@@ -7,6 +7,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        satoshi: ['var(--font-satoshi)'],
+        lufga: ['var(--font-lufga)'],
+      },
       colors: {
         primary: {
           DEFAULT: "#4624E0",

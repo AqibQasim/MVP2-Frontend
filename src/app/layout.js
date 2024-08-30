@@ -1,5 +1,4 @@
-// import "./globals.css";
-import { satoshiRegular } from "@/fonts/font-styles";
+import { lufga, satoshi } from "@/fonts/font-styles";
 import "@/styles/globals.css";
 
 export const metadata = {
@@ -13,7 +12,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="bg-heavy-metal max-h-[100dvh] overflow-hidden">
-      <body className={`${satoshiRegular.className} max-w-[90em] mx-auto p-3 !pr-[calc(0.75rem-12px)] body-scroll bg-neutral-white rounded-[48px] h-[100dvh] overflow-x-hidden overflow-y-scroll`}>
+      <body className={`${satoshi.variable} ${lufga.variable} font-satoshi font-normal max-w-[90em] mx-auto p-3 !pr-[calc(0.75rem-12px)] body-scroll bg-neutral-white rounded-[48px] h-[100dvh] overflow-x-hidden overflow-y-scroll`}>
         <main className="p-[6px] min-h-full bg-bg-frame rounded-[36px] ">
           <div className="p-[6px] rounded-[32px]">
             {children}
