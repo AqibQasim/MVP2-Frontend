@@ -1,15 +1,15 @@
-import Heading from "@/component/Heading"
+import Heading from "@/components/Heading";
 
 export const metadata = {
-    title: "Login",
+  title: "Login",
 };
 
 function Login() {
-    return (
-        <>
-            <Heading>Login page</Heading>
-        </>
-    )
+  return (
+    <>
+      <Heading>Login page</Heading>
+    </>
+  );
 }
 
-export default Login
+export default Login;
