@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      spacing: {
+        4.5: "18px",
+      },
       fontFamily: {
         satoshi: ["var(--font-satoshi)"],
         lufga: ["var(--font-lufga)"],

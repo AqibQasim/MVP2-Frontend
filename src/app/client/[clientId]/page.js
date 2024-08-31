@@ -1,6 +1,4 @@
-import DashboardSection from "@/components/DashboardSection";
-import HeadingSmall from "@/components/HeadingSmall";
-import Hr from "@/components/Hr";
+import ClientRecommendationCard from "@/components/ClientRecommendationCard";
 import { getDummyClientById, getDummyClients } from "@/lib/tempData";
 
 export async function generateMetadata({ params }) {
@@ -20,12 +18,7 @@ export default async function Page({ params }) {
   const client = await getDummyClientById(params.clientId);
   return (
     <>
-      <DashboardSection
-        paragraph={`Hey ${client.name} here's your new`}
-        heading="Recommendations"
-      >
-        <p>child</p>
-      </DashboardSection>
+      <ClientRecommendationCard client={client} />
     </>
   );
 }
