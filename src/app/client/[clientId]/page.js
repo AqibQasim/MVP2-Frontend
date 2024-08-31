@@ -1,26 +1,31 @@
+import DashboardSection from "@/components/DashboardSection";
+import HeadingSmall from "@/components/HeadingSmall";
+import Hr from "@/components/Hr";
 import { getDummyClientById, getDummyClients } from "@/lib/tempData";
 
-// Dynamic metadata for dynamic routes
 export async function generateMetadata({ params }) {
-    const client = await getDummyClientById(params.clientId)
-    return { title: `Client ${client.name}` };
+  const {
+    company: { name },
+  } = await getDummyClientById(params.clientId);
+  return { title: `Company ${name}` };
 }
 
-// Static route generation for dynamic routes
 export async function generateStaticParams() {
-    const clients = await getDummyClients();
-    const ids = clients.map((client) => ({ clientId: String(client.id) })); // Consistent naming
-    return ids;
+  const clients = await getDummyClients();
+  const ids = clients.map((client) => ({ cabinId: String(client.id) }));
+  return ids;
 }
 
-async function Page({ params }) {
-    const client = await getDummyClientById(params.clientId);
-
-    return (
-        <div>
-            {client.name}
-        </div>
-    );
+export default async function Page({ params }) {
+  const client = await getDummyClientById(params.clientId);
+  return (
+    <>
+      <DashboardSection
+        paragraph={`Hey ${client.name} here's your new`}
+        heading="Recommendations"
+      >
+        <p>child</p>
+      </DashboardSection>
+    </>
+  );
 }
-
-export default Page;

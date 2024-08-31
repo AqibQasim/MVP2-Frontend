@@ -1,8 +1,9 @@
-
 function Home() {
   return (
     <>
-      <h1 className="font-satoshi font-black text-primary-shade-10 text-7xl">heading</h1>
+      <h1 className="font-satoshi text-7xl font-black text-primary-shade-10">
+        heading
+      </h1>
       <h1 className="text-primary-shade-20">heading</h1>
       <h1 className="text-primary-shade-30">heading</h1>
       <h1 className="text-primary-shade-40">heading</h1>
@@ -29,7 +30,7 @@ function Home() {
       <h1 className="text-primary-shade-10">heading</h1>
       <h1 className="text-primary-shade-10">heading</h1>
     </>
-  )
+  );
 }
 
-export default Home
+export default Home;

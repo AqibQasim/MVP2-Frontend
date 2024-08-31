@@ -1,7 +1,7 @@
 function Loading() {
   return (
     <div className="h-view flex w-full items-center justify-center">
-      <p>Loading...</p>
+      <p>Getting Client...</p>
     </div>
   );
 }

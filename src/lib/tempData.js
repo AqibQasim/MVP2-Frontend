@@ -1,41 +1,39 @@
 import { notFound } from "next/navigation";
 
 // Dummy data
-export async function getDummyClients() {
-    const clients = [
-        {
-            id: 1,
-            name: "Nacho Fernandez",
-            email: "nachofernandez@email.com"
-        },
-        {
-            id: 2,
-            name: "Dani Carvajal",
-            email: "danicarvajal@email.com"
-        }
-    ];
+export const getDummyClients = async () => {
+  try {
+    const response = await fetch("https://jsonplaceholder.typicode.com/users");
 
-    // Simulate network delay
-    // await new Promise((res) => setTimeout(res, 1000));
-
-    return clients;
-}
-
-export async function getDummyClientById(id) {
-    try {
-
-        const client = (await getDummyClients()).find(client => client.id === id);
-
-        // Simulate network delay
-        // await new Promise((res) => setTimeout(res, 1000));
-
-        if (!client) {
-            throw new Error(`Client with id ${id} not found`);
-        }
-        return client;
-
-    } catch (error) {
-        console.log(error)
-        notFound()
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} ${response.statusText}`);
     }
-}
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Clients could not be loaded:", error.message);
+    throw new Error(`Clients could not be loaded:  ${error.message}`);
+  }
+};
+
+export const getDummyClientById = async (id) => {
+  try {
+    const response = await fetch(
+      `https://jsonplaceholder.typicode.com/users/${id}`,
+    );
+
+    // For testing
+    // await new Promise((res) => setTimeout(res, 5000));
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch client:", error.message);
+    notFound();
+  }
+};
