@@ -4,10 +4,10 @@ import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
 
 export const metadata = {
-  title: "Login",
+  title: "Sign Up",
 };
 
-function Login() {
+function SignUp() {
   return (
     <>
       <div className="flex h-screen gap-2">
@@ -46,21 +46,41 @@ function Login() {
               />
             </h2>
 
+            <div className="flex gap-2 mt-5">
             <Input
               type="text"
-              placeholder="Enter your email"
-              className="mt-5"
-            />
-            <Input
-              type="password"
-              placeholder="Enter your password"
+              placeholder="First name"
               className="mt-3"
             />
-            <div className="mt-2 w-full text-right">
-              <button className="text-sm text-primary">Forgot Password?</button>
+             <Input
+              type="text"
+              placeholder="Last name"
+              className="mt-3"
+            />
             </div>
-            <OnBoardingButton>Login to proceed</OnBoardingButton>
-            <div className="my-3 w-full text-center text-grey-primary-tint-30">
+
+            <Input
+              type="text"
+              placeholder="Enter email"
+              className="mt-3"
+            />
+            <div className="flex gap-2">
+            <Input
+              type="password"
+              placeholder="Enter password"
+              className="mt-3"
+            />
+             <Input
+              type="password"
+              placeholder="Confirm password"
+              className="mt-3"
+            />
+            </div>
+            <div className="mt-2 w-full text-start">
+            <input type="checkbox" className="border-none outline-none" /><span className="text-sm  text-grey-primary ms-2">I read and accept the </span><button className="text-sm text-primary">Terms and Condition</button>
+            </div>
+            <OnBoardingButton>Create account</OnBoardingButton>
+            <div className="my-3 w-full text-center text-grey-primary-tint-30 ">
               <div className="flex items-center justify-center gap-2">
                 <Image
                   src="line.svg"
@@ -92,10 +112,10 @@ function Login() {
             </button>
             <div className="mt-2">
               <p className="me-1 inline-block text-xs text-grey-primary">
-                Don’t have an account?
+                Already have an account?
               </p>
               <button className="text-xs text-primary underline">
-                Sign up now
+            Login now
               </button>
             </div>
           </div>
@@ -119,4 +139,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default SignUp;
