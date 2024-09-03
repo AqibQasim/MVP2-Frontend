@@ -1,5 +1,8 @@
-import ClientRecommendationCard from "@/components/ClientRecommendationCard";
-import { getDummyClientById, getDummyClients } from "@/lib/tempData";
+
+
+import {getDummyClientById, getDummyClients } from "@/lib/tempData";
+
+import ClientPage from "@/components/ClientPage";
 
 export async function generateMetadata({ params }) {
   const {
@@ -14,11 +17,13 @@ export async function generateStaticParams() {
   return ids;
 }
 
+
+
 export default async function Page({ params }) {
-  const client = await getDummyClientById(params.clientId);
+
   return (
     <>
-      <ClientRecommendationCard client={client} />
+      <ClientPage params={params} />
     </>
-  );
+  )
 }
