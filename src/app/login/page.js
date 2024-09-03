@@ -2,6 +2,7 @@ import Heading from "@/components/Heading";
 import Image from "next/image";
 import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
+import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 
 export const metadata = {
   title: "Login",
@@ -10,7 +11,7 @@ export const metadata = {
 function Login() {
   return (
     <>
-      <div className="flex h-full gap-2">
+      <div className={`flex ${PAGE_HEIGHT_FIX} gap-2`}>
         <div className="flex  flex-[1.4] flex-col items-center justify-center rounded-[36px] bg-white">
           <Heading className="text-5xl font-extrabold text-primary">
             Interactive <span className="gradient-text">Illustration</span>

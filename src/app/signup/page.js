@@ -2,6 +2,7 @@ import Heading from "@/components/Heading";
 import Image from "next/image";
 import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
+import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 
 export const metadata = {
   title: "Sign Up",
@@ -10,14 +11,14 @@ export const metadata = {
 function SignUp() {
   return (
     <>
-      <div className="flex h-screen gap-2">
-        <div className="flex h-[96%] flex-[1.4] flex-col items-center justify-center rounded-[36px] bg-white">
+      <div className={`flex ${PAGE_HEIGHT_FIX} gap-2`}>
+        <div className="flex flex-[1.4] flex-col items-center justify-center rounded-[36px] bg-white">
           <Heading className="text-5xl font-extrabold text-primary">
             Interactive <span className="gradient-text">Illustration</span>
           </Heading>
         </div>
 
-        <div className="flex h-[96%] flex-[1] flex-col items-start justify-start rounded-[36px] bg-white">
+        <div className="flex w-[33rem] flex-col items-start justify-start rounded-[36px] bg-white">
           {/* <Heading className="text-primary bg-primary-to-r from-primary-500 font-extrabold"></Heading> */}
 
           <div className="flex w-full justify-between space-y-2 p-5">

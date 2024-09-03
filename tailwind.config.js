@@ -7,9 +7,16 @@ module.exports = {
   ],
   theme: {
     extend: {
+      spacing: {
+        4.5: "18px",
+      },
       fontFamily: {
-        satoshi: ['var(--font-satoshi)'],
-        lufga: ['var(--font-lufga)'],
+        satoshi: ["var(--font-satoshi)"],
+        lufga: ["var(--font-lufga)"],
+      },
+      borderRadius: {
+        "4xl": "2rem",
+        "5xl": "3rem",
       },
       colors: {
         primary: {
