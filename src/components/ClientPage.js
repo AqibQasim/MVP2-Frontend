@@ -11,14 +11,21 @@ import SuccessModal from "./SuccessModal";
 const ClientPage = async ({ params }) => {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
   const [client, setClient] = useState(null);
+  const [successAcknowledge, setSuccessAcknowledge] = useState(false);
+
+  const handleSuccessAcknowledge = () => {
+    setSuccessAcknowledge(!successAcknowledge);
+  }
 
   const handleOpenOverlay = () => {
     setOverlayVisible(true);
   };
 
   const handleCloseOverlay = () => {
-    setOverlayVisible(false);
+    setOverlayVisible(false);  
+    setSuccessAcknowledge(false); 
   };
+
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -35,6 +42,10 @@ const ClientPage = async ({ params }) => {
 
   if (!client) return <div>Loading...</div>;
 
+
+
+  // ALL THE CONTENT FOR THE PROPS.
+
   const mainHeading = <span>Your call & job request successfully <span style={{
     backgroundImage: 'linear-gradient(to right, #4624E0, white)',
     WebkitBackgroundClip: 'text',
@@ -49,12 +60,20 @@ const ClientPage = async ({ params }) => {
     <>
       <ClientRecommendationCard handleOpenOverlay={handleOpenOverlay} client={client} />
       <Overlay isVisible={isOverlayVisible} >
-        <SuccessModal onClose={handleCloseOverlay}
-          mainHeading={mainHeading}
-          text={text}
-        />
-
-        {/* <InterViewScheduler onClose={handleCloseOverlay} /> */}
+        {
+          successAcknowledge ? (
+            <>
+              <SuccessModal
+                mainHeading={mainHeading}
+                text={text}
+                onClose={handleCloseOverlay} />
+            </>
+          ) : (
+            <>
+              <InterViewScheduler onSuccessAck={handleSuccessAcknowledge} onClose={handleCloseOverlay} />
+            </>
+          )
+        }
       </Overlay>
     </>
   );
