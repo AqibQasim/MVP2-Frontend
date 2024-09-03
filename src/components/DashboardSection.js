@@ -1,11 +1,8 @@
 "use client"
 
 import PropTypes from "prop-types";
-// import HeadingSmall from "./HeadingSmall";
 import Hr from "./Hr";
 import Heading from "./Heading";
-import { useState } from "react";
-import Overlay from "./Overlay";
 
 function DashboardSection({
   paragraph = "Hey [client.name], here's your new",

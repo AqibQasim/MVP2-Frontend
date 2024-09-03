@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 function Skill({ skill, score = null }) {
   return (
-    <div className="flex items-center justify-start gap-1.5 rounded-[2.25rem] bg-grey-primary-tint-90 p-2.5 pr-3 font-lufga text-sm capitalize text-black">
+    <div className="flex items-center justify-start gap-1.5 rounded-[2.25rem] bg-grey-primary-tint-90 p-2.5 pr-3 font-lufga text-sm !font-normal capitalize text-black">
       {skill ? (
         <>
           <Image
