@@ -10,14 +10,14 @@ export const metadata = {
 function Login() {
   return (
     <>
-      <div className="flex h-screen gap-2">
-        <div className="flex h-[96%] flex-[1.4] flex-col items-center justify-center rounded-[36px] bg-white">
+      <div className="flex h-full gap-2">
+        <div className="flex  flex-[1.4] flex-col items-center justify-center rounded-[36px] bg-white">
           <Heading className="text-5xl font-extrabold text-primary">
             Interactive <span className="gradient-text">Illustration</span>
           </Heading>
         </div>
 
-        <div className="flex h-[96%] flex-[1] flex-col items-start justify-start rounded-[36px] bg-white overflow-y-auto">
+        <div className="flex  w-[33rem] flex-col items-start justify-start rounded-[36px] bg-white overflow-y-auto">
           {/* <Heading className="text-primary bg-primary-to-r from-primary-500 font-extrabold"></Heading> */}
 
           <div className="flex w-full justify-between space-y-2 p-5">
@@ -33,8 +33,8 @@ function Login() {
                         <Button className="rounded-full bg-primary-tint-100 text-[#ACA6C8]">Freelancer</Button> */}
             </div>
           </div>
-          <div className="mx-auto mt-20 w-10/12 lg:w-8/12 flex-grow">
-            <h2 className="text-start font-lufga lg:text-4xl md:text-2xl">
+          <div className="mx-auto mt-3 w-8/12 flex-grow">
+            <h2 className="text-start font-lufga lg:text-2xl md:text-2xl">
               A sentence of perks and encouragement for{" "}
               <span className=" gradient-text">freelancer.</span>
               <Image
@@ -60,7 +60,7 @@ function Login() {
               <button className="text-sm text-primary">Forgot Password?</button>
             </div>
             <OnBoardingButton>Login to proceed</OnBoardingButton>
-            <div className="my-3 w-full text-center text-grey-primary-tint-30">
+            <div className="my-1 w-full text-center text-grey-primary-tint-30">
               <div className="flex items-center justify-center gap-2">
                 <Image
                   src="line.svg"

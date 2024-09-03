@@ -17,7 +17,7 @@ function SignUp() {
           </Heading>
         </div>
 
-        <div className="flex h-[96%] flex-[1] flex-col items-start justify-start rounded-[36px] bg-white overflow-y-auto">
+        <div className="flex h-[96%] flex-[1] flex-col items-start justify-start rounded-[36px] bg-white">
           {/* <Heading className="text-primary bg-primary-to-r from-primary-500 font-extrabold"></Heading> */}
 
           <div className="flex w-full justify-between space-y-2 p-5">
@@ -33,7 +33,7 @@ function SignUp() {
                         <Button className="rounded-full bg-primary-tint-100 text-[#ACA6C8]">Freelancer</Button> */}
             </div>
           </div>
-          <div className="mx-auto mt-20 w-10/12 lg:w-8/12 flex-grow">
+          <div className="mx-auto mt-20 w-10/12  ">
             <h2 className="text-start font-lufga lg:text-4xl md:text-2xl">
               A sentence of perks and encouragement for{" "}
               <span className=" gradient-text">freelancer.</span>
