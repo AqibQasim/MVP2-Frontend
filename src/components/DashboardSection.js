@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import HeadingSmall from "./HeadingSmall";
+// import HeadingSmall from "./HeadingSmall";
 import Hr from "./Hr";
 import Heading from "./Heading";
 
