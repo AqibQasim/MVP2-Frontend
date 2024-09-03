@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 function EntityCard({
   sm = false,
   lg = false,
+  icon = false,
   entity = {
     image: "/avatars/avatar-1.png",
     name: "John Doe",
@@ -16,15 +17,19 @@ function EntityCard({
   return (
     <div className="entity flex items-center justify-start gap-2">
       <div
-        className={`relative ${sizeClass} overflow-hidden rounded-full bg-bg-avatar`}
+        className={`relative ${sizeClass} ${icon ? "!bg-primary-tint-100 p-3.5" : ""} overflow-hidden rounded-full bg-bg-avatar`}
       >
-        <Image
-          src={entity.image}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover"
-          alt="Avatar image"
-        />
+        {!icon ? (
+          <Image
+            src={entity.image}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover"
+            alt="Avatar image"
+          />
+        ) : (
+          icon
+        )}
       </div>
       <div className="names">
         <p className={`font-lufga ${textSizeClass} font-medium`}>
@@ -41,6 +46,7 @@ function EntityCard({
 EntityCard.propTypes = {
   sm: PropTypes.bool,
   lg: PropTypes.bool,
+  profession: PropTypes.bool,
   entity: PropTypes.shape({
     image: PropTypes.string,
     name: PropTypes.string,
