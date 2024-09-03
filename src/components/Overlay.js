@@ -1,17 +1,16 @@
 import React from 'react';
+import '../styles/overlay.css';
 
-const Overlay = ({ isVisible, onClose, children }) => {
-  if (!isVisible) return null; 
+
+const Overlay = ({ isVisible, children }) => {
+ 
+
+  if (!isVisible) return null;
+
 
   return (
-    <div className="w-[100%] fixed inset-0 flex items-center justify-center bg-white bg-opacity-10 backdrop-blur-md z-50">
-      <div className="w-[30%] relative bg-white p-6 rounded-lg shadow-lg">
-        <button
-          className="absolute top-2 right-2 text-gray-700 hover:text-gray-900"
-          onClick={onClose}
-        >
-          ✕
-        </button>
+    <div className="w-full h-full fixed inset-0 flex items-center justify-center bg-white bg-opacity-10 backdrop-blur-md z-50 overflow-hidden">
+      <div className="w-[50%] max-h-[90vh] overflow-y-auto relative bg-white px-6 py-3 rounded-[2rem] shadow-2xl custom-scrollbar">
         {children}
       </div>
     </div>
