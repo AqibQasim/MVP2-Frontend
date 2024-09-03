@@ -19,3 +19,8 @@ export function formatCurrencyNoDecimals(price) {
 export function formatWithDecimalZero(value) {
   return value % 1 === 0 ? `${value}.0` : value.toFixed(1);
 }
+
+export function formatDate(date) {
+  const options = { day: "numeric", month: "long", year: "numeric" };
+  return new Date(date).toLocaleDateString("en-US", options);
+}

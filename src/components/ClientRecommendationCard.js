@@ -28,7 +28,7 @@ function ClientRecommendationCard({ client = {} }) {
               <p>exp: {client.name.length}Y </p>
             </Capsule>
             <Capsule>
-              <p>[Job-Type] </p>
+              <p>full time</p>
             </Capsule>
             <Capsule icon="$">
               <p className="">{formatCurrencyNoDecimals(2000)}</p>

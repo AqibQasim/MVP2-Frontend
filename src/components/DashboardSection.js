@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
-import HeadingSmall from "./HeadingSmall";
-import Hr from "./Hr";
 import Heading from "./Heading";
+import Hr from "./Hr";
 
 function DashboardSection({
   paragraph = "Hey [client.name], here's your new",
