@@ -2,7 +2,7 @@
 
 import { getDummyClientById, getDummyClients } from "@/lib/tempData";
 import ClientRecommendationCard from "@/components/ClientRecommendationCard";
-
+import ClientJobsTable from "./ClientJobsTable";
 import Overlay from "@/components/Overlay";
 import { useEffect, useState } from "react";
 import InterViewScheduler from "./InterviewScheduler";
@@ -22,8 +22,8 @@ const ClientPage = async ({ params }) => {
   };
 
   const handleCloseOverlay = () => {
-    setOverlayVisible(false);  
-    setSuccessAcknowledge(false); 
+    setOverlayVisible(false);
+    setSuccessAcknowledge(false);
   };
 
 
@@ -58,7 +58,10 @@ const ClientPage = async ({ params }) => {
 
   return (
     <>
-      <ClientRecommendationCard handleOpenOverlay={handleOpenOverlay} client={client} />
+      <div className="space-y-2">
+        <ClientRecommendationCard handleOpenOverlay={handleOpenOverlay} client={client} />
+        <ClientJobsTable />
+      </div>
       <Overlay isVisible={isOverlayVisible} >
         {
           successAcknowledge ? (

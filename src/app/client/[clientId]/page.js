@@ -1,8 +1,9 @@
 
 
-import {getDummyClientById, getDummyClients } from "@/lib/tempData";
+// import {getDummyClientById, getDummyClients } from "@/lib/tempData";
 
 import ClientPage from "@/components/ClientPage";
+import { getDummyClientById, getDummyClients } from "@/lib/tempData";
 
 export async function generateMetadata({ params }) {
   const {
