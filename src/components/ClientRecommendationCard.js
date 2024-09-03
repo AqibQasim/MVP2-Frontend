@@ -8,7 +8,7 @@ import ButtonCapsule from "./ButtonCapsule";
 
 const skills = ["python", "javascript", "react"];
 
-function ClientRecommendationCard({ client = {} }) {
+function ClientRecommendationCard({ client = {} , handleOpenOverlay}) {
   return (
     <DashboardSection
       paragraph={`Hey ${client.name}, here's your new`}
@@ -44,7 +44,7 @@ function ClientRecommendationCard({ client = {} }) {
             <span className="h-[1px] w-2 rounded-full bg-grey-primary-tint-40"></span>
             <Skill score={8.0} />
           </div>
-          <ButtonCapsule>Schedule Interview</ButtonCapsule>
+          <ButtonCapsule handleOpenOverlay={handleOpenOverlay}>Schedule Interview</ButtonCapsule>
         </div>
       </div>
     </DashboardSection>

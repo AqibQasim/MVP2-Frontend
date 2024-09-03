@@ -1,12 +1,20 @@
+"use client"
+
 import PropTypes from "prop-types";
-import Heading from "./Heading";
+// import HeadingSmall from "./HeadingSmall";
 import Hr from "./Hr";
+import Heading from "./Heading";
+import { useState } from "react";
+import Overlay from "./Overlay";
 
 function DashboardSection({
   paragraph = "Hey [client.name], here's your new",
   heading = "Recommendations",
   children,
 }) {
+
+  
+
   return (
     <div className="rounded-3xl bg-neutral-white p-6">
       <div className="head">
@@ -14,6 +22,7 @@ function DashboardSection({
           {paragraph}
         </p>
         <Heading sm>{heading}</Heading>
+        
       </div>
       <Hr />
       <div className="body"> {children} </div>
@@ -28,3 +37,4 @@ DashboardSection.propTypes = {
 };
 
 export default DashboardSection;
+// button-capsule 
