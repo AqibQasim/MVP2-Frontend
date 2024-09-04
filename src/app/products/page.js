@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import ProductList from "@/component/ProductList";
-import Heading from "@/component/Heading";
+import ProductList from "@/components/ProductList";
+import Heading from "@/components/Heading";
 
 export const metadata = {
   title: "Products",
