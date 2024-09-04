@@ -9,7 +9,7 @@ const jobs = [
     profession: "some profession",
     skills: ["react", "python", "javascript"],
     experience: "expert",
-    status: "fulfill",
+    status: "fulfilled",
   },
   {
     role: "some role",
@@ -23,7 +23,7 @@ const jobs = [
     profession: "some profession",
     skills: ["react", "python", "javascript"],
     experience: "expert",
-    status: "fulfill",
+    status: "fulfilled",
   },
 ];
 

@@ -8,7 +8,7 @@ function EntityCard({
   entity = {
     image: "/avatars/avatar-1.png",
     name: "John Doe",
-    profession: "Software Developer",
+    profession: "",
   },
 }) {
   const sizeClass = lg ? "size-20" : sm ? "size-9" : "size-12";
@@ -35,9 +35,11 @@ function EntityCard({
         <p className={`font-lufga ${textSizeClass} font-medium`}>
           {entity.name}
         </p>
-        <p className="text-sm font-medium text-grey-primary-shade-30">
-          {entity.profession}
-        </p>
+        {entity.profession && (
+          <p className="text-sm font-medium text-grey-primary-shade-30">
+            {entity.profession}
+          </p>
+        )}
       </div>
     </div>
   );
@@ -46,7 +48,7 @@ function EntityCard({
 EntityCard.propTypes = {
   sm: PropTypes.bool,
   lg: PropTypes.bool,
-  profession: PropTypes.bool,
+  icon: PropTypes.oneOfType([PropTypes.bool, PropTypes.element]),
   entity: PropTypes.shape({
     image: PropTypes.string,
     name: PropTypes.string,
