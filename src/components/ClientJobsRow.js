@@ -1,5 +1,8 @@
+import SvgIconJobStatus from "@/svgs/SvgIconJobStatus";
 import SvgIconWork from "@/svgs/SvgIconWork";
+import Capsule from "./Capsule";
 import EntityCard from "./EntityCard";
+import IconWithBg from "./IconWithBg";
 import Skill from "./Skill";
 import Table from "./Table";
 
@@ -20,7 +23,12 @@ function ClientJobsRow({ job }) {
         ))}
       </div>
       <div className="experience text-center">{job.experience}</div>
-      <div className="status text-center"> {job.status} </div>
+      <Capsule
+        icon={<IconWithBg icon={<SvgIconJobStatus status={job.status} />} />}
+      >
+        {" "}
+        {job.status}{" "}
+      </Capsule>
     </Table.Row>
   );
 }

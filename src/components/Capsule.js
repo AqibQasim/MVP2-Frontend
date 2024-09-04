@@ -9,11 +9,7 @@ function Capsule({ children, icon = null }) {
 
   return (
     <div className={containerClasses}>
-      {icon && (
-        <span className="flex size-6 items-center justify-center rounded-full bg-neutral-white">
-          {icon}
-        </span>
-      )}
+      {icon && icon}
       {children}
     </div>
   );
