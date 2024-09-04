@@ -1,6 +1,12 @@
 import PropTypes from "prop-types";
 
-function Heading({ className = "", children, sm = false, xm = false }) {
+function Heading({
+  className = "",
+  children,
+  sm = false,
+  xm = false,
+  toxm = false,
+}) {
   let HeadingTag = "h1";
   let textSizeClass = "text-4xl";
   let fontWeightClass = "font-bold";
@@ -11,8 +17,12 @@ function Heading({ className = "", children, sm = false, xm = false }) {
       textSizeClass = "text-2xl";
       break;
     case xm:
-      HeadingTag = "h6";
+      HeadingTag = "h5";
       textSizeClass = "text-lg";
+      break;
+    case toxm:
+      HeadingTag = "h6";
+      textSizeClass = "text-base";
       break;
     // Add more cases for h3, h2, etc. as needed
     default:
