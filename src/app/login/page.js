@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Heading from "@/components/Heading";
 import Image from "next/image";
 import Input from "@/components/Input";
@@ -10,19 +10,16 @@ import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 // };
 
 function Login() {
-
- 
-
   return (
     <>
       <div className={`flex ${PAGE_HEIGHT_FIX} gap-2`}>
-        <div className="flex  flex-[1.4] flex-col items-center justify-center rounded-[36px] bg-white">
+        <div className="flex flex-[1.4] flex-col items-center justify-center rounded-[36px] bg-white">
           <Heading className="text-5xl font-extrabold text-primary">
             Interactive <span className="gradient-text">Illustration</span>
           </Heading>
         </div>
 
-        <div className="flex  w-[33rem] flex-col items-start justify-start rounded-[36px] bg-white overflow-y-auto">
+        <div className="flex w-[33rem] flex-col items-start justify-start overflow-y-auto rounded-[36px] bg-white">
           {/* <Heading className="text-primary bg-primary-to-r from-primary-500 font-extrabold"></Heading> */}
 
           <div className="flex w-full justify-between space-y-2 p-5">
@@ -39,9 +36,9 @@ function Login() {
             </div>
           </div>
           <div className="mx-auto mt-3 w-8/12 flex-grow">
-            <h2 className="text-start font-lufga text-2xl text-2xl">
+            <h2 className="text-start font-lufga text-2xl">
               A sentence of perks and encouragement for{" "}
-              <span className=" gradient-text">freelancer.</span>
+              <span className="gradient-text">freelancer.</span>
               <Image
                 src="/icons/clients_emoji.png"
                 width={100}
@@ -60,9 +57,8 @@ function Login() {
               type="password"
               placeholder="Enter your password"
               className="mt-3"
-              
             />
-                    
+
             <div className="mt-2 w-full text-right">
               <button className="text-sm text-primary">Forgot Password?</button>
             </div>
@@ -106,25 +102,21 @@ function Login() {
               </button>
             </div>
           </div>
-          <div className="mt-auto align-end text-start text-xs text-grey-primary py-5 px-7">
-          <Image
-                src="icons/info_icon.svg"
-                width={14}
-                height={14}
-                alt="info icon"
-                className="inline-block "
-              />
-              <p className="inline-block ms-1">
-               You’re registering as client, but you can also switch to
+          <div className="align-end mt-auto px-7 py-5 text-start text-xs text-grey-primary">
+            <Image
+              src="icons/info_icon.svg"
+              width={14}
+              height={14}
+              alt="info icon"
+              className="inline-block"
+            />
+            <p className="ms-1 inline-block">
+              You’re registering as client, but you can also switch to
               freelancer later from settings.
-              </p>
-            
-            </div>
+            </p>
+          </div>
         </div>
-        
       </div>
-     
-     
     </>
   );
 }

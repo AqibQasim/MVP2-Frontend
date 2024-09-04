@@ -17,10 +17,10 @@ function SignUp() {
 
   const handleCloseOverlay = () => {
     setOverlayVisible(false);
+    console.log(isOverlayVisible);
   };
-
   useEffect(() => {
-    console.log('[isOverlayVisible]:', isOverlayVisible);
+    console.log("[isOverlayVisible]:", isOverlayVisible);
   }, [isOverlayVisible]);
 
   const mainHeading = (
@@ -41,7 +41,8 @@ function SignUp() {
 
   let text = (
     <>
-      We've sent a code to <span className="font-semibold">janedoe@gmail.com</span>
+      We've sent a code to{" "}
+      <span className="font-semibold">janedoe@gmail.com</span>
     </>
   );
 
@@ -69,7 +70,7 @@ function SignUp() {
           <div className="mx-auto mt-3 w-8/12 flex-grow">
             <h2 className="text-start font-lufga text-2xl">
               A sentence of perks and encouragement for{" "}
-              <span className=" gradient-text">freelancer.</span>
+              <span className="gradient-text">freelancer.</span>
               <Image
                 src="/icons/clients_emoji.png"
                 width={100}
@@ -79,24 +80,36 @@ function SignUp() {
               />
             </h2>
 
-            <div className="flex gap-2 mt-5">
+            <div className="mt-5 flex gap-2">
               <Input type="text" placeholder="First name" className="mt-3" />
               <Input type="text" placeholder="Last name" className="mt-3" />
             </div>
 
             <Input type="text" placeholder="Enter email" className="mt-3" />
             <div className="flex gap-2">
-              <Input type="password" placeholder="Enter password" className="mt-3" />
-              <Input type="password" placeholder="Confirm password" className="mt-3" />
+              <Input
+                type="password"
+                placeholder="Enter password"
+                className="mt-3"
+              />
+              <Input
+                type="password"
+                placeholder="Confirm password"
+                className="mt-3"
+              />
             </div>
             <div className="mt-2 w-full text-start">
               <input type="checkbox" className="border-none outline-none" />
-              <span className="text-sm text-grey-primary ms-2">
+              <span className="ms-2 text-sm text-grey-primary">
                 I read and accept the{" "}
               </span>
-              <button className="text-sm text-primary">Terms and Conditions</button>
+              <button className="text-sm text-primary">
+                Terms and Conditions
+              </button>
             </div>
-            <OnBoardingButton onClick={handleOpenOverlay}>Create account</OnBoardingButton>
+            <OnBoardingButton onClick={handleOpenOverlay}>
+              Create account
+            </OnBoardingButton>
             <div className="my-1 w-full text-center text-grey-primary-tint-30">
               <div className="flex items-center justify-center gap-2">
                 <Image
@@ -131,18 +144,20 @@ function SignUp() {
               <p className="me-1 inline-block text-xs text-grey-primary">
                 Already have an account?
               </p>
-              <button className="text-xs text-primary underline">Login now</button>
+              <button className="text-xs text-primary underline">
+                Login now
+              </button>
             </div>
           </div>
-          <div className="mt-auto align-end text-start text-xs text-grey-primary py-5 px-7">
+          <div className="align-end mt-auto px-7 py-5 text-start text-xs text-grey-primary">
             <Image
               src="icons/info_icon.svg"
               width={14}
               height={14}
               alt="info icon"
-              className="inline-block "
+              className="inline-block"
             />
-            <p className="inline-block ms-1">
+            <p className="ms-1 inline-block">
               You’re registering as a client, but you can also switch to
               freelancer later from settings.
             </p>
@@ -150,9 +165,9 @@ function SignUp() {
         </div>
       </div>
       {isOverlayVisible && (
-        <Overlay isVisible={isOverlayVisible}>
+        <Overlay isVisible={isOverlayVisible} closeoverlay={handleCloseOverlay}>
           <SuccessModal
-            onClose={handleCloseOverlay}
+            // onClose={handleCloseOverlay}
             imgSrc="/Message.png"
             mainHeading={mainHeading}
             text={text}

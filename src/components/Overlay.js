@@ -1,16 +1,18 @@
-import React from 'react';
-import '../styles/overlay.css';
+import React from "react";
+import "../styles/overlay.css";
 
-
-const Overlay = ({ isVisible, children }) => {
- 
-
+const Overlay = ({ closeoverlay, isVisible, children }) => {
   if (!isVisible) return null;
 
-
   return (
-    <div className="w-full h-full fixed inset-0 flex items-center justify-center bg-white bg-opacity-10 backdrop-blur-md z-50 overflow-hidden">
-      <div className="w-[50%] max-h-[90vh] overflow-y-auto relative bg-white px-6 py-3 rounded-[2rem] shadow-2xl custom-scrollbar">
+    <div
+      className="fixed inset-0 z-50 flex h-full w-full items-center justify-center overflow-hidden bg-white bg-opacity-10 backdrop-blur-md"
+      onClick={closeoverlay}
+    >
+      <div
+        className="custom-scrollbar relative max-h-[90vh] w-[50%] overflow-y-auto rounded-[2rem] bg-white px-6 py-3 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
         {children}
       </div>
     </div>
