@@ -4,7 +4,8 @@ import ClientRecommendationCard from "@/components/ClientRecommendationCard";
 import Overlay from "@/components/Overlay";
 import { getDummyClientById } from "@/lib/tempData";
 import { useEffect, useState } from "react";
-import ClientJobsTable from "./ClientJobsTable";
+import ClientEmployeesTable from "./ClientEmployeesTable";
+import ClientJobsTable from "./ClientJobsOverviewTable";
 import InterViewScheduler from "./InterviewScheduler";
 import SuccessModal from "./SuccessModal";
 
@@ -74,6 +75,7 @@ const ClientPage = async ({ params }) => {
           client={client}
         />
         <ClientJobsTable />
+        <ClientEmployeesTable />
       </div>
       <Overlay isVisible={isOverlayVisible}>
         {successAcknowledge ? (

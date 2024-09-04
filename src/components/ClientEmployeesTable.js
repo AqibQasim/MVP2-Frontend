@@ -1,35 +1,30 @@
 "use client";
-import ClientJobsRow from "./ClientJobsRow";
+import ClientEmployeesRow from "./ClientEmployeesRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 
-const jobs = [
+const employees = [
   {
-    role: "some role",
-    profession: "some profession",
+    name: "Richard Feynman",
+    image: "/avatars/avatar-1.png",
+    profession: "Software Developer",
     skills: ["react", "python", "javascript"],
     experience: "expert",
-    status: "fulfill",
+    status: "hired",
   },
   {
-    role: "some role",
-    profession: "some profession",
+    name: "Richard Feynman",
+    image: "/avatars/avatar-1.png",
+    profession: "Software Developer",
     skills: ["react", "python", "javascript"],
     experience: "expert",
-    status: "open",
-  },
-  {
-    role: "some role",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    status: "fulfill",
+    status: "trial",
   },
 ];
 
-function ClientJobsTable() {
+function ClientEmployeesTable() {
   return (
-    <DashboardSection paragraph="View and manage all here." heading="Your jobs">
+    <DashboardSection paragraph="Employees you’ve" heading="Recently hired">
       <Table columns="grid-cols-[1fr_1.7fr_0.4fr_0.4fr]">
         <Table.Header>
           <div className="name">Info</div>
@@ -38,12 +33,14 @@ function ClientJobsTable() {
           <div className="status text-center">Status</div>
         </Table.Header>
         <Table.Body
-          data={jobs}
-          render={(job, i) => <ClientJobsRow job={job} key={i} />}
+          data={employees}
+          render={(employee, i) => (
+            <ClientEmployeesRow employee={employee} key={i} />
+          )}
         />
       </Table>
     </DashboardSection>
   );
 }
 
-export default ClientJobsTable;
+export default ClientEmployeesTable;

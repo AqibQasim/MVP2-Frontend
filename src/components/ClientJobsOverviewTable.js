@@ -1,5 +1,5 @@
 "use client";
-import ClientJobsRow from "./ClientJobsRow";
+import ClientJobsRow from "./ClientJobsOverviewRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 
@@ -27,9 +27,9 @@ const jobs = [
   },
 ];
 
-function ClientJobsTable() {
+function ClientJobsOverviewTable() {
   return (
-    <DashboardSection paragraph="View and manage all here." heading="Your jobs">
+    <DashboardSection paragraph="These are all" heading="Your job">
       <Table columns="grid-cols-[1fr_1.7fr_0.4fr_0.4fr]">
         <Table.Header>
           <div className="name">Info</div>
@@ -46,4 +46,4 @@ function ClientJobsTable() {
   );
 }
 
-export default ClientJobsTable;
+export default ClientJobsOverviewTable;

@@ -6,7 +6,7 @@ import IconWithBg from "./IconWithBg";
 import Skill from "./Skill";
 import Table from "./Table";
 
-function ClientJobsRow({ job }) {
+function ClientJobsOverviewRow({ job }) {
   console.log(job);
   return (
     <Table.Row>
@@ -34,4 +34,4 @@ function ClientJobsRow({ job }) {
   );
 }
 
-export default ClientJobsRow;
+export default ClientJobsOverviewRow;
