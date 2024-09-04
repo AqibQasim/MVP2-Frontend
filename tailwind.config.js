@@ -7,9 +7,19 @@ module.exports = {
   ],
   theme: {
     extend: {
+      boxShadow: {
+        'xl': '0 0 25px -5px rgba(0, 0, 0, 0.1)', // Adjust values here
+      },
+      spacing: {
+        4.5: "18px",
+      },
       fontFamily: {
-        satoshi: ['var(--font-satoshi)'],
-        lufga: ['var(--font-lufga)'],
+        satoshi: ["var(--font-satoshi)"],
+        lufga: ["var(--font-lufga)"],
+      },
+      borderRadius: {
+        "4xl": "2rem",
+        "5xl": "3rem",
       },
       colors: {
         primary: {
