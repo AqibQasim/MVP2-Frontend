@@ -1,14 +1,65 @@
+"use client"
 import Heading from "@/components/Heading";
 import Image from "next/image";
 import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
+import Overlay from "@/components/Overlay";
+import SuccessModal from "@/components/SuccessModal";
+import { useState, useEffect } from "react";
 
-export const metadata = {
-  title: "Sign Up",
-};
+// export const metadata = {
+//   title: "Sign Up",
+// };
 
 function SignUp() {
+  const [isOverlayVisible, setOverlayVisible] = useState(false);
+
+  const handleOpenOverlay = () => {
+    setOverlayVisible(true);
+  };
+
+  const handleCloseOverlay = () => {
+    setOverlayVisible(false);
+  };
+
+  useEffect(() => {
+    console.log('[isOverlayVisible]:', isOverlayVisible);
+  }, [isOverlayVisible]);
+
+  const mainHeading = <span>Enter verification <span style={{
+    backgroundImage: 'linear-gradient(to right, #4624E0, white)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    display: 'inline'
+
+  }}>Code.</span></span>;
+
+  let text = <>We've sent a code to <span className="font-semibold">janedoe@gmail.com</span></>;
+  // const [isOverlayVisible, setOverlayVisible] = useState(false);
+
+  // const handleOpenOverlay = () => {
+  //   setOverlayVisible(true);
+  // };
+
+  // const handleCloseOverlay = () => {
+  //   setOverlayVisible(false);
+  // };
+
+  // useEffect(() => {
+  //   console.log('[isOverlayVisible]:', isOverlayVisible);
+  // }, [isOverlayVisible]);
+
+  // const mainHeading = <span>Your account is successfully <span style={{
+  //   backgroundImage: 'linear-gradient(to right, #4624E0, white)',
+  //   WebkitBackgroundClip: 'text',
+  //   WebkitTextFillColor: 'transparent',
+  //   display: 'inline'
+
+  // }}>Created.</span></span>;
+
+  // let text = <>Your account is currently under review. Soon you’ll receive an email on <span className="font-semibold">janedoe@gmail.com</span>upon approval</>;
+
   return (
     <>
       <div className={`flex ${PAGE_HEIGHT_FIX} gap-2`}>
@@ -34,8 +85,8 @@ function SignUp() {
                         <Button className="rounded-full bg-primary-tint-100 text-[#ACA6C8]">Freelancer</Button> */}
             </div>
           </div>
-          <div className="mx-auto mt-20 w-10/12  ">
-            <h2 className="text-start font-lufga lg:text-4xl md:text-2xl">
+          <div className="mx-auto mt-3 w-8/12 flex-grow">
+            <h2 className="text-start font-lufga text-2xl">
               A sentence of perks and encouragement for{" "}
               <span className=" gradient-text">freelancer.</span>
               <Image
@@ -80,8 +131,8 @@ function SignUp() {
             <div className="mt-2 w-full text-start">
             <input type="checkbox" className="border-none outline-none" /><span className="text-sm  text-grey-primary ms-2">I read and accept the </span><button className="text-sm text-primary">Terms and Condition</button>
             </div>
-            <OnBoardingButton>Create account</OnBoardingButton>
-            <div className="my-3 w-full text-center text-grey-primary-tint-30 ">
+            <OnBoardingButton onClick={handleOpenOverlay}>Create account</OnBoardingButton>
+            <div className="my-1 w-full text-center text-grey-primary-tint-30 ">
               <div className="flex items-center justify-center gap-2">
                 <Image
                   src="line.svg"
@@ -136,6 +187,27 @@ function SignUp() {
             </div>
         </div>
       </div>
+      {/* <Overlay isVisible={isOverlayVisible} >
+        <SuccessModal onClose={handleCloseOverlay}
+          mainHeading={mainHeading}
+          text={text}
+          buttonText={"Verify email"}
+          onBoarding={true}
+        />
+
+        {/* <InterViewScheduler onClose={handleCloseOverlay} /> 
+      </Overlay> */}
+      <Overlay isVisible={isOverlayVisible} >
+      <SuccessModal onClose={handleCloseOverlay}
+        imgSrc="/Message.png"
+        mainHeading={mainHeading}
+        text={text}
+        buttonText={"Verify email"}
+        onBoarding={true}
+      />
+
+      {/* <InterViewScheduler onClose={handleCloseOverlay} /> */}
+    </Overlay>
     </>
   );
 }

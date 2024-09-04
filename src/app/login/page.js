@@ -1,14 +1,18 @@
+"use client"
 import Heading from "@/components/Heading";
 import Image from "next/image";
 import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 
-export const metadata = {
-  title: "Login",
-};
+// export const metadata = {
+//   title: "Login",
+// };
 
 function Login() {
+
+ 
+
   return (
     <>
       <div className={`flex ${PAGE_HEIGHT_FIX} gap-2`}>
@@ -35,7 +39,7 @@ function Login() {
             </div>
           </div>
           <div className="mx-auto mt-3 w-8/12 flex-grow">
-            <h2 className="text-start font-lufga lg:text-2xl md:text-2xl">
+            <h2 className="text-start font-lufga text-2xl text-2xl">
               A sentence of perks and encouragement for{" "}
               <span className=" gradient-text">freelancer.</span>
               <Image
@@ -56,7 +60,9 @@ function Login() {
               type="password"
               placeholder="Enter your password"
               className="mt-3"
+              
             />
+                    
             <div className="mt-2 w-full text-right">
               <button className="text-sm text-primary">Forgot Password?</button>
             </div>
@@ -115,7 +121,10 @@ function Login() {
             
             </div>
         </div>
+        
       </div>
+     
+     
     </>
   );
 }
