@@ -1,4 +1,4 @@
-function Capsule({ children, icon = null }) {
+function Capsule({ children, icon = null, className }) {
   const baseClasses =
     "rounded-[2.25rem] px-[1.125rem] py-[6px] text-sm font-medium capitalize";
   const iconClasses =
@@ -8,12 +8,8 @@ function Capsule({ children, icon = null }) {
   const containerClasses = `bg-grey-primary-tint-90 ${icon ? iconClasses : noIconClasses} ${baseClasses}`;
 
   return (
-    <div className={containerClasses}>
-      {icon && (
-        <span className="flex size-6 items-center justify-center rounded-full bg-neutral-white">
-          {icon}
-        </span>
-      )}
+    <div className={`${className} ${containerClasses}`}>
+      {icon && icon}
       {children}
     </div>
   );

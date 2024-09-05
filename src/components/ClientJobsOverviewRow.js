@@ -6,7 +6,7 @@ import IconWithBg from "./IconWithBg";
 import Skill from "./Skill";
 import Table from "./Table";
 
-function ClientJobsRow({ job }) {
+function ClientJobsOverviewRow({ job }) {
   console.log(job);
   return (
     <Table.Row>
@@ -14,6 +14,7 @@ function ClientJobsRow({ job }) {
         icon={<SvgIconWork className="relative -right-[1.3px]" />}
         entity={{
           name: job?.role,
+          profession: job?.profession,
         }}
       />
       <div className="skills flex items-center justify-center gap-1.5 text-center">
@@ -22,22 +23,15 @@ function ClientJobsRow({ job }) {
         ))}
       </div>
       <div className="experience text-center">{job.experience}</div>
-      <div className="commitment text-center">{job.commit}</div>
       <Capsule
-        className="mr-auto w-max !bg-primary-tint-100"
+        className="mx-auto w-max !bg-primary-tint-100"
         icon={<IconWithBg icon={<SvgIconJobStatus status={job.status} />} />}
       >
         {" "}
         {job.status}{" "}
       </Capsule>
-      <Capsule
-        className="mx-auto w-max !bg-primary-tint-100"
-        icon={<IconWithBg icon={<SvgIconJobStatus status="hired" />} />}
-      >
-        view talent
-      </Capsule>
     </Table.Row>
   );
 }
 
-export default ClientJobsRow;
+export default ClientJobsOverviewRow;

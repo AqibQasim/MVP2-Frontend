@@ -1,6 +1,5 @@
-import React from "react";
-import OnboardingBgImage from "@/components/OnboardingBgImage";
 import GradientText from "@/components/GradientText";
+import OnboardingBgImage from "@/components/OnboardingBgImage";
 
 function OtpVerification() {
   return (

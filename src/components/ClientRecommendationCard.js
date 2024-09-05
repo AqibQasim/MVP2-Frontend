@@ -5,10 +5,11 @@ import Heading from "@/components/Heading";
 import Skill from "@/components/Skill";
 import { formatCurrencyNoDecimals } from "@/utils/utility";
 import ButtonCapsule from "./ButtonCapsule";
+import IconWithBg from "./IconWithBg";
 
 const skills = ["python", "javascript", "react"];
 
-function ClientRecommendationCard({ client = {} , handleOpenOverlay}) {
+function ClientRecommendationCard({ client = {}, handleOpenOverlay }) {
   return (
     <DashboardSection
       paragraph={`Hey ${client.name}, here's your new`}
@@ -30,7 +31,7 @@ function ClientRecommendationCard({ client = {} , handleOpenOverlay}) {
             <Capsule>
               <p>full time</p>
             </Capsule>
-            <Capsule icon="$">
+            <Capsule icon={<IconWithBg icon="$" />}>
               <p className="">{formatCurrencyNoDecimals(2000)}</p>
             </Capsule>
           </div>
@@ -44,7 +45,9 @@ function ClientRecommendationCard({ client = {} , handleOpenOverlay}) {
             <span className="h-[1px] w-2 rounded-full bg-grey-primary-tint-40"></span>
             <Skill score={8.0} />
           </div>
-          <ButtonCapsule handleOpenOverlay={handleOpenOverlay}>Schedule Interview</ButtonCapsule>
+          <ButtonCapsule handleOpenOverlay={handleOpenOverlay}>
+            Schedule Interview
+          </ButtonCapsule>
         </div>
       </div>
     </DashboardSection>
