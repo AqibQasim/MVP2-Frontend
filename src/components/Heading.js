@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-function Heading({ className = "", children, sm = false, xm = false }) {
+function Heading({ className = "", children, sm = false, xm = false, style }) {
   let HeadingTag = "h1";
   let textSizeClass = "text-4xl";
   let fontWeightClass = "font-bold";
@@ -21,6 +21,7 @@ function Heading({ className = "", children, sm = false, xm = false }) {
 
   return (
     <HeadingTag
+    style={style}
       className={`${className} text-nowrap font-lufga ${textSizeClass} ${fontWeightClass}`}
     >
       {children}

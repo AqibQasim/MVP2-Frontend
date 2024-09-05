@@ -1,14 +1,12 @@
 import React from "react";
-import bgImg from "../../../public/bg-img.svg";
-import Image from "next/image";
-import GradientText from "@/component/GradientText";
+import OnboardingBgImage from "@/components/OnboardingBgImage";
+import GradientText from "@/components/GradientText";
 
 function OtpVerification() {
   return (
-    <>
-      <Image src={bgImg} className="h-screen w-screen" />
+    <OnboardingBgImage>
       <GradientText>Created</GradientText>
-    </>
+    </OnboardingBgImage>
   );
 }
 

@@ -1,0 +1,4 @@
+.bg-image-overlay{
+    background-image: url('../../public/bg-img.png');
+    object-fit:contain;
+}
