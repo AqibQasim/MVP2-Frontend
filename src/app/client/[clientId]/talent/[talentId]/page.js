@@ -16,6 +16,9 @@ import timer_start from "../../../../../../public/icons/timer-start.svg";
 import React from "react";
 import EntityCard from "@/components/EntityCard";
 import Capsule from "@/components/Capsule";
+import IconWithBg from "@/components/IconWithBg";
+import SvgIconJobStatus from "@/svgs/SvgIconJobStatus";
+import Skill from "@/components/Skill";
 
 const client = {
   title: "Software Engineer",
@@ -41,22 +44,26 @@ const job_questions = [
 
 const job_on_progress = [
   {
-    job_status: "Open",
+    job_status: "open",
+    profession: "Software Developer",
     candidate_name: "R. Feynman",
     skills: ["Python", "JavaScript", "React"],
     job_type: "Full-Time",
     experience: "2Y",
   },
   {
-    job_status: "Hired",
+    job_status: "hired",
+    profession: "Software Developer",
     candidate_name: "R. Feynman",
     skills: ["Python", "JavaScript", "React"],
+    job_type: "Full-Time",
+    experience: "2Y",
   },
 ];
 
 function TalentViewById({ talentId }) {
   return (
-    <div className="flex h-full w-full flex-row gap-2">
+    <div className="flex h-auto w-full flex-row gap-2">
       <div className="h-full w-auto rounded-3xl bg-white">
         <div className="p-10">
           <div className="flex flex-row justify-between">
@@ -149,12 +156,44 @@ function TalentViewById({ talentId }) {
         </div>
         <Hr />
 
-        <div className="rounded-xl">
+        <div>
           {job_on_progress.map((job) => (
-            <div>
-              <div className="flex flex-row">
-                <EntityCard />
-                <Capsule>{job.job_status}</Capsule>
+            <div className="h-[158px] w-full mb-3 p-2 rounded-xl border-[1px] border-[#F9F8FC]">
+              <div className="flex flex-row justify-between flex-1 items-center w-fit">
+                <EntityCard
+                  entity={{
+                    name: job.candidate_name,
+                    profession: job.profession,
+                    image: "/avatars/avatar-1.png",
+                  }}
+                />
+                <Capsule
+                  className="mr-auto h-8 w-max rounded-[40px] !bg-primary-tint-100"
+                  icon={
+                    <IconWithBg
+                      icon={<SvgIconJobStatus status={job.job_status} />}
+                    />
+                  }
+                >
+                  {" "}
+                  {job.job_status}{" "}
+                </Capsule>
+              </div>
+              <div className="skills flex items-center justify-center gap-1.5 text-center">
+                {job.skills.map((skill, i) => (
+                  <Skill key={i} skill={skill} />
+                ))}
+              </div>
+
+              <div className="flex flex-row mt-1 gap-2 text-center">
+                <Capsule className="h-8 w-max rounded-[40px] !bg-primary-tint-100">
+                  {" "}
+                  {job.job_type}{" "}
+                </Capsule>
+                <Capsule className="h-8 w-max rounded-[40px] !bg-primary-tint-100">
+                  {" "}
+                  {"Exp: " + job.experience}{" "}
+                </Capsule>
               </div>
             </div>
           ))}
