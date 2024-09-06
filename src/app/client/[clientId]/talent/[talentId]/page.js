@@ -63,20 +63,23 @@ const job_on_progress = [
 
 function TalentViewById({ talentId }) {
   return (
-    <div className="flex h-auto w-full flex-row gap-2">
-      <div className="h-full w-auto rounded-3xl bg-white">
-        <div className="p-10">
+    <div className="flex flex-row gap-2">
+      <div className="rounded-3xl bg-white p-10">
+        <div className="w-auto">
           <div className="flex flex-row justify-between">
-            <ButtonCapsuleWhite>Back</ButtonCapsuleWhite>
+            <div className="flex flex-row items-center gap-3">
+              <ButtonCapsuleWhite />
+              <Heading>{client.title}</Heading>
+            </div>
             <ButtonCapsule>Next</ButtonCapsule>
           </div>
           <Hr />
 
-          <div className="my-3">
+          {/* <div className="my-3">
             <Heading>{client.title}</Heading>
-          </div>
+          </div> */}
 
-          <div className="h-auto w-full justify-between rounded-xl bg-grey-primary-tint-90 px-4 py-4.5 font-lufga">
+          <div className="justify-between rounded-xl bg-grey-primary-tint-90 px-4 py-4.5 font-lufga">
             <Heading
               style={{ color: "#8992A3" }}
               className="py-3 font-lufga"
@@ -90,48 +93,50 @@ function TalentViewById({ talentId }) {
             </div>
           </div>
 
-          <div className="mt-2 grid grid-cols-2 grid-rows-4 gap-2">
-            <TagCard
-              icon={tag}
-              title={"Specialization"}
-              answer={client.specialization}
-            />
-            <TagCard
-              icon={note_add}
-              title={"Est. Length"}
-              answer={client.estimated_length}
-            />
-            <TagCard
-              icon={commitment}
-              title={"Commitment"}
-              answer={client.commitment}
-            />
-            <TagCard
-              icon={clipboard_text}
-              title={"Job Posted"}
-              answer={client.job_posted}
-            />
-            <TagCard
-              icon={briefcase_tick}
-              title={"Job Type"}
-              answer={client.job_type}
-            />
-            <TagCard
-              icon={calendar}
-              title={"Desired Start Date"}
-              answer={client.desired_start_date}
-            />
-            <TagCard
-              icon={copy_success}
-              title={"Workday Overlap"}
-              answer={client.workday_overlap}
-            />
-            <TagCard
-              icon={timer_start}
-              title={"Time zone"}
-              answer={client.time_zone}
-            />
-          </div>
+          <div className="gap-4 w-full">
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <TagCard
+      icon={tag}
+      title={"Specialization"}
+      answer={client.specialization}
+    />
+    <TagCard
+      icon={note_add}
+      title={"Est. Length"}
+      answer={client.estimated_length}
+    />
+    <TagCard
+      icon={commitment}
+      title={"Commitment"}
+      answer={client.commitment}
+    />
+    <TagCard
+      icon={clipboard_text}
+      title={"Job Posted"}
+      answer={client.job_posted}
+    />
+    <TagCard
+      icon={briefcase_tick}
+      title={"Job Type"}
+      answer={client.job_type}
+    />
+    <TagCard
+      icon={calendar}
+      title={"Desired Start Date"}
+      answer={client.desired_start_date}
+    />
+    <TagCard
+      icon={copy_success}
+      title={"Workday Overlap"}
+      answer={client.workday_overlap}
+    />
+    <TagCard
+      icon={timer_start}
+      title={"Time zone"}
+      answer={client.time_zone}
+    />
+  </div>
+</div>
 
           <Hr />
 
@@ -149,25 +154,24 @@ function TalentViewById({ talentId }) {
           ))}
         </div>
       </div>
-      <div className="h-full w-full items-center justify-center rounded-[36px] bg-white p-5">
-        <div className="h-auto w-auto">
+      <div className="h-full w-full items-center justify-center rounded-[36px] bg-white p-6">
+        <div className="flex h-auto w-auto flex-row justify-between">
           <Heading sm>Status</Heading>
-          <div>Interviews in progress</div>
+          <Capsule className='text-primary-tint-20'>Interview in progress</Capsule>
         </div>
         <Hr />
 
-        <div>
-          {job_on_progress.map((job) => (
-            <div className="h-[158px] w-full mb-3 p-2 rounded-xl border-[1px] border-[#F9F8FC]">
-              <div className="flex flex-row justify-between flex-1 items-center w-fit">
-                <EntityCard
-                  entity={{
-                    name: job.candidate_name,
-                    profession: job.profession,
-                    image: "/avatars/avatar-1.png",
-                  }}
-                />
-                <Capsule
+        {job_on_progress.map((job) => (
+          <div className="mb-3 w-full rounded-xl gap-3">
+            <div className="flex flex-1 flex-row items-center border-[1px] border-[#F9F8FC] justify-between">
+              <EntityCard
+                entity={{
+                  name: job.candidate_name,
+                  profession: job.profession,
+                  image: "/avatars/avatar-1.png",
+                }}
+              />
+              {/* <Capsule
                   className="mr-auto h-8 w-max rounded-[40px] !bg-primary-tint-100"
                   icon={
                     <IconWithBg
@@ -177,15 +181,15 @@ function TalentViewById({ talentId }) {
                 >
                   {" "}
                   {job.job_status}{" "}
-                </Capsule>
-              </div>
-              <div className="skills flex items-center justify-center gap-1.5 text-center">
-                {job.skills.map((skill, i) => (
-                  <Skill key={i} skill={skill} />
-                ))}
-              </div>
+                </Capsule> */}
+            </div>
+            <div className="skills flex items-center gap-1.5 text-center">
+              {job.skills.map((skill, i) => (
+                <Skill key={i} skill={skill} />
+              ))}
+            </div>
 
-              <div className="flex flex-row mt-1 gap-2 text-center">
+            {/* <div className="flex flex-row mt-1 gap-2 text-center">
                 <Capsule className="h-8 w-max rounded-[40px] !bg-primary-tint-100">
                   {" "}
                   {job.job_type}{" "}
@@ -194,11 +198,9 @@ function TalentViewById({ talentId }) {
                   {" "}
                   {"Exp: " + job.experience}{" "}
                 </Capsule>
-              </div>
-            </div>
-          ))}
-          <div></div>
-        </div>
+              </div> */}
+          </div>
+        ))}
       </div>
     </div>
   );
