@@ -64,12 +64,12 @@ const job_on_progress = [
 function TalentViewById({ talentId }) {
   return (
     <div className="flex flex-row gap-2">
-      <div className="rounded-3xl bg-white p-10">
+      <div className="rounded-3xl bg-white p-4">
         <div className="w-auto">
           <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-3">
               <ButtonCapsuleWhite />
-              <Heading>{client.title}</Heading>
+              <Heading className="text-[24px]">{client.title}</Heading>
             </div>
             <ButtonCapsule>Next</ButtonCapsule>
           </div>
@@ -93,50 +93,50 @@ function TalentViewById({ talentId }) {
             </div>
           </div>
 
-          <div className="gap-4 w-full">
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-    <TagCard
-      icon={tag}
-      title={"Specialization"}
-      answer={client.specialization}
-    />
-    <TagCard
-      icon={note_add}
-      title={"Est. Length"}
-      answer={client.estimated_length}
-    />
-    <TagCard
-      icon={commitment}
-      title={"Commitment"}
-      answer={client.commitment}
-    />
-    <TagCard
-      icon={clipboard_text}
-      title={"Job Posted"}
-      answer={client.job_posted}
-    />
-    <TagCard
-      icon={briefcase_tick}
-      title={"Job Type"}
-      answer={client.job_type}
-    />
-    <TagCard
-      icon={calendar}
-      title={"Desired Start Date"}
-      answer={client.desired_start_date}
-    />
-    <TagCard
-      icon={copy_success}
-      title={"Workday Overlap"}
-      answer={client.workday_overlap}
-    />
-    <TagCard
-      icon={timer_start}
-      title={"Time zone"}
-      answer={client.time_zone}
-    />
-  </div>
-</div>
+          <div className="w-full gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <TagCard
+                icon={tag}
+                title={"Specialization"}
+                answer={client.specialization}
+              />
+              <TagCard
+                icon={note_add}
+                title={"Est. Length"}
+                answer={client.estimated_length}
+              />
+              <TagCard
+                icon={commitment}
+                title={"Commitment"}
+                answer={client.commitment}
+              />
+              <TagCard
+                icon={clipboard_text}
+                title={"Job Posted"}
+                answer={client.job_posted}
+              />
+              <TagCard
+                icon={briefcase_tick}
+                title={"Job Type"}
+                answer={client.job_type}
+              />
+              <TagCard
+                icon={calendar}
+                title={"Desired Start Date"}
+                answer={client.desired_start_date}
+              />
+              <TagCard
+                icon={copy_success}
+                title={"Workday Overlap"}
+                answer={client.workday_overlap}
+              />
+              <TagCard
+                icon={timer_start}
+                title={"Time zone"}
+                answer={client.time_zone}
+              />
+            </div>
+          </div>
 
           <Hr />
 
@@ -154,16 +154,17 @@ function TalentViewById({ talentId }) {
           ))}
         </div>
       </div>
-      <div className="h-full w-full items-center justify-center rounded-[36px] bg-white p-6">
-        <div className="flex h-auto w-auto flex-row justify-between">
-          <Heading sm>Status</Heading>
-          <Capsule className='text-primary-tint-20'>Interview in progress</Capsule>
+      <div className="items-center justify-center rounded-[36px] bg-white p-3">
+        <div className="flex h-auto w-auto flex-row justify-between items-center">
+          <Heading className="text-[24px]">Status</Heading>
+          <Capsule className="items-center text-primary-tint-20">
+            Interview in progress
+          </Capsule>
         </div>
         <Hr />
-
         {job_on_progress.map((job) => (
-          <div className="mb-3 w-full rounded-xl gap-3">
-            <div className="flex flex-1 flex-row items-center border-[1px] border-[#F9F8FC] justify-between">
+          <div className="mb-3 w-full gap-3 rounded-xl">
+            <div className="flex flex-1 flex-row items-center justify-between border-[1px] border-[#F9F8FC]">
               <EntityCard
                 entity={{
                   name: job.candidate_name,
