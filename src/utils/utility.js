@@ -21,8 +21,8 @@ export function formatWithDecimalZero(value) {
 }
 
 export function formatDate(date) {
-  const options = { day: "numeric", month: "long", year: "numeric" };
-  return new Date(date).toLocaleDateString("en-US", options);
+  const options = { day: "numeric", month: "short", year: "numeric" };
+  return new Date(date).toLocaleDateString("en-GB", options);
 }
 export const PAGE_HEIGHT_FIX =
   "size-full min-h-[calc(100dvh-2.25rem)] rounded-[2rem]";

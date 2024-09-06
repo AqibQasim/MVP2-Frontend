@@ -25,6 +25,12 @@ function ClientDashboardNavLinks({ clientId }) {
       ),
     },
     {
+      name: "Recommended",
+      href: `/client/${clientId}/recommended`,
+      icon: <SvgIconRecommended className="size-6" />,
+      amount: 12,
+    },
+    {
       name: "Jobs",
       href: `/client/${clientId}/jobs`,
       amount: 4,
@@ -35,12 +41,6 @@ function ClientDashboardNavLinks({ clientId }) {
       href: `/client/${clientId}/talents`,
       icon: <SvgIconTalent className="size-6" />,
       amount: 9,
-    },
-    {
-      name: "Recommended",
-      href: `/client/recommended`,
-      icon: <SvgIconRecommended className="size-6" />,
-      amount: 12,
     },
     {
       name: "Payment",

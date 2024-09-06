@@ -40,7 +40,7 @@ function ClientRecommendationCard({ client = {}, handleOpenOverlay }) {
         <div className="cto flex items-center justify-between">
           <div className="flex items-center justify-start gap-1">
             {skills.map((skill) => (
-              <Skill key={skill} skill={skill} />
+              <Skill key={skill} icon={skill} skill={skill} />
             ))}
             <span className="h-[1px] w-2 rounded-full bg-grey-primary-tint-40"></span>
             <Skill score={8.0} />
