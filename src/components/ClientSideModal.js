@@ -1,5 +1,5 @@
+"use client";
 import PropTypes from "prop-types";
-import ButtonCapsule from "./ButtonCapsule";
 import Modal from "./Modal";
 
 function ClientSideModal({ opens, button, window }) {
