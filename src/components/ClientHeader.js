@@ -3,6 +3,7 @@ import SvgIconSettings from "@/svgs/SvgIconSettings";
 import { formatDate } from "@/utils/utility";
 import ButtonCapsule from "./ButtonCapsule";
 import ButtonRounded from "./ButtonRounded";
+import ClientSideModal from "./ClientSideModal";
 import EntityCard from "./EntityCard";
 
 function ClientHeader() {
@@ -32,7 +33,12 @@ function ClientHeader() {
           <ButtonRounded>
             <SvgIconSettings />
           </ButtonRounded>
-          <ButtonCapsule>Schedule Call</ButtonCapsule>
+          {/* ScheduleInterview */}
+          <ClientSideModal
+            opens="schedule-call"
+            button={<ButtonCapsule>Schedule Call</ButtonCapsule>}
+            window={<div className="d">here u can scedule a Call</div>}
+          />
         </div>
         <div className="joing-date float-right">
           <p className="capitalize text-grey-primary-shade-10">

@@ -1,4 +1,6 @@
-import ClientPage from "@/components/ClientPage";
+import ClientEmployeesTable from "@/components/ClientEmployeesTable";
+import ClientJobsOverviewTable from "@/components/ClientJobsOverviewTable";
+import ClientRecommendationCard from "@/components/ClientRecommendationCard";
 import { getDummyClientById, getDummyClients } from "@/lib/tempData";
 
 export async function generateMetadata({ params }) {
@@ -15,9 +17,13 @@ export async function generateStaticParams() {
 }
 
 export default async function Page({ params }) {
+  const client = await getDummyClientById(params.clientId);
+
   return (
-    <>
-      <ClientPage params={params} />
-    </>
+    <div className="space-y-2">
+      <ClientRecommendationCard client={client} />
+      <ClientJobsOverviewTable />
+      <ClientEmployeesTable />
+    </div>
   );
 }
