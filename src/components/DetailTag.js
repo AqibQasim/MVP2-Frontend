@@ -7,6 +7,7 @@ function DetailTag({
 }) {
   return (
     <div className="flex flex-col text-sm font-bold text-grey-primary-shade-20 xl:flex-row">
+      {/* // <div className="flex text-sm font-bold text-grey-primary-shade-20"> */}
       <p className="inline-flex flex-1 items-center justify-start gap-1 text-nowrap">
         {" "}
         <Image
