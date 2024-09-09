@@ -18,7 +18,7 @@ const jobs = [
     skills: ["react", "python", "javascript"],
     experience: "expert",
     commit: "full time",
-    status: "open",
+    status: "trial",
   },
   {
     role: "Front-End Developer",
@@ -26,7 +26,7 @@ const jobs = [
     skills: ["react", "python", "javascript"],
     experience: "expert",
     commit: "full time",
-    status: "hired",
+    status: "trial",
   },
   {
     role: "Front-End Developer",

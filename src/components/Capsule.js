@@ -3,8 +3,8 @@ function Capsule({ children, icon = null, className = "", status = "none" }) {
     none: " ",
     paid: "bg-primary-tint-100 text-primary-tint-20",
     trial: "bg-primary-tint-100 text-primary-tint-20",
-    fulfilled: "bg-fulfilled-bg text-fulfilled-text",
-    hired: "bg-fulfilled-bg text-fulfilled-text",
+    fulfilled: "bg-fulfilled-bg text-fulfilled-text ",
+    hired: "bg-fulfilled-bg text-fulfilled-text ",
   };
 
   const baseClasses =
@@ -13,7 +13,7 @@ function Capsule({ children, icon = null, className = "", status = "none" }) {
     "inline-flex items-center justify-center gap-2 !py-1 pl-1 pr-4 font-satoshi !font-bold text-primary-tint-30";
   const noIconClasses = "font-lufga text-grey-primary-shade-30";
 
-  const containerClasses = `bg-grey-primary-tint-90 ${icon ? iconClasses : noIconClasses} ${statusClasses[status]} ${baseClasses}`;
+  const containerClasses = `${icon ? iconClasses : noIconClasses} ${statusClasses[status]} ${baseClasses} bg-grey-primary-tint-90`;
 
   return (
     <div className={`${className} ${containerClasses}`}>
