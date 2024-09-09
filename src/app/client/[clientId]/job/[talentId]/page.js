@@ -54,14 +54,7 @@ const job_on_progress = [
     job_type: "Full-Time",
     experience: "2Y",
   },
-  {
-    job_status: "hired",
-    profession: "Software Developer",
-    candidate_name: "R. Feynman",
-    skills: ["Python", "JavaScript", "React"],
-    job_type: "Full-Time",
-    experience: "2Y",
-  },
+  
 ];
 
 function TalentViewById({ talentId }) {
@@ -78,10 +71,10 @@ function TalentViewById({ talentId }) {
         <div className="w-auto">
           <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-3">
-              <ButtonCapsuleWhite />
+              
               <Heading sm>{client.title}</Heading>
             </div>
-            <ButtonCapsule>Next</ButtonCapsule>
+            
           </div>
           <Hr />
 
