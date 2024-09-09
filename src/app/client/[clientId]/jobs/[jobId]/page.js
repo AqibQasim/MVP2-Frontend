@@ -1,28 +1,22 @@
 "use client";
-import ActionButtons from "@/components/ActionButtons";
-import ButtonCapsule from "@/components/ButtonCapsule";
-import ButtonCapsuleWhite from "@/components/ButtonCapsuleWhite";
-import ButtonRounded from "@/components/ButtonRounded";
+import Capsule from "@/components/Capsule";
+import EntityCard from "@/components/EntityCard";
 import Heading from "@/components/Heading";
 import Hr from "@/components/Hr";
+import Skill from "@/components/Skill";
 import TagCard from "@/components/TagCard";
-import tag from "../../../../../../public/icons/tag-user.svg";
-import commitment from "../../../../../../public/icons/commitment.svg";
-import note_add from "../../../../../../public/icons/note-add.svg";
-import clipboard_text from "../../../../../../public/icons/clipboard-text.svg";
+import TalentDescription from "@/components/TalentDescription";
+import Image from "next/image";
+import { useState } from "react";
 import briefcase_tick from "../../../../../../public/icons/briefcase-tick.svg";
 import calendar from "../../../../../../public/icons/calendar.svg";
+import clipboard_text from "../../../../../../public/icons/clipboard-text.svg";
+import commitment from "../../../../../../public/icons/commitment.svg";
 import copy_success from "../../../../../../public/icons/copy-success.svg";
-import timer_start from "../../../../../../public/icons/timer-start.svg";
-import React, { useState } from "react";
-import EntityCard from "@/components/EntityCard";
-import Capsule from "@/components/Capsule";
-import IconWithBg from "@/components/IconWithBg";
-import SvgIconJobStatus from "@/svgs/SvgIconJobStatus";
 import dropdown from "../../../../../../public/icons/drop-down.svg";
-import Skill from "@/components/Skill";
-import Image from "next/image";
-import TalentDescription from "@/components/TalentDescription";
+import note_add from "../../../../../../public/icons/note-add.svg";
+import tag from "../../../../../../public/icons/tag-user.svg";
+import timer_start from "../../../../../../public/icons/timer-start.svg";
 
 const client = {
   title: "Software Engineer",
@@ -75,7 +69,10 @@ function TalentViewById({ job_id }) {
             </div>
           </div>
           <Hr />
-          <TalentDescription description={client.description} isShowMoreEnabled={isShowMoreEnabled}/>
+          <TalentDescription
+            description={client.description}
+            isShowMoreEnabled={isShowMoreEnabled}
+          />
           {client.description.length > 300 && (
             <div className="m-3">
               <button
@@ -83,13 +80,13 @@ function TalentViewById({ job_id }) {
                 onClick={handleShowMore}
               >
                 {isShowMoreEnabled ? "Show Less" : "Show More"}
-                <Image src={dropdown} />
+                <Image alt="dropdown" src={dropdown} />
               </button>
             </div>
           )}
 
           <div className="gap-8">
-            <div className=" grid grid-cols-2">
+            <div className="grid grid-cols-2">
               <div className="h-auto">
                 <TagCard
                   icon={note_add}
@@ -151,7 +148,11 @@ function TalentViewById({ job_id }) {
           </div>
 
           {job_questions.map((question, index) => (
-            <div className="flex flex-row gap-1" style={{ color: "#A3A3A3" }}>
+            <div
+              key={index}
+              className="flex flex-row gap-1"
+              style={{ color: "#A3A3A3" }}
+            >
               <div className="w-4">
                 <div>{index + 1}. </div>
               </div>
@@ -166,13 +167,13 @@ function TalentViewById({ job_id }) {
                 onClick={handleShowMore}
               >
                 {isReadMoreEnabled ? "Read More" : "Read Less"}
-                <Image src={dropdown} />
+                <Image alt="dropdown" src={dropdown} />
               </button>
             </div>
           )}
         </div>
       </div>
-      <div className="items-center justify-center rounded-[36px] bg-white p-3 w-[23.375rem]">
+      <div className="w-[23.375rem] items-center justify-center rounded-[36px] bg-white p-3">
         <div className="flex h-auto w-auto flex-row items-center justify-between">
           <Heading className="text-[24px]">Status</Heading>
           <Capsule className="items-center text-primary-tint-20">
@@ -180,8 +181,8 @@ function TalentViewById({ job_id }) {
           </Capsule>
         </div>
         <Hr />
-        {job_on_progress.map((job) => (
-          <div className="mb-3 w-full gap-3 rounded-xl">
+        {job_on_progress.map((job, index) => (
+          <div key={index} className="mb-3 w-full gap-3 rounded-xl">
             <div className="flex flex-1 flex-row items-center justify-between border-[1px] border-[#F9F8FC]">
               <EntityCard
                 entity={{
