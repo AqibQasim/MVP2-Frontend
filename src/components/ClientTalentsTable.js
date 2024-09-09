@@ -72,7 +72,7 @@ function ClientTalentsTable() {
       heading="Talents"
       href={`/client/${clientId}/talents`}
     >
-      <Table columns="grid-cols-[1fr_0.7fr_1fr_5.7rem_6.5rem_6.5rem_9.5rem]">
+      <Table columns="grid-cols-[1.2fr_0.7fr_0.8fr_5.7rem_6.5rem_6.5rem_9.5rem]">
         <Table.Header>
           <div className="info">Info</div>
           <div className="skills text-center">Skills</div>

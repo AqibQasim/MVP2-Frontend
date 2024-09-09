@@ -9,13 +9,16 @@ function SkillIconWithBg({ icon, skill = null, score = null, className }) {
     >
       {icon ? (
         <>
-          <Image
-            className="size-5"
-            src={`/tech-icons/${icon}.svg`}
-            height={20}
-            width={20}
-            alt={`${icon} icon`}
-          />
+          <div className="relative !size-5">
+            <Image
+              className="object-cover"
+              src={`/tech-icons/${icon}.svg`}
+              alt={`${icon} icon`}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              placehoder="blur"
+            />
+          </div>
           {skill && skill}
         </>
       ) : (
