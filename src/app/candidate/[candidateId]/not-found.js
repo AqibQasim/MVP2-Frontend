@@ -1,24 +1,22 @@
-import Button from "@/components/Button";
-import Link from "next/link";
-
+import Image from "next/image";
 function NotFound({ error }) {
   // console.log("Error: ", error);
 
   return (
     <main className="mt-20 flex flex-col items-center justify-center space-y-6 px-4 text-center lg:mt-0 lg:h-[calc(100dvh-7.25em)]">
-      <h1 className="text-balance text-4xl font-semibold">
-        This Candidate could not be found :(
-      </h1>
-      <p>
-        You may go back to{" "}
-        <Link href="/" class="text-blue-700 hover:underline">
-          home
-        </Link>
-        .
-      </p>
-      <Button as="link" href="/">
-        Back to home
-      </Button>
+      <Image 
+        src="/candidate_no_data.png"
+        width="200"
+        height="200"
+        alt="No data Image"
+
+      />
+      <div>
+        <p className="font-bold">No data available </p>
+      <p className="text-[#86819B]">Get started by adding your first item.</p>
+      </div>
+      
+      
     </main>
   );
 }

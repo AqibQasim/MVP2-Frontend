@@ -1,4 +1,4 @@
-import ClientPage from '@/components/ClientPage'
+import CandidatePage from "@/components/CandidatePage";
 import { getDummyClientById, getDummyClients } from "@/lib/tempData";
 
 export async function generateMetadata({ params }) {
@@ -17,7 +17,7 @@ export async function generateStaticParams() {
 export default async function Page({ params }) {
   return (
     <>
-      {/* <ClientPage params={params} /> */}
+      <CandidatePage params={params} />
     </>
   );
 }
