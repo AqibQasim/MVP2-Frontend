@@ -2,62 +2,48 @@
 import SvgIconDashboard from "@/svgs/SvgIconDashboard";
 import SvgIconJob from "@/svgs/SvgIconJob";
 import SvgIconPayment from "@/svgs/SvgIconPayment";
-import SvgIconRecommended from "@/svgs/SvgIconRecommended";
 import SvgIconSettings from "@/svgs/SvgIconSettings";
-import SvgIconTalent from "@/svgs/SvgIconTalent";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-function ClientDashboardNavLinks({ clientId }) {
+function CandidateDashboardNavLinks({ candidateId }) {
   const pathname = usePathname();
 
-  const clientDashboardLinks = [
+  const candidateDashboardLinks = [
     {
       name: "Dashboard",
-      href: `/client/${clientId}`,
+      href: `/candidate/${candidateId}`,
       icon: (
         <SvgIconDashboard
           className="size-6"
           secondColor={
-            pathname === `/client/${clientId}` ? "active" : "default"
+            pathname === `/candidate/${candidateId}` ? "active" : "default"
           }
         />
       ),
     },
     {
-      name: "Recommended",
-      href: `/client/${clientId}/recommended`,
-      icon: <SvgIconRecommended className="size-6" />,
-      amount: 12,
-    },
-    {
       name: "Jobs",
-      href: `/client/${clientId}/jobs`,
-      amount: 4,
+      href: `/candidate/${candidateId}/jobs`,
+      amount: 0,
       icon: <SvgIconJob className="size-6" />,
     },
     {
-      name: "Talents",
-      href: `/client/${clientId}/talents`,
-      icon: <SvgIconTalent className="size-6" />,
-      amount: 9,
-    },
-    {
       name: "Payment",
-      href: `/client/payment`,
+      href: `/candidate/${candidateId}/payment`,
       icon: <SvgIconPayment className="size-6" />,
     },
     {
       name: "Settings",
-      href: `/client/${clientId}/settings`,
+       href: `/candidate/${candidateId}/settings`,
       icon: <SvgIconSettings className="size-6" />,
     },
   ];
 
   return (
-    <nav aria-label="Client Dashboard Navigation">
+    <nav aria-label="candidate Dashboard Navigation">
       <ul className="nav-links">
-        {clientDashboardLinks.map((link) => (
+        {candidateDashboardLinks.map((link) => (
           <li key={link.href}>
             <Link
               className={`group flex items-center justify-start gap-3 rounded-[0.625rem] bg-transparent px-4 py-3 font-lufga text-sm font-medium text-grey-primary-shade-20 transition-colors duration-200 hover:bg-primary-tint-100 hover:text-primary-tint-20 ${pathname === link.href ? "!bg-primary text-neutral-white" : ""}`}
@@ -65,9 +51,9 @@ function ClientDashboardNavLinks({ clientId }) {
             >
               {link.icon}
               <span>{link.name}</span>
-              {link.amount ? (
+              {link.amount >= 0 ? (
                 <span
-                  className={`rounded-4xl ml-auto inline-flex h-[1.6rem] w-[1.95rem] items-center justify-center bg-grey-primary-tint-80 transition-colors duration-200 group-hover:bg-neutral-white ${pathname === link.href ? "!bg-neutral-white text-primary" : ""}`}
+                  className={`ml-auto inline-flex h-[1.6rem] w-[1.95rem] items-center justify-center rounded-4xl bg-grey-primary-tint-80 transition-colors duration-200 group-hover:bg-neutral-white ${pathname === link.href ? "!bg-neutral-white text-primary" : ""}`}
                 >
                   {link.amount > 9 ? "9+" : link.amount}
                 </span>
@@ -80,4 +66,4 @@ function ClientDashboardNavLinks({ clientId }) {
   );
 }
 
-export default ClientDashboardNavLinks;
+export default CandidateDashboardNavLinks;
