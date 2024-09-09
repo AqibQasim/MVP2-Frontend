@@ -1,3 +1,4 @@
+"use client";
 import ActionButtons from "@/components/ActionButtons";
 import ButtonCapsule from "@/components/ButtonCapsule";
 import ButtonCapsuleWhite from "@/components/ButtonCapsuleWhite";
@@ -13,12 +14,14 @@ import briefcase_tick from "../../../../../../public/icons/briefcase-tick.svg";
 import calendar from "../../../../../../public/icons/calendar.svg";
 import copy_success from "../../../../../../public/icons/copy-success.svg";
 import timer_start from "../../../../../../public/icons/timer-start.svg";
-import React from "react";
+import React, { useState } from "react";
 import EntityCard from "@/components/EntityCard";
 import Capsule from "@/components/Capsule";
 import IconWithBg from "@/components/IconWithBg";
 import SvgIconJobStatus from "@/svgs/SvgIconJobStatus";
+import dropdown from "../../../../../../public/icons/drop-down.svg";
 import Skill from "@/components/Skill";
+import Image from "next/image";
 
 const client = {
   title: "Software Engineer",
@@ -62,6 +65,13 @@ const job_on_progress = [
 ];
 
 function TalentViewById({ talentId }) {
+  const [isShowMoreEnabled, setIsShowMoreEnabled] = useState(false);
+  const [isReadMoreEnabled, setIsReadMoreEnabled] = useState(false);
+
+  const handleShowMore = () => {
+    setIsShowMoreEnabled((value) => setIsShowMoreEnabled(!value));
+  };
+
   return (
     <div className="flex flex-row gap-2">
       <div className="rounded-3xl bg-white p-4">
@@ -69,7 +79,7 @@ function TalentViewById({ talentId }) {
           <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-3">
               <ButtonCapsuleWhite />
-              <Heading className="text-[24px]">{client.title}</Heading>
+              <Heading sm>{client.title}</Heading>
             </div>
             <ButtonCapsule>Next</ButtonCapsule>
           </div>
@@ -89,9 +99,22 @@ function TalentViewById({ talentId }) {
             </Heading>
 
             <div style={{ color: "#A3A3A3" }} className="font-lufga text-sm">
-              {client.description}
+              {client.description.length >= 300 && !isShowMoreEnabled
+                ? client.description.slice(0, 300) + "..."
+                : client.description}
             </div>
           </div>
+          {client.description.length > 300 && (
+            <div className="m-3">
+              <button
+                className="weigh flex w-36 flex-row items-center justify-around rounded-3xl border-[1px] px-4 py-3 text-[14px] text-primary"
+                onClick={handleShowMore}
+              >
+                {isShowMoreEnabled ? "Show Less" : "Show More"}
+                <Image src={dropdown} />
+              </button>
+            </div>
+          )}
 
           <div className="w-full gap-4">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -152,10 +175,22 @@ function TalentViewById({ talentId }) {
               <div className="w-auto">{question}</div>
             </div>
           ))}
+
+          {job_questions.length > 1 && (
+            <div className="flex flex-row gap-1">
+              <button
+                className="weigh flex w-36 flex-row items-center justify-around rounded-3xl px-4 py-3 text-[14px] text-grey-primary-shade-60 font-semibold"
+                onClick={handleShowMore}
+              >
+                {isReadMoreEnabled ? "Read More" : "Read Less"}
+                <Image src={dropdown} />
+              </button>
+            </div>
+          )}
         </div>
       </div>
       <div className="items-center justify-center rounded-[36px] bg-white p-3">
-        <div className="flex h-auto w-auto flex-row justify-between items-center">
+        <div className="flex h-auto w-auto flex-row items-center justify-between">
           <Heading className="text-[24px]">Status</Heading>
           <Capsule className="items-center text-primary-tint-20">
             Interview in progress
@@ -185,7 +220,8 @@ function TalentViewById({ talentId }) {
                 </Capsule> */}
             </div>
             <div className="skills flex items-center gap-1.5 text-center">
-              {job.skills.map((skill, i) => (
+              {}
+              {job.skills.map((skill, i = numOfJobQues) => (
                 <Skill key={i} skill={skill} />
               ))}
             </div>
