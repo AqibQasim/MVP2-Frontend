@@ -80,6 +80,12 @@ module.exports = {
             },
           },
         },
+        status: {
+          fulfilled: {
+            text: "#2AA700",
+            bg: "#F0FFEB",
+          },
+        },
         neutral: {
           dark: "#0D0D0F",
           white: "#FFFFFF",

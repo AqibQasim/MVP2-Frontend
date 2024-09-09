@@ -27,7 +27,9 @@ function ClientPaymentHistoryRow({ payment }) {
       <div className="date text-nowrap text-center">
         {formatDate(new Date("2024-09-20"))}
       </div>
-      <div className="status text-center">{payment.status}</div>
+      <Capsule status={payment?.status} className="status !text-center">
+        <p>{payment.status}</p>
+      </Capsule>
       <div className="amount text-center">{payment.amount}</div>
       <div className="invoice text-center">{payment.invoice}</div>
       <Capsule
