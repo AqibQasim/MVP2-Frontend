@@ -15,9 +15,8 @@ function CandidateHeader() {
 
   // Options for the dropdown
   const options = [
-    { value: 'morning', label: 'Morning' },
-    { value: 'afternoon', label: 'Afternoon' },
-    { value: 'evening', label: 'Evening' }
+    { value: 'Offline', label: 'Offline' },
+   
   ];
 
   // Handle change event
