@@ -1,4 +1,14 @@
 "use client";
+import briefcase_tick from "@/../public/icons/briefcase-tick.svg";
+import calendar from "@/../public/icons/calendar.svg";
+import clipboard_text from "@/../public/icons/clipboard-text.svg";
+import commitment from "@/../public/icons/commitment.svg";
+import copy_success from "@/../public/icons/copy-success.svg";
+import dropdown from "@/../public/icons/drop-down.svg";
+import note_add from "@/../public/icons/note-add.svg";
+import tag from "@/../public/icons/tag-user.svg";
+import timer_start from "@/../public/icons/timer-start.svg";
+import ButtonCapsuleWhite from "@/components/ButtonCapsuleWhite";
 import Capsule from "@/components/Capsule";
 import EntityCard from "@/components/EntityCard";
 import Heading from "@/components/Heading";
@@ -8,16 +18,6 @@ import TagCard from "@/components/TagCard";
 import TalentDescription from "@/components/TalentDescription";
 import Image from "next/image";
 import { useState } from "react";
-import briefcase_tick from "../../../../../../public/icons/briefcase-tick.svg";
-import calendar from "../../../../../../public/icons/calendar.svg";
-import clipboard_text from "../../../../../../public/icons/clipboard-text.svg";
-import commitment from "../../../../../../public/icons/commitment.svg";
-import copy_success from "../../../../../../public/icons/copy-success.svg";
-import dropdown from "../../../../../../public/icons/drop-down.svg";
-import note_add from "../../../../../../public/icons/note-add.svg";
-import tag from "../../../../../../public/icons/tag-user.svg";
-import timer_start from "../../../../../../public/icons/timer-start.svg";
-import ButtonCapsuleWhite from "@/components/ButtonCapsuleWhite";
 
 const client = {
   title: "Software Engineer",
@@ -66,7 +66,7 @@ function TalentViewById({ job_id }) {
         <div className="w-auto">
           <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-3">
-              <ButtonCapsuleWhite/>
+              <ButtonCapsuleWhite />
               <Heading sm>{client.title}</Heading>
             </div>
           </div>
@@ -74,7 +74,7 @@ function TalentViewById({ job_id }) {
           <TalentDescription
             description={client.description}
             isShowMoreEnabled={isShowMoreEnabled}
-            skills={['JavaScript','React']}
+            skills={["JavaScript", "React"]}
           />
           {client.description.length > 300 && (
             <div className="m-3">

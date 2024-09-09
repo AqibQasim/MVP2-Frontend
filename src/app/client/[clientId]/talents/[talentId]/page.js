@@ -1,10 +1,54 @@
 import ButtonBack from "@/components/ButtonBack";
 import Capsule from "@/components/Capsule";
+import DetailTag from "@/components/DetailTag";
 import EntityCard from "@/components/EntityCard";
 import Heading from "@/components/Heading";
 import Hr from "@/components/Hr";
 import IconWithBg from "@/components/IconWithBg";
 import TalentDescription from "@/components/TalentDescription";
+
+const talentDetails = [
+  {
+    icon: "/icons/note-add.svg",
+    name: "Est. length",
+    content: "2 weeks",
+  },
+  {
+    icon: "/icons/tag-user.svg",
+    name: "Specialization",
+    content: "Software Engineer",
+  },
+  {
+    icon: "/icons/copy-success.svg",
+    name: "Workday overlap",
+    content: "6 hrs (5 hrs required",
+  },
+  {
+    icon: "/icons/clipboard-text.svg",
+    name: "Job posted",
+    content: "1 month ago",
+  },
+  {
+    icon: "/icons/commitment.svg",
+    name: "Commitment",
+    content: "Full-time (40 hrs/wk)",
+  },
+  {
+    icon: "/icons/timer-start.svg",
+    name: "Time zone",
+    content: "Karachi, 9 hrs behind",
+  },
+  {
+    icon: "/icons/briefcase-tick.svg",
+    name: "Job type",
+    content: "remote",
+  },
+  {
+    icon: "/icons/calendar.svg",
+    name: "Desired start date",
+    content: "Aug 24, 2024",
+  },
+];
 
 function TalentIdPage() {
   return (
@@ -33,6 +77,16 @@ function TalentIdPage() {
         description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vitae velit numquam hic consectetur amet non sequi repellat? Porro, autem illo, Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vitae velit numquam hic consectetur amet non sequi repellat? Porro, autem illo, Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vitae velit numquam hic consectetur amet non sequi repellat? Porro, autem illo,Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vitae velit numquam hic consectetur amet non sequi repellat? Porro, autem illo,"
         skills={["javascript", "react", "python"]}
       />
+      <div className="grid grid-cols-3 grid-rows-3 gap-x-8 gap-y-4.5">
+        {talentDetails.map((detail) => (
+          <DetailTag
+            key={detail.name}
+            icon={detail.icon}
+            name={detail.name}
+            content={detail.content}
+          />
+        ))}
+      </div>
     </div>
   );
 }
