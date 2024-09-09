@@ -17,6 +17,7 @@ import dropdown from "../../../../../../public/icons/drop-down.svg";
 import note_add from "../../../../../../public/icons/note-add.svg";
 import tag from "../../../../../../public/icons/tag-user.svg";
 import timer_start from "../../../../../../public/icons/timer-start.svg";
+import ButtonCapsuleWhite from "@/components/ButtonCapsuleWhite";
 
 const client = {
   title: "Software Engineer",
@@ -65,6 +66,7 @@ function TalentViewById({ job_id }) {
         <div className="w-auto">
           <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-3">
+              <ButtonCapsuleWhite/>
               <Heading sm>{client.title}</Heading>
             </div>
           </div>
@@ -72,6 +74,7 @@ function TalentViewById({ job_id }) {
           <TalentDescription
             description={client.description}
             isShowMoreEnabled={isShowMoreEnabled}
+            skills={['JavaScript','React']}
           />
           {client.description.length > 300 && (
             <div className="m-3">
@@ -86,7 +89,7 @@ function TalentViewById({ job_id }) {
           )}
 
           <div className="gap-8">
-            <div className="grid grid-cols-2">
+            <div className="flex flex-row flex-wrap">
               <div className="h-auto">
                 <TagCard
                   icon={note_add}
@@ -204,7 +207,6 @@ function TalentViewById({ job_id }) {
                 </Capsule> */}
             </div>
             <div className="skills flex items-center gap-1.5 text-center">
-              {}
               {job.skills.map((skill, i = numOfJobQues) => (
                 <Skill key={i} skill={skill} />
               ))}
