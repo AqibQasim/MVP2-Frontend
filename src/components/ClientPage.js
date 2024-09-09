@@ -5,7 +5,7 @@ import Overlay from "@/components/Overlay";
 import { getDummyClientById } from "@/lib/tempData";
 import { useEffect, useState } from "react";
 import ClientEmployeesTable from "./ClientEmployeesTable";
-import ClientJobsTable from "./ClientJobsOverviewTable";
+import ClientJobsOverviewTable from "./ClientJobsOverviewTable";
 import InterViewScheduler from "./InterviewScheduler";
 import SuccessModal from "./SuccessModal";
 
@@ -74,7 +74,7 @@ const ClientPage = async ({ params }) => {
           handleOpenOverlay={handleOpenOverlay}
           client={client}
         />
-        <ClientJobsTable />
+        <ClientJobsOverviewTable />
         <ClientEmployeesTable />
       </div>
       <Overlay isVisible={isOverlayVisible}>

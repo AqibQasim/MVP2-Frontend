@@ -2,19 +2,21 @@ import { formatWithDecimalZero } from "@/utils/utility";
 import Image from "next/image";
 import PropTypes from "prop-types";
 
-function Skill({ icon, skill, score = null }) {
+function SkillIconWithBg({ icon, skill = null, score = null, className }) {
   return (
-    <div className="flex items-center justify-center gap-1.5 rounded-[2.25rem] bg-grey-primary-tint-90 p-2.5 pr-3 font-lufga text-sm !font-normal capitalize text-black">
-      {skill ? (
+    <div
+      className={`${className} flex items-center justify-start gap-1.5 rounded-[2.25rem] bg-grey-primary-tint-90 p-2.5 pr-3 font-lufga text-sm !font-normal capitalize text-black`}
+    >
+      {icon ? (
         <>
           <Image
             className="size-5"
-            src={`/tech-icons/${skill}.svg`}
+            src={`/tech-icons/${icon}.svg`}
             height={20}
             width={20}
-            alt={`${skill} icon`}
+            alt={`${icon} icon`}
           />
-          {skill}
+          {skill && skill}
         </>
       ) : (
         <>
@@ -36,9 +38,11 @@ function Skill({ icon, skill, score = null }) {
   );
 }
 
-Skill.propTypes = {
+SkillIconWithBg.propTypes = {
+  icon: PropTypes.string,
   skill: PropTypes.string,
   score: PropTypes.number,
+  className: PropTypes.string,
 };
 
-export default Skill;
+export default SkillIconWithBg;
