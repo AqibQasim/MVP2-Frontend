@@ -1,8 +1,10 @@
 "use client";
 import { useState } from "react";
 import Heading from "./Heading";
+import Skill from "./Skill";
 
-function TalentDescription({ description }) {
+function TalentDescription({ description, skills }) {
+  console.log("Skills: ", skills);
   const [showmore, setShowmore] = useState(false);
   return (
     <>
@@ -15,6 +17,18 @@ function TalentDescription({ description }) {
             ? description.slice(0, 300) + "..."
             : description}
         </p>
+        {skills && (
+          <>
+            <Heading className="py-3 !text-[#8992A3]" sm>
+              Top Skills
+            </Heading>
+            <div className="flex items-start">
+              {skills.map((skill, i) => (
+                <Skill key={i} skill={skill} />
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </>
   );
