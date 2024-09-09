@@ -9,7 +9,7 @@ module.exports = {
   theme: {
     extend: {
       boxShadow: {
-        'xl': '0 0 25px -5px rgba(0, 0, 0, 0.1)', // Adjust values here
+        xl: "0 0 25px -5px rgba(0, 0, 0, 0.1)", // Adjust values here
       },
       spacing: {
         4.5: "18px",
