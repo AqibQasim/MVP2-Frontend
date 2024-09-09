@@ -5,6 +5,7 @@ import Table from "./Table";
 
 const jobs = [
   {
+    id: 1,
     role: "Front-End Developer",
     profession: "some profession",
     skills: ["react", "python", "javascript"],
@@ -13,6 +14,7 @@ const jobs = [
     status: "fulfilled",
   },
   {
+    id: 2,
     role: "Front-End Developer",
     profession: "some profession",
     skills: ["react", "python", "javascript"],
@@ -21,6 +23,7 @@ const jobs = [
     status: "trial",
   },
   {
+    id: 3,
     role: "Front-End Developer",
     profession: "some profession",
     skills: ["react", "python", "javascript"],
@@ -29,6 +32,7 @@ const jobs = [
     status: "trial",
   },
   {
+    id: 4,
     role: "Front-End Developer",
     profession: "some profession",
     skills: ["react", "python", "javascript"],
@@ -37,6 +41,7 @@ const jobs = [
     status: "fulfilled",
   },
   {
+    id: 5,
     role: "Front-End Developer",
     profession: "some profession",
     skills: ["react", "python", "javascript"],
@@ -45,6 +50,7 @@ const jobs = [
     status: "open",
   },
   {
+    id: 6,
     role: "Front-End Developer",
     profession: "some profession",
     skills: ["react", "python", "javascript"],

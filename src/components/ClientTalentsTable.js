@@ -6,6 +6,7 @@ import Table from "./Table";
 
 const talents = [
   {
+    id: 1,
     role: "Front-End Developer",
     profession: "some profession",
     skills: ["javascript", "react", "python"],
@@ -15,6 +16,7 @@ const talents = [
     dateHired: "20-Sep-2024",
   },
   {
+    id: 2,
     role: "Front-End Developer",
     profession: "some profession",
     skills: ["javascript", "react", "python"],
@@ -24,6 +26,7 @@ const talents = [
     dateHired: "20-Sep-2024",
   },
   {
+    id: 3,
     role: "Front-End Developer",
     profession: "some profession",
     skills: ["javascript", "react", "python"],
@@ -33,6 +36,7 @@ const talents = [
     dateHired: "20-Sep-2024",
   },
   {
+    id: 4,
     role: "Front-End Developer",
     profession: "some profession",
     skills: ["javascript", "react", "python"],
@@ -42,6 +46,7 @@ const talents = [
     dateHired: "20-Sep-2024",
   },
   {
+    id: 5,
     role: "Front-End Developer",
     profession: "some profession",
     skills: ["javascript", "react", "python"],
@@ -51,6 +56,7 @@ const talents = [
     dateHired: "20-Sep-2024",
   },
   {
+    id: 6,
     role: "Front-End Developer",
     profession: "some profession",
     skills: ["javascript", "react", "python"],

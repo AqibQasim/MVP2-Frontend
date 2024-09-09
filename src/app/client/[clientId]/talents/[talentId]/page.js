@@ -53,6 +53,7 @@ const talentDetails = [
 
 const paymentHistory = [
   {
+    id: 1,
     role: "R. Feynman",
     profession: "some profession",
     date: "24 April, 2024",
@@ -61,6 +62,7 @@ const paymentHistory = [
     invoice: "10A3011F-0020",
   },
   {
+    id: 2,
     role: "R. Feynman",
     profession: "some profession",
     date: "24 April, 2024",

@@ -5,6 +5,7 @@ import Table from "./Table";
 
 const jobs = [
   {
+    id: 1,
     role: "some role",
     profession: "some profession",
     skills: ["react", "python", "javascript"],
@@ -12,6 +13,7 @@ const jobs = [
     status: "fulfilled",
   },
   {
+    id: 2,
     role: "some role",
     profession: "some profession",
     skills: ["react", "python", "javascript"],
@@ -19,6 +21,7 @@ const jobs = [
     status: "open",
   },
   {
+    id: 3,
     role: "some role",
     profession: "some profession",
     skills: ["react", "python", "javascript"],
