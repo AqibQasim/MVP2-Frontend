@@ -22,6 +22,7 @@ import SvgIconJobStatus from "@/svgs/SvgIconJobStatus";
 import dropdown from "../../../../../../public/icons/drop-down.svg";
 import Skill from "@/components/Skill";
 import Image from "next/image";
+import TalentDescription from "@/components/TalentDescription";
 
 const client = {
   title: "Software Engineer",
@@ -54,10 +55,9 @@ const job_on_progress = [
     job_type: "Full-Time",
     experience: "2Y",
   },
-  
 ];
 
-function TalentViewById({ talentId }) {
+function TalentViewById({ job_id }) {
   const [isShowMoreEnabled, setIsShowMoreEnabled] = useState(false);
   const [isReadMoreEnabled, setIsReadMoreEnabled] = useState(false);
 
@@ -71,32 +71,11 @@ function TalentViewById({ talentId }) {
         <div className="w-auto">
           <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-3">
-              
               <Heading sm>{client.title}</Heading>
             </div>
-            
           </div>
           <Hr />
-
-          {/* <div className="my-3">
-            <Heading>{client.title}</Heading>
-          </div> */}
-
-          <div className="justify-between rounded-xl bg-grey-primary-tint-90 px-4 py-4.5 font-lufga">
-            <Heading
-              style={{ color: "#8992A3" }}
-              className="py-3 font-lufga"
-              sm
-            >
-              Description
-            </Heading>
-
-            <div style={{ color: "#A3A3A3" }} className="font-lufga text-sm">
-              {client.description.length >= 300 && !isShowMoreEnabled
-                ? client.description.slice(0, 300) + "..."
-                : client.description}
-            </div>
-          </div>
+          <TalentDescription description={client.description} isShowMoreEnabled={isShowMoreEnabled}/>
           {client.description.length > 300 && (
             <div className="m-3">
               <button
@@ -109,48 +88,59 @@ function TalentViewById({ talentId }) {
             </div>
           )}
 
-          <div className="w-full gap-4">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <TagCard
-                icon={tag}
-                title={"Specialization"}
-                answer={client.specialization}
-              />
-              <TagCard
-                icon={note_add}
-                title={"Est. Length"}
-                answer={client.estimated_length}
-              />
-              <TagCard
-                icon={commitment}
-                title={"Commitment"}
-                answer={client.commitment}
-              />
-              <TagCard
-                icon={clipboard_text}
-                title={"Job Posted"}
-                answer={client.job_posted}
-              />
-              <TagCard
-                icon={briefcase_tick}
-                title={"Job Type"}
-                answer={client.job_type}
-              />
-              <TagCard
-                icon={calendar}
-                title={"Desired Start Date"}
-                answer={client.desired_start_date}
-              />
-              <TagCard
-                icon={copy_success}
-                title={"Workday Overlap"}
-                answer={client.workday_overlap}
-              />
-              <TagCard
-                icon={timer_start}
-                title={"Time zone"}
-                answer={client.time_zone}
-              />
+          <div className="gap-8">
+            <div className=" grid grid-cols-2">
+              <div className="h-auto">
+                <TagCard
+                  icon={note_add}
+                  title={"Est. Length"}
+                  answer={client.estimated_length}
+                />
+
+                <TagCard
+                  icon={clipboard_text}
+                  title={"Job Posted"}
+                  answer={client.job_posted}
+                />
+
+                <TagCard
+                  icon={briefcase_tick}
+                  title={"Job Type"}
+                  answer={client.job_type}
+                />
+
+                <TagCard
+                  icon={copy_success}
+                  title={"Workday Overlap"}
+                  answer={client.workday_overlap}
+                />
+              </div>
+
+              <div className="h-auto">
+                <TagCard
+                  icon={tag}
+                  title={"Specialization"}
+                  answer={client.specialization}
+                />
+
+                <TagCard
+                  icon={commitment}
+                  title={"Commitment"}
+                  answer={client.commitment}
+                />
+
+                <TagCard
+                  icon={calendar}
+                  title={"Desired Start Date"}
+                  answer={client.desired_start_date}
+                />
+
+                <TagCard
+                  icon={timer_start}
+                  title={"Time zone"}
+                  answer={client.time_zone}
+                />
+              </div>
             </div>
           </div>
 
@@ -172,7 +162,7 @@ function TalentViewById({ talentId }) {
           {job_questions.length > 1 && (
             <div className="flex flex-row gap-1">
               <button
-                className="weigh flex w-36 flex-row items-center justify-around rounded-3xl px-4 py-3 text-[14px] text-grey-primary-shade-60 font-semibold"
+                className="weigh flex w-36 flex-row items-center justify-around rounded-3xl px-4 py-3 text-[14px] font-semibold text-grey-primary-shade-60"
                 onClick={handleShowMore}
               >
                 {isReadMoreEnabled ? "Read More" : "Read Less"}
@@ -182,7 +172,7 @@ function TalentViewById({ talentId }) {
           )}
         </div>
       </div>
-      <div className="items-center justify-center rounded-[36px] bg-white p-3">
+      <div className="items-center justify-center rounded-[36px] bg-white p-3 w-[23.375rem]">
         <div className="flex h-auto w-auto flex-row items-center justify-between">
           <Heading className="text-[24px]">Status</Heading>
           <Capsule className="items-center text-primary-tint-20">
