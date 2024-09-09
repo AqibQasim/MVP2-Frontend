@@ -11,34 +11,43 @@ function HandleOpenOverlay2() {
   };
 
   const handleCloseOverlay2 = () => {
-    console.log("clickkkkkkk")
+    console.log("clickkkkkkk");
     setOverlayVisible2(false);
   };
 
   useEffect(() => {
-    console.log('[isOverlayVisible2]:', isOverlayVisible2);
+    console.log("[isOverlayVisible2]:", isOverlayVisible2);
   }, [isOverlayVisible2]);
 
   const mainHeading = (
     <span>
-      Your account is successfully <span style={{
-        backgroundImage: 'linear-gradient(to right, #4624E0, white)',
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-        display: 'inline'
-      }}>
+      Your account is successfully{" "}
+      <span
+        style={{
+          backgroundImage: "linear-gradient(to right, #4624E0, white)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          display: "inline",
+        }}
+      >
         Created.
       </span>
     </span>
   );
 
-  let text = <>Your account is currently under review. Soon you’ll receive an email on <span className="font-semibold">janedoe@gmail.com</span> upon approval</>;
+  let text = (
+    <>
+      Your account is currently under review. Soon you’ll receive an email on{" "}
+      <span className="font-semibold">janedoe@gmail.com</span> upon approval
+    </>
+  );
 
   return (
     <>
-    {isOverlayVisible2 & ( 
+      {isOverlayVisible2 &
+      (
         <Overlay isVisible={isOverlayVisible2}>
-          <SuccessModal 
+          <SuccessModal
             onClose={handleCloseOverlay2}
             imgSrc="/Message.png"
             mainHeading={mainHeading}
@@ -49,8 +58,8 @@ function HandleOpenOverlay2() {
             handleOpenOverlay2={handleOpenOverlay2} // Pass the function here
           />
           {/* <InterViewScheduler onClose={handleCloseOverlay} /> */}
-        </Overlay>)}
-     
+        </Overlay>
+      )}
     </>
   );
 }
