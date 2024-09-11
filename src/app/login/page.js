@@ -4,7 +4,9 @@ import Image from "next/image";
 import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { apiHelper } from "@/Helpers/apiHelper";
+import Link from "next/link";
 
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -37,10 +39,36 @@ function Login() {
     validateField(name, value);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Additional form submission logic
-  };
+  const payload = useMemo(
+    () => ({
+      endpoint: "login",
+      method: "POST",
+      body: {
+        email: form.email,
+        password: form.password,
+        user_role: "client",
+        method: "login",
+      },
+    }),
+    [form],
+  );
+
+  const handleLogin = useCallback(
+    async (event) => {
+      event.preventDefault();
+
+      // Validate all fields before submission
+      if (!form.email || !form.password || errors.email || errors.password) {
+        return; // Don't proceed if there are validation errors
+      }
+
+      const result = await apiHelper(payload);
+      if (result.status === 200) {
+        console.log("Logged in successfully");
+      }
+    },
+    [form, errors],
+  );
 
   return (
     <>
@@ -103,7 +131,7 @@ function Login() {
             <div className="mt-2 w-full text-right">
               <button className="text-sm text-primary">Forgot Password?</button>
             </div>
-            <OnBoardingButton onClick={handleSubmit}>
+            <OnBoardingButton onClick={handleLogin}>
               Login to proceed
             </OnBoardingButton>
             <div className="my-1 w-full text-center text-grey-primary-tint-30">
@@ -126,23 +154,22 @@ function Login() {
               </div>
             </div>
             <button className="text-md w-full rounded-full border-[1px] bg-white px-4 py-2 text-center text-primary-tint-20">
-              {" "}
               <Image
                 src="google.svg"
                 width={23}
                 height={20}
                 alt="google Logo"
                 className="inline-block"
-              />{" "}
+              />
               Sign in with Google
             </button>
             <div className="mt-2">
               <p className="me-1 inline-block text-xs text-grey-primary">
                 Don’t have an account?
               </p>
-              <button className="text-xs text-primary underline">
+              <Link href={"/signup"} className="text-xs text-primary underline">
                 Sign up now
-              </button>
+              </Link>
             </div>
           </div>
           <div className="align-end mt-auto px-7 py-5 text-start text-xs text-grey-primary">

@@ -4,9 +4,10 @@ import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
 import Overlay from "@/components/Overlay";
 import SuccessModal from "@/components/SuccessModal";
+import { useState, useMemo, useCallback } from "react";
+import { apiHelper } from "@/Helpers/apiHelper";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 
 function SignUp() {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
@@ -19,6 +20,37 @@ function SignUp() {
   });
 
   const [errors, setErrors] = useState({});
+
+  const payload = useMemo(
+    () => ({
+      endpoint: "signup",
+      method: "POST",
+      body: {
+        email: form.email,
+        name: form.firstName + " " + form.lastName,
+        password: form.password,
+        user_role: "client",
+        method: "signup",
+      },
+    }),
+    [form],
+  );
+
+  const handleSignup = useCallback(
+    async (event) => {
+      event.preventDefault();
+      if (Object.values(errors).some((err) => err !== "")) {
+        return; // Do not proceed with signup if there are validation errors
+      }
+      console.log(payload);
+      const result = await apiHelper(payload);
+      if (result.status === 200) {
+        console.log("signed up successfully");
+        setOverlayVisible(true);
+      }
+    },
+    [payload, errors],
+  );
 
   const handleOpenOverlay = () => {
     if (Object.values(errors).every((err) => err === "")) {
@@ -71,12 +103,8 @@ function SignUp() {
         break;
     }
 
-    setErrors({ ...errors, [name]: errorMsg });
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMsg }));
   };
-
-  useEffect(() => {
-    console.log("[isOverlayVisible]:", isOverlayVisible);
-  }, [isOverlayVisible]);
 
   const mainHeading = (
     <span>
@@ -96,7 +124,7 @@ function SignUp() {
   let text = (
     <>
       We&apos;ve sent a code to{" "}
-      <span className="font-semibold">janedoe@gmail.com</span>
+      <span className="font-semibold">{form.email}</span>
     </>
   );
 
@@ -154,12 +182,6 @@ function SignUp() {
               />
             </div>
 
-            {/* {errors.firstName || errors.lastName ? (
-              <p className="text-xs text-red-500">{errors.firstName}</p>
-            ) : (
-              ""
-            )} */}
-
             <div className="flex gap-2">
               <div>
                 {errors.firstName && (
@@ -194,9 +216,6 @@ function SignUp() {
                 placeholder="Enter password"
                 className="mt-3"
               />
-              {/* {errors.password && (
-                <p className="text-xs text-red-500">{errors.password}</p>
-              )} */}
               <Input
                 type="password"
                 name="confirmPassword"
@@ -229,7 +248,7 @@ function SignUp() {
                 Terms and Conditions
               </button>
             </div>
-            <OnBoardingButton onClick={handleOpenOverlay}>
+            <OnBoardingButton onClick={handleSignup}>
               Create account
             </OnBoardingButton>
             <div className="my-1 w-full text-center text-grey-primary-tint-30">
@@ -251,50 +270,25 @@ function SignUp() {
                 />
               </div>
             </div>
-            <button className="text-md w-full rounded-full border-[1px] bg-white px-4 py-2 text-center text-primary-tint-20">
-              {" "}
+            <button className="text-md w-full rounded-full border-[1px] bg-white px-4 py-2 font-semibold text-black shadow-md">
               <Image
                 src="google.svg"
-                width={23}
+                width={20}
                 height={20}
-                alt="google Logo"
+                alt="Google"
                 className="inline-block"
               />{" "}
-              Sign in with Google
+              Continue with Google
             </button>
-            <div className="mt-2">
-              <p className="me-1 inline-block text-xs text-grey-primary">
-                Already have an account?
-              </p>
-              <button className="text-xs text-primary underline">
-                Login now
-              </button>
-            </div>
-          </div>
-          <div className="align-end mt-auto px-7 py-5 text-start text-xs text-grey-primary">
-            <Image
-              src="icons/info_icon.svg"
-              width={14}
-              height={14}
-              alt="info icon"
-              className="inline-block"
-            />
-            <p className="ms-1 inline-block">
-              You’re registering as a client, but you can also switch to
-              freelancer later from settings.
-            </p>
           </div>
         </div>
       </div>
       {isOverlayVisible && (
-        <Overlay isVisible={isOverlayVisible} closeoverlay={handleCloseOverlay}>
+        <Overlay>
           <SuccessModal
-            imgSrc="/Message.png"
-            mainHeading={mainHeading}
+            heading={mainHeading}
             text={text}
-            buttonText={"Verify email"}
-            onBoarding={true}
-            containsOtp={true}
+            onClose={handleCloseOverlay}
           />
         </Overlay>
       )}
