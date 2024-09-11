@@ -1,6 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
-import AdminCandidateRecommendedRow from './AdminCandidateRecommendedRow';
+import AdminCandidateRecommendedRow from "./AdminCandidateRecommendedRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 
@@ -46,7 +46,7 @@ const recommendedTalents = [
     role: "Front-End Developer",
     profession: "some profession",
     skills: ["javascript", "react", "python"],
-  
+
     experience: "Intermediate",
     jobType: "full time",
     dateHired: "20-Sep-2024",
@@ -55,7 +55,7 @@ const recommendedTalents = [
     id: 6,
     role: "Front-End Developer",
     profession: "some profession",
-  skills: ["javascript", "react", "python"],
+    skills: ["javascript", "react", "python"],
     experience: "Intermediate",
     jobType: "full time",
     dateHired: "20-Sep-2024",
@@ -83,7 +83,7 @@ function AdminCandidatesTable() {
           data={recommendedTalents}
           //   data={[]}
           render={(recommended, i) => (
-          <AdminCandidateRecommendedRow recommended={recommended} key={i} />
+            <AdminCandidateRecommendedRow recommended={recommended} key={i} />
           )}
         />
       </Table>
