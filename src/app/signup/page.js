@@ -7,6 +7,7 @@ import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Overlay from "@/components/Overlay";
 import SuccessModal from "@/components/SuccessModal";
 import { useState, useEffect, useMemo, useCallback } from "react";
+import { apiHelper } from "@/Helpers/apiHelper";
 
 function SignUp() {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
@@ -26,15 +27,16 @@ function SignUp() {
       user_role:'client',
       method:'signup'
     },
-  }),[email,password])
+  }),[email,password,firstName,lastName,confirmPassword])
   
   const handleSignup= useCallback(async(event)=>{
     event.preventDefault();
+    console.log(payload)
     const result= await apiHelper(payload);
     if(result.status===200){
-      console.log("logged in successfully")
+      console.log("signed up successfully")
     }
-  },[email,password])
+  },[payload])
 
   const handleOpenOverlay = () => {
     setOverlayVisible(true);
@@ -107,11 +109,11 @@ function SignUp() {
 
             <div className="mt-5 flex gap-2">
               <Input 
-              type="text" placeholder="First name" className="mt-3" onChange={(event)=>setEmail(event.target.value)}/>
-              <Input type="text" placeholder="Last name" className="mt-3" onChange={(event)=>setEmail(event.target.value)}/>
+              type="text" placeholder="First name" className="mt-3" onChange={(event)=>setFirstName(event.target.value)}/>
+              <Input type="text" placeholder="Last name" className="mt-3" onChange={(event)=>setLastName(event.target.value)}/>
             </div>
 
-            <Input type="text" placeholder="Enter email" className="mt-3" />
+            <Input type="text" placeholder="Enter email" className="mt-3" onChange={(event)=>setEmail(event.target.value)}/>
             <div className="flex gap-2">
               <Input
                 type="password"
