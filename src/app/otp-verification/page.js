@@ -1,13 +1,11 @@
 import GradientText from "@/components/GradientText";
-import Image from "next/image";
-import bgImg from "../../../public/bg-img.svg";
+import OnboardingBgImage from "@/components/OnboardingBgImage";
 
 function OtpVerification() {
   return (
-    <>
-      <Image src={bgImg} className="h-screen w-screen" />
+    <OnboardingBgImage>
       <GradientText>Created</GradientText>
-    </>
+    </OnboardingBgImage>
   );
 }
 

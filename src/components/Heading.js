@@ -6,6 +6,7 @@ function Heading({
   sm = false,
   xm = false,
   toxm = false,
+  style,
 }) {
   let HeadingTag = "h1";
   let textSizeClass = "text-4xl";
@@ -31,6 +32,7 @@ function Heading({
 
   return (
     <HeadingTag
+      style={style}
       className={`${className} text-nowrap font-lufga ${textSizeClass} ${fontWeightClass}`}
     >
       {children}

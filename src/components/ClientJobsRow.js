@@ -1,12 +1,14 @@
-import SvgIconJobStatus from "@/svgs/SvgIconJobStatus";
 import SvgIconWork from "@/svgs/SvgIconWork";
+import { useParams } from "next/navigation";
 import Capsule from "./Capsule";
+import CapsuleLink from "./CapsuleLink";
 import EntityCard from "./EntityCard";
-import IconWithBg from "./IconWithBg";
-import Skill from "./Skill";
+import SkillIconWithBg from "./SkillIconWithBg";
 import Table from "./Table";
 
 function ClientJobsRow({ job }) {
+  const params = useParams();
+  const clientId = params?.clientId;
   console.log(job);
   return (
     <Table.Row>
@@ -18,24 +20,31 @@ function ClientJobsRow({ job }) {
       />
       <div className="skills flex items-center justify-center gap-1.5 text-center">
         {job.skills.map((skill, i) => (
-          <Skill key={i} skill={skill} />
+          <SkillIconWithBg key={i} icon={skill} />
         ))}
       </div>
       <div className="experience text-center">{job.experience}</div>
       <div className="commitment text-center">{job.commit}</div>
       <Capsule
-        className="mr-auto w-max !bg-primary-tint-100"
-        icon={<IconWithBg icon={<SvgIconJobStatus status={job.status} />} />}
+        status={job.status.toLowerCase()}
+        className="!mx-auto mr-auto w-max"
       >
-        {" "}
-        {job.status}{" "}
+        <p>{job.status}</p>
       </Capsule>
-      <Capsule
+      {/* <Capsule
         className="mx-auto w-max !bg-primary-tint-100"
         icon={<IconWithBg icon={<SvgIconJobStatus status="hired" />} />}
       >
         view talent
-      </Capsule>
+      </Capsule> */}
+      {/* <CapsuleLink className="ml-auto" href={`${job.id}`}> */}
+      <CapsuleLink
+        className="ml-auto"
+        href={`/client/${clientId}/jobs/${job.id}`}
+      >
+        {" "}
+        view talent{" "}
+      </CapsuleLink>
     </Table.Row>
   );
 }

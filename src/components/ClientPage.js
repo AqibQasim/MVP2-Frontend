@@ -9,7 +9,7 @@ import ClientJobsOverviewTable from "./ClientJobsOverviewTable";
 import InterViewScheduler from "./InterviewScheduler";
 import SuccessModal from "./SuccessModal";
 
-const ClientPage = async ({ params }) => {
+const ClientPage = ({ params }) => {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
   const [client, setClient] = useState(null);
   const [successAcknowledge, setSuccessAcknowledge] = useState(false);

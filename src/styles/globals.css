@@ -34,16 +34,47 @@ svg {
   height: 18px;
   width: 18px;
 }
-.gradient-text{
-  background-image: linear-gradient(90deg,#4624E0,#C8BDF6);
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  -webkit-background-clip: text;
-}
 
 .gradient-text{
   background-image: linear-gradient(90deg,#4624E0,#e5e3f0);
   -webkit-text-fill-color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
+}
+
+.custom-select {
+  /* Hide the default arrow */
+  -webkit-appearance: none;
+  /* For Chrome, Safari, and newer versions of Opera */
+  -moz-appearance: none;
+  /* For Firefox */
+  /* For modern browsers */
+  appearance: none;
+  padding-right: 2.5rem;
+  /* Space for the custom arrow */
+  padding-left: 2.5rem;
+  /* Space for the round div */
+}
+
+.icon-container {
+  position: absolute;
+  top: 50%;
+  left: 0.5rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+  /* Prevents the div from capturing click events */
+}
+
+.custom-arrow {
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+  /* Prevents the arrow from capturing click events */
+}
+
+.relative {
+  position: relative;
+  /* Ensures the custom arrow and round div are positioned correctly */
 }

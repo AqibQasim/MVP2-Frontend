@@ -1,12 +1,12 @@
 "use client";
 import Heading from "@/components/Heading";
-import Image from "next/image";
 import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
-import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Overlay from "@/components/Overlay";
 import SuccessModal from "@/components/SuccessModal";
-import { useState, useEffect } from "react";
+import { PAGE_HEIGHT_FIX } from "@/utils/utility";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
 function SignUp() {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
@@ -41,7 +41,7 @@ function SignUp() {
 
   let text = (
     <>
-      We've sent a code to{" "}
+      We&apos;ve sent a code to{" "}
       <span className="font-semibold">janedoe@gmail.com</span>
     </>
   );
@@ -180,5 +180,4 @@ function SignUp() {
     </>
   );
 }
-
 export default SignUp;

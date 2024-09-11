@@ -32,11 +32,11 @@ function EntityCard({
         )}
       </div>
       <div className="names">
-        <p className={`font-lufga ${textSizeClass} font-medium`}>
+        <p className={`font-lufga ${textSizeClass} text-[15px] font-medium`}>
           {entity.name}
         </p>
         {entity.profession && (
-          <p className="text-sm font-medium text-grey-primary-shade-30">
+          <p className="text-sm font-medium text-[14px] text-grey-primary-shade-30">
             {entity.profession}
           </p>
         )}
