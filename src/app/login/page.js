@@ -4,12 +4,36 @@ import Image from "next/image";
 import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
+import { useCallback, useMemo, useState } from "react";
+import { apiHelper } from "@/Helpers/apiHelper";
+import Link from "next/link";
 
 // export const metadata = {
 //   title: "Login",
 // };
 
 function Login() {
+  const [email,setEmail]= useState('');
+  const [password,setPassword]=useState('');
+
+  const payload= useMemo(()=>({
+    endpoint:'login',
+    method:'POST',
+    body:{
+      email,
+      password,
+      user_role:'client',
+      method:'login'
+    },
+  }),[email,password])
+  
+  const handleLogin= useCallback(async(event)=>{
+    event.preventDefault();
+    const result= await apiHelper(payload);
+    if(result.status===200){
+      console.log("logged in successfully")
+    }
+  },[email,password])
   return (
     <>
       <div className={`flex ${PAGE_HEIGHT_FIX} gap-2`}>
@@ -52,17 +76,19 @@ function Login() {
               type="text"
               placeholder="Enter your email"
               className="mt-5"
+              onChange={(event)=>setEmail(event.target.value)}
             />
             <Input
               type="password"
               placeholder="Enter your password"
               className="mt-3"
+              onChange={(event)=>setPassword(event.target.value)}
             />
 
             <div className="mt-2 w-full text-right">
               <button className="text-sm text-primary">Forgot Password?</button>
             </div>
-            <OnBoardingButton>Login to proceed</OnBoardingButton>
+            <OnBoardingButton onClick={handleLogin}>Login to proceed</OnBoardingButton>
             <div className="my-1 w-full text-center text-grey-primary-tint-30">
               <div className="flex items-center justify-center gap-2">
                 <Image
@@ -97,9 +123,9 @@ function Login() {
               <p className="me-1 inline-block text-xs text-grey-primary">
                 Don’t have an account?
               </p>
-              <button className="text-xs text-primary underline">
+              <Link href={'/signup'} className="text-xs text-primary underline">
                 Sign up now
-              </button>
+              </Link>
             </div>
           </div>
           <div className="align-end mt-auto px-7 py-5 text-start text-xs text-grey-primary">

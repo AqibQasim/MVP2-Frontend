@@ -6,10 +6,35 @@ import OnBoardingButton from "@/components/OnBoardingButton";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Overlay from "@/components/Overlay";
 import SuccessModal from "@/components/SuccessModal";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 
 function SignUp() {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
+  const [firstName,setFirstName]=useState('');
+  const [lastName,setLastName]=useState('')
+  const [email,setEmail]= useState('');
+  const [password,setPassword]=useState('');
+  const [confirmPassword,setConfirmPass]=useState('');
+
+  const payload= useMemo(()=>({
+    endpoint:'signup',
+    method:'POST',
+    body:{
+      email,
+      name:firstName+' '+lastName,
+      password,
+      user_role:'client',
+      method:'signup'
+    },
+  }),[email,password])
+  
+  const handleSignup= useCallback(async(event)=>{
+    event.preventDefault();
+    const result= await apiHelper(payload);
+    if(result.status===200){
+      console.log("logged in successfully")
+    }
+  },[email,password])
 
   const handleOpenOverlay = () => {
     setOverlayVisible(true);
@@ -81,8 +106,9 @@ function SignUp() {
             </h2>
 
             <div className="mt-5 flex gap-2">
-              <Input type="text" placeholder="First name" className="mt-3" />
-              <Input type="text" placeholder="Last name" className="mt-3" />
+              <Input 
+              type="text" placeholder="First name" className="mt-3" onChange={(event)=>setEmail(event.target.value)}/>
+              <Input type="text" placeholder="Last name" className="mt-3" onChange={(event)=>setEmail(event.target.value)}/>
             </div>
 
             <Input type="text" placeholder="Enter email" className="mt-3" />
@@ -91,11 +117,13 @@ function SignUp() {
                 type="password"
                 placeholder="Enter password"
                 className="mt-3"
+                onChange={(event)=>setPassword(event.target.value)}
               />
               <Input
                 type="password"
                 placeholder="Confirm password"
                 className="mt-3"
+                onChange={(event)=>setConfirmPass(event.target.value)}
               />
             </div>
             <div className="mt-2 w-full text-start">
@@ -107,7 +135,10 @@ function SignUp() {
                 Terms and Conditions
               </button>
             </div>
-            <OnBoardingButton onClick={handleOpenOverlay}>
+            <OnBoardingButton onClick={(e)=>{
+              handleOpenOverlay();
+              handleSignup(e);
+            }}>
               Create account
             </OnBoardingButton>
             <div className="my-1 w-full text-center text-grey-primary-tint-30">
