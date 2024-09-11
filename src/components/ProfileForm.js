@@ -158,7 +158,6 @@ const ProfileForm = () => {
             </div>
           </div>
         </div>
-
         <hr />
 
         <div className="mb-4 mt-4 grid grid-cols-4 items-start gap-4">

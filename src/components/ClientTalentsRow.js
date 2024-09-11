@@ -4,10 +4,17 @@ import CapsuleLink from "./CapsuleLink";
 import EntityCard from "./EntityCard";
 import SkillIconWithBg from "./SkillIconWithBg";
 import Table from "./Table";
+import { useParams } from "next/navigation";
 
 function ClientTalentsRow({ talent }) {
-  console.log(talent);
+  const params = useParams();
+  const clientId = params?.clientId;
+  // const router = useRouter();
+  // function handleRowClick() {
+  //   router.push(`${talent.id}`);
+  // }
   return (
+    // <Table.Row onClick={handleRowClick}>
     <Table.Row>
       <EntityCard
         entity={{
@@ -27,7 +34,11 @@ function ClientTalentsRow({ talent }) {
       <div className="date-hired text-nowrap text-center">
         {formatDate(new Date("2024-09-20"))}
       </div>
-      <CapsuleLink className="ml-auto" href="/client/talents">
+      {/* <CapsuleLink className="ml-auto" href={`${talent.id}`}> */}
+      <CapsuleLink
+        className="ml-auto"
+        href={`/client/${clientId}/talents/${talent.id}`}
+      >
         {" "}
         view talent{" "}
       </CapsuleLink>
