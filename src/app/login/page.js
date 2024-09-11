@@ -110,6 +110,7 @@ function Login() {
               alt="info icon"
               className="inline-block"
             />
+
             <p className="ms-1 inline-block">
               You’re registering as client, but you can also switch to
               freelancer later from settings.

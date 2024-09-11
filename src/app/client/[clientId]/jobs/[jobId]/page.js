@@ -1,4 +1,14 @@
 "use client";
+import briefcase_tick from "@/../public/icons/briefcase-tick.svg";
+import calendar from "@/../public/icons/calendar.svg";
+import clipboard_text from "@/../public/icons/clipboard-text.svg";
+import commitment from "@/../public/icons/commitment.svg";
+import copy_success from "@/../public/icons/copy-success.svg";
+import dropdown from "@/../public/icons/drop-down.svg";
+import note_add from "@/../public/icons/note-add.svg";
+import tag from "@/../public/icons/tag-user.svg";
+import timer_start from "@/../public/icons/timer-start.svg";
+import ButtonCapsuleWhite from "@/components/ButtonCapsuleWhite";
 import Capsule from "@/components/Capsule";
 import EntityCard from "@/components/EntityCard";
 import Heading from "@/components/Heading";
@@ -7,17 +17,7 @@ import Skill from "@/components/Skill";
 import TagCard from "@/components/TagCard";
 import TalentDescription from "@/components/TalentDescription";
 import Image from "next/image";
-import { useCallback, useMemo, useState } from "react";
-import briefcase_tick from "../../../../../../public/icons/briefcase-tick.svg";
-import calendar from "../../../../../../public/icons/calendar.svg";
-import clipboard_text from "../../../../../../public/icons/clipboard-text.svg";
-import commitment from "../../../../../../public/icons/commitment.svg";
-import copy_success from "../../../../../../public/icons/copy-success.svg";
-import dropdown from "../../../../../../public/icons/drop-down.svg";
-import note_add from "../../../../../../public/icons/note-add.svg";
-import tag from "../../../../../../public/icons/tag-user.svg";
-import timer_start from "../../../../../../public/icons/timer-start.svg";
-import ButtonCapsuleWhite from "@/components/ButtonCapsuleWhite";
+import { useState, useCallback, useEffect } from "react";
 
 const client = {
   title: "Software Engineer",
@@ -63,12 +63,16 @@ function JobViewById({ job_id }) {
 
   const handleReadMore = () => {
     setIsReadMoreEnabled((value) => !value);
+    
+  };
+
+  useEffect(()=>{
     if(isReadMoreEnabled){
       setJobQuestionLength(job_questions.length);
     }else{
       setJobQuestionLength(1)
     }
-  };
+  },[isReadMoreEnabled])
 
   const createApplicationQuestions=useCallback(({ job_questions, length })=>{
     const questions = [];
@@ -106,6 +110,7 @@ function JobViewById({ job_id }) {
           <TalentDescription
             description={client.description}
             isShowMoreEnabled={isShowMoreEnabled}
+            //skills={["JavaScript", "React"]}
           />
           {client.description.length > 300 && (
             <div className="m-3">
@@ -204,7 +209,7 @@ function JobViewById({ job_id }) {
                 className="weigh flex w-36 flex-row items-center justify-around rounded-3xl px-4 py-3 text-[14px] font-semibold text-grey-primary-shade-60"
                 onClick={handleReadMore}
               >
-                <p>{isReadMoreEnabled ? "Read More" : "Read Less"}</p>
+                <p>{isReadMoreEnabled ? "Read Less" : "Read More"}</p>
                 <Image alt="dropdown" src={dropdown} />
               </button>
             </div>

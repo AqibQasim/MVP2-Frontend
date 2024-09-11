@@ -10,11 +10,12 @@ const SuccessModal = ({
   onBoarding,
   onClose,
   containsOtp,
-  // handleOpenOverlay2, // Pass the function here
+  handleOpenOverlay2, // Pass the function here
 }) => {
-  const handleOpenOverlay2 = () => {
-    console.log("cickiinngggg");
-  };
+  // const handleOpenOverlay2 = () => {
+  //   console.log("cickiinngggg");
+  // };
+
   return (
     <div className="flex h-[85vh] w-[100%] flex-col items-center justify-around font-lufga">
       <div className="flex flex-col items-center">

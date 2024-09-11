@@ -3,10 +3,10 @@ import SvgIconWork from "@/svgs/SvgIconWork";
 import Capsule from "./Capsule";
 import EntityCard from "./EntityCard";
 import IconWithBg from "./IconWithBg";
-import SkillIconWithBg from "./SkillIconWithBg";
+import Skill from "./Skill";
 import Table from "./Table";
 
-function ClientJobsRow({ job }) {
+function CandidateJobsRow({ job }) {
   console.log(job);
   return (
     <Table.Row>
@@ -18,16 +18,17 @@ function ClientJobsRow({ job }) {
       />
       <div className="skills flex items-center justify-center gap-1.5 text-center">
         {job.skills.map((skill, i) => (
-          <SkillIconWithBg key={i} icon={skill} />
+          <Skill key={i} skill={skill} />
         ))}
       </div>
       <div className="experience text-center">{job.experience}</div>
       <div className="commitment text-center">{job.commit}</div>
       <Capsule
-        status={job.status.toLowerCase()}
-        className="!mx-auto mr-auto w-max"
+        className="mr-auto w-max !bg-primary-tint-100"
+        icon={<IconWithBg icon={<SvgIconJobStatus status={job.status} />} />}
       >
-        <p>{job.status}</p>
+        {" "}
+        {job.status}{" "}
       </Capsule>
       <Capsule
         className="mx-auto w-max !bg-primary-tint-100"
@@ -39,4 +40,4 @@ function ClientJobsRow({ job }) {
   );
 }
 
-export default ClientJobsRow;
+export default CandidateJobsRow;

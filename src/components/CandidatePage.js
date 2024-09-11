@@ -1,15 +1,12 @@
 "use client";
 
-import ClientRecommendationCard from "@/components/ClientRecommendationCard";
-import Overlay from "@/components/Overlay";
+import CandidateRecommendationCard from "./CandidateRecommendationCard";
+
 import { getDummyClientById } from "@/lib/tempData";
 import { useEffect, useState } from "react";
-import ClientEmployeesTable from "./ClientEmployeesTable";
-import ClientJobsOverviewTable from "./ClientJobsOverviewTable";
-import InterViewScheduler from "./InterviewScheduler";
 import SuccessModal from "./SuccessModal";
 
-const ClientPage = ({ params }) => {
+const CandidatePage = async ({ params }) => {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
   const [client, setClient] = useState(null);
   const [successAcknowledge, setSuccessAcknowledge] = useState(false);
@@ -29,7 +26,7 @@ const ClientPage = ({ params }) => {
 
   useEffect(() => {
     const fetchClient = async () => {
-      const fetchedClient = await getDummyClientById(params.clientId);
+      const fetchedClient = await getDummyClientById(params.candidateId);
       setClient(fetchedClient);
     };
 
@@ -70,32 +67,12 @@ const ClientPage = ({ params }) => {
   return (
     <>
       <div className="space-y-2">
-        <ClientRecommendationCard
+        <CandidateRecommendationCard
           handleOpenOverlay={handleOpenOverlay}
           client={client}
         />
-        <ClientJobsOverviewTable />
-        <ClientEmployeesTable />
       </div>
-      <Overlay isVisible={isOverlayVisible}>
-        {successAcknowledge ? (
-          <>
-            <SuccessModal
-              mainHeading={mainHeading}
-              text={text}
-              onClose={handleCloseOverlay}
-            />
-          </>
-        ) : (
-          <>
-            <InterViewScheduler
-              onSuccessAck={handleSuccessAcknowledge}
-              onClose={handleCloseOverlay}
-            />
-          </>
-        )}
-      </Overlay>
     </>
   );
 };
-export default ClientPage;
+export default CandidatePage;

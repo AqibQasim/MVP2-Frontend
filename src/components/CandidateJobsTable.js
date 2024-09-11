@@ -1,11 +1,10 @@
 "use client";
-import ClientJobsRow from "./ClientJobsRow";
+import CandidateJobsRow from "./CandidateJobsRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 
 const jobs = [
   {
-    id: 1,
     role: "Front-End Developer",
     profession: "some profession",
     skills: ["react", "python", "javascript"],
@@ -14,34 +13,6 @@ const jobs = [
     status: "fulfilled",
   },
   {
-    id: 2,
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commit: "full time",
-    status: "trial",
-  },
-  {
-    id: 3,
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commit: "full time",
-    status: "trial",
-  },
-  {
-    id: 4,
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commit: "full time",
-    status: "fulfilled",
-  },
-  {
-    id: 5,
     role: "Front-End Developer",
     profession: "some profession",
     skills: ["react", "python", "javascript"],
@@ -50,7 +21,30 @@ const jobs = [
     status: "open",
   },
   {
-    id: 6,
+    role: "Front-End Developer",
+    profession: "some profession",
+    skills: ["react", "python", "javascript"],
+    experience: "expert",
+    commit: "full time",
+    status: "hired",
+  },
+  {
+    role: "Front-End Developer",
+    profession: "some profession",
+    skills: ["react", "python", "javascript"],
+    experience: "expert",
+    commit: "full time",
+    status: "fulfilled",
+  },
+  {
+    role: "Front-End Developer",
+    profession: "some profession",
+    skills: ["react", "python", "javascript"],
+    experience: "expert",
+    commit: "full time",
+    status: "open",
+  },
+  {
     role: "Front-End Developer",
     profession: "some profession",
     skills: ["react", "python", "javascript"],
@@ -60,11 +54,11 @@ const jobs = [
   },
 ];
 
-function ClientJobsTable() {
+function CandidateJobsTable() {
   return (
     <DashboardSection
       className="!min-h-full"
-      paragraph="View and manage all here."
+      paragraph="These are all"
       heading="Your jobs"
     >
       <Table columns="grid-cols-[1fr_1.7fr_6rem_5rem_7.1rem_8.1rem]">
@@ -78,11 +72,11 @@ function ClientJobsTable() {
         </Table.Header>
         <Table.Body
           data={jobs}
-          render={(job, i) => <ClientJobsRow job={job} key={i} />}
+          render={(job, i) => <CandidateJobsRow job={job} key={i} />}
         />
       </Table>
     </DashboardSection>
   );
 }
 
-export default ClientJobsTable;
+export default CandidateJobsTable;
