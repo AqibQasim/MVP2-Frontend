@@ -7,7 +7,6 @@ import Skill from "./Skill";
 import Table from "./Table";
 
 function CandidateJobsRow({ job }) {
-  console.log(job);
   return (
     <Table.Row>
       <EntityCard

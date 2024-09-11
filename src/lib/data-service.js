@@ -1,3 +1,4 @@
+import { apiHelper } from "@/Helpers/apiHelper";
 import { notFound } from "next/navigation";
 // example
 
@@ -40,27 +41,10 @@ export const getProducts = async function () {
 };
 
 export async function getClients() {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/clients`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-    console.log("Response: ", response);
-    if (!response.ok) {
-      return response.text().then((text) => {
-        throw new Error(text);
-      });
-    }
-
-    const clients = await response.json();
-    return clients;
-  } catch (error) {
-    console.log("Error:", error);
-    throw new Error(error.message || "Could not get Clients");
-  }
+  const payload = {
+    endpoint: "clients",
+    method: "GET",
+  };
+  const result = await apiHelper(payload);
+  return result;
 }

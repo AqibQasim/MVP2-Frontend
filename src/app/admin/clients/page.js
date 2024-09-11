@@ -1,12 +1,16 @@
 import AdminClientsTable from "@/components/AdminClientsTable";
 import { getClients } from "@/lib/data-service";
 
+export const metadata = {
+  title: "Clients",
+};
+
 async function page() {
   const clients = await getClients();
-  console.log("clients:", clients);
+
   return (
     <div>
-      <AdminClientsTable />
+      <AdminClientsTable clients={clients} />
     </div>
   );
 }
