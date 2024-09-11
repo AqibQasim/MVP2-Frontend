@@ -4,10 +4,11 @@ import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
 import Overlay from "@/components/Overlay";
 import SuccessModal from "@/components/SuccessModal";
-import { useState, useMemo, useCallback } from "react";
 import { apiHelper } from "@/Helpers/apiHelper";
+import { revalidate } from "@/lib/data-service";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
+import { useCallback, useMemo, useState } from "react";
 
 function SignUp() {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
@@ -46,6 +47,8 @@ function SignUp() {
       const result = await apiHelper(payload);
       if (result.status === 200) {
         console.log("signed up successfully");
+        // const revalidatePath = await revalidate("/admin/clients");
+        // console.log("revalidate path", revalidatePath);
         setOverlayVisible(true);
       }
     },

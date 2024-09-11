@@ -48,3 +48,23 @@ export async function getClients() {
   const result = await apiHelper(payload);
   return result;
 }
+
+export async function revalidate(path) {
+  try {
+    const response = await fetch("/api/revalidate-path", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ path }),
+    });
+
+    if (response.ok) {
+      console.log("Revalidation successful");
+    } else {
+      console.error("Failed to revalidate");
+    }
+  } catch (error) {
+    console.error("Error during revalidation:", error);
+  }
+}
