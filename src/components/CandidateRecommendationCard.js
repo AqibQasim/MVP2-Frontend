@@ -20,7 +20,7 @@ function CandidateRecommendationCard({ client = {}, handleOpenOverlay }) {
           <EntityCard
             entity={{
               image: "/avatars/avatar-1.png",
-              name: 'Front-end Developer',
+              name: "Front-end Developer",
               profession: client.name,
             }}
           />
@@ -37,7 +37,15 @@ function CandidateRecommendationCard({ client = {}, handleOpenOverlay }) {
           </div>
         </div>
         <Heading xm> Description </Heading>
-        <p className="text-[#A3A3A3]">Are you a coding ninja with a passion for creating stunning user interfaces? Do you dream in HTML, CSS, and JavaScript, effortlessly transforming concepts into sleek, responsive designs? If so, we're looking for someone like you to join our team of tech wizards, where your skills will help shape innovative digital experiences that captivate users and set new standards in web development.</p>
+        <p className="text-[#A3A3A3]">
+          Are you a coding ninja with a passion for creating stunning user
+          interfaces? Do you dream in HTML, CSS, and JavaScript, effortlessly
+          transforming concepts into sleek, responsive designs? If so,
+          we&apos;re looking for someone like you to join our team of tech
+          wizards, where your skills will help shape innovative digital
+          experiences that captivate users and set new standards in web
+          development.
+        </p>
         <div className="cto flex items-center justify-between">
           <div className="flex items-center justify-start gap-1">
             {skills.map((skill) => (

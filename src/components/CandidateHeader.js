@@ -41,9 +41,9 @@ function CandidateHeader() {
        <AvailabilityDropdown
         options={options}
         placeholder="Available"
-        value={selectedValue}  // Controlled value
-        onChange={handleChange} // Handle value change
-        className="custom-class" // Custom CSS class
+        value={selectedValue}  
+        onChange={handleChange} 
+        className="font-bold text-sm" 
       />
       </div>
         <div>
