@@ -15,6 +15,7 @@ function SignUp() {
   const [lastName,setLastName]=useState('')
   const [email,setEmail]= useState('');
   const [password,setPassword]=useState('');
+  const [user_role,setUserRole]= useState('client')
   const [confirmPassword,setConfirmPass]=useState('');
 
   const payload= useMemo(()=>({
@@ -24,10 +25,10 @@ function SignUp() {
       email,
       name:firstName+' '+lastName,
       password,
-      user_role:'client',
+      user_role,
       method:'signup'
     },
-  }),[email,password,firstName,lastName,confirmPassword])
+  }),[email,password,firstName,lastName,confirmPassword,user_role])
   
   const handleSignup= useCallback(async(event)=>{
     event.preventDefault();
@@ -86,10 +87,16 @@ function SignUp() {
           <div className="flex w-full justify-between space-y-2 p-5">
             <Image src="/logo.svg" width={100} height={25} alt="MVP 2 Logo" />
             <div className="flex gap-2">
-              <button className="rounded-full border-[1px] border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]">
+              <button  onClick={(e)=>{
+                //e.preventDefault();
+                setUserRole('client')}}  
+                className={`rounded-full border-[1px] ${(user_role==='client')? 'border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]':'bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]'}`}>
                 Client
               </button>
-              <button className="rounded-full bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]">
+              <button onClick={(e)=>{
+                //e.preventDefault();
+                setUserRole('customer')}} 
+                className={`rounded-full border-[1px] ${(user_role==='customer')? 'border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]':'bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]'}`}>
                 Freelancer
               </button>
             </div>
