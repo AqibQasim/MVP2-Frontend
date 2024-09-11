@@ -1,42 +1,48 @@
 "use client";
 import Heading from "@/components/Heading";
-import Image from "next/image";
 import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
-import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Overlay from "@/components/Overlay";
 import SuccessModal from "@/components/SuccessModal";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { apiHelper } from "@/Helpers/apiHelper";
+import { PAGE_HEIGHT_FIX } from "@/utils/utility";
+import Image from "next/image";
 
 function SignUp() {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
-  const [firstName,setFirstName]=useState('');
-  const [lastName,setLastName]=useState('')
-  const [email,setEmail]= useState('');
-  const [password,setPassword]=useState('');
-  const [confirmPassword,setConfirmPass]=useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPass] = useState("");
 
-  const payload= useMemo(()=>({
-    endpoint:'signup',
-    method:'POST',
-    body:{
-      email,
-      name:firstName+' '+lastName,
-      password,
-      user_role:'client',
-      method:'signup'
+  const payload = useMemo(
+    () => ({
+      endpoint: "signup",
+      method: "POST",
+      body: {
+        email,
+        name: firstName + " " + lastName,
+        password,
+        user_role: "client",
+        method: "signup",
+      },
+    }),
+    [email, password, firstName, lastName, confirmPassword],
+  );
+
+  const handleSignup = useCallback(
+    async (event) => {
+      event.preventDefault();
+      console.log(payload);
+      const result = await apiHelper(payload);
+      if (result.status === 200) {
+        console.log("signed up successfully");
+      }
     },
-  }),[email,password,firstName,lastName,confirmPassword])
-  
-  const handleSignup= useCallback(async(event)=>{
-    event.preventDefault();
-    console.log(payload)
-    const result= await apiHelper(payload);
-    if(result.status===200){
-      console.log("signed up successfully")
-    }
-  },[payload])
+    [payload],
+  );
 
   const handleOpenOverlay = () => {
     setOverlayVisible(true);
@@ -68,7 +74,7 @@ function SignUp() {
 
   let text = (
     <>
-      We've sent a code to{" "}
+      We&apos;ve sent a code to{" "}
       <span className="font-semibold">janedoe@gmail.com</span>
     </>
   );
@@ -108,24 +114,38 @@ function SignUp() {
             </h2>
 
             <div className="mt-5 flex gap-2">
-              <Input 
-              type="text" placeholder="First name" className="mt-3" onChange={(event)=>setFirstName(event.target.value)}/>
-              <Input type="text" placeholder="Last name" className="mt-3" onChange={(event)=>setLastName(event.target.value)}/>
+              <Input
+                type="text"
+                placeholder="First name"
+                className="mt-3"
+                onChange={(event) => setFirstName(event.target.value)}
+              />
+              <Input
+                type="text"
+                placeholder="Last name"
+                className="mt-3"
+                onChange={(event) => setLastName(event.target.value)}
+              />
             </div>
 
-            <Input type="text" placeholder="Enter email" className="mt-3" onChange={(event)=>setEmail(event.target.value)}/>
+            <Input
+              type="text"
+              placeholder="Enter email"
+              className="mt-3"
+              onChange={(event) => setEmail(event.target.value)}
+            />
             <div className="flex gap-2">
               <Input
                 type="password"
                 placeholder="Enter password"
                 className="mt-3"
-                onChange={(event)=>setPassword(event.target.value)}
+                onChange={(event) => setPassword(event.target.value)}
               />
               <Input
                 type="password"
                 placeholder="Confirm password"
                 className="mt-3"
-                onChange={(event)=>setConfirmPass(event.target.value)}
+                onChange={(event) => setConfirmPass(event.target.value)}
               />
             </div>
             <div className="mt-2 w-full text-start">
@@ -137,10 +157,12 @@ function SignUp() {
                 Terms and Conditions
               </button>
             </div>
-            <OnBoardingButton onClick={(e)=>{
-              handleOpenOverlay();
-              handleSignup(e);
-            }}>
+            <OnBoardingButton
+              onClick={(e) => {
+                handleOpenOverlay();
+                handleSignup(e);
+              }}
+            >
               Create account
             </OnBoardingButton>
             <div className="my-1 w-full text-center text-grey-primary-tint-30">

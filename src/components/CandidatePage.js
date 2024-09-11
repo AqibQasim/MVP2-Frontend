@@ -6,7 +6,7 @@ import { getDummyClientById } from "@/lib/tempData";
 import { useEffect, useState } from "react";
 import SuccessModal from "./SuccessModal";
 
-const CandidatePage = async ({ params }) => {
+const CandidatePage = ({ params }) => {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
   const [client, setClient] = useState(null);
   const [successAcknowledge, setSuccessAcknowledge] = useState(false);
@@ -26,7 +26,7 @@ const CandidatePage = async ({ params }) => {
 
   useEffect(() => {
     const fetchClient = async () => {
-      const fetchedClient = await getDummyClientById(params.candidateId);
+      const fetchedClient = await getDummyClientById(params.clientId);
       setClient(fetchedClient);
     };
 
