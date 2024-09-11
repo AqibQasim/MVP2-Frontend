@@ -18,6 +18,7 @@ import TagCard from "@/components/TagCard";
 import TalentDescription from "@/components/TalentDescription";
 import Image from "next/image";
 import { useState } from "react";
+import { useCallback } from "react";
 
 const client = {
   title: "Software Engineer",
@@ -52,13 +53,48 @@ const job_on_progress = [
   },
 ];
 
-function TalentViewById({ job_id }) {
+function JobViewById({ job_id }) {
   const [isShowMoreEnabled, setIsShowMoreEnabled] = useState(false);
   const [isReadMoreEnabled, setIsReadMoreEnabled] = useState(false);
+  const [jobQuestionLength, setJobQuestionLength] = useState(1);
 
   const handleShowMore = () => {
-    setIsShowMoreEnabled((value) => setIsShowMoreEnabled(!value));
+    setIsShowMoreEnabled((value) => !value);
   };
+
+  const handleReadMore = () => {
+    setIsReadMoreEnabled((value) => !value);
+    if (isReadMoreEnabled) {
+      setJobQuestionLength(job_questions.length);
+    } else {
+      setJobQuestionLength(1);
+    }
+  };
+
+  const createApplicationQuestions = useCallback(
+    ({ job_questions, length }) => {
+      const questions = [];
+
+      for (let i = 0; i < length; i++) {
+        console.log(i);
+        questions.push(
+          <div
+            key={i}
+            className="flex flex-row gap-1"
+            style={{ color: "#A3A3A3" }}
+          >
+            <div className="w-4">
+              <div>{i + 1}. </div>
+            </div>
+            <div className="w-auto">{job_questions[i]}</div>
+          </div>,
+        );
+      }
+
+      return questions;
+    },
+    [jobQuestionLength],
+  );
 
   return (
     <div className="flex flex-row gap-2">
@@ -150,7 +186,7 @@ function TalentViewById({ job_id }) {
             <Heading sm>Application Questions</Heading>
           </div>
 
-          {job_questions.map((question, index) => (
+          {/* {job_questions.map((question, index) => (
             <div
               key={index}
               className="flex flex-row gap-1"
@@ -161,15 +197,20 @@ function TalentViewById({ job_id }) {
               </div>
               <div className="w-auto">{question}</div>
             </div>
-          ))}
+          ))} */}
+
+          {createApplicationQuestions({
+            job_questions,
+            length: jobQuestionLength,
+          }).map((q) => q)}
 
           {job_questions.length > 1 && (
             <div className="flex flex-row gap-1">
               <button
                 className="weigh flex w-36 flex-row items-center justify-around rounded-3xl px-4 py-3 text-[14px] font-semibold text-grey-primary-shade-60"
-                onClick={handleShowMore}
+                onClick={handleReadMore}
               >
-                {isReadMoreEnabled ? "Read More" : "Read Less"}
+                <p>{isReadMoreEnabled ? "Read More" : "Read Less"}</p>
                 <Image alt="dropdown" src={dropdown} />
               </button>
             </div>
@@ -194,34 +235,12 @@ function TalentViewById({ job_id }) {
                   image: "/avatars/avatar-1.png",
                 }}
               />
-              {/* <Capsule
-                  className="mr-auto h-8 w-max rounded-[40px] !bg-primary-tint-100"
-                  icon={
-                    <IconWithBg
-                      icon={<SvgIconJobStatus status={job.job_status} />}
-                    />
-                  }
-                >
-                  {" "}
-                  {job.job_status}{" "}
-                </Capsule> */}
             </div>
             <div className="skills flex items-center gap-1.5 text-center">
-              {job.skills.map((skill, i = numOfJobQues) => (
+              {job.skills.map((skill, i) => (
                 <Skill key={i} skill={skill} />
               ))}
             </div>
-
-            {/* <div className="flex flex-row mt-1 gap-2 text-center">
-                <Capsule className="h-8 w-max rounded-[40px] !bg-primary-tint-100">
-                  {" "}
-                  {job.job_type}{" "}
-                </Capsule>
-                <Capsule className="h-8 w-max rounded-[40px] !bg-primary-tint-100">
-                  {" "}
-                  {"Exp: " + job.experience}{" "}
-                </Capsule>
-              </div> */}
           </div>
         ))}
       </div>
@@ -229,4 +248,4 @@ function TalentViewById({ job_id }) {
   );
 }
 
-export default TalentViewById;
+export default JobViewById;
