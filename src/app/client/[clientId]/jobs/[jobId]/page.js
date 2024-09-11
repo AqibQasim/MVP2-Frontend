@@ -18,6 +18,7 @@ import TagCard from "@/components/TagCard";
 import TalentDescription from "@/components/TalentDescription";
 import Image from "next/image";
 import { useState } from "react";
+import { useCallback } from "react";
 
 const client = {
   title: "Software Engineer",

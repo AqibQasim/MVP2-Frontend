@@ -4,12 +4,44 @@ import Image from "next/image";
 import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
-
-// export const metadata = {
-//   title: "Login",
-// };
+import { useState } from "react";
 
 function Login() {
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState({ email: "", password: "" });
+
+  const validateField = (name, value) => {
+    let errorMsg = "";
+
+    switch (name) {
+      case "email":
+        if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value)) {
+          errorMsg = "Invalid email address";
+        }
+        break;
+      case "password":
+        if (!/^.{8,}$/.test(value)) {
+          errorMsg = "Password must be at least 8 characters long";
+        }
+        break;
+      default:
+        break;
+    }
+
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMsg }));
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prevForm) => ({ ...prevForm, [name]: value }));
+    validateField(name, value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Additional form submission logic
+  };
+
   return (
     <>
       <div className={`flex ${PAGE_HEIGHT_FIX} gap-2`}>
@@ -20,8 +52,6 @@ function Login() {
         </div>
 
         <div className="flex w-[33rem] flex-col items-start justify-start overflow-y-auto rounded-[36px] bg-white">
-          {/* <Heading className="text-primary bg-primary-to-r from-primary-500 font-extrabold"></Heading> */}
-
           <div className="flex w-full justify-between space-y-2 p-5">
             <Image src="/logo.svg" width={100} height={25} alt="MVP 2 Logo" />
             <div className="flex gap-2">
@@ -31,8 +61,6 @@ function Login() {
               <button className="rounded-full bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]">
                 Freelancer
               </button>
-              {/* <Button className="rounded-full bg-primary-tint-100 text-[#070416] border-2 border-primary">Client</Button>
-                        <Button className="rounded-full bg-primary-tint-100 text-[#ACA6C8]">Freelancer</Button> */}
             </div>
           </div>
           <div className="mx-auto mt-3 w-8/12 flex-grow">
@@ -50,19 +78,34 @@ function Login() {
 
             <Input
               type="text"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
               placeholder="Enter your email"
               className="mt-5"
             />
+            {errors.email && (
+              <p className="text-xs text-red-500">{errors.email}</p>
+            )}
+
             <Input
               type="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
               placeholder="Enter your password"
               className="mt-3"
             />
+            {errors.password && (
+              <p className="text-xs text-red-500">{errors.password}</p>
+            )}
 
             <div className="mt-2 w-full text-right">
               <button className="text-sm text-primary">Forgot Password?</button>
             </div>
-            <OnBoardingButton>Login to proceed</OnBoardingButton>
+            <OnBoardingButton onClick={handleSubmit}>
+              Login to proceed
+            </OnBoardingButton>
             <div className="my-1 w-full text-center text-grey-primary-tint-30">
               <div className="flex items-center justify-center gap-2">
                 <Image
@@ -110,7 +153,6 @@ function Login() {
               alt="info icon"
               className="inline-block"
             />
-
             <p className="ms-1 inline-block">
               You’re registering as client, but you can also switch to
               freelancer later from settings.

@@ -10,15 +10,70 @@ import { useState, useEffect } from "react";
 
 function SignUp() {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const [errors, setErrors] = useState({});
 
   const handleOpenOverlay = () => {
-    setOverlayVisible(true);
+    if (Object.values(errors).every((err) => err === "")) {
+      setOverlayVisible(true);
+    }
   };
 
   const handleCloseOverlay = () => {
     setOverlayVisible(false);
-    console.log(isOverlayVisible);
   };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+
+    // Real-time validation
+    validateField(name, value);
+  };
+
+  const validateField = (name, value) => {
+    let errorMsg = "";
+
+    switch (name) {
+      case "firstName":
+        if (!/^[A-Za-z]+$/.test(value)) {
+          errorMsg = "Invalid Firstname";
+        }
+        break;
+      case "lastName":
+        if (!/^[A-Za-z]+$/.test(value)) {
+          errorMsg = "Invalid Lastname";
+        }
+        break;
+      case "email":
+        if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value)) {
+          errorMsg = "Invalid email address";
+        }
+        break;
+      case "password":
+        if (!/^.{8,}$/.test(value)) {
+          errorMsg = "Password must be at least 8 characters";
+        }
+        break;
+      case "confirmPassword":
+        if (value !== form.password) {
+          errorMsg = "Passwords do not match";
+        }
+        break;
+      default:
+        break;
+    }
+
+    setErrors({ ...errors, [name]: errorMsg });
+  };
+
   useEffect(() => {
     console.log("[isOverlayVisible]:", isOverlayVisible);
   }, [isOverlayVisible]);
@@ -38,7 +93,6 @@ function SignUp() {
       </span>
     </span>
   );
-
   let text = (
     <>
       We've sent a code to{" "}
@@ -81,22 +135,90 @@ function SignUp() {
             </h2>
 
             <div className="mt-5 flex gap-2">
-              <Input type="text" placeholder="First name" className="mt-3" />
-              <Input type="text" placeholder="Last name" className="mt-3" />
+              <Input
+                type="text"
+                name="firstName"
+                value={form.firstName}
+                onChange={handleChange}
+                placeholder="First name"
+                className="mt-3"
+              />
+
+              <Input
+                type="text"
+                name="lastName"
+                value={form.lastName}
+                onChange={handleChange}
+                placeholder="Last name"
+                className="mt-3"
+              />
             </div>
 
-            <Input type="text" placeholder="Enter email" className="mt-3" />
+            {/* {errors.firstName || errors.lastName ? (
+              <p className="text-xs text-red-500">{errors.firstName}</p>
+            ) : (
+              ""
+            )} */}
+
+            <div className="flex gap-2">
+              <div>
+                {errors.firstName && (
+                  <p className="text-xs text-red-500">{errors.firstName}</p>
+                )}
+              </div>
+              <div>
+                {errors.lastName && (
+                  <p className="text-xs text-red-500">{errors.lastName}</p>
+                )}
+              </div>
+            </div>
+
+            <Input
+              type="text"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="Enter email"
+              className="mt-3"
+            />
+            {errors.email && (
+              <p className="text-xs text-red-500">{errors.email}</p>
+            )}
+
             <div className="flex gap-2">
               <Input
                 type="password"
+                name="password"
+                value={form.password}
+                onChange={handleChange}
                 placeholder="Enter password"
                 className="mt-3"
               />
+              {/* {errors.password && (
+                <p className="text-xs text-red-500">{errors.password}</p>
+              )} */}
               <Input
                 type="password"
+                name="confirmPassword"
+                value={form.confirmPassword}
+                onChange={handleChange}
                 placeholder="Confirm password"
                 className="mt-3"
               />
+            </div>
+            <div className="flex gap-2">
+              <div>
+                {errors.password && (
+                  <p className="text-xs text-red-500">{errors.password}</p>
+                )}
+              </div>
+              <div>
+                {errors.confirmPassword && (
+                  <p className="text-xs text-red-500">
+                    {errors.confirmPassword}
+                  </p>
+                )}
+              </div>
             </div>
             <div className="mt-2 w-full text-start">
               <input type="checkbox" className="border-none outline-none" />
@@ -167,7 +289,6 @@ function SignUp() {
       {isOverlayVisible && (
         <Overlay isVisible={isOverlayVisible} closeoverlay={handleCloseOverlay}>
           <SuccessModal
-            // onClose={handleCloseOverlay}
             imgSrc="/Message.png"
             mainHeading={mainHeading}
             text={text}
@@ -180,4 +301,5 @@ function SignUp() {
     </>
   );
 }
+
 export default SignUp;
