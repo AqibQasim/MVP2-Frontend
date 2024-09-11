@@ -5,7 +5,7 @@ import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import { useCallback, useMemo, useState } from "react";
-import { apiHelper } from "@/Helpers/apiHelper";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import Link from "next/link";
 
 // export const metadata = {
@@ -29,7 +29,7 @@ function Login() {
   
   const handleLogin= useCallback(async(event)=>{
     event.preventDefault();
-    const result= await apiHelper(payload);
+    const result= await mvp2ApiHelper(payload);
     if(result.status===200){
       console.log("logged in successfully")
     }

@@ -7,7 +7,7 @@ import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Overlay from "@/components/Overlay";
 import SuccessModal from "@/components/SuccessModal";
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { apiHelper } from "@/Helpers/apiHelper";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 
 function SignUp() {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
@@ -32,7 +32,7 @@ function SignUp() {
   const handleSignup= useCallback(async(event)=>{
     event.preventDefault();
     console.log(payload)
-    const result= await apiHelper(payload);
+    const result= await mvp2ApiHelper(payload);
     if(result.status===200){
       console.log("signed up successfully")
     }

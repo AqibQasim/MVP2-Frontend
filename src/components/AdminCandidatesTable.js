@@ -3,6 +3,9 @@ import { useParams } from "next/navigation";
 import AdminCandidateRecommendedRow from './AdminCandidateRecommendedRow';
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
+import { useCallback, useEffect } from "react";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
+import { recruitinnApiHelper } from "@/Helpers/recruitinnApiHelper";
 
 const recommendedTalents = [
   {
@@ -65,6 +68,19 @@ const recommendedTalents = [
 function AdminCandidatesTable() {
   const params = useParams();
   const clientId = params?.clientId;
+
+  const fetchCandidates= useCallback(async()=>{
+    const payload={
+      endpoint:''
+    }
+    const result= await recruitinnApiHelper(payload)
+  },[])
+
+  useEffect(()=>{
+    fetchCandidates()
+  },[])
+
+
   return (
     <DashboardSection
       className="!min-h-full"
