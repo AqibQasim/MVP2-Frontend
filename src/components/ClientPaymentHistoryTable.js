@@ -1,0 +1,33 @@
+"use client";
+import ClientPaymentHistoryRow from "./ClientPaymentHistoryRow";
+import DashboardSection from "./DashboardSection";
+import Table from "./Table";
+
+function ClientPaymentHistoryTable({ clientId, paymentHistory }) {
+  return (
+    <DashboardSection
+      paragraph="Hey Richard Feynman, below is your"
+      heading="Payment history"
+      href={`/client/${clientId}/payment-history`}
+    >
+      <Table columns="grid-cols-[1fr_0.8fr_0.5fr_0.5fr_0.7fr_9.5rem]">
+        <Table.Header>
+          <div className="info">Info</div>
+          <div className="date text-center">Date</div>
+          <div className="status text-center">Status</div>
+          <div className="amount text-center">Amount</div>
+          <div className="invoice text-center">Invoice</div>
+          <div className="actions text-right">Action</div>
+        </Table.Header>
+        <Table.Body
+          data={paymentHistory}
+          render={(payment, i) => (
+            <ClientPaymentHistoryRow payment={payment} key={i} />
+          )}
+        />
+      </Table>
+    </DashboardSection>
+  );
+}
+
+export default ClientPaymentHistoryTable;

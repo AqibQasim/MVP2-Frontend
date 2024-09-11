@@ -9,7 +9,7 @@ module.exports = {
   theme: {
     extend: {
       screens: {
-        '1220px': '1220px',
+        "1220px": "1220px",
       },
       boxShadow: {
         xl: "0 0 25px -5px rgba(0, 0, 0, 0.1)", // Adjust values here
@@ -79,6 +79,10 @@ module.exports = {
               90: "#F9F8FC",
             },
           },
+        },
+        fulfilled: {
+          text: "#2AA700",
+          bg: "#F0FFEB",
         },
         neutral: {
           dark: "#0D0D0F",

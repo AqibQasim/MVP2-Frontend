@@ -1,4 +1,14 @@
 "use client";
+import briefcase_tick from "@/../public/icons/briefcase-tick.svg";
+import calendar from "@/../public/icons/calendar.svg";
+import clipboard_text from "@/../public/icons/clipboard-text.svg";
+import commitment from "@/../public/icons/commitment.svg";
+import copy_success from "@/../public/icons/copy-success.svg";
+import dropdown from "@/../public/icons/drop-down.svg";
+import note_add from "@/../public/icons/note-add.svg";
+import tag from "@/../public/icons/tag-user.svg";
+import timer_start from "@/../public/icons/timer-start.svg";
+import ButtonCapsuleWhite from "@/components/ButtonCapsuleWhite";
 import Capsule from "@/components/Capsule";
 import EntityCard from "@/components/EntityCard";
 import Heading from "@/components/Heading";
@@ -7,17 +17,7 @@ import Skill from "@/components/Skill";
 import TagCard from "@/components/TagCard";
 import TalentDescription from "@/components/TalentDescription";
 import Image from "next/image";
-import { useCallback, useMemo, useState } from "react";
-import briefcase_tick from "../../../../../../public/icons/briefcase-tick.svg";
-import calendar from "../../../../../../public/icons/calendar.svg";
-import clipboard_text from "../../../../../../public/icons/clipboard-text.svg";
-import commitment from "../../../../../../public/icons/commitment.svg";
-import copy_success from "../../../../../../public/icons/copy-success.svg";
-import dropdown from "../../../../../../public/icons/drop-down.svg";
-import note_add from "../../../../../../public/icons/note-add.svg";
-import tag from "../../../../../../public/icons/tag-user.svg";
-import timer_start from "../../../../../../public/icons/timer-start.svg";
-import ButtonCapsuleWhite from "@/components/ButtonCapsuleWhite";
+import { useState } from "react";
 
 const client = {
   title: "Software Engineer",
@@ -55,7 +55,7 @@ const job_on_progress = [
 function JobViewById({ job_id }) {
   const [isShowMoreEnabled, setIsShowMoreEnabled] = useState(false);
   const [isReadMoreEnabled, setIsReadMoreEnabled] = useState(false);
-  const [jobQuestionLength, setJobQuestionLength]= useState(1)
+  const [jobQuestionLength, setJobQuestionLength] = useState(1);
 
   const handleShowMore = () => {
     setIsShowMoreEnabled((value) => !value);
@@ -63,34 +63,37 @@ function JobViewById({ job_id }) {
 
   const handleReadMore = () => {
     setIsReadMoreEnabled((value) => !value);
-    if(isReadMoreEnabled){
+    if (isReadMoreEnabled) {
       setJobQuestionLength(job_questions.length);
-    }else{
-      setJobQuestionLength(1)
+    } else {
+      setJobQuestionLength(1);
     }
   };
 
-  const createApplicationQuestions=useCallback(({ job_questions, length })=>{
-    const questions = [];
-  
-    for (let i = 0; i < length; i++) {
-      console.log(i)
-      questions.push(
-        <div
-          key={i}
-          className="flex flex-row gap-1"
-          style={{ color: "#A3A3A3" }}
-        >
-          <div className="w-4">
-            <div>{i + 1}. </div>
-          </div>
-          <div className="w-auto">{job_questions[i]}</div>
-        </div>,
-      );
-    }
-  
-    return questions;
-  },[jobQuestionLength])
+  const createApplicationQuestions = useCallback(
+    ({ job_questions, length }) => {
+      const questions = [];
+
+      for (let i = 0; i < length; i++) {
+        console.log(i);
+        questions.push(
+          <div
+            key={i}
+            className="flex flex-row gap-1"
+            style={{ color: "#A3A3A3" }}
+          >
+            <div className="w-4">
+              <div>{i + 1}. </div>
+            </div>
+            <div className="w-auto">{job_questions[i]}</div>
+          </div>,
+        );
+      }
+
+      return questions;
+    },
+    [jobQuestionLength],
+  );
 
   return (
     <div className="flex flex-row gap-2">
@@ -106,6 +109,7 @@ function JobViewById({ job_id }) {
           <TalentDescription
             description={client.description}
             isShowMoreEnabled={isShowMoreEnabled}
+            skills={["JavaScript", "React"]}
           />
           {client.description.length > 300 && (
             <div className="m-3">
@@ -194,9 +198,10 @@ function JobViewById({ job_id }) {
             </div>
           ))} */}
 
-          {
-            createApplicationQuestions({job_questions,length:jobQuestionLength}).map(q=>q)
-          }
+          {createApplicationQuestions({
+            job_questions,
+            length: jobQuestionLength,
+          }).map((q) => q)}
 
           {job_questions.length > 1 && (
             <div className="flex flex-row gap-1">
