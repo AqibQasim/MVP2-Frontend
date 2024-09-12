@@ -42,10 +42,11 @@ export const getProducts = async function () {
 
 export async function getClients() {
   const payload = {
-    endpoint: "clients",
+    endpoint: "client",
     method: "GET",
   };
   const result = await apiHelper(payload);
+  console.log("result", result);
   return result;
 }
 
