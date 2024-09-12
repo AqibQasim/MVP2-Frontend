@@ -1,4 +1,6 @@
-import ClientPage from "@/components/ClientPage";
+import ClientEmployeesTable from "@/components/ClientEmployeesTable";
+import ClientJobsOverviewTable from "@/components/ClientJobsOverviewTable";
+import ClientRecommendationCard from "@/components/ClientRecommendationCard";
 import { getClientById, getClients } from "@/lib/data-service";
 
 export async function generateMetadata({ params }) {
@@ -13,9 +15,13 @@ export async function generateStaticParams() {
 }
 
 export default async function Page({ params }) {
+  const client = await getClientById(params.clientId);
+
   return (
-    <>
-      <ClientPage params={params} />
-    </>
+    <div className="space-y-2">
+      <ClientRecommendationCard client={client} />
+      <ClientJobsOverviewTable />
+      <ClientEmployeesTable />
+    </div>
   );
 }
