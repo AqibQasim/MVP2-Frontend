@@ -7,10 +7,12 @@ import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import { useCallback, useMemo, useState } from "react";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import Link from "next/link";
+import { redirect, useRouter } from "next/navigation";
 
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
+  const router = useRouter();
 
   const validateField = (name, value) => {
     let errorMsg = "";
@@ -65,8 +67,12 @@ function Login() {
       }
       console.log(payload)
       const result = await mvp2ApiHelper(payload);
+      console.log(result)
       if (result.status === 200) {
-        console.log("Logged in successfully");
+        //console.log("Logged in successfully");
+        //redirect(`/client/${result.id}`)
+        //redirect(`/client/1`)
+        router.push(`/client/1`)
       }
     },
     [form, errors, user_role],

@@ -14,5 +14,15 @@ export const mvp2ApiHelper= async(payload)=>{
 
     const result= await response.json();
 
-    return result;
+    if(!response.ok){
+        return {
+            status: response.status,
+            result
+        }
+    }
+
+    return {
+        status: 200,
+        ...result
+    };
 }
