@@ -1,4 +1,4 @@
-import { apiHelper } from "@/Helpers/apiHelper";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { notFound } from "next/navigation";
 // example
 
@@ -45,7 +45,7 @@ export async function getClients() {
     endpoint: "client",
     method: "GET",
   };
-  const result = await apiHelper(payload);
+  const result = await mvp2ApiHelper(payload);
   console.log("result", result);
   return result;
 }
