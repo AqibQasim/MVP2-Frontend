@@ -16,7 +16,7 @@ export const mvp2ApiHelper= async(payload)=>{
 
     if(!response.ok){
         return {
-            status: response.status,
+            status: response?.status,
             result
         }
     }
