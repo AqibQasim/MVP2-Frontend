@@ -4,12 +4,12 @@ import EntityCard from "@/components/EntityCard";
 import Heading from "@/components/Heading";
 import Skill from "@/components/Skill";
 import { formatCurrencyNoDecimals } from "@/utils/utility";
-import ButtonCapsule from "./ButtonCapsule";
 import IconWithBg from "./IconWithBg";
+import ScheduleInterviewModal from "./ScheduleInterviewModal";
 
 const skills = ["python", "javascript", "react"];
 
-function ClientRecommendationCard({ client = {}, handleOpenOverlay }) {
+function ClientRecommendationCard({ client = {} }) {
   return (
     <DashboardSection
       paragraph={`Hey ${client.name}, here's your new`}
@@ -45,9 +45,8 @@ function ClientRecommendationCard({ client = {}, handleOpenOverlay }) {
             <span className="h-[1px] w-2 rounded-full bg-grey-primary-tint-40"></span>
             <Skill score={8.0} />
           </div>
-          <ButtonCapsule handleOpenOverlay={handleOpenOverlay}>
-            Schedule Interview
-          </ButtonCapsule>
+          {/* ScheduleInterview */}
+          <ScheduleInterviewModal />
         </div>
       </div>
     </DashboardSection>

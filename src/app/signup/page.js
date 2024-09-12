@@ -4,10 +4,10 @@ import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
 import Overlay from "@/components/Overlay";
 import SuccessModal from "@/components/SuccessModal";
-import { useState, useMemo, useCallback } from "react";
-import { apiHelper } from "@/Helpers/apiHelper";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
+import { useCallback, useMemo, useState } from "react";
 
 function SignUp() {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
@@ -19,6 +19,7 @@ function SignUp() {
     confirmPassword: "",
   });
 
+  const [user_role, setUserRole] = useState("client");
   const [errors, setErrors] = useState({});
 
   const payload = useMemo(
@@ -29,11 +30,11 @@ function SignUp() {
         email: form.email,
         name: form.firstName + " " + form.lastName,
         password: form.password,
-        user_role: "client",
+        user_role,
         method: "signup",
       },
     }),
-    [form],
+    [form, user_role],
   );
 
   const handleSignup = useCallback(
@@ -42,14 +43,17 @@ function SignUp() {
       if (Object.values(errors).some((err) => err !== "")) {
         return; // Do not proceed with signup if there are validation errors
       }
-      console.log(payload);
-      const result = await apiHelper(payload);
+      //console.log(payload);
+      const result = await mvp2ApiHelper(payload);
+      console.log(result)
       if (result.status === 200) {
         console.log("signed up successfully");
+        // const revalidatePath = await revalidate("/admin/clients");
+        // console.log("revalidate path", revalidatePath);
         setOverlayVisible(true);
       }
     },
-    [payload, errors],
+    [payload, errors,user_role],
   );
 
   const handleOpenOverlay = () => {
@@ -141,10 +145,22 @@ function SignUp() {
           <div className="flex w-full justify-between space-y-2 p-5">
             <Image src="/logo.svg" width={100} height={25} alt="MVP 2 Logo" />
             <div className="flex gap-2">
-              <button className="rounded-full border-[1px] border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]">
+              <button
+                onClick={(e) => {
+                  //e.preventDefault();
+                  setUserRole("client");
+                }}
+                className={`rounded-full border-[1px] ${user_role === "client" ? "border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]" : "bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]"}`}
+              >
                 Client
               </button>
-              <button className="rounded-full bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]">
+              <button
+                onClick={(e) => {
+                  //e.preventDefault();
+                  setUserRole("customer");
+                }}
+                className={`rounded-full border-[1px] ${user_role === "customer" ? "border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]" : "bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]"}`}
+              >
                 Freelancer
               </button>
             </div>

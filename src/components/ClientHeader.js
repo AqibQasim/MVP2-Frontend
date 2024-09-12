@@ -1,9 +1,9 @@
 import SvgIconNotification from "@/svgs/SvgIconNotification";
 import SvgIconSettings from "@/svgs/SvgIconSettings";
 import { formatDate } from "@/utils/utility";
-import ButtonCapsule from "./ButtonCapsule";
 import ButtonRounded from "./ButtonRounded";
 import EntityCard from "./EntityCard";
+import ScheduleCallModal from "./ScheduleCallModal";
 
 function ClientHeader() {
   return (
@@ -32,7 +32,8 @@ function ClientHeader() {
           <ButtonRounded>
             <SvgIconSettings />
           </ButtonRounded>
-          <ButtonCapsule>Schedule Call</ButtonCapsule>
+          {/* schedule-call */}
+          <ScheduleCallModal />
         </div>
         <div className="joing-date float-right">
           <p className="capitalize text-grey-primary-shade-10">

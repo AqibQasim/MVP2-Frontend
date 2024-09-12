@@ -1,8 +1,11 @@
 "use client";
 import { useParams } from "next/navigation";
-import AdminCandidateRecommendedRow from './AdminCandidateRecommendedRow';
+import AdminCandidateRecommendedRow from "./AdminCandidateRecommendedRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
+import { useCallback, useEffect } from "react";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
+import { recruitinnApiHelper } from "@/Helpers/recruitinnApiHelper";
 
 const recommendedTalents = [
   {
@@ -46,7 +49,7 @@ const recommendedTalents = [
     role: "Front-End Developer",
     profession: "some profession",
     skills: ["javascript", "react", "python"],
-  
+
     experience: "Intermediate",
     jobType: "full time",
     dateHired: "20-Sep-2024",
@@ -55,7 +58,7 @@ const recommendedTalents = [
     id: 6,
     role: "Front-End Developer",
     profession: "some profession",
-  skills: ["javascript", "react", "python"],
+    skills: ["javascript", "react", "python"],
     experience: "Intermediate",
     jobType: "full time",
     dateHired: "20-Sep-2024",
@@ -65,6 +68,19 @@ const recommendedTalents = [
 function AdminCandidatesTable() {
   const params = useParams();
   const clientId = params?.clientId;
+
+  const fetchCandidates= useCallback(async()=>{
+    const payload={
+      endpoint:''
+    }
+    const result= await recruitinnApiHelper(payload)
+  },[])
+
+  useEffect(()=>{
+    fetchCandidates()
+  },[])
+
+
   return (
     <DashboardSection
       className="!min-h-full"
@@ -83,7 +99,7 @@ function AdminCandidatesTable() {
           data={recommendedTalents}
           //   data={[]}
           render={(recommended, i) => (
-          <AdminCandidateRecommendedRow recommended={recommended} key={i} />
+            <AdminCandidateRecommendedRow recommended={recommended} key={i} />
           )}
         />
       </Table>

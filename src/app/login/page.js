@@ -5,12 +5,14 @@ import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import { useCallback, useMemo, useState } from "react";
-import { apiHelper } from "@/Helpers/apiHelper";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import Link from "next/link";
+import { redirect, useRouter } from "next/navigation";
 
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
+  const router = useRouter();
 
   const validateField = (name, value) => {
     let errorMsg = "";
@@ -38,6 +40,8 @@ function Login() {
     setForm((prevForm) => ({ ...prevForm, [name]: value }));
     validateField(name, value);
   };
+  const [user_role,setUserRole]= useState('client')
+
 
   const payload = useMemo(
     () => ({
@@ -46,11 +50,11 @@ function Login() {
       body: {
         email: form.email,
         password: form.password,
-        user_role: "client",
+        user_role,
         method: "login",
       },
     }),
-    [form],
+    [form,user_role],
   );
 
   const handleLogin = useCallback(
@@ -61,13 +65,17 @@ function Login() {
       if (!form.email || !form.password || errors.email || errors.password) {
         return; // Don't proceed if there are validation errors
       }
-
-      const result = await apiHelper(payload);
+      console.log(payload)
+      const result = await mvp2ApiHelper(payload);
+      console.log(result)
       if (result.status === 200) {
-        console.log("Logged in successfully");
+        //console.log("Logged in successfully");
+        //redirect(`/client/${result.id}`)
+        //redirect(`/client/1`)
+        router.push(`/client/${result.data.id}`)
       }
     },
-    [form, errors],
+    [form, errors, user_role],
   );
 
   return (
@@ -83,10 +91,16 @@ function Login() {
           <div className="flex w-full justify-between space-y-2 p-5">
             <Image src="/logo.svg" width={100} height={25} alt="MVP 2 Logo" />
             <div className="flex gap-2">
-              <button className="rounded-full border-[1px] border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]">
+            <button  onClick={(e)=>{
+                //e.preventDefault();
+                setUserRole('client')}}  
+                className={`rounded-full border-[1px] ${(user_role==='client')? 'border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]':'bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]'}`}>
                 Client
               </button>
-              <button className="rounded-full bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]">
+              <button onClick={(e)=>{
+                //e.preventDefault();
+                setUserRole('customer')}} 
+                className={`rounded-full border-[1px] ${(user_role==='customer')? 'border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]':'bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]'}`}>
                 Freelancer
               </button>
             </div>

@@ -1,7 +1,7 @@
 
-export const apiHelper= async(payload)=>{
+export const recruitinnApiHelper= async(payload)=>{
     const {endpoint,token,method,body,params}= payload;
-    const url=`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/${endpoint}`
+    const url=`${process.env.NEXT_PUBLIC_RECRUITINN_API_REMOTE_URL}/${endpoint}`
     console.log(url)
     const response= await fetch(url,{
         method,
