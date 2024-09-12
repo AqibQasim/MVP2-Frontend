@@ -8,7 +8,7 @@ import ButtonCapsule from "./ButtonCapsule";
 
 const skills = ["python", "javascript", "react"];
 
-function ClientRecommendationCard({ client = {} , handleOpenOverlay}) {
+function ClientRecommendationCard({ client = {} , handleInterviewOverlay, handleOpenOverlay}) {
   return (
     <DashboardSection
       paragraph={`Hey ${client.name}, here's your new`}

@@ -4,6 +4,7 @@
 
 import ClientPage from "@/components/ClientPage";
 import { getDummyClientById, getDummyClients } from "@/lib/tempData";
+import { DataProvider } from "@/contexts/DataContext";
 
 export async function generateMetadata({ params }) {
   const {
@@ -18,13 +19,13 @@ export async function generateStaticParams() {
   return ids;
 }
 
-
-
 export default async function Page({ params }) {
 
   return (
     <>
-      <ClientPage params={params} />
+      {/* <DataProvider> */}
+        <ClientPage params={params} />
+      {/* </DataProvider> */}
     </>
   )
 }

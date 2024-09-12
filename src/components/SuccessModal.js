@@ -14,7 +14,7 @@ const SuccessModal = ({ mainHeading, text, onClose }) => {
                             <p className="w-[80%] text-center tes text-sm mt-[0.5rem]">{text}</p>
                         </div>
 
-                        <Image src="/line.svg" className="w-[80%] m-4" width={20} height={20} />
+                        <Image src="/separator.svg" className="w-[80%] m-4" width={20} height={20} />
 
                         <SuccessAckBtn onClickHandler={onClose} />
                     </div>

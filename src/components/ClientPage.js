@@ -5,19 +5,47 @@ import ClientRecommendationCard from "@/components/ClientRecommendationCard";
 import ClientJobsTable from "./ClientJobsTable";
 import Overlay from "@/components/Overlay";
 import { useEffect, useState } from "react";
-import InterViewScheduler from "./InterviewScheduler";
+// import InterViewScheduler from "./CallScheduler";
 import SuccessModal from "./SuccessModal";
+import CallScheduler from "./CallScheduler";
+import { useData } from "@/contexts/DataContext";
+import InterViewScheduler from "./InterviewSchedule";
 
 const ClientPage = async ({ params }) => {
-  const [isOverlayVisible, setOverlayVisible] = useState(false);
-  const [client, setClient] = useState(null);
+
+  // const { isOverlayVisible, setOverlayVisible, isCallClick, setIsCallClick } = useData();
+  const { isOverlayVisible, setOverlayVisible, overlayType, setOverlayType } = useData();
+
+
+
+  // const [client, setClient] = useState(null);
   const [successAcknowledge, setSuccessAcknowledge] = useState(false);
+  const [isCallScheduling, setIsCallScheduling] = useState(false);
+
+  const [client, setClient] = useState(null);
+
+
+  const handleOpenInterviewScheduler = () => {
+    setOverlayType('interviewScheduler');
+    setOverlayVisible(true);
+  };
 
   const handleSuccessAcknowledge = () => {
     setSuccessAcknowledge(!successAcknowledge);
   }
 
+  const handleInterviewOverlay = () => {
+    setOverlayVisible(true);
+    setIsCallScheduling(true);
+  };
+
+  const handleInterviewOverlayClose = () => {
+    setOverlayVisible(false);
+    setSuccessAcknowledge(false);
+  };
+
   const handleOpenOverlay = () => {
+    setIsCallClick(false);
     setOverlayVisible(true);
   };
 
@@ -37,15 +65,10 @@ const ClientPage = async ({ params }) => {
   }, [params.clientId]);
 
   useEffect(() => {
-    console.log('[isOverlayVisible]:', isOverlayVisible);
-  }, [isOverlayVisible]);
+    console.log("[DATA IN CLIENT PAGE]:", isOverlayVisible, "[OVERLAY TYPE]:",overlayType);
+  }, [isOverlayVisible, overlayType]);
 
   if (!client) return <div>Loading...</div>;
-
-
-
-  // ALL THE CONTENT FOR THE PROPS.
-
   const mainHeading = <span>Your call & job request successfully <span style={{
     backgroundImage: 'linear-gradient(to right, #4624E0, white)',
     WebkitBackgroundClip: 'text',
@@ -59,25 +82,26 @@ const ClientPage = async ({ params }) => {
   return (
     <>
       <div className="space-y-2">
-        <ClientRecommendationCard handleOpenOverlay={handleOpenOverlay} client={client} />
+        <ClientRecommendationCard
+          handleInterviewOverlay={handleOpenInterviewScheduler} handleInterviewOverlayClose={handleInterviewOverlay} handleOpenOverlay={handleOpenInterviewScheduler} client={client} />
         <ClientJobsTable />
       </div>
-      <Overlay isVisible={isOverlayVisible} >
-        {
-          successAcknowledge ? (
-            <>
-              <SuccessModal
-                mainHeading={mainHeading}
-                text={text}
-                onClose={handleCloseOverlay} />
-            </>
-          ) : (
-            <>
-              <InterViewScheduler onSuccessAck={handleSuccessAcknowledge} onClose={handleCloseOverlay} />
-            </>
-          )
-        }
-      </Overlay>
+      {
+        isOverlayVisible && <Overlay>
+          {
+            successAcknowledge ? (
+              <>
+                <SuccessModal
+                  mainHeading={mainHeading}
+                  text={text}
+                  onClose={handleCloseOverlay} />
+              </>
+            ) : (overlayType === 'callScheduler' ? <CallScheduler onClose={() => setOverlayVisible(false)} />
+              : overlayType === 'interviewScheduler' && <InterViewScheduler onClose={() => setOverlayVisible(false)} />
+            )
+          }
+        </Overlay>
+      }
     </>
   );
 }

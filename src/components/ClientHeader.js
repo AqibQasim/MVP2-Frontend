@@ -1,11 +1,31 @@
+"use client"
+
 import SvgIconNotification from "@/svgs/SvgIconNotification";
 import SvgIconSettings from "@/svgs/SvgIconSettings";
 import { formatDate } from "@/utils/utility";
 import ButtonCapsule from "./ButtonCapsule";
 import ButtonRounded from "./ButtonRounded";
 import EntityCard from "./EntityCard";
+import { useData } from "@/contexts/DataContext";
+import { useEffect } from "react";
+// import { useData } from "@/app/client/[clientId]/layout";
 
 function ClientHeader() {
+
+  const context = useData();
+  console.log("Context values:", context);
+
+  const { isOverlayVisible, setOverlayVisible , overlayType, setOverlayType } = context;
+
+  const handleOpenCallScheduler = () => {
+    setOverlayType('callScheduler');
+    setOverlayVisible(true);
+  };
+
+  useEffect(() => {
+    console.log("[DATA IN CLIENT HEADER]:", isOverlayVisible);
+  }, [isOverlayVisible]);
+
   return (
     <div className="flex">
       <EntityCard
@@ -32,7 +52,7 @@ function ClientHeader() {
           <ButtonRounded>
             <SvgIconSettings />
           </ButtonRounded>
-          <ButtonCapsule>Schedule Call</ButtonCapsule>
+          <ButtonCapsule handleOpenOverlay={handleOpenCallScheduler}>Schedule Call</ButtonCapsule>
         </div>
         <div className="joing-date float-right">
           <p className="capitalize text-grey-primary-shade-10">

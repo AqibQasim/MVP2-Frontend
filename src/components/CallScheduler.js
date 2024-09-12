@@ -7,7 +7,7 @@ import UserProfileTab from "./UserProfileTab";
 import { useState } from "react";
 
 
-const InterViewScheduler = async ({ onSuccessAck, onClose }) => {
+const CallScheduler = async ({ onSuccessAck, onClose }) => {
 
     const [isContinued, setIsContinued] = useState(false);
 
@@ -26,7 +26,7 @@ const InterViewScheduler = async ({ onSuccessAck, onClose }) => {
                             </>
                         ) : (
                             <>
-                                <h2 className="text-xl font-bold font-lufga pb-3">Schedule A Call</h2>
+                                <h2 className="text-xl font-bold font-lufga pb-3">Schedule An Interview</h2>
                             </>
                         )}
 
@@ -80,4 +80,4 @@ const InterViewScheduler = async ({ onSuccessAck, onClose }) => {
     )
 }
 
-export default InterViewScheduler;
+export default CallScheduler;
