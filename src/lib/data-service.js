@@ -2,6 +2,8 @@ import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { notFound } from "next/navigation";
 // example
 
+const mvp2Url = process.env.NEXT_PUBLIC_API_REMOTE_URL;
+
 export const getProductById = async function (id) {
   try {
     const response = await fetch(`https://fakestoreapi.com/products/${id}`);
@@ -40,14 +42,31 @@ export const getProducts = async function () {
   }
 };
 
-export async function getClients() {
+export async function getClientById(id) {
   const payload = {
-    endpoint: "client",
+    endpoint: `client?client_id=${id}`,
     method: "GET",
   };
   const result = await mvp2ApiHelper(payload);
-  console.log("result", result);
-  return result;
+  if (result.status === 200) {
+    return result?.data;
+  }
+  console.error(result?.data?.message);
+  notFound();
+}
+
+export async function getClients() {
+  const payload = {
+    endpoint: "clients",
+    method: "GET",
+  };
+
+  const result = await mvp2ApiHelper(payload);
+  if (result?.status === 200) {
+    return result?.data;
+  }
+
+  throw new Error(result.data.message);
 }
 
 export async function revalidate(path) {

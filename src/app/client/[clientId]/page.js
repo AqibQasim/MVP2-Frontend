@@ -1,16 +1,14 @@
 import ClientPage from "@/components/ClientPage";
-import { getDummyClientById, getDummyClients } from "@/lib/tempData";
+import { getClientById, getClients } from "@/lib/data-service";
 
 export async function generateMetadata({ params }) {
-  const {
-    company: { name },
-  } = await getDummyClientById(params.clientId);
-  return { title: `Company ${name}` };
+  const client = await getClientById(params.clientId);
+  return { title: `Client ${client?.name}` };
 }
 
 export async function generateStaticParams() {
-  const clients = await getDummyClients();
-  const ids = clients.map((client) => ({ cabinId: String(client.id) }));
+  const clients = await getClients();
+  const ids = clients.map((client) => ({ clientId: String(client.client_id) }));
   return ids;
 }
 
