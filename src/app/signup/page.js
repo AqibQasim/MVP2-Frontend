@@ -43,14 +43,15 @@ function SignUp() {
       if (Object.values(errors).some((err) => err !== "")) {
         return; // Do not proceed with signup if there are validation errors
       }
-      console.log(payload);
+      //console.log(payload);
       const result = await mvp2ApiHelper(payload);
+      console.log(result)
       if (result.status === 200) {
         console.log("signed up successfully");
         setOverlayVisible(true);
       }
     },
-    [payload, errors],
+    [payload, errors,user_role],
   );
 
   const handleOpenOverlay = () => {
