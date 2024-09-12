@@ -1,12 +1,14 @@
-import SvgIconJobStatus from "@/svgs/SvgIconJobStatus";
 import SvgIconWork from "@/svgs/SvgIconWork";
+import { useParams } from "next/navigation";
 import Capsule from "./Capsule";
+import CapsuleLink from "./CapsuleLink";
 import EntityCard from "./EntityCard";
-import IconWithBg from "./IconWithBg";
 import SkillIconWithBg from "./SkillIconWithBg";
 import Table from "./Table";
 
 function ClientJobsRow({ job }) {
+  const params = useParams();
+  const clientId = params?.clientId;
   console.log(job);
   return (
     <Table.Row>
@@ -29,12 +31,20 @@ function ClientJobsRow({ job }) {
       >
         <p>{job.status}</p>
       </Capsule>
-      <Capsule
+      {/* <Capsule
         className="mx-auto w-max !bg-primary-tint-100"
         icon={<IconWithBg icon={<SvgIconJobStatus status="hired" />} />}
       >
         view talent
-      </Capsule>
+      </Capsule> */}
+      {/* <CapsuleLink className="ml-auto" href={`${job.id}`}> */}
+      <CapsuleLink
+        className="ml-auto"
+        href={`/client/${clientId}/jobs/${job.id}`}
+      >
+        {" "}
+        view talent{" "}
+      </CapsuleLink>
     </Table.Row>
   );
 }

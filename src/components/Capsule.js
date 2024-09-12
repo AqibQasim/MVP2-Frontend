@@ -3,8 +3,8 @@ function Capsule({ children, icon = null, className = "", status = "none" }) {
     none: " ",
     paid: "bg-primary-tint-100 text-primary-tint-20",
     trial: "bg-primary-tint-100 text-primary-tint-20",
-    fulfilled: "bg-fulfilled-bg text-fulfilled-text ",
-    hired: "bg-fulfilled-bg text-fulfilled-text ",
+    fulfilled: "!bg-fulfilled-bg !text-fulfilled-text ",
+    hired: "!bg-fulfilled-bg !text-fulfilled-text ",
   };
 
   const baseClasses =
