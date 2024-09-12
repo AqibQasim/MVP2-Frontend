@@ -72,7 +72,7 @@ function Login() {
         //console.log("Logged in successfully");
         //redirect(`/client/${result.id}`)
         //redirect(`/client/1`)
-        router.push(`/client/1`)
+        router.push(`/client/${result.data.id}`)
       }
     },
     [form, errors, user_role],
