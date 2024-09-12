@@ -8,11 +8,7 @@ export const metadata = {
 async function page() {
   const clients = await getClients();
 
-  return (
-    <div>
-      <AdminClientsTable clients={clients} />
-    </div>
-  );
+  return <AdminClientsTable clients={clients} />;
 }
 
 export default page;

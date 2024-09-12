@@ -45,7 +45,7 @@ function SignUp() {
       }
       //console.log(payload);
       const result = await mvp2ApiHelper(payload);
-      console.log(result)
+      console.log(result);
       if (result.status === 200) {
         console.log("signed up successfully");
         // const revalidatePath = await revalidate("/admin/clients");
@@ -53,7 +53,7 @@ function SignUp() {
         setOverlayVisible(true);
       }
     },
-    [payload, errors,user_role],
+    [payload, errors, user_role],
   );
 
   const handleOpenOverlay = () => {
