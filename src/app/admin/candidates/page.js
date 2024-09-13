@@ -1,10 +1,14 @@
 import React from 'react'
 import AdminCandidatesTable from '@/components/AdminCandidatesTable'
+import { fetchCandidates } from '@/lib/data-service'
 
-const page = () => {
+const page = async() => {
+
+  const candidates = await fetchCandidates();
+
   return (
     <>
-    <AdminCandidatesTable/>
+    <AdminCandidatesTable candidates={candidates}/>
     </>
   )
 }
