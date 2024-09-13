@@ -12,7 +12,7 @@ function CandidateJobsRow({ job }) {
       <EntityCard
         icon={<SvgIconWork className="relative -right-[1.3px]" />}
         entity={{
-          name: job?.role,
+          name: job?.position,
         }}
       />
       <div className="skills flex items-center justify-center gap-1.5 text-center">

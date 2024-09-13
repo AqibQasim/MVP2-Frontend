@@ -5,6 +5,8 @@ export const metadata = {
   title: "Clients",
 };
 
+export const revalidate = 60 * 60 * 24; // invalidate every 24 hours
+
 async function page() {
   const clients = await getClients();
 

@@ -69,6 +69,20 @@ export async function getClients() {
   throw new Error(result.data.message);
 }
 
+export async function getJobs() {
+  const payload = {
+    endpoint: "jobs",
+    method: "GET",
+  };
+
+  const result = await mvp2ApiHelper(payload);
+  if (result?.status === 200) {
+    return result?.data?.result;
+  }
+
+  throw new Error(result.data.message);
+}
+
 export async function revalidate(path) {
   try {
     const response = await fetch("/api/revalidate-path", {
@@ -90,11 +104,11 @@ export async function revalidate(path) {
 }
 
 export async function fetchCandidates() {
-  const payload={
-    endpoint:'customers',
-    method: 'GET'
-  }
-  const result= await mvp2ApiHelper(payload);
+  const payload = {
+    endpoint: "customers",
+    method: "GET",
+  };
+  const result = await mvp2ApiHelper(payload);
   if (result?.status === 200) {
     return result?.data;
   }

@@ -7,10 +7,10 @@ export async function createAJobAction(formData) {
   const description = formData.get("description");
   const experience = formData.get("experience");
   const commitment = formData.get("commitment");
-  const project_length = Number(formData.get("project_length")); // Convert to number
+  const project_length = Number(formData.get("project_length"));
   const job_type = formData.get("job_type");
   const start_date = formData.get("start_date");
-  const workday_overlap = Number(formData.get("workday_overlap")); // Convert to number
+  const workday_overlap = Number(formData.get("workday_overlap"));
   const skills = formData.getAll("skills");
   const location = formData.get("location");
   const is_test_required = formData.get("is_test_required") === "true";
@@ -91,6 +91,5 @@ export async function createAJobAction(formData) {
     status: "active",
   };
 
-  // Add logic to dispatch the job data or handle it accordingly
   console.log("Job data prepared for dispatch:", createJobData);
 }

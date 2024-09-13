@@ -1,20 +1,19 @@
 import AdminJobsList from "@/components/AdminJobsList";
+import { getJobs } from "@/lib/data-service";
 
-const Page = () => {
-  return (
-    <>
-      <header className="flex justify-between rounded-4xl bg-neutral-white p-4">
-        <div className="text-2xl font-bold">Admin</div>
-        {/* <ClientSideModal
-          opens="create-job"
-          button={<Button className="rounded-full">Create a Job</Button>}
-          window={<AdminCreateJob />}
-        /> */}
-      </header>
-
-      <AdminJobsList />
-    </>
-  );
+export const metadata = {
+  title: "Jobs",
 };
 
-export default Page;
+export const revalidate = 60 * 60 * 24; // invalidate every 24 hours
+
+async function page() {
+  const jobs = await getJobs();
+  return (
+    <>
+      <AdminJobsList jobs={jobs} />
+    </>
+  );
+}
+
+export default page;
