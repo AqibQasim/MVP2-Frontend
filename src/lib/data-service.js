@@ -1,5 +1,5 @@
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 // example
 
 const mvp2Url = process.env.NEXT_PUBLIC_API_REMOTE_URL;
@@ -67,6 +67,32 @@ export async function getClients() {
   }
 
   throw new Error(result.data.message);
+}
+
+// data-service.js
+export async function createJob(jobData) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-positions`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(jobData),
+      },
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { error: errorData.message || "An unknown error occurred" };
+    }
+
+    const data = await response.json();
+    return { data };
+  } catch (error) {
+    return { error: error.message || "An unknown error occurred" };
+  }
 }
 
 export async function getJobs() {

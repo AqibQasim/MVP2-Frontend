@@ -132,7 +132,6 @@ function AdminCreateAJobForm({ clientId }) {
           >
             <option value="remote">Remote</option>
             <option value="on-site">On Site</option>
-            <option value="hybrid">Hybrid</option>
           </select>
         </div>
 
