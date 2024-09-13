@@ -17,7 +17,7 @@ const InterViewScheduler = async ({ onSuccessAck, onClose }) => {
 
     return (
         <>
-            <div className="w-[40%] max-h-[90vh] overflow-y-auto relative bg-white px-6 py-3 rounded-[2rem] shadow-2xl custom-scrollbar">
+            <div className="w-[100%] max-h-[90vh] overflow-y-auto relative bg-white px-6 py-3 rounded-[2rem] shadow-2xl custom-scrollbar">
                 <div className="w-[100%] flex flex-col items-center">
                     <div className="w-[95%] flex flex-col">
                         {isContinued ? (
