@@ -88,3 +88,16 @@ export async function revalidate(path) {
     console.error("Error during revalidation:", error);
   }
 }
+
+export async function fetchCandidates() {
+  const payload={
+    endpoint:'customers',
+    method: 'GET'
+  }
+  const result= await mvp2ApiHelper(payload);
+  if (result?.status === 200) {
+    return result?.data;
+  }
+
+  throw new Error(result.data.message);
+}
