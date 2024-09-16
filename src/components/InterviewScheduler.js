@@ -20,29 +20,27 @@ const InterViewScheduler = async ({ onSuccessAck, onClose }) => {
             <div className="w-[100%] max-h-[90vh] overflow-y-auto relative bg-white px-6 py-3 rounded-[2rem] shadow-2xl custom-scrollbar">
                 <div className="w-[100%] flex flex-col items-center">
                     <div className="w-[95%] flex flex-col">
-                        {isContinued ? (
-                            <>
-                                <h2 className="text-xl font-bold font-lufga pb-3">Your interview has been scheduled successfully send</h2>
-                            </>
-                        ) : (
+                        {/* {isContinued ? ( */}
+                            {/* <> */}
+                                {/* <h2 className="text-xl font-bold font-lufga pb-3">Your interview has been scheduled successfully send</h2> */}
+                            {/* </> */}
+                        {/* ) : ( */}
                             <>
                                 <h2 className="text-xl font-bold font-lufga pb-3">Schedule A Call</h2>
                             </>
-                        )}
+                        {/* )} */}
 
-                        {isContinued && <span className="text-[0.8rem] mb-[0.5rem] font-lufga text-grey-primary-shade-30">
+                        {/* {isContinued && <span className="text-[0.8rem] mb-[0.5rem] font-lufga text-grey-primary-shade-30">
                             Your interview with Sohaib has been successfully scheduled. Please find the details below:
-                        </span>}
-
-
+                        </span>} */}
                         <div className="flex items-center w-[100%] mb-[0.5rem] gap-[1rem]">
                             <Avatar src="/avatars/avatar-1.png" alt="an avatar image" />
                             <UserProfileTab name="Sohaib" designation="Account Executive - AE" />
                         </div>
 
-                        {isContinued && <span className="text-[0.8rem] my-[1rem] font-lufga text-grey-primary-shade-30">
+                        {/* {isContinued && <span className="text-[0.8rem] my-[1rem] font-lufga text-grey-primary-shade-30">
                             Interview has been scheduled with <span className="font-bold">Sohaib</span>.
-                        </span>}
+                        </span>} */}
 
                         <div className="flex w-[100%] gap-[1rem] mb-[0.25rem] justify-between items-center bg-primary-tint-100  rounded-full">
                             <div className="flex gap-[1rem] items-center p-1">

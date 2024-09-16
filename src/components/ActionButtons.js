@@ -9,11 +9,7 @@ const ActionButtons = ({
 }) => {
   return (
     <div className="flex justify-between gap-[0.5rem]">
-      {isContinued ? (
-        <>
-          <SuccessAckBtn onClickHandler={onSuccessAck} />
-        </>
-      ) : (
+      {!isContinued ? (
         <>
           <button
             onClick={onBackClick}
@@ -46,6 +42,11 @@ const ActionButtons = ({
               />
             </div>
           </button>
+        </>
+       
+      ) : (
+         <>
+          <SuccessAckBtn onClickHandler={onSuccessAck} />
         </>
       )}
     </div>

@@ -7,6 +7,7 @@ import ButtonCapsule from "./ButtonCapsule";
 import ButtonRounded from "./ButtonRounded";
 import EntityCard from "./EntityCard";
 import { PopupModal } from "react-calendly";
+import Modal from "./AdminJobsFormModal";
 
 function ClientHeader() {
   const [isClient, setIsClient] = useState(false);
@@ -60,16 +61,13 @@ function ClientHeader() {
                 text="Schedule Call"
                 textColor="#fff"
                 color="#000"
+                height = "200px"
+                overflow= "hidden"
                 onModalClose={() => setIsOpen(false)}
                 open={isOpen}
-                styles={{
-                  html: {
-                    overflow: 'hidden',
-                  },
-                  
-                }}
-                
-
+                // styles={{
+                //   height: '10px'
+                // }}
               />
             </div>
           )}
