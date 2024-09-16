@@ -44,7 +44,7 @@ async function ClientJobsOverviewTable({client_id}) {
           <div className="status text-center">Status</div>
         </Table.Header>
         <Table.Body
-          data={clientJobs.result}
+          data={clientJobs?.data?.result}
           render={(job, i) => <ClientJobsRow job={job} key={i} />}
         />
       </Table>

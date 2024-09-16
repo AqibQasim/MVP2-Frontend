@@ -62,11 +62,11 @@ export async function getClients() {
   };
 
   const result = await mvp2ApiHelper(payload);
-  if (result?.status === 200) {
-    return result?.data;
+  console.log(result)
+  return{
+    status: result.status,
+    data: result.data
   }
-
-  throw new Error(result.data.message);
 }
 
 // data-service.js
@@ -144,12 +144,17 @@ export async function fetchCandidates() {
 }
 
 export async function fetchClientJobs(client_id) {
+  console.log("inside fetch function ///////////////////////: ",client_id)
   const payload = {
     endpoint: `client/job-posting/${client_id}`,
     method: "GET",
   };
   const result = await mvp2ApiHelper(payload);
-  if (result?.status === 200) {
-    return result?.data;
+  // if (result?.status === 200) {
+  //   return result?.data;
+  // }
+  return{
+    status: result.status,
+    data: result.data
   }
 }

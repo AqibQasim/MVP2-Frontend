@@ -23,7 +23,7 @@ async function ClientJobsTable({client_id}) {
           <div className="action text-center">Action</div>
         </Table.Header>
         <Table.Body
-          data={clientJobs.result}
+          data={clientJobs.data.result}
           render={(job, i) => <ClientJobsRow job={job} key={i} />}
         />
       </Table>
