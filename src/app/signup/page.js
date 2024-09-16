@@ -58,7 +58,8 @@ function SignUp() {
     [payload, errors, user_role, isOverlayVisible],
   );
 
-  const handleOpenOverlay = () => {
+  const handleOpenOverlay = (event) => {
+    event.preventDefault();
     if (Object.values(errors).every((err) => err === "")) {
       setOverlayVisible(true);
       // console.log("overlay should be open :", isOverlayVisible);
@@ -180,96 +181,95 @@ function SignUp() {
                 className="inline-block"
               />
             </h2>
+            <form onSubmit={handleSignup}>
+              <div className="mt-5 flex gap-2">
+                <Input
+                  type="text"
+                  name="firstName"
+                  value={form.firstName}
+                  onChange={handleChange}
+                  placeholder="First name"
+                  className="mt-3"
+                />
+                <Input
+                  type="text"
+                  name="lastName"
+                  value={form.lastName}
+                  onChange={handleChange}
+                  placeholder="Last name"
+                  className="mt-3"
+                />
+              </div>
 
-            <div className="mt-5 flex gap-2">
+              <div className="flex gap-2">
+                <div>
+                  {errors.firstName && (
+                    <p className="text-xs text-red-500">{errors.firstName}</p>
+                  )}
+                </div>
+
+                <div>
+                  {errors.lastName && (
+                    <p className="text-xs text-red-500">{errors.lastName}</p>
+                  )}
+                </div>
+              </div>
+
               <Input
                 type="text"
-                name="firstName"
-                value={form.firstName}
+                name="email"
+                value={form.email}
                 onChange={handleChange}
-                placeholder="First name"
+                placeholder="Enter email"
                 className="mt-3"
               />
-              <Input
-                type="text"
-                name="lastName"
-                value={form.lastName}
-                onChange={handleChange}
-                placeholder="Last name"
-                className="mt-3"
-              />
-            </div>
+              {errors.email && (
+                <p className="text-xs text-red-500">{errors.email}</p>
+              )}
 
-            <div className="flex gap-2">
-              <div>
-                {errors.firstName && (
-                  <p className="text-xs text-red-500">{errors.firstName}</p>
-                )}
+              <div className="flex gap-2">
+                <Input
+                  type="password"
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  placeholder="Enter password"
+                  className="mt-3"
+                />
+                <Input
+                  type="password"
+                  name="confirmPassword"
+                  value={form.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm password"
+                  className="mt-3"
+                />
               </div>
-
-              <div>
-                {errors.lastName && (
-                  <p className="text-xs text-red-500">{errors.lastName}</p>
-                )}
+              <div className="flex gap-2">
+                <div>
+                  {errors.password && (
+                    <p className="text-xs text-red-500">{errors.password}</p>
+                  )}
+                </div>
+                <div>
+                  {errors.confirmPassword && (
+                    <p className="text-xs text-red-500">
+                      {errors.confirmPassword}
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
-
-            <Input
-              type="text"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="Enter email"
-              className="mt-3"
-            />
-            {errors.email && (
-              <p className="text-xs text-red-500">{errors.email}</p>
-            )}
-
-            <div className="flex gap-2">
-              <Input
-                type="password"
-                name="password"
-                value={form.password}
-                onChange={handleChange}
-                placeholder="Enter password"
-                className="mt-3"
-              />
-              <Input
-                type="password"
-                name="confirmPassword"
-                value={form.confirmPassword}
-                onChange={handleChange}
-                placeholder="Confirm password"
-                className="mt-3"
-              />
-            </div>
-            <div className="flex gap-2">
-              <div>
-                {errors.password && (
-                  <p className="text-xs text-red-500">{errors.password}</p>
-                )}
+              <div className="mt-2 w-full text-start">
+                <input type="checkbox" className="border-none outline-none" />
+                <span className="ms-2 text-sm text-grey-primary">
+                  I read and accept the{" "}
+                </span>
+                <button className="text-sm text-primary">
+                  Terms and Conditions
+                </button>
               </div>
-              <div>
-                {errors.confirmPassword && (
-                  <p className="text-xs text-red-500">
-                    {errors.confirmPassword}
-                  </p>
-                )}
-              </div>
-            </div>
-            <div className="mt-2 w-full text-start">
-              <input type="checkbox" className="border-none outline-none" />
-              <span className="ms-2 text-sm text-grey-primary">
-                I read and accept the{" "}
-              </span>
-              <button className="text-sm text-primary">
-                Terms and Conditions
-              </button>
-            </div>
-            <OnBoardingButton onClick={handleOpenOverlay}>
-              Create account
-            </OnBoardingButton>
+              <OnBoardingButton type="submit">Create account</OnBoardingButton>
+            </form>
             <div className="my-1 w-full text-center text-grey-primary-tint-30">
               <div className="flex items-center justify-center gap-2">
                 <Image
@@ -304,11 +304,15 @@ function SignUp() {
       </div>
 
       {isOverlayVisible && (
-        <Overlay closeoverlay={handleCloseOverlay}>
+        <Overlay isVisible={isOverlayVisible} closeoverlay={handleCloseOverlay}>
           <SuccessModal
-            heading={mainHeading}
-            text={text}
             onClose={handleCloseOverlay}
+            imgSrc="/Message.png"
+            mainHeading={mainHeading}
+            text={text}
+            buttonText={"Verify email"}
+            onBoarding={true}
+            containsOtp={true}
           />
         </Overlay>
       )}
