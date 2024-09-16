@@ -11,7 +11,8 @@ import { useState, useEffect } from "react";
 function SignUp() {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
 
-  const handleOpenOverlay = () => {
+  const handleOpenOverlay = (event) => {
+    event.preventDefault();
     setOverlayVisible(true);
   };
 
@@ -79,37 +80,40 @@ function SignUp() {
                 className="inline-block"
               />
             </h2>
+            <form onSubmit={handleOpenOverlay}>
+              <div className="mt-5 flex gap-2">
+                <Input type="text" placeholder="First name" className="mt-3" />
+                <Input type="text" placeholder="Last name" className="mt-3" />
+              </div>
 
-            <div className="mt-5 flex gap-2">
-              <Input type="text" placeholder="First name" className="mt-3" />
-              <Input type="text" placeholder="Last name" className="mt-3" />
-            </div>
-
-            <Input type="text" placeholder="Enter email" className="mt-3" />
-            <div className="flex gap-2">
-              <Input
-                type="password"
-                placeholder="Enter password"
-                className="mt-3"
-              />
-              <Input
-                type="password"
-                placeholder="Confirm password"
-                className="mt-3"
-              />
-            </div>
-            <div className="mt-2 w-full text-start">
-              <input type="checkbox" className="border-none outline-none" />
-              <span className="ms-2 text-sm text-grey-primary">
-                I read and accept the{" "}
-              </span>
-              <button className="text-sm text-primary">
-                Terms and Conditions
-              </button>
-            </div>
-            <OnBoardingButton onClick={handleOpenOverlay}>
-              Create account
-            </OnBoardingButton>
+              <Input type="text" placeholder="Enter email" className="mt-3" />
+              <div className="flex gap-2">
+                <Input
+                  type="password"
+                  placeholder="Enter password"
+                  className="mt-3"
+                />
+                <Input
+                  type="password"
+                  placeholder="Confirm password"
+                  className="mt-3"
+                />
+              </div>
+              <div className="mt-2 w-full text-start">
+                <input
+                  type="checkbox"
+                  className="border-none outline-none"
+                  required
+                />
+                <span className="ms-2 text-sm text-grey-primary">
+                  I read and accept the{" "}
+                </span>
+                <button className="text-sm text-primary">
+                  Terms and Conditions
+                </button>
+              </div>
+              <OnBoardingButton type="submit">Create account</OnBoardingButton>
+            </form>
             <div className="my-1 w-full text-center text-grey-primary-tint-30">
               <div className="flex items-center justify-center gap-2">
                 <Image
@@ -167,7 +171,7 @@ function SignUp() {
       {isOverlayVisible && (
         <Overlay isVisible={isOverlayVisible} closeoverlay={handleCloseOverlay}>
           <SuccessModal
-            // onClose={handleCloseOverlay}
+            onClose={handleCloseOverlay}
             imgSrc="/Message.png"
             mainHeading={mainHeading}
             text={text}
