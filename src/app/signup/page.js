@@ -267,7 +267,7 @@ function SignUp() {
                 Terms and Conditions
               </button>
             </div>
-            <OnBoardingButton onClick={handleSignup}>
+            <OnBoardingButton onClick={handleOpenOverlay}>
               Create account
             </OnBoardingButton>
             <div className="my-1 w-full text-center text-grey-primary-tint-30">
