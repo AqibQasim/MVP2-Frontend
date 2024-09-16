@@ -1,4 +1,5 @@
 "use client";
+import { fetchClientJobs, getClientById, getJobs } from "@/lib/data-service";
 import ClientJobsRow from "./ClientJobsRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
@@ -60,7 +61,9 @@ const jobs = [
   },
 ];
 
-function ClientJobsTable() {
+async function ClientJobsTable({client_id}) {
+  const clientJobs = await fetchClientJobs(client_id);
+
   return (
     <DashboardSection
       className="!min-h-full"
@@ -77,7 +80,7 @@ function ClientJobsTable() {
           <div className="action text-center">Action</div>
         </Table.Header>
         <Table.Body
-          data={jobs}
+          data={clientJobs.result}
           render={(job, i) => <ClientJobsRow job={job} key={i} />}
         />
       </Table>

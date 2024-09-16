@@ -20,7 +20,7 @@ export default async function Page({ params }) {
   return (
     <div className="space-y-2">
       <ClientRecommendationCard client={client} />
-      <ClientJobsOverviewTable />
+      <ClientJobsOverviewTable client_id={params.clientId}/>
       <ClientEmployeesTable />
     </div>
   );

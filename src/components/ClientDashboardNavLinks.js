@@ -10,6 +10,7 @@ import { usePathname } from "next/navigation";
 
 function ClientDashboardNavLinks({ clientId }) {
   const pathname = usePathname();
+  
 
   const clientDashboardLinks = [
     {

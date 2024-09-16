@@ -143,3 +143,13 @@ export async function fetchCandidates() {
   throw new Error(result.data.message);
 }
 
+export async function fetchClientJobs(client_id) {
+  const payload = {
+    endpoint: `client/job-posting/${client_id}`,
+    method: "GET",
+  };
+  const result = await mvp2ApiHelper(payload);
+  if (result?.status === 200) {
+    return result?.data;
+  }
+}
