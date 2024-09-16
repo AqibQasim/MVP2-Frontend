@@ -266,7 +266,7 @@ function AdminCreateAJobForm({ clientId }) {
         </div>
 
         <div className="flex justify-end">
-          <SubmitButton pendingLabel="Creating...">Create Jon</SubmitButton>
+          <SubmitButton pendingLabel="Creating...">Create Job</SubmitButton>
         </div>
       </form>
     </>

@@ -71,6 +71,7 @@ export async function getClients() {
 
 // data-service.js
 export async function createJob(jobData) {
+  console.log(jobData)
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-positions`,
@@ -141,3 +142,4 @@ export async function fetchCandidates() {
 
   throw new Error(result.data.message);
 }
+

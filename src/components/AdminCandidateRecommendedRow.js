@@ -7,6 +7,7 @@ import SkillIconWithBg from "./SkillIconWithBg";
 import Table from "./Table";
 import SvgIconRequestInterview from "@/svgs/SvgIconRequestInterview";
 import Modal from "./AdminJobsFormModal"; // Import your Modal component
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 
 function AdminCandidateRecommendedRow({ recommended }) {
   const [showForm, setShowForm] = useState(false);
@@ -15,13 +16,11 @@ function AdminCandidateRecommendedRow({ recommended }) {
 
   // Static list of clients
   const clients = [
-    { id: 1, name: "Client A" },
-    { id: 2, name: "Client B" },
-    { id: 3, name: "Client C" },
+    { id: "70237905-2fe9-4d62-9aeb-92dcda473295", name: "Client A" }
   ];
 
   // Function to handle form submission
-  const handleReferCandidate = (e) => {
+  const handleReferCandidate = async(e) => {
     e.preventDefault();
     console.log("Hourly Rate:", hourlyRate);
     console.log("Assigned to Client:", selectedClient);
@@ -30,6 +29,17 @@ function AdminCandidateRecommendedRow({ recommended }) {
     setHourlyRate("");
     setSelectedClient("");
     setShowForm(false);
+
+    const payload={
+      endpoint:'assigned-customer',
+      method:'POST',
+      body:{
+        customer_id
+        //job_posting_id:
+      }
+    }
+
+    const response= await mvp2ApiHelper()
   };
 
   return (
@@ -106,7 +116,7 @@ function AdminCandidateRecommendedRow({ recommended }) {
               Confirm Referral
             </button>
             <button
-              type="button"
+              type="submit"
               onClick={() => setShowForm(false)}
               className="bg-gray-300 px-4 py-2"
             >
