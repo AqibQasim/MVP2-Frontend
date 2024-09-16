@@ -304,7 +304,7 @@ function SignUp() {
       </div>
 
       {isOverlayVisible && (
-        <Overlay>
+        <Overlay closeoverlay={handleCloseOverlay}>
           <SuccessModal
             heading={mainHeading}
             text={text}

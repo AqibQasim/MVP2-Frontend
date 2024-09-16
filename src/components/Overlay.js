@@ -1,9 +1,7 @@
 import React from "react";
 import "../styles/overlay.css";
 
-const Overlay = ({ closeoverlay, isVisible, children }) => {
-  if (!isVisible) return null;
-
+const Overlay = ({ closeoverlay, children }) => {
   return (
     <div
       className="fixed inset-0 z-50 flex h-full w-full items-center justify-center overflow-hidden bg-white bg-opacity-10 backdrop-blur-md"
