@@ -62,15 +62,16 @@ export async function getClients() {
   };
 
   const result = await mvp2ApiHelper(payload);
-  if (result?.status === 200) {
-    return result?.data;
+  console.log(result)
+  return{
+    status: result.status,
+    data: result.data
   }
-
-  throw new Error(result.data.message);
 }
 
 // data-service.js
 export async function createJob(jobData) {
+  console.log(jobData)
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-positions`,
@@ -140,4 +141,20 @@ export async function fetchCandidates() {
   }
 
   throw new Error(result.data.message);
+}
+
+export async function fetchClientJobs(client_id) {
+  console.log("inside fetch function ///////////////////////: ",client_id)
+  const payload = {
+    endpoint: `client/job-posting/${client_id}`,
+    method: "GET",
+  };
+  const result = await mvp2ApiHelper(payload);
+  // if (result?.status === 200) {
+  //   return result?.data;
+  // }
+  return{
+    status: result.status,
+    data: result.data
+  }
 }

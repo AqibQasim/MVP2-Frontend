@@ -13,7 +13,7 @@ function ClientJobsOverviewRow({ job }) {
       <EntityCard
         icon={<SvgIconWork className="relative -right-[1.3px]" />}
         entity={{
-          name: job?.role,
+          name: job?.position,
           profession: job?.profession,
         }}
       />
@@ -22,10 +22,10 @@ function ClientJobsOverviewRow({ job }) {
           <Skill key={i} skill={skill} />
         ))}
       </div>
-      <div className="experience text-center">{job.experience}</div>
+      <div className="experience text-center">{job?.experience}</div>
       <Capsule
         className="mx-auto w-max !bg-primary-tint-100"
-        icon={<IconWithBg icon={<SvgIconJobStatus status={job.status} />} />}
+        icon={<IconWithBg icon={<SvgIconJobStatus status={job?.status} />} />}
       >
         {" "}
         {job.status}{" "}

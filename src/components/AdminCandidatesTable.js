@@ -1,5 +1,4 @@
-"use client";
-import { useParams } from "next/navigation";
+"use client"
 import AdminCandidateRecommendedRow from "./AdminCandidateRecommendedRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";

@@ -21,7 +21,7 @@ function CandidateJobsRow({ job }) {
         ))}
       </div>
       <div className="experience text-center">{job.experience}</div>
-      <div className="commitment text-center">{job.commit}</div>
+      <div className="commitment text-center">{job.commitment}</div>
       <Capsule
         className="mr-auto w-max !bg-primary-tint-100"
         icon={<IconWithBg icon={<SvgIconJobStatus status={job.status} />} />}
