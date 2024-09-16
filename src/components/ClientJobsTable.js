@@ -1,66 +1,12 @@
 "use client";
+import { fetchClientJobs, getClientById, getJobs } from "@/lib/data-service";
 import ClientJobsRow from "./ClientJobsRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 
-const jobs = [
-  {
-    id: 1,
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commit: "full time",
-    status: "fulfilled",
-  },
-  {
-    id: 2,
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commit: "full time",
-    status: "trial",
-  },
-  {
-    id: 3,
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commit: "full time",
-    status: "trial",
-  },
-  {
-    id: 4,
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commit: "full time",
-    status: "fulfilled",
-  },
-  {
-    id: 5,
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commit: "full time",
-    status: "open",
-  },
-  {
-    id: 6,
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commit: "full time",
-    status: "hired",
-  },
-];
+async function ClientJobsTable({client_id}) {
+  const clientJobs = await fetchClientJobs(client_id);
 
-function ClientJobsTable() {
   return (
     <DashboardSection
       className="!min-h-full"
@@ -77,7 +23,7 @@ function ClientJobsTable() {
           <div className="action text-center">Action</div>
         </Table.Header>
         <Table.Body
-          data={jobs}
+          data={clientJobs.data.result}
           render={(job, i) => <ClientJobsRow job={job} key={i} />}
         />
       </Table>

@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useCallback, useEffect, useState } from "react";
 import SvgIconJobStatus from "@/svgs/SvgIconJobStatus";
 import Capsule from "./Capsule";
 import EntityCard from "./EntityCard";
@@ -8,19 +9,65 @@ import Table from "./Table";
 import SvgIconRequestInterview from "@/svgs/SvgIconRequestInterview";
 import Modal from "./AdminJobsFormModal"; // Import your Modal component
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
+import { fetchClientJobs, getClients, getJobs } from "@/lib/data-service";
 
 function AdminCandidateRecommendedRow({ recommended }) {
   const [showForm, setShowForm] = useState(false);
   const [hourlyRate, setHourlyRate] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
+  const [clients, setClients] = useState(null);
+  const [searchClient, setSearchClient] = useState("");
+  const [selectedClientId, setSelectedClientId] = useState("");
+  const [searchJob, setSearchJob] = useState("");
+  const [jobs, setFetchedJobs] = useState(null);
+  const [selectedJob, setSelectedJob] = useState("");
+
+  // const onSearch=useCallback((e)=>{
+  //   e.preventDefault();
+
+  // },[searchClient])
+
+  const filteredClients = clients?.filter((client) =>
+    client.name.toLowerCase().includes(searchClient.toLowerCase()),
+  );
+
+  const filteredJobs = jobs?.filter((job) =>
+    job.position.toLowerCase().includes(searchJob.toLowerCase()),
+  );
+
+  const fetchClients = useCallback(async () => {
+    const f = await getClients();
+    if (f.status === 200) {
+      setClients(f.data);
+    }
+  }, []);
+
+  const fetchJobs = useCallback(async () => {
+
+    if(selectedClientId){
+    const f = await fetchClientJobs(selectedClientId);
+    if (f.status === 200) {
+      setFetchedJobs(f.data.result);
+    }
+  }
+  }, [selectedClientId]);
+
+  useEffect(() => {
+    fetchClients();
+  }, [showForm]);
+
+  useEffect(()=>{
+    fetchJobs();
+    
+  },[searchJob])
 
   // Static list of clients
-  const clients = [
-    { id: "70237905-2fe9-4d62-9aeb-92dcda473295", name: "Client A" }
-  ];
+  // const clients = [
+  //   { id: 1, name: "Client A" }
+  // ];
 
   // Function to handle form submission
-  const handleReferCandidate = async(e) => {
+  const handleReferCandidate = async (e) => {
     e.preventDefault();
     console.log("Hourly Rate:", hourlyRate);
     console.log("Assigned to Client:", selectedClient);
@@ -30,16 +77,16 @@ function AdminCandidateRecommendedRow({ recommended }) {
     setSelectedClient("");
     setShowForm(false);
 
-    const payload={
-      endpoint:'assigned-customer',
-      method:'POST',
-      body:{
-        customer_id
+    const payload = {
+      endpoint: "assigned-customer",
+      method: "POST",
+      body: {
+        customer_id,
         //job_posting_id:
-      }
-    }
+      },
+    };
 
-    const response= await mvp2ApiHelper()
+    const response = await mvp2ApiHelper(payload);
   };
 
   return (
@@ -48,7 +95,7 @@ function AdminCandidateRecommendedRow({ recommended }) {
         <EntityCard
           entity={{
             name: recommended?.name,
-            profession: recommended?.position||'software engineer',
+            profession: recommended?.position,
             image: "/avatars/avatar-1.png",
           }}
         />
@@ -94,19 +141,60 @@ function AdminCandidateRecommendedRow({ recommended }) {
           />
 
           <label className="mt-4 block">Assign to Client</label>
-          <select
+          <input
+            type="text"
+            value={selectedClient || searchClient}
+            onChange={(e) => setSearchClient(e.target.value)}
+            placeholder="Search client by name"
+            className="mb-2 block w-full border px-2 py-1"
+          />
+
+          {/* <select
             value={selectedClient}
             onChange={(e) => setSelectedClient(e.target.value)}
             required
             className="mt-2 block w-full border px-2 py-1"
-          >
-            <option value="">Select a client</option>
-            {clients.map((client) => (
-              <option key={client.id} value={client.id}>
+          > */}
+          {/* <option value="">Select a client</option> */}
+          {searchClient &&
+            filteredClients?.map((client) => (
+              <option
+                onClick={() => {
+                  setSearchClient("");
+                  setSelectedClient(client.name);
+                  setSelectedClientId(client.client_id);
+                }}
+                key={client.client_id}
+                value={client.client_id}
+              >
                 {client.name}
               </option>
             ))}
-          </select>
+
+          <label className="mt-4 block">Select Job</label>
+          <input
+            type="text"
+            value={selectedJob || searchJob}
+            onChange={(e) => setSearchJob(e.target.value)}
+            placeholder="Search Job"
+            className="mb-2 block w-full border px-2 py-1"
+          />
+
+          {searchJob &&
+            filteredJobs?.map((job) => (
+              <option
+                onClick={() => {
+                  setSearchJob("");
+                  setSelectedJob(job.position);
+                  setSelectedClientId(job.job_posting_id);
+                }}
+                key={job.job_posting_id}
+                value={job.job_posting_id}
+              >
+                {job.position}
+              </option>
+            ))}
+          {/* </select> */}
 
           <div className="mt-4">
             <button

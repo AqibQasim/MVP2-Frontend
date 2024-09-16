@@ -17,6 +17,7 @@ import Skill from "@/components/Skill";
 import TagCard from "@/components/TagCard";
 import TalentDescription from "@/components/TalentDescription";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useCallback } from "react";
 
@@ -53,7 +54,13 @@ const job_on_progress = [
   },
 ];
 
-function JobViewById({ job_id }) {
+function JobViewById() {
+  const pathname = usePathname();
+  const path_split= pathname.split('/')[2]
+  const client_id= path_split[2]
+  const job_id= path_split[4]
+  console.log("//////////////////////////////////",job_id)
+
   const [isShowMoreEnabled, setIsShowMoreEnabled] = useState(false);
   const [isReadMoreEnabled, setIsReadMoreEnabled] = useState(false);
   const [jobQuestionLength, setJobQuestionLength] = useState(1);
