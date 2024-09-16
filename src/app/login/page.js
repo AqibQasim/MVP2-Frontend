@@ -40,8 +40,7 @@ function Login() {
     setForm((prevForm) => ({ ...prevForm, [name]: value }));
     validateField(name, value);
   };
-  const [user_role,setUserRole]= useState('client')
-
+  const [user_role, setUserRole] = useState("client");
 
   const payload = useMemo(
     () => ({
@@ -54,7 +53,7 @@ function Login() {
         method: "login",
       },
     }),
-    [form,user_role],
+    [form, user_role],
   );
 
   const handleLogin = useCallback(
@@ -65,14 +64,14 @@ function Login() {
       if (!form.email || !form.password || errors.email || errors.password) {
         return; // Don't proceed if there are validation errors
       }
-      console.log(payload)
+      console.log(payload);
       const result = await mvp2ApiHelper(payload);
-      console.log(result)
+      console.log(result);
       if (result.status === 200) {
         //console.log("Logged in successfully");
         //redirect(`/client/${result.id}`)
         //redirect(`/client/1`)
-        router.push(`/client/${result.data.id}`)
+        router.push(`/client/${result.data.id}`);
       }
     },
     [form, errors, user_role],
@@ -91,16 +90,22 @@ function Login() {
           <div className="flex w-full justify-between space-y-2 p-5">
             <Image src="/logo.svg" width={100} height={25} alt="MVP 2 Logo" />
             <div className="flex gap-2">
-            <button  onClick={(e)=>{
-                //e.preventDefault();
-                setUserRole('client')}}  
-                className={`rounded-full border-[1px] ${(user_role==='client')? 'border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]':'bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]'}`}>
+              <button
+                onClick={(e) => {
+                  //e.preventDefault();
+                  setUserRole("client");
+                }}
+                className={`rounded-full border-[1px] ${user_role === "client" ? "border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]" : "bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]"}`}
+              >
                 Client
               </button>
-              <button onClick={(e)=>{
-                //e.preventDefault();
-                setUserRole('customer')}} 
-                className={`rounded-full border-[1px] ${(user_role==='customer')? 'border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]':'bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]'}`}>
+              <button
+                onClick={(e) => {
+                  //e.preventDefault();
+                  setUserRole("customer");
+                }}
+                className={`rounded-full border-[1px] ${user_role === "customer" ? "border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]" : "bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]"}`}
+              >
                 Freelancer
               </button>
             </div>

@@ -45,20 +45,23 @@ function SignUp() {
       }
       //console.log(payload);
       const result = await mvp2ApiHelper(payload);
-      console.log(result)
+      console.log(result);
       if (result.status === 200) {
         console.log("signed up successfully");
         // const revalidatePath = await revalidate("/admin/clients");
         // console.log("revalidate path", revalidatePath);
         setOverlayVisible(true);
+        console.log("is overlay is :", isOverlayVisible);
+        console.log("overlay should be visible now ...");
       }
     },
-    [payload, errors,user_role],
+    [payload, errors, user_role, isOverlayVisible],
   );
 
   const handleOpenOverlay = () => {
     if (Object.values(errors).every((err) => err === "")) {
       setOverlayVisible(true);
+      // console.log("overlay should be open :", isOverlayVisible);
     }
   };
 
@@ -187,7 +190,6 @@ function SignUp() {
                 placeholder="First name"
                 className="mt-3"
               />
-
               <Input
                 type="text"
                 name="lastName"
@@ -204,6 +206,7 @@ function SignUp() {
                   <p className="text-xs text-red-500">{errors.firstName}</p>
                 )}
               </div>
+
               <div>
                 {errors.lastName && (
                   <p className="text-xs text-red-500">{errors.lastName}</p>
@@ -299,6 +302,7 @@ function SignUp() {
           </div>
         </div>
       </div>
+
       {isOverlayVisible && (
         <Overlay>
           <SuccessModal
