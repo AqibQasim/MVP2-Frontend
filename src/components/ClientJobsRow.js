@@ -40,7 +40,7 @@ function ClientJobsRow({ job }) {
       {/* <CapsuleLink className="ml-auto" href={`${job.id}`}> */}
       <CapsuleLink
         className="ml-auto"
-        href={`/client/${clientId}/jobs/${job.id}`}
+        href={`/client/${clientId}/jobs/${job.job_posting_id}`}
       >
         {" "}
         view talent{" "}
