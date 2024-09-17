@@ -20,7 +20,7 @@ function ClientPaymentHistoryRow({ payment }) {
           />
         }
         entity={{
-          name: payment?.role,
+          name: payment?.name,
         }}
       />
       {/* <Capsule>{payment.jobType}</Capsule> */}
@@ -31,7 +31,7 @@ function ClientPaymentHistoryRow({ payment }) {
         <p>{payment.status}</p>
       </Capsule>
       <div className="amount text-center">{payment.amount}</div>
-      <div className="invoice text-center">{payment.invoice}</div>
+      <div className="amount text-center">{payment.invoice}</div>
       <Capsule
         className="ml-auto !bg-primary-tint-100"
         icon={<IconWithBg icon={<SvgIconDownload />} />}
