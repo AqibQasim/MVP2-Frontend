@@ -21,6 +21,8 @@ function AdminCandidateRecommendedRow({ recommended }) {
   const [selectedJob, setSelectedJob] = useState("");
   const [selectedJobId, setSelectedJobId] = useState("");
   const [error, setError] = useState(null);
+  const [isClientsShow, setIsClientShow] = useState(false);
+  const [isJobsShow, setIsJobsShow] = useState(false);
 
   const filteredClients = clients?.filter((client) =>
     client.name.toLowerCase().includes(searchClient.toLowerCase()),
@@ -131,8 +133,11 @@ function AdminCandidateRecommendedRow({ recommended }) {
           <label className="mt-4 block">Assign to Client</label>
           <input
             type="text"
-            value={selectedClient || searchClient}
-            onChange={(e) => setSearchClient(e.target.value)}
+            value={searchClient}
+            onChange={(e) => {
+              setIsClientShow(true);
+              setSearchClient(e.target.value);
+            }}
             placeholder="Search client by name"
             className="mb-2 block w-full border px-2 py-1"
           />
@@ -144,11 +149,12 @@ function AdminCandidateRecommendedRow({ recommended }) {
             className="mt-2 block w-full border px-2 py-1"
           > */}
           {/* <option value="">Select a client</option> */}
-          {searchClient &&
+          {isClientsShow &&
             filteredClients?.map((client) => (
               <option
                 onClick={() => {
-                  setSearchClient("");
+                  setIsClientShow(false);
+                  setSearchClient(client.name);
                   setSelectedClient(client.name);
                   setSelectedClientId(client.client_id);
                 }}
@@ -162,17 +168,21 @@ function AdminCandidateRecommendedRow({ recommended }) {
           <label className="mt-4 block">Select Job</label>
           <input
             type="text"
-            value={selectedJob || searchJob}
-            onChange={(e) => setSearchJob(e.target.value)}
+            value={searchJob}
+            onChange={(e) => {
+              setIsJobsShow(true);
+              setSearchJob(e.target.value);
+            }}
             placeholder="Search Job"
             className="mb-2 block w-full border px-2 py-1"
           />
 
-          {searchJob &&
+          {isJobsShow &&
             filteredJobs?.map((job) => (
               <option
                 onClick={() => {
-                  setSearchJob("");
+                  setIsJobsShow(false);
+                  setSearchJob(job.position);
                   setSelectedJob(job.position);
                   setSelectedJobId(job.job_posting_id);
                 }}

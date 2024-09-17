@@ -45,7 +45,7 @@ function ClientDashboardNavLinks({ clientId }) {
     },
     {
       name: "Payment",
-      href: `/client/payment`,
+      href: `/client/${clientId}/payment`,
       icon: <SvgIconPayment className="size-6" />,
     },
     {
