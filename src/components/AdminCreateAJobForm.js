@@ -3,9 +3,10 @@ import { createAJobAction } from "@/lib/actions";
 import { useState } from "react";
 import SubmitButton from "./SubmitButton";
 
-function AdminCreateAJobForm({ clientId }) {
+function AdminCreateAJobForm({ clientId, closeModal }) {
   const [skills, setSkills] = useState([""]);
   const [applicationQuestions, setApplicationQuestions] = useState([""]);
+  const [error, setError] = useState(null);
 
   const handleSkillChange = (index, event) => {
     const newSkills = [...skills];
@@ -37,10 +38,19 @@ function AdminCreateAJobForm({ clientId }) {
     setApplicationQuestions(newQuestions);
   };
 
+  async function handleCreateJobAction(formData) {
+    const { error, message } = await createAJobAction(formData);
+    if (error) {
+      console.log(error);
+      return setError(error);
+    }
+    if (message) return closeModal();
+  }
+
   return (
     <>
       <h2 className="mb-4 text-xl font-bold">Create Job</h2>
-      <form action={createAJobAction}>
+      <form action={handleCreateJobAction}>
         <div className="mb-4">
           <input
             type="hidden"
@@ -264,6 +274,12 @@ function AdminCreateAJobForm({ clientId }) {
             Add more
           </button>
         </div>
+
+        {error ? (
+          <div className="error">
+            <p className="text-red-500"> {error} </p>
+          </div>
+        ) : null}
 
         <div className="flex justify-end">
           <SubmitButton pendingLabel="Creating...">Create Job</SubmitButton>

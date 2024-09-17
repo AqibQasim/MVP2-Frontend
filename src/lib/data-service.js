@@ -62,7 +62,6 @@ export async function getClients() {
   };
 
   const result = await mvp2ApiHelper(payload);
-  console.log(result);
   return {
     status: result.status,
     data: result.data,

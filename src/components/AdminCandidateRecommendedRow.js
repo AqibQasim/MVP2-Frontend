@@ -20,6 +20,7 @@ function AdminCandidateRecommendedRow({ recommended }) {
   const [jobs, setFetchedJobs] = useState(null);
   const [selectedJob, setSelectedJob] = useState("");
   const [selectedJobId, setSelectedJobId] = useState("");
+  const [error, setError] = useState(null);
 
   const filteredClients = clients?.filter((client) =>
     client.name.toLowerCase().includes(searchClient.toLowerCase()),
@@ -62,8 +63,16 @@ function AdminCandidateRecommendedRow({ recommended }) {
       job_posting_id: selectedJobId,
     };
 
-    const { message } = await referCandidateToClientAction(referClientBody);
-    if (message) setShowForm(false);
+    const { error, message } =
+      await referCandidateToClientAction(referClientBody);
+    if (error) {
+      console.log({ Error: error });
+      return setError(error);
+    }
+    if (message) {
+      console.log("Refer Message: ", message);
+      return setShowForm(false);
+    }
   };
 
   return (
@@ -174,6 +183,8 @@ function AdminCandidateRecommendedRow({ recommended }) {
               </option>
             ))}
           {/* </select> */}
+          {/* Error Temp */}
+          {error ? <div className="error text-red-500"> {error} </div> : null}
 
           <div className="mt-4">
             <button
