@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createJob } from "./data-service";
+import { createJob, referCandidate } from "./data-service";
 
 export async function createAJobAction(formData) {
   const client_id = formData.get("client_id");
@@ -96,4 +96,27 @@ export async function createAJobAction(formData) {
   revalidatePath(`/client/${createJobData.client_id}`);
   revalidatePath("/admin/jobs");
   redirect("/admin/clients");
+}
+
+export async function referCandidateToClientAction(params, closeModal) {
+  const { client_id, customer_id, job_posting_id } = params;
+  console.log("Params in refer Candidate to client Action: ", params);
+  if (!client_id) throw new Error("Client id is required");
+  if (!customer_id) throw new Error("Candidate id is required");
+  if (!job_posting_id) throw new Error("Job id is required");
+
+  const { error, data } = await referCandidate({
+    client_id,
+    customer_id,
+    job_posting_id,
+  });
+
+  if (error) {
+    throw new Error(error);
+  }
+
+  revalidatePath(`/client/${client_id}/recommended`);
+  revalidatePath("/admin/candidates");
+  return { message: "Candidate successfully referred to the client." };
+  // redirect("/admin/candidates");
 }

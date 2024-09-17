@@ -1,9 +1,9 @@
-"use client"
+"use client";
 import AdminCandidateRecommendedRow from "./AdminCandidateRecommendedRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 
-function AdminCandidatesTable({candidates}) {
+function AdminCandidatesTable({ candidates }) {
   return (
     <DashboardSection
       className="!min-h-full"
@@ -20,7 +20,6 @@ function AdminCandidatesTable({candidates}) {
         </Table.Header>
         <Table.Body
           data={candidates}
-          //   data={[]}
           render={(recommended, i) => (
             <AdminCandidateRecommendedRow recommended={recommended} key={i} />
           )}

@@ -62,16 +62,16 @@ export async function getClients() {
   };
 
   const result = await mvp2ApiHelper(payload);
-  console.log(result)
-  return{
+  console.log(result);
+  return {
     status: result.status,
-    data: result.data
-  }
+    data: result.data,
+  };
 }
 
 // data-service.js
 export async function createJob(jobData) {
-  console.log(jobData)
+  console.log(jobData);
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-positions`,
@@ -110,6 +110,7 @@ export async function getJobs() {
   throw new Error(result.data.message);
 }
 
+// to revalidate a path from client side component
 export async function revalidate(path) {
   try {
     const response = await fetch("/api/revalidate-path", {
@@ -144,7 +145,6 @@ export async function fetchCandidates() {
 }
 
 export async function fetchClientJobs(client_id) {
-  console.log("inside fetch function ///////////////////////: ",client_id)
   const payload = {
     endpoint: `client/job-posting/${client_id}`,
     method: "GET",
@@ -153,8 +153,24 @@ export async function fetchClientJobs(client_id) {
   // if (result?.status === 200) {
   //   return result?.data;
   // }
-  return{
+  return {
     status: result.status,
-    data: result.data
+    data: result.data,
+  };
+}
+
+export async function referCandidate(params) {
+  const payload = {
+    endpoint: `assigned-customer`,
+    method: "POST",
+    body: params,
+  };
+
+  const result = await mvp2ApiHelper(payload);
+  console.log("Actual data: ", result?.data?.data);
+  if (result.status !== 200) {
+    console.error(result?.data?.message);
+    return { status: result.status, data: null, error: result.data };
   }
+  return { status: result.status, data: result.data.data, error: null };
 }
