@@ -1,15 +1,13 @@
-
+import { referCandidateToClientAction } from "@/lib/actions";
+import { fetchClientJobs, getClients } from "@/lib/data-service";
+import SvgIconRequestInterview from "@/svgs/SvgIconRequestInterview";
 import { useCallback, useEffect, useState } from "react";
-import SvgIconJobStatus from "@/svgs/SvgIconJobStatus";
+import Modal from "./AdminJobsFormModal";
 import Capsule from "./Capsule";
 import EntityCard from "./EntityCard";
 import IconWithBg from "./IconWithBg";
 import SkillIconWithBg from "./SkillIconWithBg";
 import Table from "./Table";
-import SvgIconRequestInterview from "@/svgs/SvgIconRequestInterview";
-import Modal from "./AdminJobsFormModal"; // Import your Modal component
-import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
-import { fetchClientJobs, getClients, getJobs } from "@/lib/data-service";
 
 function AdminCandidateRecommendedRow({ recommended }) {
   const [showForm, setShowForm] = useState(false);
@@ -21,11 +19,10 @@ function AdminCandidateRecommendedRow({ recommended }) {
   const [searchJob, setSearchJob] = useState("");
   const [jobs, setFetchedJobs] = useState(null);
   const [selectedJob, setSelectedJob] = useState("");
-
-  // const onSearch=useCallback((e)=>{
-  //   e.preventDefault();
-
-  // },[searchClient])
+  const [selectedJobId, setSelectedJobId] = useState("");
+  const [error, setError] = useState(null);
+  const [isClientsShow, setIsClientShow] = useState(false);
+  const [isJobsShow, setIsJobsShow] = useState(false);
 
   const filteredClients = clients?.filter((client) =>
     client.name.toLowerCase().includes(searchClient.toLowerCase()),
@@ -43,50 +40,41 @@ function AdminCandidateRecommendedRow({ recommended }) {
   }, []);
 
   const fetchJobs = useCallback(async () => {
-
-    if(selectedClientId){
-    const f = await fetchClientJobs(selectedClientId);
-    if (f.status === 200) {
-      setFetchedJobs(f.data.result);
+    if (selectedClientId) {
+      const f = await fetchClientJobs(selectedClientId);
+      if (f.status === 200) {
+        setFetchedJobs(f.data.result);
+      }
     }
-  }
   }, [selectedClientId]);
 
   useEffect(() => {
     fetchClients();
   }, [showForm]);
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchJobs();
-    
-  },[searchJob])
+  }, [searchJob]);
 
-  // Static list of clients
-  // const clients = [
-  //   { id: 1, name: "Client A" }
-  // ];
+  const handleReferCandidate = async (formData) => {
+    // e.preventDefault();
 
-  // Function to handle form submission
-  const handleReferCandidate = async (e) => {
-    e.preventDefault();
-    console.log("Hourly Rate:", hourlyRate);
-    console.log("Assigned to Client:", selectedClient);
-
-    // Reset form and close modal
-    setHourlyRate("");
-    setSelectedClient("");
-    setShowForm(false);
-
-    const payload = {
-      endpoint: "assigned-customer",
-      method: "POST",
-      body: {
-        customer_id,
-        //job_posting_id:
-      },
+    const referClientBody = {
+      client_id: selectedClientId,
+      customer_id: recommended.customer_id,
+      job_posting_id: selectedJobId,
     };
 
-    const response = await mvp2ApiHelper(payload);
+    const { error, message } =
+      await referCandidateToClientAction(referClientBody);
+    if (error) {
+      console.log({ Error: error });
+      return setError(error);
+    }
+    if (message) {
+      console.log("Refer Message: ", message);
+      return setShowForm(false);
+    }
   };
 
   return (
@@ -95,7 +83,7 @@ function AdminCandidateRecommendedRow({ recommended }) {
         <EntityCard
           entity={{
             name: recommended?.name,
-            profession: recommended?.position,
+            profession: "Front-end Developer",
             image: "/avatars/avatar-1.png",
           }}
         />
@@ -130,10 +118,12 @@ function AdminCandidateRecommendedRow({ recommended }) {
         <h3 className="mb-4 text-xl font-semibold">
           Refer {recommended?.role} to Client
         </h3>
-        <form onSubmit={handleReferCandidate}>
+        <form action={handleReferCandidate}>
           <label className="block">Hourly Rate</label>
           <input
             type="number"
+            name="hourlyRate"
+            id="hourlyRate"
             value={hourlyRate}
             onChange={(e) => setHourlyRate(e.target.value)}
             required
@@ -143,8 +133,11 @@ function AdminCandidateRecommendedRow({ recommended }) {
           <label className="mt-4 block">Assign to Client</label>
           <input
             type="text"
-            value={selectedClient || searchClient}
-            onChange={(e) => setSearchClient(e.target.value)}
+            value={searchClient}
+            onChange={(e) => {
+              setIsClientShow(true);
+              setSearchClient(e.target.value);
+            }}
             placeholder="Search client by name"
             className="mb-2 block w-full border px-2 py-1"
           />
@@ -156,11 +149,12 @@ function AdminCandidateRecommendedRow({ recommended }) {
             className="mt-2 block w-full border px-2 py-1"
           > */}
           {/* <option value="">Select a client</option> */}
-          {searchClient &&
+          {isClientsShow &&
             filteredClients?.map((client) => (
               <option
                 onClick={() => {
-                  setSearchClient("");
+                  setIsClientShow(false);
+                  setSearchClient(client.name);
                   setSelectedClient(client.name);
                   setSelectedClientId(client.client_id);
                 }}
@@ -174,19 +168,23 @@ function AdminCandidateRecommendedRow({ recommended }) {
           <label className="mt-4 block">Select Job</label>
           <input
             type="text"
-            value={selectedJob || searchJob}
-            onChange={(e) => setSearchJob(e.target.value)}
+            value={searchJob}
+            onChange={(e) => {
+              setIsJobsShow(true);
+              setSearchJob(e.target.value);
+            }}
             placeholder="Search Job"
             className="mb-2 block w-full border px-2 py-1"
           />
 
-          {searchJob &&
+          {isJobsShow &&
             filteredJobs?.map((job) => (
               <option
                 onClick={() => {
-                  setSearchJob("");
+                  setIsJobsShow(false);
+                  setSearchJob(job.position);
                   setSelectedJob(job.position);
-                  setSelectedClientId(job.job_posting_id);
+                  setSelectedJobId(job.job_posting_id);
                 }}
                 key={job.job_posting_id}
                 value={job.job_posting_id}
@@ -195,6 +193,8 @@ function AdminCandidateRecommendedRow({ recommended }) {
               </option>
             ))}
           {/* </select> */}
+          {/* Error Temp */}
+          {error ? <div className="error text-red-500"> {error} </div> : null}
 
           <div className="mt-4">
             <button

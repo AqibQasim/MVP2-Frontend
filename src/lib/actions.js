@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createJob } from "./data-service";
+import { createJob, referCandidate } from "./data-service";
 
 export async function createAJobAction(formData) {
   const client_id = formData.get("client_id");
@@ -23,46 +23,46 @@ export async function createAJobAction(formData) {
 
   // Validate required fields
   if (!client_id || client_id.trim() === "") {
-    throw new Error("Client Id is required.");
+    return { error: "Client Id is required." };
   }
   if (!position || position.trim() === "") {
-    throw new Error("Job title is required.");
+    return { error: "Job title is required." };
   }
   if (!description || description.trim() === "") {
-    throw new Error("Description is required.");
+    return { error: "Description is required." };
   }
   if (
     !experience ||
     !["beginner", "intermediate", "expert"].includes(experience)
   ) {
-    throw new Error("Valid experience level is required.");
+    return { error: "Valid experience level is required." };
   }
   if (!commitment || !["full-time", "part-time"].includes(commitment.trim())) {
-    throw new Error("Valid commitment is required.");
+    return { error: "Valid commitment is required." };
   }
   if (!project_length || isNaN(project_length) || project_length <= 0) {
-    throw new Error("Project length is required and must be a valid number.");
+    return { error: "Project length is required and must be a valid number." };
   }
   if (!job_type || !["remote", "on-site", "hybrid"].includes(job_type)) {
-    throw new Error("Valid job type is required.");
+    return { error: "Valid job type is required." };
   }
   if (!start_date || isNaN(new Date(start_date))) {
-    throw new Error("A valid desired start date is required.");
+    return { error: "A valid desired start date is required." };
   }
   if (!workday_overlap || isNaN(workday_overlap) || workday_overlap <= 0) {
-    throw new Error("Workday overlap is required and must be a valid number.");
+    return { error: "Workday overlap is required and must be a valid number." };
   }
   if (!location || location.trim() === "") {
-    throw new Error("Location is required.");
+    return { error: "Location is required." };
   }
   if (skills.length === 0 || skills.some((skill) => skill.trim() === "")) {
-    throw new Error("At least one valid skill is required.");
+    return { error: "At least one valid skill is required." };
   }
   if (
     application_questions.length === 0 ||
     application_questions.some((q) => q.trim() === "")
   ) {
-    throw new Error("At least one valid application question is required.");
+    return { error: "At least one valid application question is required." };
   }
 
   // Prepare job data
@@ -88,12 +88,38 @@ export async function createAJobAction(formData) {
   console.log("Job data prepared for dispatch:", createJobData);
 
   const { error } = await createJob(createJobData);
+  console.log("error while creating: ", error);
 
   if (error) {
-    throw new Error(error);
+    return { error };
   }
 
   revalidatePath(`/client/${createJobData.client_id}`);
   revalidatePath("/admin/jobs");
-  redirect("/admin/clients");
+  return { message: "Candidate successfully referred to the client." };
+
+  // redirect("/admin/clients");
+}
+
+export async function referCandidateToClientAction(params, closeModal) {
+  const { client_id, customer_id, job_posting_id } = params;
+  console.log("Params in refer Candidate to client Action: ", params);
+  if (!client_id) return { error: "Client id is required" };
+  if (!customer_id) return { error: "Candidate id is required" };
+  if (!job_posting_id) return { error: "Job id is required" };
+
+  const { error, data } = await referCandidate({
+    client_id,
+    customer_id,
+    job_posting_id,
+  });
+
+  if (error) {
+    return { error };
+  }
+
+  revalidatePath(`/client/${client_id}/recommended`);
+  revalidatePath("/admin/candidates");
+  return { message: "Candidate successfully referred to the client." };
+  // redirect("/admin/candidates");
 }
