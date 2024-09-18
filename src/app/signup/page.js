@@ -24,6 +24,7 @@ function SignUp() {
 
   const [user_role, setUserRole] = useState("client");
   const [errors, setErrors] = useState({});
+  const [otp, setotp] = useState(null);
 
   const payload = useMemo(
     () => ({
@@ -71,7 +72,8 @@ function SignUp() {
       event.preventDefault();
 
       if (Object.values(errors).every((err) => err === "")) {
-        const otp = generateOtp();
+        const generatedotp = generateOtp();
+        setotp(generatedotp);
 
         const payload = {
           endpoint: "send-email",
@@ -79,25 +81,12 @@ function SignUp() {
           body: {
             to: form.email, // Using form.email for the recipient
             subject: "OTP",
-            text: `Your OTP code is: ${otp}`, // Include the generated OTP
-            user_role: "client", // Can be "client" or "freelancer"
+            text: `Your OTP code is: ${generatedotp}`, // Include the generated OTP
           },
         };
 
         try {
           const result = await mvp2ApiHelper(payload);
-          const contentType = result.headers.get("content-type");
-
-          // Check if the response is JSON or plain text
-          let data;
-          if (contentType && contentType.includes("application/json")) {
-            data = await result.json(); // Parse as JSON if it's JSON
-          } else {
-            data = await result.text(); // Otherwise, parse as plain text
-          }
-
-          console.log("The result is this: ", data);
-          console.log("Result status = ", result.status);
 
           if (result.status === 200) {
             console.log("Email sent successfully");
@@ -397,6 +386,7 @@ function SignUp() {
             buttonText={"Verify email"}
             onBoarding={true}
             containsOtp={true}
+            otp={otp}
             signupHandler={handleSignup}
           />
         </Overlay>

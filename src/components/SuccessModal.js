@@ -14,13 +14,28 @@ const SuccessModal = ({
   containsOtp,
   signupHandler,
   confirmationtext,
+  otp,
 }) => {
   const [isSecondPopupVisible, setIsSecondPopupVisible] = useState(false);
-
-  const handleVerifyEmailClick = () => {
-    setIsSecondPopupVisible(true);
-    onClose; // Close the first popup
+  const [enteredOtp, setEnteredOtp] = useState("");
+  const handleOtpChange = (event) => {
+    setEnteredOtp(event.target.value);
   };
+
+  const handleOtpVerification = () => {
+    if (enteredOtp === otp.toString()) {
+      console.log("OTP verified successfully");
+      setIsSecondPopupVisible(true);
+      onClose;
+    } else {
+      console.log("Incorrect OTP");
+    }
+  };  
+
+  // const handleVerifyEmailClick = () => {
+  //   setIsSecondPopupVisible(true);
+  //   onClose; // Close the first popup
+  // };
 
   return (
     <div className="pt flex h-[100%] w-[100%] flex-col items-center justify-around font-lufga">
@@ -42,11 +57,12 @@ const SuccessModal = ({
               type="number"
               placeholder="000000"
               className="mt-5 py-3 text-center"
+              onChange={handleOtpChange}
             />
           )}
         </div>
         {onBoarding && containsOtp ? (
-          <OnBoardingButton onClick={handleVerifyEmailClick}>
+          <OnBoardingButton onClick={handleOtpVerification}>
             {buttonText}
           </OnBoardingButton>
         ) : (
