@@ -9,7 +9,10 @@ import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
 import { useCallback, useMemo, useState } from "react";
 
+import { useRouter } from "next/navigation";
+
 function SignUp() {
+  const router = useRouter();
   const [isOverlayVisible, setOverlayVisible] = useState(false);
   const [form, setForm] = useState({
     firstName: "",
@@ -50,21 +53,72 @@ function SignUp() {
         console.log("signed up successfully");
         // const revalidatePath = await revalidate("/admin/clients");
         // console.log("revalidate path", revalidatePath);
-        setOverlayVisible(true);
+        setOverlayVisible(false);
+        router.push("/login");
         console.log("is overlay is :", isOverlayVisible);
-        console.log("overlay should be visible now ...");
+        console.log("overlay should be unvisible now ...");
       }
     },
+
     [payload, errors, user_role, isOverlayVisible],
   );
 
-  const handleOpenOverlay = (event) => {
-    event.preventDefault();
-    if (Object.values(errors).every((err) => err === "")) {
-      setOverlayVisible(true);
-      // console.log("overlay should be open :", isOverlayVisible);
-    }
-  };
+  // Utility function to generate a random 6-digit OTP
+  const generateOtp = () => Math.floor(100000 + Math.random() * 900000);
+
+  const handleOpenOverlay = useCallback(
+    async (event) => {
+      event.preventDefault();
+
+      if (Object.values(errors).every((err) => err === "")) {
+        const otp = generateOtp();
+
+        const payload = {
+          endpoint: "send-email",
+          method: "POST",
+          body: {
+            to: form.email, // Using form.email for the recipient
+            subject: "OTP",
+            text: `Your OTP code is: ${otp}`, // Include the generated OTP
+            user_role: "client", // Can be "client" or "freelancer"
+          },
+        };
+
+        try {
+          const result = await mvp2ApiHelper(payload);
+          const contentType = result.headers.get("content-type");
+
+          // Check if the response is JSON or plain text
+          let data;
+          if (contentType && contentType.includes("application/json")) {
+            data = await result.json(); // Parse as JSON if it's JSON
+          } else {
+            data = await result.text(); // Otherwise, parse as plain text
+          }
+
+          console.log("The result is this: ", data);
+          console.log("Result status = ", result.status);
+
+          if (result.status === 200) {
+            console.log("Email sent successfully");
+            setOverlayVisible(true);
+          } else {
+            console.log("Failed to send email");
+          }
+        } catch (error) {
+          console.error("Error sending email: ", error);
+        }
+      }
+    },
+    [errors, form.email, user_role], // dependencies
+  );
+
+  // const handleOpenOverlay = (event) => {
+  //   event.preventDefault();
+  //   if (Object.values(errors).every((err) => err === "")) {
+  //     setOverlayVisible(true);
+  //   }
+  // };
 
   const handleCloseOverlay = () => {
     setOverlayVisible(false);
@@ -77,6 +131,17 @@ function SignUp() {
     // Real-time validation
     validateField(name, value);
   };
+
+  const isFormInvalid = useMemo(() => {
+    return (
+      Object.values(errors).some((err) => err !== "") ||
+      !form.firstName ||
+      !form.lastName ||
+      !form.email ||
+      !form.password ||
+      !form.confirmPassword
+    );
+  }, [errors, form]);
 
   const validateField = (name, value) => {
     let errorMsg = "";
@@ -135,6 +200,12 @@ function SignUp() {
       <span className="font-semibold">{form.email}</span>
     </>
   );
+  let confirmationtext = (
+    <>
+      Your account is currently under review. Soon you’ll receive an email on{" "}
+      <span className="font-semibold"> {form.email} </span> upon approval
+    </>
+  );
 
   return (
     <>
@@ -181,7 +252,7 @@ function SignUp() {
                 className="inline-block"
               />
             </h2>
-            <form onSubmit={handleSignup}>
+            <form onSubmit={handleOpenOverlay}>
               <div className="mt-5 flex gap-2">
                 <Input
                   type="text"
@@ -260,7 +331,11 @@ function SignUp() {
                 </div>
               </div>
               <div className="mt-2 w-full text-start">
-                <input type="checkbox" className="border-none outline-none" />
+                <input
+                  type="checkbox"
+                  className="border-none outline-none"
+                  required
+                />
                 <span className="ms-2 text-sm text-grey-primary">
                   I read and accept the{" "}
                 </span>
@@ -268,7 +343,15 @@ function SignUp() {
                   Terms and Conditions
                 </button>
               </div>
-              <OnBoardingButton type="submit">Create account</OnBoardingButton>
+              <OnBoardingButton
+                type="submit"
+                disabled={isFormInvalid}
+                className={`${
+                  isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
+                }`}
+              >
+                Create account
+              </OnBoardingButton>
             </form>
             <div className="my-1 w-full text-center text-grey-primary-tint-30">
               <div className="flex items-center justify-center gap-2">
@@ -310,9 +393,11 @@ function SignUp() {
             imgSrc="/Message.png"
             mainHeading={mainHeading}
             text={text}
+            confirmationtext={confirmationtext}
             buttonText={"Verify email"}
             onBoarding={true}
             containsOtp={true}
+            signupHandler={handleSignup}
           />
         </Overlay>
       )}

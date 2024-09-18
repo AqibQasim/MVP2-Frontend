@@ -7,6 +7,8 @@ const ConfirmationModal = ({
   text,
   buttonText,
   onClose,
+  confirmationtext,
+  signupHandler,
 }) => {
   return (
     <div className="flex h-[100%] w-[100%] flex-col items-center justify-around font-lufga">
@@ -22,9 +24,13 @@ const ConfirmationModal = ({
           <h2 className="w-[90%] text-center text-xl font-semibold">
             {mainHeading}
           </h2>
-          <p className="mt-[0.5rem] w-[80%] text-center text-sm">{text}</p>
+          <p className="mt-[0.5rem] w-[80%] text-center text-sm">
+            {confirmationtext}
+          </p>
         </div>
-        <OnBoardingButton onClick={onClose}>{buttonText}</OnBoardingButton>
+        <OnBoardingButton onClick={signupHandler}>
+          {buttonText}
+        </OnBoardingButton>
       </div>
     </div>
   );

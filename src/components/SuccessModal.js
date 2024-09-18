@@ -12,6 +12,8 @@ const SuccessModal = ({
   onBoarding,
   onClose,
   containsOtp,
+  signupHandler,
+  confirmationtext,
 }) => {
   const [isSecondPopupVisible, setIsSecondPopupVisible] = useState(false);
 
@@ -70,7 +72,9 @@ const SuccessModal = ({
             mainHeading="Your account is successfully created"
             text="Your account is currently under review. Soon you’ll receive an email on janedoe@gmail.com upon approval"
             buttonText={"Okay I understand"}
-            onClose={onClose}
+            signupHandler={signupHandler}
+            confirmationtext={confirmationtext}
+            // onClose={onClose}
           />
         </Overlay>
       )}
