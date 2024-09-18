@@ -9,7 +9,11 @@ import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
 import { useCallback, useMemo, useState } from "react";
 
+import { useRouter } from "next/navigation";
+import ErrorPopup from "@/components/ErrorPopup";
+
 function SignUp() {
+  const router = useRouter();
   const [isOverlayVisible, setOverlayVisible] = useState(false);
   const [form, setForm] = useState({
     firstName: "",
@@ -21,6 +25,8 @@ function SignUp() {
 
   const [user_role, setUserRole] = useState("client");
   const [errors, setErrors] = useState({});
+  const [otp, setotp] = useState(null);
+  const [alert, setalert] = useState(false);
 
   const payload = useMemo(
     () => ({
@@ -50,17 +56,62 @@ function SignUp() {
         console.log("signed up successfully");
         // const revalidatePath = await revalidate("/admin/clients");
         // console.log("revalidate path", revalidatePath);
-        setOverlayVisible(true);
+        setOverlayVisible(false);
+        router.push("/login");
+        console.log("is overlay is :", isOverlayVisible);
+        console.log("overlay should be unvisible now ...");
+      } else {
+        setalert(true);
       }
     },
-    [payload, errors, user_role],
+
+    [payload, errors, user_role, isOverlayVisible],
   );
 
-  const handleOpenOverlay = () => {
-    if (Object.values(errors).every((err) => err === "")) {
-      setOverlayVisible(true);
-    }
-  };
+  // Utility function to generate a random 6-digit OTP
+  const generateOtp = () => Math.floor(100000 + Math.random() * 900000);
+
+  const handleOpenOverlay = useCallback(
+    async (event) => {
+      event.preventDefault();
+
+      if (Object.values(errors).every((err) => err === "")) {
+        const generatedotp = generateOtp();
+        setotp(generatedotp);
+
+        const payload = {
+          endpoint: "send-email",
+          method: "POST",
+          body: {
+            to: form.email, // Using form.email for the recipient
+            subject: "OTP",
+            text: `Your OTP code is: ${generatedotp}`, // Include the generated OTP
+          },
+        };
+
+        try {
+          const result = await mvp2ApiHelper(payload);
+
+          if (result.status === 200) {
+            console.log("Email sent successfully");
+            setOverlayVisible(true);
+          } else {
+            console.log("Failed to send email");
+          }
+        } catch (error) {
+          console.error("Error sending email: ", error);
+        }
+      }
+    },
+    [errors, form.email, user_role], // dependencies
+  );
+
+  // const handleOpenOverlay = (event) => {
+  //   event.preventDefault();
+  //   if (Object.values(errors).every((err) => err === "")) {
+  //     setOverlayVisible(true);
+  //   }
+  // };
 
   const handleCloseOverlay = () => {
     setOverlayVisible(false);
@@ -73,6 +124,17 @@ function SignUp() {
     // Real-time validation
     validateField(name, value);
   };
+
+  const isFormInvalid = useMemo(() => {
+    return (
+      Object.values(errors).some((err) => err !== "") ||
+      !form.firstName ||
+      !form.lastName ||
+      !form.email ||
+      !form.password ||
+      !form.confirmPassword
+    );
+  }, [errors, form]);
 
   const validateField = (name, value) => {
     let errorMsg = "";
@@ -131,6 +193,12 @@ function SignUp() {
       <span className="font-semibold">{form.email}</span>
     </>
   );
+  let confirmationtext = (
+    <>
+      Your account is currently under review. Soon you’ll receive an email on{" "}
+      <span className="font-semibold"> {form.email} </span> upon approval
+    </>
+  );
 
   return (
     <>
@@ -177,96 +245,107 @@ function SignUp() {
                 className="inline-block"
               />
             </h2>
+            <form onSubmit={handleOpenOverlay}>
+              <div className="mt-5 flex gap-2">
+                <Input
+                  type="text"
+                  name="firstName"
+                  value={form.firstName}
+                  onChange={handleChange}
+                  placeholder="First name"
+                  className="mt-3"
+                />
+                <Input
+                  type="text"
+                  name="lastName"
+                  value={form.lastName}
+                  onChange={handleChange}
+                  placeholder="Last name"
+                  className="mt-3"
+                />
+              </div>
 
-            <div className="mt-5 flex gap-2">
+              <div className="flex gap-2">
+                <div>
+                  {errors.firstName && (
+                    <p className="text-xs text-red-500">{errors.firstName}</p>
+                  )}
+                </div>
+
+                <div>
+                  {errors.lastName && (
+                    <p className="text-xs text-red-500">{errors.lastName}</p>
+                  )}
+                </div>
+              </div>
+
               <Input
                 type="text"
-                name="firstName"
-                value={form.firstName}
+                name="email"
+                value={form.email}
                 onChange={handleChange}
-                placeholder="First name"
+                placeholder="Enter email"
                 className="mt-3"
               />
+              {errors.email && (
+                <p className="text-xs text-red-500">{errors.email}</p>
+              )}
 
-              <Input
-                type="text"
-                name="lastName"
-                value={form.lastName}
-                onChange={handleChange}
-                placeholder="Last name"
-                className="mt-3"
-              />
-            </div>
-
-            <div className="flex gap-2">
-              <div>
-                {errors.firstName && (
-                  <p className="text-xs text-red-500">{errors.firstName}</p>
-                )}
+              <div className="flex gap-2">
+                <Input
+                  type="password"
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  placeholder="Enter password"
+                  className="mt-3"
+                />
+                <Input
+                  type="password"
+                  name="confirmPassword"
+                  value={form.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm password"
+                  className="mt-3"
+                />
               </div>
-              <div>
-                {errors.lastName && (
-                  <p className="text-xs text-red-500">{errors.lastName}</p>
-                )}
+              <div className="flex gap-2">
+                <div>
+                  {errors.password && (
+                    <p className="text-xs text-red-500">{errors.password}</p>
+                  )}
+                </div>
+                <div>
+                  {errors.confirmPassword && (
+                    <p className="text-xs text-red-500">
+                      {errors.confirmPassword}
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
-
-            <Input
-              type="text"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="Enter email"
-              className="mt-3"
-            />
-            {errors.email && (
-              <p className="text-xs text-red-500">{errors.email}</p>
-            )}
-
-            <div className="flex gap-2">
-              <Input
-                type="password"
-                name="password"
-                value={form.password}
-                onChange={handleChange}
-                placeholder="Enter password"
-                className="mt-3"
-              />
-              <Input
-                type="password"
-                name="confirmPassword"
-                value={form.confirmPassword}
-                onChange={handleChange}
-                placeholder="Confirm password"
-                className="mt-3"
-              />
-            </div>
-            <div className="flex gap-2">
-              <div>
-                {errors.password && (
-                  <p className="text-xs text-red-500">{errors.password}</p>
-                )}
+              <div className="mt-2 w-full text-start">
+                <input
+                  type="checkbox"
+                  className="border-none outline-none"
+                  required
+                />
+                <span className="ms-2 text-sm text-grey-primary">
+                  I read and accept the{" "}
+                </span>
+                <button className="text-sm text-primary">
+                  Terms and Conditions
+                </button>
               </div>
-              <div>
-                {errors.confirmPassword && (
-                  <p className="text-xs text-red-500">
-                    {errors.confirmPassword}
-                  </p>
-                )}
-              </div>
-            </div>
-            <div className="mt-2 w-full text-start">
-              <input type="checkbox" className="border-none outline-none" />
-              <span className="ms-2 text-sm text-grey-primary">
-                I read and accept the{" "}
-              </span>
-              <button className="text-sm text-primary">
-                Terms and Conditions
-              </button>
-            </div>
-            <OnBoardingButton onClick={handleSignup}>
-              Create account
-            </OnBoardingButton>
+              <OnBoardingButton
+                type="submit"
+                disabled={isFormInvalid}
+                className={`${
+                  isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
+                }`}
+              >
+                Create account
+              </OnBoardingButton>
+            </form>
             <div className="my-1 w-full text-center text-grey-primary-tint-30">
               <div className="flex items-center justify-center gap-2">
                 <Image
@@ -299,14 +378,29 @@ function SignUp() {
           </div>
         </div>
       </div>
+
       {isOverlayVisible && (
-        <Overlay>
+        <Overlay isVisible={isOverlayVisible} closeoverlay={handleCloseOverlay}>
           <SuccessModal
-            heading={mainHeading}
-            text={text}
             onClose={handleCloseOverlay}
+            imgSrc="/Message.png"
+            mainHeading={mainHeading}
+            text={text}
+            confirmationtext={confirmationtext}
+            buttonText={"Verify email"}
+            onBoarding={true}
+            containsOtp={true}
+            otp={otp}
+            signupHandler={handleSignup}
           />
         </Overlay>
+      )}
+      {alert && (
+        <ErrorPopup
+          message="Account Already Exist"
+          type="error" // Can be 'success', 'error', 'warning', 'info'
+          onClose={() => setalert(false)}
+        />
       )}
     </>
   );

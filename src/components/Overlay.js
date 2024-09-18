@@ -10,7 +10,7 @@ const Overlay = ({ closeoverlay, isVisible, children }) => {
       onClick={closeoverlay}
     >
       <div
-        className="custom-scrollbar relative max-h-[90vh] w-[50%] overflow-y-auto rounded-[2rem] bg-white px-6 py-3 shadow-2xl"
+        className="custom-scrollbar relative max-h-[100%] w-[30%] overflow-y-auto rounded-[2rem] bg-white px-6 py-12 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {children}
