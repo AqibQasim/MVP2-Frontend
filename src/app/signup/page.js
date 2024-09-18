@@ -10,6 +10,7 @@ import Image from "next/image";
 import { useCallback, useMemo, useState } from "react";
 
 import { useRouter } from "next/navigation";
+import ErrorPopup from "@/components/ErrorPopup";
 
 function SignUp() {
   const router = useRouter();
@@ -25,6 +26,7 @@ function SignUp() {
   const [user_role, setUserRole] = useState("client");
   const [errors, setErrors] = useState({});
   const [otp, setotp] = useState(null);
+  const [alert, setalert] = useState(false);
 
   const payload = useMemo(
     () => ({
@@ -58,6 +60,8 @@ function SignUp() {
         router.push("/login");
         console.log("is overlay is :", isOverlayVisible);
         console.log("overlay should be unvisible now ...");
+      } else {
+        setalert(true);
       }
     },
 
@@ -390,6 +394,13 @@ function SignUp() {
             signupHandler={handleSignup}
           />
         </Overlay>
+      )}
+      {alert && (
+        <ErrorPopup
+          message="Account Already Exist"
+          type="error" // Can be 'success', 'error', 'warning', 'info'
+          onClose={() => setalert(false)}
+        />
       )}
     </>
   );
