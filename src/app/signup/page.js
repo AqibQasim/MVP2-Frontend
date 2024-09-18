@@ -9,8 +9,9 @@ import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
 import { useCallback, useMemo, useState } from "react";
 
-import { useRouter } from "next/navigation";
 import ErrorPopup from "@/components/ErrorPopup";
+import { revalidate } from "@/lib/data-service";
+import { useRouter } from "next/navigation";
 
 function SignUp() {
   const router = useRouter();
@@ -54,8 +55,8 @@ function SignUp() {
       console.log(result);
       if (result.status === 200) {
         console.log("signed up successfully");
-        // const revalidatePath = await revalidate("/admin/clients");
-        // console.log("revalidate path", revalidatePath);
+        const revalidatePathOnSignup = `/admin/${user_role === "client" ? "clients" : "candidates"}`;
+        await revalidate(revalidatePathOnSignup);
         setOverlayVisible(false);
         router.push("/login");
         console.log("is overlay is :", isOverlayVisible);
