@@ -1,8 +1,9 @@
 import ChevronRight from "@/svgs/ChevronRight";
 
-function ButtonCapsule({ className, children }) {
+function ButtonCapsule({ className, children, onPress }) {
   return (
     <button
+      onClick={onPress}
       className={`${className} inline-flex items-center justify-center gap-4.5 rounded-[2.5rem] bg-primary p-1.5 pl-5 text-sm font-bold capitalize text-neutral-white`}
     >
       {" "}

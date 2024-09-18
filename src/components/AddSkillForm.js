@@ -26,57 +26,54 @@ const AddSkillForm = ({
   setLevel3,
   level4,
   setLevel4,
+  onContinue,
+  onBack,
   // setCodingExpertise,
   // setTechStack,
   // isTestRequired,
   // setIsTestRequired,
 }) => {
-  const [codingSkill, setCodingSkill] = useState("");
-  const [codingLevel, setCodingLevel] = useState("beginner");
-  const [queryIcons, setQueryIcons] = useState([]);
+  // const [codingSkill, setCodingSkill] = useState("");
+  // const [codingLevel, setCodingLevel] = useState("beginner");
+  // const [queryIcons, setQueryIcons] = useState([]);
 
-  console.log("Icons state", queryIcons);
+  // console.log("Icons state", queryIcons);
 
-  useEffect(() => {
-    const FormSubmissionHandler = (e) => {
-      const skills = [
-        { skill: skill1, level: level1 },
-        { skill: skill2, level: level2 },
-        { skill: skill3, level: level3 },
-        { skill: skill4, level: level4 },
-      ];
+  // useEffect(() => {
+  //   const FormSubmissionHandler = (e) => {
+  //     const skills = [
+  //       { skill: skill1, level: level1 },
+  //       { skill: skill2, level: level2 },
+  //       { skill: skill3, level: level3 },
+  //       { skill: skill4, level: level4 },
+  //     ];
 
-      const filledSkills = skills.filter((skillObj) => skillObj.skill);
-      //setTechStack(filledSkills);
-    };
+  //     const filledSkills = skills.filter((skillObj) => skillObj.skill);
+  //     //setTechStack(filledSkills);
+  //   };
 
-    FormSubmissionHandler();
-  }, [skill1, skill2, skill3, skill4, level1, level2, level3, level4]);
+  //   FormSubmissionHandler();
+  // }, [skill1, skill2, skill3, skill4, level1, level2, level3, level4]);
 
-  useEffect(() => {
-    const skills = [{ skill: codingSkill, level: codingLevel }];
+  // useEffect(() => {
+  //   const skills = [{ skill: codingSkill, level: codingLevel }];
 
-    const filledSkills = skills.filter((skillObj) => skillObj.skill);
-    //setCodingExpertise(filledSkills);
-  }, [codingSkill, codingLevel]);
-
-  const handleTestRequirementChange = (event) => {
-    console.log("clicked", event.target.checked);
-    //setIsTestRequired(event.target.checked);
-  };
+  //   const filledSkills = skills.filter((skillObj) => skillObj.skill);
+  //   //setCodingExpertise(filledSkills);
+  // }, [codingSkill, codingLevel]);
 
   const iconSize = 25;
 
   return (
     <>
-      <form className="flex w-full flex-col items-center justify-center gap-8">
+      <div className="flex w-full flex-col items-center justify-center gap-8">
         <div className="w-full justify-start">
           <Heading sm className="font-[500px]" style={{ fontSize: "40px" }}>
             Technologies You’ll Be Asked about
           </Heading>
         </div>
 
-        <div className="w-[90%] space-y-4 h-[100%]">
+        <div className="h-[100%] w-[90%] space-y-4">
           <div
             className={`${styles.inputField} ${skill1 ? styles.filled : ""}`}
           >
@@ -200,13 +197,14 @@ const AddSkillForm = ({
               <option value="expert">Expert</option>
             </select>
           </div>
-        <div className="flex justify-end pr-7 pt-2">
-          <ButtonBack className={"w-[220px] items-center flex gap-2"}>Back</ButtonBack>
-        <ButtonCapsule>Start Assessment</ButtonCapsule>
+          <div className="flex justify-end pr-7 pt-2">
+            <ButtonBack className={"flex w-[220px] items-center gap-2"}>
+              Back
+            </ButtonBack>
+            <ButtonCapsule onPress={onContinue}>Start Assessment</ButtonCapsule>
+          </div>
         </div>
-        </div>
-
-      </form>
+      </div>
     </>
   );
 };

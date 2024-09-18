@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Heading from "./Heading";
 import Image from "next/image";
 import ButtonCapsule from "./ButtonCapsule";
 import Overlay from "./Overlay";
 import AddSkillForm from "./AddSkillForm";
+import { redirect, usePathname, useRouter } from "next/navigation";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 
 function CandidateEvaluateYourselfCard() {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
@@ -11,11 +13,42 @@ function CandidateEvaluateYourselfCard() {
   const [skill2, setSkill2] = useState("");
   const [skill3, setSkill3] = useState("");
   const [skill4, setSkill4] = useState("");
-  const [codingSkill, setCodingSkill] = useState("");
   const [level1, setLevel1] = useState("");
   const [level2, setLevel2] = useState("");
   const [level3, setLevel3] = useState("");
   const [level4, setLevel4] = useState("");
+  const router = useRouter();
+  const candidate_id=usePathname().split('/')[2];
+
+
+  const skills = [
+    { skill: skill1, level: level1 },
+    { skill: skill2, level: level2 },
+    { skill: skill3, level: level3 },
+    { skill: skill4, level: level4 },
+  ];
+
+  const filledSkills = useMemo(
+    () => skills.filter((skillObj) => skillObj.skill),
+    [skills],
+  );
+
+  const payload= useMemo(()=>({
+    endpoint: 'set-expertise',
+    method:'PUT',
+    body:{
+        customer_id: candidate_id,
+        expertise: filledSkills
+    }
+  }),[skills])
+
+  const handleStartAssessment = async() => {
+    const result= await mvp2ApiHelper(payload);
+    if(result.status===200){
+        router.push(`/candidate/${candidate_id}/test`)
+    }
+    // console.log(payload.body)
+  };
 
   return (
     <>
@@ -86,6 +119,8 @@ function CandidateEvaluateYourselfCard() {
             setLevel3={setLevel3}
             level4={level4}
             setLevel4={setLevel4}
+            onContinue={handleStartAssessment}
+            //onBack={}
             //   codingExpertise={codingExpertise}
             //   setCodingExpertise={setCodingExpertise}
             //   isTestRequired={isTestRequired}
