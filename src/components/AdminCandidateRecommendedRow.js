@@ -63,6 +63,7 @@ function AdminCandidateRecommendedRow({ recommended }) {
       client_id: selectedClientId,
       customer_id: recommended.customer_id,
       job_posting_id: selectedJobId,
+      hourly_rate: hourlyRate,
     };
 
     const { error, message } =

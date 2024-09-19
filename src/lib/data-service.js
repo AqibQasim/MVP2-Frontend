@@ -173,3 +173,20 @@ export async function referCandidate(params) {
   }
   return { status: result.status, data: result.data.data, error: null };
 }
+
+export async function setHourlyRate(params) {
+  // expected  body:{customer_id, hourly_rate}
+  const payload = {
+    endpoint: `set-hourly-rate`,
+    method: "PUT",
+    body: params,
+  };
+
+  const result = await mvp2ApiHelper(payload);
+  console.log("Actual data: ", result?.data?.data);
+  if (result.status !== 200) {
+    console.error(result?.data?.message);
+    return { status: result.status, data: null, error: result.data };
+  }
+  return { status: result.status, data: result.data.data, error: null };
+}
