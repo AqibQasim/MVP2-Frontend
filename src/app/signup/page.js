@@ -9,8 +9,6 @@ import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
 import { useCallback, useMemo, useState } from "react";
 
-import ErrorPopup from "@/components/ErrorPopup";
-import { revalidate } from "@/lib/data-service";
 import { useRouter } from "next/navigation";
 
 function SignUp() {
@@ -27,7 +25,6 @@ function SignUp() {
   const [user_role, setUserRole] = useState("client");
   const [errors, setErrors] = useState({});
   const [otp, setotp] = useState(null);
-  const [alert, setalert] = useState(false);
 
   const payload = useMemo(
     () => ({
@@ -50,22 +47,48 @@ function SignUp() {
       if (Object.values(errors).some((err) => err !== "")) {
         return; // Do not proceed with signup if there are validation errors
       }
-      //console.log(payload);
-      const result = await mvp2ApiHelper(payload);
-      console.log(result);
-      if (result.status === 200) {
-        console.log("signed up successfully");
-        const revalidatePathOnSignup = `/admin/${user_role === "client" ? "clients" : "candidates"}`;
-        await revalidate(revalidatePathOnSignup);
-        setOverlayVisible(false);
-        router.push("/login");
-        console.log("is overlay is :", isOverlayVisible);
-        console.log("overlay should be unvisible now ...");
-      } else {
+
+      try {
+        // Call the Stripe customer creation API
+        const stripeResponse = await fetch('/api/create-customer', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: form.email,
+            name: form.firstName + " " + form.lastName,
+          }),
+        });
+
+        const stripeData = await stripeResponse.json();
+
+        if (stripeResponse.status !== 200) {
+          throw new Error(stripeData.error);
+        }
+
+        console.log("Stripe customer created successfully:", stripeData.customer);
+
+        // Proceed with the rest of the signup process
+        const result = await mvp2ApiHelper(payload);
+        console.log(result);
+
+        if (result.status === 200) {
+          console.log("Signed up successfully");
+          const revalidatePathOnSignup = `/admin/${user_role === "client" ? "clients" : "candidates"}`;
+          await revalidate(revalidatePathOnSignup);
+          setOverlayVisible(false);
+          router.push("/login");
+          console.log("is overlay is :", isOverlayVisible);
+          console.log("overlay should be unvisible now ...");
+        } else {
+          setalert(true);
+        }
+      } catch (error) {
+        console.error("Error during signup:", error);
         setalert(true);
       }
     },
-
     [payload, errors, user_role, isOverlayVisible],
   );
 
@@ -395,13 +418,6 @@ function SignUp() {
             signupHandler={handleSignup}
           />
         </Overlay>
-      )}
-      {alert && (
-        <ErrorPopup
-          message="Account Already Exist"
-          type="error" // Can be 'success', 'error', 'warning', 'info'
-          onClose={() => setalert(false)}
-        />
       )}
     </>
   );

@@ -34,7 +34,7 @@ function Page() {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ customer_id: 'cus_QsB4xsyQg5MLBe' }), // Replace with actual customer ID
+                    body: JSON.stringify({ customer_id: 'cus_QsTUOnWq3fWwlo' }), // Replace with actual customer ID
                 });
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -53,7 +53,7 @@ function Page() {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ customer_id: 'cus_QsB4xsyQg5MLBe' }), // Replace with actual customer ID
+                    body: JSON.stringify({ customer_id: 'cus_QsTUOnWq3fWwlo' }), // Replace with actual customer ID
                 });
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
