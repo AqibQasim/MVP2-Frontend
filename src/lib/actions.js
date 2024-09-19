@@ -72,6 +72,7 @@ export async function createAJobAction(formData) {
     skills,
     job_type,
     description,
+    commitment,
     status,
     applied_customers_count,
     application_questions,
@@ -83,8 +84,6 @@ export async function createAJobAction(formData) {
     workday_overlap: `${workday_overlap} Hours`,
   };
   // commitment is not accepted
-  // commitment,
-
   console.log("Job data prepared for dispatch:", createJobData);
 
   const { error } = await createJob(createJobData);

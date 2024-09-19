@@ -30,7 +30,7 @@ const SuccessModal = ({
     } else {
       console.log("Incorrect OTP");
     }
-  };  
+  };
 
   // const handleVerifyEmailClick = () => {
   //   setIsSecondPopupVisible(true);
