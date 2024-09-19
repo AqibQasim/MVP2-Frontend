@@ -5,15 +5,15 @@ import ButtonRounded from "./ButtonRounded";
 import EntityCard from "./EntityCard";
 import ScheduleCallModal from "./ScheduleCallModal";
 
-function ClientHeader() {
+function ClientHeader({ client }) {
   return (
     <div className="flex">
       <EntityCard
         lg
         entity={{
           image: "/avatars/avatar-2.png",
-          name: "Richard Feynman",
-          profession: "Richardfeynman@gmail.com",
+          name: client.name,
+          profession: client.email,
         }}
       />
       <div className="info ml-auto space-y-4">
