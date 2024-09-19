@@ -8,11 +8,12 @@ import { useCallback, useMemo, useState } from "react";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import Link from "next/link";
 import { redirect, useRouter } from "next/navigation";
-
+import ErrorPopup from "@/components/ErrorPopup";
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
   const router = useRouter();
+  const [alert, setalert] = useState(false);
 
   const validateField = (name, value) => {
     let errorMsg = "";
@@ -34,6 +35,14 @@ function Login() {
 
     setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMsg }));
   };
+
+  const isFormInvalid = useMemo(() => {
+    return (
+      Object.values(errors).some((err) => err !== "") ||
+      !form.email ||
+      !form.password
+    );
+  }, [errors, form]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -72,6 +81,8 @@ function Login() {
         //redirect(`/client/${result.id}`)
         //redirect(`/client/1`)
         router.push(`/client/${result.data.id}`);
+      } else {
+        setalert(true);
       }
     },
     [form, errors, user_role],
@@ -150,7 +161,13 @@ function Login() {
             <div className="mt-2 w-full text-right">
               <button className="text-sm text-primary">Forgot Password?</button>
             </div>
-            <OnBoardingButton onClick={handleLogin}>
+            <OnBoardingButton
+              onClick={handleLogin}
+              disabled={isFormInvalid}
+              className={`${
+                isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
+              }`}
+            >
               Login to proceed
             </OnBoardingButton>
             <div className="my-1 w-full text-center text-grey-primary-tint-30">
@@ -206,6 +223,13 @@ function Login() {
           </div>
         </div>
       </div>
+      {alert && (
+        <ErrorPopup
+          message="Incorrect email or password"
+          type="error" // Can be 'success', 'error', 'warning', 'info'
+          onClose={() => setalert(false)}
+        />
+      )}
     </>
   );
 }
