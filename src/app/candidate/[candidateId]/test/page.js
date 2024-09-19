@@ -2,7 +2,7 @@
 import TestInstruction from "@/components/TestInstruction";
 // import QuestionBox from "../../components/QuestionBox";
 // import styles from "@/styles/test.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const page = () => {
   const [instructionsPopup, setInstructionsPopup] = useState(true);
@@ -10,6 +10,15 @@ const page = () => {
   const closePopup = () => {
     setInstructionsPopup(false);
   };
+
+  useEffect(()=>{
+    setIsLoading(true)
+    setTimeout(()=>{
+      setIsLoading(false)
+    },2000)
+  },[])
+
+  
 
   const instructions = [
     "Make sure your connection is stable.",
@@ -21,14 +30,16 @@ const page = () => {
   ];
 
   return (
-    <>
+    <html lang="en">
+      <body>
       {instructionsPopup && (
         <TestInstruction isLoading={isLoading} setIsLoading={setIsLoading} onClose={closePopup} options={instructions} />
       )}
       {/* <div className={styles.superContainer}>
         <QuestionBox isLoading={isLoading} setIsLoading={setIsLoading} hasStarted={!instructionsPopup} />
       </div> */}
-    </>
+      </body>
+    </html>
   );
 };
 
