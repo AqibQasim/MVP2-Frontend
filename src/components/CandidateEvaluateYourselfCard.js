@@ -1,3 +1,4 @@
+
 import React, { useMemo, useState } from "react";
 import Heading from "./Heading";
 import Image from "next/image";
@@ -6,6 +7,8 @@ import Overlay from "./Overlay";
 import AddSkillForm from "./AddSkillForm";
 import { redirect, usePathname, useRouter } from "next/navigation";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
+import { useDispatch } from "react-redux";
+import { setFilledSkills } from "@/redux/slices/filledSkillsSlice";
 
 function CandidateEvaluateYourselfCard() {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
@@ -18,8 +21,8 @@ function CandidateEvaluateYourselfCard() {
   const [level3, setLevel3] = useState("");
   const [level4, setLevel4] = useState("");
   const router = useRouter();
-  const candidate_id=usePathname().split('/')[2];
-
+  const candidate_id = usePathname().split("/")[2];
+  // const dispatch = useDispatch();
 
   const skills = [
     { skill: skill1, level: level1 },
@@ -33,19 +36,24 @@ function CandidateEvaluateYourselfCard() {
     [skills],
   );
 
-  const payload= useMemo(()=>({
-    endpoint: 'set-expertise',
-    method:'PUT',
-    body:{
+  const payload = useMemo(
+    () => ({
+      endpoint: "set-expertise",
+      method: "PUT",
+      body: {
         customer_id: candidate_id,
-        expertise: filledSkills
-    }
-  }),[skills])
+        expertise: filledSkills,
+      },
+    }),
+    [skills],
+  );
 
-  const handleStartAssessment = async() => {
-    const result= await mvp2ApiHelper(payload);
-    if(result.status===200){
-        router.push(`/candidate/${candidate_id}/test`)
+  const handleStartAssessment = async () => {
+    const result = await mvp2ApiHelper(payload);
+    if (result.status === 200) {
+      //router.push(`/candidate/${candidate_id}/test`,{skills:filledSkills})
+      // dispatch(setFilledSkills(filledSkills));
+      router.push(`/candidate/${candidate_id}/test`);
     }
     // console.log(payload.body)
   };
