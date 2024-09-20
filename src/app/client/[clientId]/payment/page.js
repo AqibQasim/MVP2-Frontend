@@ -16,8 +16,24 @@ const client_payment_history = [
         status: 'paid',
         invoice: '10A3011F-0020'
     },
+    {
+        name: 'Richard Feynman',
+        amount: '$4000',
+        status: 'paid',
+        invoice: '10A3011F-0020'
+    },
     // ... other payment history entries
 ];
+
+// const client_payment_history = [
+// {
+//     name: 'Richard Feynman',
+//     amount: clientCharges[0].data.amount,
+//     status: 'paid',
+//     invoice: '10A3011F-0020',
+// }
+
+// ]
 
 function Page() {
     const pathname = usePathname();
@@ -28,6 +44,7 @@ function Page() {
     const [elements, setElements] = useState(null);
     const [paymentMethods, setPaymentMethods] = useState([]);
     const [cardholderName, setCardholderName] = useState('');
+    const [clientCharges, setClientCharges] = useState([]);
     
     useEffect(() => {
         const fetchData = async () => {
@@ -77,6 +94,7 @@ function Page() {
                 if (!paymentIntentResponse.ok) {
                     throw new Error(`HTTP error! status: ${paymentIntentResponse.status}`);
                 }
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -135,6 +153,48 @@ function Page() {
             console.log('Payment method setup complete');
         }
     };
+    
+ useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const chargesResponse = await fetch('/api/client-charges-list', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ customer_id: 'cus_QsTUOnWq3fWwlo' }), // Replace with actual customer ID
+            });
+
+            if (!chargesResponse.ok) {
+                throw new Error(`HTTP error! status: ${chargesResponse.status}`);
+            }
+
+            const { data } = await chargesResponse.json(); // Access the data property directly
+            console.log("Charges Data is: ", data); // Inspect the charges data
+
+            // Check if data is an array
+            if (!Array.isArray(data)) {
+                console.error("Expected an array but got:", data);
+                return;
+            }
+
+            // Transform charges data into client_payment_history format
+            const transformedCharges = data.map((charge) => ({
+                name: charge.billing_details.name || 'Unknown Client', // Fallback if no name is available
+                amount: `$${(charge.amount / 100).toFixed(2)}`, // Convert from cents to dollars
+                status: charge.status, // 'paid', 'pending', etc.
+                invoice: charge.id, // Assuming invoice refers to the charge id
+            }));
+
+            setClientCharges(transformedCharges);
+
+        } catch (error) {
+            console.error('Error fetching charges:', error);
+        }
+    };
+
+    fetchData();
+}, []); // Ensure `useEffect` is properly configured to run only once on mount
 
     return (
         <div className="max-w-full space-y-2">
@@ -186,7 +246,7 @@ function Page() {
                 </div>
                 )
             }
-            <ClientPaymentHistoryTable client_id={client_id} paymentHistory={client_payment_history} />
+            <ClientPaymentHistoryTable client_id={client_id} paymentHistory={clientCharges} />
         </div>
     );
 }
