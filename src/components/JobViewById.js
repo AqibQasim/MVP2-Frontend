@@ -48,7 +48,7 @@ function JobViewById({ job }) {
   const handleReadMore = () => {
     setIsReadMoreEnabled((value) => !value);
     if (isReadMoreEnabled) {
-      setJobQuestionLength(job_questions.length);
+      setJobQuestionLength(job.application_questions.length);
     } else {
       setJobQuestionLength(1);
     }
@@ -174,7 +174,7 @@ function JobViewById({ job }) {
             length: job?.application_questions?.length,
           }).map((q) => q)}
 
-          {job_questions.length > 1 && (
+          {job?.application_questions?.length > 1 && (
             <div className="flex flex-row gap-1">
               <button
                 className="weigh flex w-36 flex-row items-center justify-around rounded-3xl px-4 py-3 text-[14px] font-semibold text-grey-primary-shade-60"
