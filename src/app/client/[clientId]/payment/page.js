@@ -3,7 +3,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import ClientPaymentHistorySummary from "@/components/ClientPaymentHistorySummary";
 import ClientPaymentHistoryTable from "@/components/ClientPaymentHistoryTable";
+import ClientPaymentMethod from "@/components/ClientPaymentMethod";
 import { usePathname } from "next/navigation";
+
 
 const stripePromise = loadStripe('pk_test_51OfPQBCtLGKA7fQGNEt4t2Nn4S9RxfXQxl4nqi8TK5vWM87A8AZPmdgEZyHHSi3OcpKx8uOGPLnyYSbwbimbSAbF00vZRmnYK1');
 
@@ -156,6 +158,7 @@ useEffect(() => {
                     <p>No payment methods available.</p>
                 )}
             </div>
+            <ClientPaymentMethod />
             <ClientPaymentHistoryTable client_id={client_id} paymentHistory={client_payment_history} />
         </div>
     );

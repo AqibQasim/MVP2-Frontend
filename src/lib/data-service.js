@@ -1,5 +1,5 @@
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 // example
 
 const mvp2Url = process.env.NEXT_PUBLIC_API_REMOTE_URL;
@@ -53,6 +53,19 @@ export async function getClientById(id) {
   }
   console.error(result?.data?.message);
   notFound();
+}
+
+export async function getRecommendedCandidatesOfClient(clientId) {
+  const payload = {
+    endpoint: `assigned-customer/${clientId}`,
+    method: "GET",
+  };
+  const result = await mvp2ApiHelper(payload);
+  if (result.status === 200) {
+    return result?.data;
+  }
+  console.error(result?.data?.message);
+  return { error: result.data.message };
 }
 
 export async function getClients() {

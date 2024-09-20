@@ -9,7 +9,6 @@ import Table from "./Table";
 function ClientJobsRow({ job }) {
   const params = useParams();
   const clientId = params?.clientId;
-  console.log(job);
   return (
     <Table.Row>
       <EntityCard

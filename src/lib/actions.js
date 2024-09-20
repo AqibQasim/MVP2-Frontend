@@ -101,16 +101,18 @@ export async function createAJobAction(formData) {
 }
 
 export async function referCandidateToClientAction(params, closeModal) {
-  const { client_id, customer_id, job_posting_id } = params;
+  const { client_id, customer_id, job_posting_id, hourly_rate } = params;
   console.log("Params in refer Candidate to client Action: ", params);
   if (!client_id) return { error: "Client id is required" };
   if (!customer_id) return { error: "Candidate id is required" };
   if (!job_posting_id) return { error: "Job id is required" };
+  if (!hourly_rate) return { error: "Hourly rate is required" };
 
   const { error, data } = await referCandidate({
     client_id,
     customer_id,
     job_posting_id,
+    hourly_rate,
   });
 
   if (error) {
