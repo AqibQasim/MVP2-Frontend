@@ -26,14 +26,14 @@ function ClientHeader({ client }) {
               profession: "Account Executive - AE",
             }}
           />
+          {/* schedule-call */}
+          <ScheduleCallModal />
           <ButtonRounded>
             <SvgIconNotification />
           </ButtonRounded>
           <ButtonRounded>
             <SvgIconSettings />
           </ButtonRounded>
-          {/* schedule-call */}
-          <ScheduleCallModal />
         </div>
         <div className="joing-date float-right">
           <p className="capitalize text-grey-primary-shade-10">
