@@ -106,8 +106,8 @@ function Page() {
 
             const elementsInstance = stripeInstance.elements(options);
             setElements(elementsInstance);
-            const paymentElement = elementsInstance.create('payment');
-            paymentElement.mount(paymentElementRef.current);
+            // const paymentElement = elementsInstance.create('payment');
+            // paymentElement.mount(paymentElementRef.current);
         };
 
         initializeStripe();
@@ -145,7 +145,7 @@ function Page() {
                 next_payment={'15 July 2024 - 0.00'}
                 last_payment={'$16,000 - 1st July 2024 - 00.00'}
             />
-            <div className="w-full gap-4 rounded-[24px] bg-neutral-white p-6">
+            {/* <div className="w-full gap-4 rounded-[24px] bg-neutral-white p-6">
                 <form onSubmit={handleSubmit}>
                      <label>
                         Cardholder Name
@@ -153,14 +153,14 @@ function Page() {
                             type="text"
                             value={cardholderName}
                             onChange={(e) => setCardholderName(e.target.value)}
-                            className="p-2 rounded-xl border-2 ms-2"
+                            className="p-2 rounded-md border-2 ms-2"
                             required
                         />
                     </label>
                     <div id="payment-element" ref={paymentElementRef}></div>
                     <button type="submit" className="mt-2 p-3 bg-primary text-white rounded-full">Save Payment Method</button>
                 </form>
-            </div>
+            </div> */}
             {/* <div className="w-full gap-4 rounded-[24px] bg-neutral-white p-6">
                 <h2 className="text-xl font-semibold">Existing Payment Methods</h2>
                 {paymentMethods.length > 0 ? (
@@ -175,7 +175,9 @@ function Page() {
                 )}
             </div> */}
              {paymentMethods.length > 0 ? (
-                <ClientPaymentMethod paymentMethods={paymentMethods} paymentElementRef={paymentElementRef} />
+                <ClientPaymentMethod paymentMethods={paymentMethods} handleSubmit={handleSubmit} paymentElementRef={paymentElementRef} stripe={stripe}
+    elements={elements}
+    clientSecret={clientSecret}/>
             ) :
             (
                 <div className="w-full gap-4 rounded-[24px] bg-neutral-white p-6">
