@@ -6,10 +6,10 @@ import { usePathname, useRouter } from "next/navigation";
 import { useSpeechSynthesis } from "react-speech-kit";
 import ErrorIndicator from "./ErrorIndicator";
 
-const QuestionBox = ({ hasStarted, setIsLoading, isLoading }) => {
-  // const { test } = useTest();x
+const QuestionBox = ({ hasStarted, setIsLoading, isLoading, questions }) => {
+  // const { test } = useTest();
   const router = useRouter();
-  const cid= usePathname().split('/')[2]
+  const cid = usePathname().split("/")[2];
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [completedQuestions, setCompletedQuestions] = useState([]);
   const [timeLeft, setTimeLeft] = useState(130);
@@ -23,7 +23,7 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading }) => {
   const [recordingDone, setRecordingDone] = useState(false);
   // const [isLoading, setIsLoading] = useState(false);
   const [disableRecordingButton, setDisableRecordingButton] = useState(false);
-  const [questions, setQuestions] = useState();
+  //const [questions, setQuestions] = useState();
   const { speak, cancel } = useSpeechSynthesis();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -45,36 +45,37 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading }) => {
   const [isFirstQues, setIsFirstQues] = useState(true);
   const [candidateExpertise, setCandidateExpertise] = useState();
 
-  //console.log(question_id)
-
+  useEffect(() => {
+    setNewQuestions(questions?.question);
+  }, [questions]);
   // const [isFirstQues, setIsFirstQues] = useState(0);
 
-  // const speakQuestion = (questionobj) => {
-  //   const question = questionobj.question;
-  //   console.log(question);
-  //   cancel();
-  //   speak({ text: question });
-  // };
+  const speakQuestion = (questionobj) => {
+    const question = questionobj.question;
+    console.log(question);
+    cancel();
+    speak({ text: question });
+  };
 
-  // useEffect(() => {
-  //   console.log("answers:", answers);
-  // }, [answers]);
+  useEffect(() => {
+    console.log("answers:", answers);
+  }, [answers]);
 
   // useEffect(() => {
   //   localStorage.setItem("candidate-id", cid);
   // }, [cid]);
 
-  // const processRecording = async (blob, questionIndex) => {
-  //   const base64Data = await blobToBase64(blob);
-  //   saveAnswer(questionIndex, base64Data);
-  // };
+  const processRecording = async (blob, questionIndex) => {
+    const base64Data = await blobToBase64(blob);
+    saveAnswer(questionIndex, base64Data);
+  };
 
-  // const saveAnswer = (questionIndex, answerData) => {
-  //   setAnswers((prev) => [
-  //     ...prev,
-  //     { question: questionIndex, answer: answerData },
-  //   ]);
-  // };
+  const saveAnswer = (questionIndex, answerData) => {
+    setAnswers((prev) => [
+      ...prev,
+      { question: questionIndex, answer: answerData },
+    ]);
+  };
 
   // useEffect(() => {
   //   const reqBody = {
@@ -301,135 +302,136 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading }) => {
   //   getTestQuestions();
   // }, [pid]);
 
-  // useEffect(() => {
-  //   if (newQuestions) {
-  //     console.log("value of has started", hasStarted);
-  //     setIsFirstQues(true);
-  //     // console.log(hasStarted);
-  //     // setQuestions(data?.data[0]?.question);
-  //     // console.log("there?", data?.data[0]?.question[0].question);
-  //     speakQuestion(currentQuestion);
-  //     console.log("questions:", questions);
-  //   }
-  // }, [hasStarted]);
+  useEffect(() => {
+    if (newQuestions) {
+      console.log("value of has started", hasStarted);
+      setIsFirstQues(true);
+      // console.log(hasStarted);
+      // setQuestions(data?.data[0]?.question);
+      // console.log("there?", data?.data[0]?.question[0].question);
+      speakQuestion(currentQuestion);
+      console.log("questions:", questions);
+    }
+  }, [hasStarted]);
 
-  // useEffect(() => {
-  //   navigator.mediaDevices
-  //     .getUserMedia({ audio: true })
-  //     .then((stream) => {
-  //       mediaRecorderRef.current = new MediaRecorder(stream);
+  useEffect(() => {
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
+        mediaRecorderRef.current = new MediaRecorder(stream);
 
-  //       mediaRecorderRef.current.ondataavailable = (event) => {
-  //         if (event.data.size > 0) {
-  //           recordedChunksRef.current.push(event.data);
-  //           console.log("Chunk recorded:", event.data.size);
-  //         }
-  //       };
+        mediaRecorderRef.current.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            recordedChunksRef.current.push(event.data);
+            console.log("Chunk recorded:", event.data.size);
+          }
+        };
 
-  //       mediaRecorderRef.current.onstop = async () => {
-  //         const blob = new Blob(recordedChunksRef.current, {
-  //           type: "audio/wav",
-  //         });
-  //         recordedChunksRef.current = [];
-  //         const audioURL = URL.createObjectURL(blob);
-  //         setAudioURLs((prevURLs) => ({
-  //           ...prevURLs,
-  //           [currentQuestion]: audioURL,
-  //         }));
+        mediaRecorderRef.current.onstop = async () => {
+          const blob = new Blob(recordedChunksRef.current, {
+            type: "audio/wav",
+          });
+          recordedChunksRef.current = [];
+          const audioURL = URL.createObjectURL(blob);
+          setAudioURLs((prevURLs) => ({
+            ...prevURLs,
+            [currentQuestion]: audioURL,
+          }));
 
-  //         isProcessingRef.current = true;
-  //         await processRecording(
-  //           blob,
-  //           currentRecordingQuestionIndexRef.current
-  //         );
-  //         isProcessingRef.current = false;
-  //       };
-  //     })
-  //     .catch((err) => console.error("Error accessing the microphone:", err));
-  // }, [currentQuestion]);
+          isProcessingRef.current = true;
+          await processRecording(
+            blob,
+            currentRecordingQuestionIndexRef.current
+          );
+          isProcessingRef.current = false;
+        };
+      })
+      .catch((err) => console.error("Error accessing the microphone:", err));
+  }, [currentQuestion]);
 
-  // const startRecording = () => {
-  //   if (mediaRecorderRef.current) {
-  //     cancel();
-  //     mediaRecorderRef.current.start();
-  //     setIsRecording(true);
-  //     setRecordingDone(true);
-  //     currentRecordingQuestionIndexRef.current = currentQuestion;
-  //     setIsRecordingPopupVisible(true);
-  //     console.log("Recording started");
-  //   }
-  // };
+  const startRecording = () => {
+    if (mediaRecorderRef.current) {
+      cancel();
+      mediaRecorderRef.current.start();
+      setIsRecording(true);
+      setRecordingDone(true);
+      currentRecordingQuestionIndexRef.current = currentQuestion;
+      setIsRecordingPopupVisible(true);
+      console.log("Recording started");
+    }
+  };
 
-  // const stopRecording = () => {
-  //   if (
-  //     mediaRecorderRef.current &&
-  //     mediaRecorderRef.current.state !== "inactive"
-  //   ) {
-  //     mediaRecorderRef.current.stop();
-  //     setIsRecordingPopupVisible(false);
-  //   }
-  // };
-  // useEffect(() => {
-  //   let timeoutId;
+  const stopRecording = () => {
+    if (
+      mediaRecorderRef.current &&
+      mediaRecorderRef.current.state !== "inactive"
+    ) {
+      mediaRecorderRef.current.stop();
+      setIsRecordingPopupVisible(false);
+    }
+  };
 
-  //   if (isRecording) {
-  //     setIsRecordingPopupVisible(true);
+  useEffect(() => {
+    let timeoutId;
 
-  //     timeoutId = setTimeout(() => {
-  //       if (isRecording) {
-  //         setIsRecordingPopupVisible(false);
-  //       }
-  //     }, 5000);
-  //   } else {
-  //     setIsRecordingPopupVisible(false);
-  //     clearTimeout(timeoutId);
-  //   }
+    if (isRecording) {
+      setIsRecordingPopupVisible(true);
 
-  //   return () => {
-  //     clearTimeout(timeoutId);
-  //   };
-  // }, [isRecording]);
+      timeoutId = setTimeout(() => {
+        if (isRecording) {
+          setIsRecordingPopupVisible(false);
+        }
+      }, 5000);
+    } else {
+      setIsRecordingPopupVisible(false);
+      clearTimeout(timeoutId);
+    }
 
-  // useEffect(() => {
-  //   if (!hasStarted || isTestCompleted) {
-  //     return;
-  //   }
-  //   const intervalId = setInterval(() => {
-  //     setTimeLeft((prevTimeLeft) => {
-  //       if (prevTimeLeft > 1) {
-  //         return prevTimeLeft - 1;
-  //       } else {
-  //         clearInterval(intervalId);
-  //         if (isLastQuestion && !isSubmitted) {
-  //           setIsSubmitted(true);
-  //           submitTestHandler();
-  //         } else if (!isLastQuestion) {
-  //           toggleComponent();
-  //         }
-  //         return 0;
-  //       }
-  //     });
-  //   }, 1000);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [isRecording]);
 
-  //   return () => clearInterval(intervalId);
-  // }, [hasStarted, isLastQuestion, timeLeft, isSubmitted, isTestCompleted]);
+  useEffect(() => {
+    if (!hasStarted || isTestCompleted) {
+      return;
+    }
+    const intervalId = setInterval(() => {
+      setTimeLeft((prevTimeLeft) => {
+        if (prevTimeLeft > 1) {
+          return prevTimeLeft - 1;
+        } else {
+          clearInterval(intervalId);
+          if (isLastQuestion && !isSubmitted) {
+            setIsSubmitted(true);
+            submitTestHandler();
+          } else if (!isLastQuestion) {
+            toggleComponent();
+          }
+          return 0;
+        }
+      });
+    }, 1000);
 
-  // const stopMediaStreamTracks = () => {
-  //   if (
-  //     mediaRecorderRef.current &&
-  //     mediaRecorderRef.current.state !== "inactive"
-  //   ) {
-  //     mediaRecorderRef.current.stream
-  //       .getTracks()
-  //       .forEach((track) => track.stop());
-  //   }
-  // };
+    return () => clearInterval(intervalId);
+  }, [hasStarted, isLastQuestion, timeLeft, isSubmitted, isTestCompleted]);
 
-  // useEffect(() => {
-  //   return () => {
-  //     stopMediaStreamTracks();
-  //   };
-  // }, []);
+  const stopMediaStreamTracks = () => {
+    if (
+      mediaRecorderRef.current &&
+      mediaRecorderRef.current.state !== "inactive"
+    ) {
+      mediaRecorderRef.current.stream
+        .getTracks()
+        .forEach((track) => track.stop());
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      stopMediaStreamTracks();
+    };
+  }, []);
   // useEffect(() => {
   //   const testcomplete = localStorage.getItem("testcompleted");
   //   if (testcomplete && assessmentId) {
@@ -538,120 +540,120 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading }) => {
   //   }
   // };
 
-  // const toggleComponent = async () => {
-  //   setIsLoading(true);
+  const toggleComponent = async () => {
+    setIsLoading(true);
 
-  //   try {
-  //     if (isLastQuestion) return;
+    try {
+      if (isLastQuestion) return;
 
-  //     if (!isLastQuestion) {
-  //       if (!recordingDone && recordedChunksRef.current.length === 0) {
-  //         const silentBase64Wav =
-  //           "UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=";
-  //         setAnswers((prevAnswers) => {
-  //           return prevAnswers.some(
-  //             (ans) =>
-  //               ans.question === newQuestions[currentQuestion - 1]?.question
-  //           )
-  //             ? prevAnswers
-  //             : [
-  //                 ...prevAnswers,
-  //                 {
-  //                   question: newQuestions[currentQuestion - 1]?.question,
-  //                   answer: silentBase64Wav,
-  //                 },
-  //               ];
-  //         });
-  //         console.log("No recording made, adding silent audio blob as answer.");
-  //         showError("No answer was provided, moving on to next question.");
-  //         setCurrentQuestion((prevCurrent) => prevCurrent + 1);
-  //         setIsRecording(false);
-  //         setRecordingDone(false);
-  //         setCompletedQuestions((prevCompleted) => [
-  //           ...prevCompleted,
-  //           currentQuestion,
-  //         ]);
-  //         if (currentQuestionIndex < newQuestions.length - 1 && hasStarted) {
-  //           setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-  //           speakQuestion(newQuestions[currentQuestionIndex + 1]);
-  //           setIsFirstQues(false);
-  //           setIsLoading(false);
-  //         }
-  //       } else {
-  //         await stopAndHandleRecording();
-  //       }
-  //       console.log("completed questions:", completedQuestions);
-  //       console.log("current questions:", currentQuestion);
-  //     }
-  //     setIsFirstQues(false);
-  //   } catch (err) {
-  //     console.log("ERR:", err);
-  //   } finally {
-  //   }
-  // };
+      if (!isLastQuestion) {
+        if (!recordingDone && recordedChunksRef.current.length === 0) {
+          const silentBase64Wav =
+            "UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=";
+          setAnswers((prevAnswers) => {
+            return prevAnswers.some(
+              (ans) =>
+                ans.question === newQuestions[currentQuestion - 1]?.question
+            )
+              ? prevAnswers
+              : [
+                  ...prevAnswers,
+                  {
+                    question: newQuestions[currentQuestion - 1]?.question,
+                    answer: silentBase64Wav,
+                  },
+                ];
+          });
+          console.log("No recording made, adding silent audio blob as answer.");
+          showError("No answer was provided, moving on to next question.");
+          setCurrentQuestion((prevCurrent) => prevCurrent + 1);
+          setIsRecording(false);
+          setRecordingDone(false);
+          setCompletedQuestions((prevCompleted) => [
+            ...prevCompleted,
+            currentQuestion,
+          ]);
+          if (currentQuestionIndex < newQuestions.length - 1 && hasStarted) {
+            setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+            speakQuestion(newQuestions[currentQuestionIndex + 1]);
+            setIsFirstQues(false);
+            setIsLoading(false);
+          }
+        } else {
+          await stopAndHandleRecording();
+        }
+        console.log("completed questions:", completedQuestions);
+        console.log("current questions:", currentQuestion);
+      }
+      setIsFirstQues(false);
+    } catch (err) {
+      console.log("ERR:", err);
+    } finally {
+    }
+  };
 
-  // useEffect(() => {
-  //   speakQuestion(currentQuestion);
-  //   setTimeLeft(130);
-  // }, [currentQuestion]);
+  useEffect(() => {
+    speakQuestion(currentQuestion);
+    setTimeLeft(130);
+  }, [currentQuestion]);
 
-  // const stopAndHandleRecording = async () => {
-  //   if (
-  //     mediaRecorderRef.current &&
-  //     mediaRecorderRef.current.state !== "inactive"
-  //   ) {
-  //     await new Promise((resolve) => {
-  //       mediaRecorderRef.current.onstop = resolve;
-  //       mediaRecorderRef.current.stop();
-  //     });
-  //     setIsRecording(false);
-  //     let blob;
-  //     if (recordedChunksRef.current.length > 0) {
-  //       blob = new Blob(recordedChunksRef.current, { type: "audio/wav" });
-  //       const newAudioURL = URL.createObjectURL(blob);
-  //       console.log("new audio url:", newAudioURL);
-  //       recordedChunksRef.current = [];
-  //       const base64Data = await blobToBase64(blob);
-  //       console.log(
-  //         "base64Data",
-  //         base64Data,
-  //         "=============== END OF DATA ================="
-  //       );
-  //       const questionBeingAnswered = currentQuestion;
-  //       const finalData = await sendAudioToServer(base64Data);
+  const stopAndHandleRecording = async () => {
+    if (
+      mediaRecorderRef.current &&
+      mediaRecorderRef.current.state !== "inactive"
+    ) {
+      await new Promise((resolve) => {
+        mediaRecorderRef.current.onstop = resolve;
+        mediaRecorderRef.current.stop();
+      });
+      setIsRecording(false);
+      let blob;
+      if (recordedChunksRef.current.length > 0) {
+        blob = new Blob(recordedChunksRef.current, { type: "audio/wav" });
+        const newAudioURL = URL.createObjectURL(blob);
+        console.log("new audio url:", newAudioURL);
+        recordedChunksRef.current = [];
+        const base64Data = await blobToBase64(blob);
+        console.log(
+          "base64Data",
+          base64Data,
+          "=============== END OF DATA ================="
+        );
+        const questionBeingAnswered = currentQuestion;
+        const finalData = await sendAudioToServer(base64Data);
 
-  //       if (!isTranscriptionComplete) {
-  //         return;
-  //       }
+        if (!isTranscriptionComplete) {
+          return;
+        }
 
-  //       if (currentRecordingQuestionIndexRef.current === currentQuestion) {
-  //         setAnswers((prev) => [
-  //           ...prev,
-  //           {
-  //             question: newQuestions[currentQuestion - 1]?.question,
-  //             answer: finalData.data.transcriptionResult,
-  //           },
-  //         ]);
-  //       }
-  //     } else {
-  //       const silentBase64Wav =
-  //         "UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=";
-  //       if (currentRecordingQuestionIndexRef.current === currentQuestion) {
-  //         setAnswers((prev) => [
-  //           ...prev,
-  //           {
-  //             question: newQuestions[currentQuestion - 1]?.question,
-  //             answer: silentBase64Wav,
-  //           },
-  //         ]);
-  //       }
-  //     }
-  //     setIsLoading(false);
-  //   } else {
-  //     console.error("Recorder not active or already stopped.");
-  //   }
-  //   recordedChunksRef.current = [];
-  // };
+        if (currentRecordingQuestionIndexRef.current === currentQuestion) {
+          setAnswers((prev) => [
+            ...prev,
+            {
+              question: newQuestions[currentQuestion - 1]?.question,
+              answer: finalData.data.transcriptionResult,
+            },
+          ]);
+        }
+      } else {
+        const silentBase64Wav =
+          "UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=";
+        if (currentRecordingQuestionIndexRef.current === currentQuestion) {
+          setAnswers((prev) => [
+            ...prev,
+            {
+              question: newQuestions[currentQuestion - 1]?.question,
+              answer: silentBase64Wav,
+            },
+          ]);
+        }
+      }
+      setIsLoading(false);
+    } else {
+      console.error("Recorder not active or already stopped.");
+    }
+    recordedChunksRef.current = [];
+  };
 
   // async function sendAudioToServer(base64Data) {
   //   try {
@@ -704,37 +706,37 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading }) => {
   //   }
   // }
 
-  // function blobToBase64(blob) {
-  //   return new Promise((resolve, reject) => {
-  //     const reader = new FileReader();
-  //     reader.readAsDataURL(blob);
-  //     reader.onloadend = () => {
-  //       const base64data = reader.result.split(",")[1];
-  //       console.log("Converted Base64 Length:", base64data.length);
-  //       resolve(base64data);
-  //     };
-  //     reader.onerror = reject;
-  //   });
-  // }
+  function blobToBase64(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = () => {
+        const base64data = reader.result.split(",")[1];
+        console.log("Converted Base64 Length:", base64data.length);
+        resolve(base64data);
+      };
+      reader.onerror = reject;
+    });
+  }
 
-  // useEffect(() => {
-  //   if (currentQuestionIndex < newQuestions?.length && hasStarted) {
-  //     speakQuestion(newQuestions[currentQuestionIndex]);
-  //   }
-  // }, [currentQuestionIndex, newQuestions, hasStarted]);
+  useEffect(() => {
+    if (currentQuestionIndex < newQuestions?.length && hasStarted) {
+      speakQuestion(newQuestions[currentQuestionIndex]);
+    }
+  }, [currentQuestionIndex, newQuestions, hasStarted]);
 
-  // const showError = (message) => {
-  //   setMessage(message);
-  //   setShowErrorMessage(true);
+  const showError = (message) => {
+    setMessage(message);
+    setShowErrorMessage(true);
 
-  //   setTimeout(() => {
-  //     setShowErrorMessage(false);
-  //   }, 3000);
-  // };
+    setTimeout(() => {
+      setShowErrorMessage(false);
+    }, 3000);
+  };
 
-  // const removeNumericPrefix = (question) => {
-  //   return question.substring(2);
-  // };
+  const removeNumericPrefix = (question) => {
+    return question.substring(2);
+  };
 
   return (
     <>
@@ -804,11 +806,11 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading }) => {
             {/* question container */}
 
             <div className={styles.questionContainer}>
-              {newQuestions && newQuestions.length > 0 && (
+              {newQuestions && newQuestions?.length > 0 && (
                 <span>
                   {isFirstQues
                     ? removeNumericPrefix(
-                        newQuestions[currentQuestion - 1]?.question
+                        newQuestions[currentQuestion - 1]?.question,
                       )
                     : newQuestions[currentQuestion - 1]?.question}
                 </span>
@@ -822,8 +824,8 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading }) => {
                 color: recordingDone ? "#808080" : "",
               }}
               className={styles.recordBtn}
-              // onClick={isRecording ? stopRecording : startRecording}
-              // disabled={isRecording}
+              onClick={isRecording ? stopRecording : startRecording}
+              disabled={isRecording}
             >
               <Image
                 src={recordingDone ? "/mic-disabled.svg" : "/mic.svg"}

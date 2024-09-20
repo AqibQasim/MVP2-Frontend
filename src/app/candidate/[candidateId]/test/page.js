@@ -3,6 +3,7 @@ import QuestionBox from "@/components/QuestionBox";
 import TestInstruction from "@/components/TestInstruction";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import styles from "@/styles/test.module.css";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 
 const page = ({ params }) => {
@@ -10,6 +11,8 @@ const page = ({ params }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [skills, setSkills] = useState(null);
   const hasPreparedTest = useRef(false); // Ref to track if prepareTest has been called
+  const [questions,setQuestions]= useState(null);
+  const router= useRouter();
 
   const closePopup = () => {
     setInstructionsPopup(false);
@@ -58,11 +61,15 @@ const page = ({ params }) => {
   const prepareTest = useCallback(async () => {
     mvp2ApiHelper(prepareTestpayload).then((result) => {
       if (result.status === 200) {
-        console.log(result.data);
+        setQuestions(result.data.message);
         setIsLoading(false);
       }
     });
   }, [prepareTestpayload]);
+
+  useEffect(()=>{
+    console.log(questions)
+  },[questions])
 
   const instructions = [
     "Make sure your connection is stable.",
@@ -88,6 +95,7 @@ const page = ({ params }) => {
             isLoading={isLoading}
             setIsLoading={setIsLoading}
             hasStarted={!instructionsPopup}
+            questions={questions}
           />
         </div>
       </body>
