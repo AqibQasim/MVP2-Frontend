@@ -59,7 +59,6 @@ function JobViewById() {
   const path_split= pathname.split('/')[2]
   const client_id= path_split[2]
   const job_id= path_split[4]
-  console.log("//////////////////////////////////",job_id)
 
   const [isShowMoreEnabled, setIsShowMoreEnabled] = useState(false);
   const [isReadMoreEnabled, setIsReadMoreEnabled] = useState(false);
