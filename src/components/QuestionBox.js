@@ -487,7 +487,8 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading, questions }) => {
       //console.log("a_ID:", a_id);
 
       setIsLoading(false);
-      router.back();
+      window.location.href=`/candidate/${cid}`;
+      // router.back();
 
       // const rBody = {
       //   position_id: pid,
