@@ -16,6 +16,7 @@ import Hr from "@/components/Hr";
 import Skill from "@/components/Skill";
 import TagCard from "@/components/TagCard";
 import TalentDescription from "@/components/TalentDescription";
+import { cityTimezoneOffset } from "@/utils/cityTimezoneOffset";
 import { formatDate } from "@/utils/utility";
 import Image from "next/image";
 import { useCallback, useState } from "react";
@@ -157,8 +158,9 @@ function JobViewById({ job }) {
                 <TagCard
                   icon={timer_start}
                   title={"Time zone"}
-                  answer={["Karachi, 8 hr ahead"]}
+                  answer={cityTimezoneOffset(job.location)}
                 />
+                <p>{job.location}</p>
               </div>
             </div>
           </div>

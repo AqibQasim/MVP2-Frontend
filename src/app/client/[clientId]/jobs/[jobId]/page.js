@@ -1,8 +1,13 @@
 import JobViewById from "@/components/JobViewById";
 import { fetchClientJob } from "@/lib/data-service";
+import { cityTimezoneOffset } from "@/utils/cityTimezoneOffset";
 
 async function page({ params }) {
   const { data: job } = await fetchClientJob(params.clientId, params.jobId);
+
+  // Example usage
+  const city = "Karachi";
+  console.log();
 
   return (
     <div>
