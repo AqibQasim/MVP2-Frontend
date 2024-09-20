@@ -12,7 +12,6 @@ export async function POST(req) {
         const paymentMethods = await stripe.paymentMethods.list({
             type: 'card',
             customer: customer_id,
-             // Adjust the limit as needed
         });
 
         return NextResponse.json({ data: paymentMethods.data }, { status: 200 });

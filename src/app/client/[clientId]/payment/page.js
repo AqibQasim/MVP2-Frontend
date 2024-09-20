@@ -26,48 +26,60 @@ function Page() {
     const [elements, setElements] = useState(null);
     const [paymentMethods, setPaymentMethods] = useState([]);
 
-    useEffect(() => {
-        const fetchClientSecret = async () => {
+useEffect(() => {
+        const fetchData = async () => {
             try {
-                const response = await fetch('/api/setup-intent', {
+                // Fetch client secret
+                const setupIntentResponse = await fetch('/api/setup-intent', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ customer_id: 'cus_QsTUOnWq3fWwlo' }), // Replace with actual customer ID
                 });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+
+                if (!setupIntentResponse.ok) {
+                    throw new Error(`HTTP error! status: ${setupIntentResponse.status}`);
                 }
-                const { clientSecret } = await response.json();
+
+                const { clientSecret } = await setupIntentResponse.json();
                 setClientSecret(clientSecret);
-            } catch (error) {
-                console.error('Error fetching client secret:', error);
-            }
-        };
 
-        const fetchPaymentMethods = async () => {
-            try {
-                const response = await fetch('/api/payment-methods', {
+                // Fetch payment methods
+                const paymentMethodsResponse = await fetch('/api/payment-methods', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ customer_id: 'cus_QsTUOnWq3fWwlo' }), // Replace with actual customer ID
                 });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+
+                if (!paymentMethodsResponse.ok) {
+                    throw new Error(`HTTP error! status: ${paymentMethodsResponse.status}`);
                 }
-                const { data } = await response.json();
+
+                const { data } = await paymentMethodsResponse.json();
                 setPaymentMethods(data); // Assuming `data` contains the payment methods
+
+                // Create payment intent
+                const paymentIntentResponse = await fetch('/api/create-payment-intent', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ amount: 69696969 }), // Replace with actual amount
+                });
+
+                if (!paymentIntentResponse.ok) {
+                    throw new Error(`HTTP error! status: ${paymentIntentResponse.status}`);
+                }
             } catch (error) {
-                console.error('Error fetching payment methods:', error);
+                console.error('Error fetching data:', error);
             }
         };
 
-        fetchClientSecret();
-        fetchPaymentMethods();
-    }, []);
+        fetchData();
+    }, []); // Empty dep
 
     useEffect(() => {
         const initializeStripe = async () => {

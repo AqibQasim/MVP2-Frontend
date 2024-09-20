@@ -14,8 +14,13 @@ export async function POST(req) {
 
         // Create a Payment Intent
         const paymentIntent = await stripe.paymentIntents.create({
-            amount,
+            payment_method_types: ['card'],
+            amount: 80000,
             currency: 'usd', // Change to your desired currency
+            customer: 'cus_QsTUOnWq3fWwlo',
+            payment_method: 'pm_1Q0iiRCtLGKA7fQGVFIgMWfT',
+            off_session: true, // Indicates that this is an off-session payment
+            confirm: true, 
         });
 
         console.log('Payment Intent created:', paymentIntent); // Log the created Payment Intent
