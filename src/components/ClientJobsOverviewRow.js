@@ -33,7 +33,7 @@ function ClientJobsOverviewRow({ job }) {
         href={`/client/${clientId}/jobs/${job.job_posting_id}`}
       >
         {" "}
-        view job{" "}
+        view details{" "}
       </CapsuleLink>
     </Table.Row>
   );
