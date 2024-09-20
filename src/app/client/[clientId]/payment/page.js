@@ -6,7 +6,6 @@ import ClientPaymentHistoryTable from "@/components/ClientPaymentHistoryTable";
 import ClientPaymentMethod from "@/components/ClientPaymentMethod";
 import { usePathname } from "next/navigation";
 
-
 const stripePromise = loadStripe('pk_test_51OfPQBCtLGKA7fQGNEt4t2Nn4S9RxfXQxl4nqi8TK5vWM87A8AZPmdgEZyHHSi3OcpKx8uOGPLnyYSbwbimbSAbF00vZRmnYK1');
 
 const client_payment_history = [
@@ -27,8 +26,8 @@ function Page() {
     const [stripe, setStripe] = useState(null);
     const [elements, setElements] = useState(null);
     const [paymentMethods, setPaymentMethods] = useState([]);
-
-useEffect(() => {
+    
+    useEffect(() => {
         const fetchData = async () => {
             try {
                 // Fetch client secret
@@ -61,6 +60,7 @@ useEffect(() => {
                 }
 
                 const { data } = await paymentMethodsResponse.json();
+                console.log("Payment Data is: ", data)
                 setPaymentMethods(data); // Assuming `data` contains the payment methods
 
                 // Create payment intent
@@ -145,7 +145,7 @@ useEffect(() => {
                     <button type="submit" className="mt-2 p-3 bg-primary text-white rounded-full">Save Payment Method</button>
                 </form>
             </div>
-            <div className="w-full gap-4 rounded-[24px] bg-neutral-white p-6">
+            {/* <div className="w-full gap-4 rounded-[24px] bg-neutral-white p-6">
                 <h2 className="text-xl font-semibold">Existing Payment Methods</h2>
                 {paymentMethods.length > 0 ? (
                     paymentMethods.map((method) => (
@@ -157,8 +157,17 @@ useEffect(() => {
                 ) : (
                     <p>No payment methods available.</p>
                 )}
-            </div>
-            <ClientPaymentMethod />
+            </div> */}
+             {paymentMethods.length > 0 ? (
+            <ClientPaymentMethod paymentMethods={paymentMethods} />
+            ) :
+            (
+                <div className="w-full gap-4 rounded-[24px] bg-neutral-white p-6">
+                <h2 className="text-xl font-semibold">Existing Payment Methods</h2>
+                <p>No payment methods available.</p>
+                </div>
+                )
+            }
             <ClientPaymentHistoryTable client_id={client_id} paymentHistory={client_payment_history} />
         </div>
     );

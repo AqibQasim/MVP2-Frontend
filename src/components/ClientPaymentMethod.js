@@ -3,25 +3,18 @@ import SvgIconPlus from "@/svgs/SvgIconPlus";
 import Image from "next/image";
 import DashboardSection from "./DashboardSection";
 import PaymentMethodCard from "./PaymentMethodCard";
-const cards = [
-  {
-    last4: "7460",
-    name: "Richard Feymman",
-    date: "12/2050",
-  },
-  //   {
-  //     last4: "8765",
-  //     name: "Richard Heymman",
-  //     date: "15/2050",
-  //   },
-];
 
-function ClientPaymentMethod() {
+function ClientPaymentMethod({paymentMethods}) {
   return (
     <DashboardSection paragraph="Below is your" heading="Payment method">
       <div className="payment-method-wrapper grid !w-full grid-cols-[repeat(auto-fill,minmax(420px,1fr))] justify-items-start gap-x-1.5 gap-y-2">
-        {cards.map(({ last4, name, date }) => (
-          <PaymentMethodCard last4={last4} name={name} date={date} />
+        {paymentMethods.map((method) => (
+          <PaymentMethodCard
+            key={method.id}
+            last4={method.card.last4}
+            name={"test"}
+            date={`${method.card.exp_month}/${method.card.exp_year}`}
+          />
         ))}
 
         {/* Button add */}
@@ -54,13 +47,13 @@ function ClientPaymentMethod() {
                 <div className="paypal flex items-center justify-center">
                   <Image
                     src="/icons/pay.svg"
-                    alt="Visa card icon"
+                    alt="PayPal icon"
                     height={22}
                     width={22}
                   />
                   <Image
                     src="/icons/pal.svg"
-                    alt="Visa card icon"
+                    alt="PayPal icon"
                     height={20}
                     width={19}
                   />
