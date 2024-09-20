@@ -7,8 +7,6 @@ import Overlay from "./Overlay";
 import AddSkillForm from "./AddSkillForm";
 import { redirect, usePathname, useRouter } from "next/navigation";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
-import { useDispatch } from "react-redux";
-import { setFilledSkills } from "@/redux/slices/filledSkillsSlice";
 
 function CandidateEvaluateYourselfCard() {
   const [isOverlayVisible, setOverlayVisible] = useState(false);

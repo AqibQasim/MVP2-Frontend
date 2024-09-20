@@ -2,32 +2,28 @@
 import QuestionBox from "@/components/QuestionBox";
 import TestInstruction from "@/components/TestInstruction";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
-// import QuestionBox from "../../components/QuestionBox";
 import styles from "@/styles/test.module.css";
-import { usePathname, useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
-// import { useSelector } from "react-redux";
+import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 
 const page = ({ params }) => {
   const [instructionsPopup, setInstructionsPopup] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [skills, setSkills] = useState(null);
+  const hasPreparedTest = useRef(false); // Ref to track if prepareTest has been called
 
   const closePopup = () => {
     setInstructionsPopup(false);
   };
-  //const filledSkills = useSelector((state) => state.skills.filledSkills);
 
   const skillsPayload = useMemo(
     () => ({
       endpoint: `get-customer-expertise?customer_id=${params.candidateId}`,
       method: "GET",
     }),
-    [],
+    [params.candidateId],
   );
 
-  const payload = useMemo(
+  const prepareTestpayload = useMemo(
     () => ({
       endpoint: "prepare-test",
       method: "POST",
@@ -36,16 +32,13 @@ const page = ({ params }) => {
         expertise: skills,
       },
     }),
-    [],
+    [params.candidateId, skills],
   );
 
-  // console.log(payload)
-
-  //question generate
   useEffect(() => {
     setIsLoading(true);
     fetchCandidateSkills();
-  }, []);
+  }, [skillsPayload]);
 
   const fetchCandidateSkills = useCallback(async () => {
     mvp2ApiHelper(skillsPayload).then((result) => {
@@ -53,30 +46,31 @@ const page = ({ params }) => {
         setSkills(result.data.data);
       }
     });
-    // console.log(payload.body)
-  },[skillsPayload]);
+  }, [skillsPayload]);
 
+  useEffect(() => {
+    if (skills && !hasPreparedTest.current) {
+      prepareTest();
+      hasPreparedTest.current = true; // Set the flag to true after prepareTest is called
+    }
+  }, [skills]);
 
   const prepareTest = useCallback(async () => {
-    mvp2ApiHelper(payload).then((result) => {
+    mvp2ApiHelper(prepareTestpayload).then((result) => {
       if (result.status === 200) {
-        setSkills(result.data.data);
+        console.log(result.data);
         setIsLoading(false);
       }
     });
-    // console.log(payload.body)
-  },[skillsPayload]);
+  }, [prepareTestpayload]);
 
   const instructions = [
     "Make sure your connection is stable.",
     "Your score will reflect on your profile.",
-    "Avoid Refreshing your page during interview",
-    "Give your answers in English",
-    `Make sure there’s no background noise while answering the
-  questions.`,
+    "Avoid refreshing your page during the interview.",
+    "Give your answers in English.",
+    "Make sure there’s no background noise while answering the questions.",
   ];
-
-  console.log(skills)
 
   return (
     <html lang="en">
