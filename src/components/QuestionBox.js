@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useSpeechSynthesis } from "react-speech-kit";
 import ErrorIndicator from "./ErrorIndicator";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 
 const QuestionBox = ({ hasStarted, setIsLoading, isLoading, questions }) => {
   // const { test } = useTest();
@@ -443,102 +444,102 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading, questions }) => {
   //   console.log("Assessment ID:", assessmentId);
   // }, [assessmentId]);
 
-  // const submitTestHandler = async () => {
+  const submitTestHandler = async () => {
   //   console.log("Submit test handler called. Assessment ID:", assessmentId);
   //   localStorage.setItem("testcompleted", "true");
-  //   if (isSubmitted) return;
-  //   setIsSubmitted(true);
-  //   setIsGeneratingResult(true);
-  //   setIsLoading(true);
-  //   setIsTestCompleted(true);
+    if (isSubmitted) return;
+    setIsSubmitted(true);
+    setIsGeneratingResult(true);
+    setIsLoading(true);
+    setIsTestCompleted(true);
 
-  //   console.log("candidate_id in question box in take test method is : ", cid);
+    console.log("candidate_id in question box in take test method is : ", cid);
+    // const userFlow = localStorage.getItem("activeFlow");
 
-  //   let requestBody;
-  //   const userFlow = localStorage.getItem("activeFlow");
+    // if (userFlow === "Candidate_self") {
+      const requestBody = {
+        candidate_id: cid,
+        question_answer: answers
+      }
 
-  //   if (userFlow === "Candidate_self") {
-  //     requestBody = {
-  //       user_role: "Candidate_self",
-  //       candidate_id: cid,
-  //       question_answer: answers,
-  //       position_id: pid,
-  //     };
-  //   } else if (userFlow === "Client") {
-  //     requestBody = {
-  //       user_role: "Client",
-  //       candidate_id: cid,
-  //       question_answer: answers,
-  //       position_id: pid,
-  //     };
-  //   }
+    try {
+      // const response = await fetch(
+      //   `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/take-test`,
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify(requestBody),
+      //   }
+      // );
 
-  //   try {
-  //     const response = await fetch(
-  //       `${process.env.NEXT_PUBLIC_REMOTE_URL}/take-test`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify(requestBody),
-  //       }
-  //     );
-  //     const data = await response.json();
-  //     console.log("take-test api response:", data);
-  //     console.log("value in test_req state:", test_req);
-  //     console.log("test_req state = ", test_req === "true");
-  //     console.log("a_ID:", a_id);
+      const payload= {
+        endpoint:'take-test',
+        body: requestBody,
+        method:'POST'
+      }
+      const response= await mvp2ApiHelper(payload);
+      const data = response.data;
+      console.log("take-test api response:", data);
+      //console.log("value in test_req state:", test_req);
+      //console.log("test_req state = ", test_req === "true");
+      //console.log("a_ID:", a_id);
 
-  //     const rBody = {
-  //       position_id: pid,
-  //     };
+      setIsLoading(false);
+      router.back();
 
-  //     if (test_req === "true" && a_id) {
-  //       if (assessmentId) {
-  //         console.log(
-  //           "Routing to coding exercise with assessment ID:",
-  //           assessmentId
-  //         );
-  //         router.push(
-  //           `/coding-excercise?a_id=${assessmentId}&pid=${pid}&cid=${cid}`
-  //         );
-  //       } else {
-  //         console.error("Assessment ID is not available.");
-  //       }
-  //     } else {
-  //       const rBody = {
-  //         position_id: pid,
-  //       };
-  //       try {
-  //         // if(response?.ok){
-  //         //   const response = await fetch(
-  //         //     `${process.env.NEXT_PUBLIC_REMOTE_URL}/set-candidate-count`,
-  //         //     {
-  //         //       method: "POST",
-  //         //       headers: {
-  //         //         "Content-Type": "application/json",
-  //         //       },
-  //         //       body: JSON.stringify(rBody),
-  //         //     }
-  //         //   );
-  //         //   const data = await response.json();
-  //         //   console.log("data fetched after setting the candidate count:", data);
-  //         // }
-  //       } catch (err) {
-  //         console.log("err:", err);
-  //       }
-  //       router.push(`/test-submit-completion/${cid}`);
-  //       setIsLoading(false);
-  //     }
-  //   } catch (err) {
-  //     console.error("Failed to submit test:", err);
-  //   } finally {
-  //     setTimeout(() => {
-  //       setIsLoading(false);
-  //     }, 7000);
-  //   }
-  // };
+      // const rBody = {
+      //   position_id: pid,
+      // };
+
+      // if (test_req === "true" && a_id) {
+      //   if (assessmentId) {
+      //     console.log(
+      //       "Routing to coding exercise with assessment ID:",
+      //       assessmentId
+      //     );
+      //     router.push(
+      //       `/coding-excercise?a_id=${assessmentId}&pid=${pid}&cid=${cid}`
+      //     );
+      //   } else {
+      //     console.error("Assessment ID is not available.");
+      //   }
+      // } else {
+      //   // const rBody = {
+      //   //   position_id: pid,
+      //   // };
+      //   // try {
+      //   //   // if(response?.ok){
+      //   //   //   const response = await fetch(
+      //   //   //     `${process.env.NEXT_PUBLIC_REMOTE_URL}/set-candidate-count`,
+      //   //   //     {
+      //   //   //       method: "POST",
+      //   //   //       headers: {
+      //   //   //         "Content-Type": "application/json",
+      //   //   //       },
+      //   //   //       body: JSON.stringify(rBody),
+      //   //   //     }
+      //   //   //   );
+      //   //   //   const data = await response.json();
+      //   //   //   console.log("data fetched after setting the candidate count:", data);
+      //   //   // }
+      //   // } catch (err) {
+      //   //   console.log("err:", err);
+      //   // }
+      //   //router.push(`/test-submit-completion/${cid}`);
+      //   setIsLoading(false);
+      //   router.back();
+      // }
+    } catch (err) {
+      console.error("Failed to submit test:", err);
+    } 
+    // finally {
+    //   setTimeout(() => {
+    //     setIsLoading(false);
+    //   }, 7000);
+    // }
+  };
 
   const toggleComponent = async () => {
     setIsLoading(true);
@@ -655,56 +656,51 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading, questions }) => {
     recordedChunksRef.current = [];
   };
 
-  // async function sendAudioToServer(base64Data) {
-  //   try {
-  //     setIsLoading(true);
-  //     setIsTranscriptionComplete(true);
-  //     console.log("send audio to server:", base64Data);
-  //     const response = await fetch(
-  //       `${process.env.NEXT_PUBLIC_REMOTE_URL}/speech-to-text`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ audio: base64Data }),
-  //       }
-  //     );
-  //     const data = await response.json();
-  //     console.log("audio response:", data.data.transcriptionResult);
-  //     setIsTranscriptionComplete(false);
-  //     setCurrentQuestion((prevCurrent) => prevCurrent + 1);
-  //     console.log("currentQuestion State:", currentQuestion);
-  //     setIsRecording(false);
-  //     setRecordingDone(false);
-  //     setCompletedQuestions((prevCompleted) => [
-  //       ...prevCompleted,
-  //       currentQuestion,
-  //     ]);
-  //     if (currentQuestionIndex < newQuestions.length - 1) {
-  //       setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-  //       console.log(
-  //         "currentQuestion State inside if condition:",
-  //         currentQuestion
-  //       );
-  //       console.log(
-  //         console.log("state of currentQuestionIndex:", currentQuestionIndex)
-  //       );
-  //       setIsLoading(false);
-  //     }
-  //     setAnswers((prev) => [
-  //       ...prev,
-  //       {
-  //         question: newQuestions[currentQuestion - 1]?.question,
-  //         answer: data?.data?.transcriptionResult,
-  //       },
-  //     ]);
-  //     return data;
-  //   } catch (error) {
-  //     console.error("Error sending audio to server:", error);
-  //     return "Error in transcription";
-  //   }
-  // }
+  async function sendAudioToServer(base64Data) {
+    try {
+      setIsLoading(true);
+      setIsTranscriptionComplete(true);
+      console.log("send audio to server:", base64Data);
+      const payload= {
+        endpoint:'speech-to-text',
+        method:'POST',
+        body: { audio: base64Data },
+      }
+      const response = await mvp2ApiHelper(payload)
+      console.log("audio response:", response.data?.transcriptionResult);
+      setIsTranscriptionComplete(false);
+      setCurrentQuestion((prevCurrent) => prevCurrent + 1);
+      console.log("currentQuestion State:", currentQuestion);
+      setIsRecording(false);
+      setRecordingDone(false);
+      setCompletedQuestions((prevCompleted) => [
+        ...prevCompleted,
+        currentQuestion,
+      ]);
+      if (currentQuestionIndex < newQuestions.length - 1) {
+        setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+        console.log(
+          "currentQuestion State inside if condition:",
+          currentQuestion
+        );
+        console.log(
+          console.log("state of currentQuestionIndex:", currentQuestionIndex)
+        );
+        setIsLoading(false);
+      }
+      setAnswers((prev) => [
+        ...prev,
+        {
+          question: newQuestions[currentQuestion - 1]?.question,
+          answer: response.data?.transcriptionResult,
+        },
+      ]);
+      return data;
+    } catch (error) {
+      console.error("Error sending audio to server:", error);
+      return "Error in transcription";
+    }
+  }
 
   function blobToBase64(blob) {
     return new Promise((resolve, reject) => {
@@ -839,7 +835,7 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading, questions }) => {
             {/*lower container */}
             <div className={styles.lowerContainer}>
               <button
-                //onClick={isLastQuestion ? submitTestHandler : toggleComponent}
+                onClick={isLastQuestion ? submitTestHandler : toggleComponent}
                 disabled={!recordingDone || isSubmitted || isLoading}
               >
                 {isLastQuestion ? "Submit Test" : "Next Question"}

@@ -107,7 +107,7 @@ function CandidateEvaluateYourselfCard() {
       </div>
 
       {isOverlayVisible && (
-        <Overlay width={"80%"} height={"83%"} isVisible={isOverlayVisible}>
+        <Overlay width={"70.75rem"} height={"83%"} isVisible={isOverlayVisible}>
           <AddSkillForm
             skill1={skill1}
             setSkill1={setSkill1}
