@@ -160,7 +160,6 @@ function JobViewById({ job }) {
                   title={"Time zone"}
                   answer={cityTimezoneOffset(job.location)}
                 />
-                <p>{job.location}</p>
               </div>
             </div>
           </div>

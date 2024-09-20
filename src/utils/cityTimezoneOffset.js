@@ -16,22 +16,21 @@ const cityTimezones = {
 };
 
 export function cityTimezoneOffset(city) {
-  const timezone = cityTimezones[city];
+  const location = city.split(",");
+  const cityName = location.at(0);
+  const timezone = cityTimezones[cityName];
 
   if (!timezone) {
     // return `Timezone for city ${city} not found.`;
     return `Timezone not found`;
   }
 
-  // Get the current time in the specified timezone
-  const cityTime = DateTime.now().setZone(timezone);
+  const timeInSpecifiedTimezone = DateTime.now().setZone(timezone);
 
-  // Calculate the offset from UTC in hours
-  const offsetInHours = cityTime.offset / 60;
+  const offsetInHours = timeInSpecifiedTimezone.offset / 60;
 
-  // Format the output
   const direction = offsetInHours >= 0 ? "ahead" : "behind";
   const absoluteOffset = Math.abs(offsetInHours);
 
-  return `${city}, ${absoluteOffset} hrs ${direction}`;
+  return `${cityName}, ${absoluteOffset} hrs ${direction}`;
 }
