@@ -6,11 +6,12 @@ import SvgIconRecommended from "@/svgs/SvgIconRecommended";
 import SvgIconSettings from "@/svgs/SvgIconSettings";
 import SvgIconTalent from "@/svgs/SvgIconTalent";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 
-function ClientDashboardNavLinks({ clientId }) {
+function ClientDashboardNavLinks({ numberOfJobs }) {
   const pathname = usePathname();
-  
+  const params = useParams();
+  const clientId = params.clientId;
 
   const clientDashboardLinks = [
     {
@@ -34,7 +35,7 @@ function ClientDashboardNavLinks({ clientId }) {
     {
       name: "Jobs",
       href: `/client/${clientId}/jobs`,
-      amount: 4,
+      amount: numberOfJobs,
       icon: <SvgIconJob className="size-6" />,
     },
     {
@@ -68,7 +69,7 @@ function ClientDashboardNavLinks({ clientId }) {
               <span>{link.name}</span>
               {link.amount ? (
                 <span
-                  className={`rounded-4xl ml-auto inline-flex h-[1.6rem] w-[1.95rem] items-center justify-center bg-grey-primary-tint-80 transition-colors duration-200 group-hover:bg-neutral-white ${pathname === link.href ? "!bg-neutral-white text-primary" : ""}`}
+                  className={`ml-auto inline-flex h-[1.6rem] w-[1.95rem] items-center justify-center rounded-4xl bg-grey-primary-tint-80 transition-colors duration-200 group-hover:bg-neutral-white ${pathname === link.href ? "!bg-neutral-white text-primary" : ""}`}
                 >
                   {link.amount > 9 ? "9+" : link.amount}
                 </span>
