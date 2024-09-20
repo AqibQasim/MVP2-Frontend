@@ -5,6 +5,7 @@ import ClientPaymentHistorySummary from "@/components/ClientPaymentHistorySummar
 import ClientPaymentHistoryTable from "@/components/ClientPaymentHistoryTable";
 import ClientPaymentMethod from "@/components/ClientPaymentMethod";
 import { usePathname } from "next/navigation";
+import ClientSideModal from "@/components/ClientSideModal";
 
 const stripePromise = loadStripe('pk_test_51OfPQBCtLGKA7fQGNEt4t2Nn4S9RxfXQxl4nqi8TK5vWM87A8AZPmdgEZyHHSi3OcpKx8uOGPLnyYSbwbimbSAbF00vZRmnYK1');
 
@@ -26,6 +27,7 @@ function Page() {
     const [stripe, setStripe] = useState(null);
     const [elements, setElements] = useState(null);
     const [paymentMethods, setPaymentMethods] = useState([]);
+    const [cardholderName, setCardholderName] = useState('');
     
     useEffect(() => {
         const fetchData = async () => {
@@ -119,7 +121,11 @@ function Page() {
         const result = await stripe.confirmSetup({
             elements: elements,
             confirmParams: {
-                return_url: `${window.location.origin}/client/1/setup-complete`,
+                payment_method_data: {
+                    billing_details: {
+                        name: cardholderName, // Cardholder name
+                    },},
+                return_url: `${window.location.origin}/client/655ca164-e37f-433e-b8f3-1149aacafdf3`,
             },
         });
 
@@ -141,6 +147,16 @@ function Page() {
             />
             <div className="w-full gap-4 rounded-[24px] bg-neutral-white p-6">
                 <form onSubmit={handleSubmit}>
+                     <label>
+                        Cardholder Name
+                        <input
+                            type="text"
+                            value={cardholderName}
+                            onChange={(e) => setCardholderName(e.target.value)}
+                            className="p-2 rounded-xl border-2 ms-2"
+                            required
+                        />
+                    </label>
                     <div id="payment-element" ref={paymentElementRef}></div>
                     <button type="submit" className="mt-2 p-3 bg-primary text-white rounded-full">Save Payment Method</button>
                 </form>
@@ -159,12 +175,12 @@ function Page() {
                 )}
             </div> */}
              {paymentMethods.length > 0 ? (
-            <ClientPaymentMethod paymentMethods={paymentMethods} />
+                <ClientPaymentMethod paymentMethods={paymentMethods} paymentElementRef={paymentElementRef} />
             ) :
             (
                 <div className="w-full gap-4 rounded-[24px] bg-neutral-white p-6">
-                <h2 className="text-xl font-semibold">Existing Payment Methods</h2>
-                <p>No payment methods available.</p>
+                    <h2 className="text-xl font-semibold">Existing Payment Methods</h2>
+                    <p>No payment methods available.</p>
                 </div>
                 )
             }

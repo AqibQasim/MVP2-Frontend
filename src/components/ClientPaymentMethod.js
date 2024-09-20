@@ -12,7 +12,7 @@ function ClientPaymentMethod({paymentMethods}) {
           <PaymentMethodCard
             key={method.id}
             last4={method.card.last4}
-            name={"test"}
+            name={method.billing_details.name}
             date={`${method.card.exp_month}/${method.card.exp_year}`}
           />
         ))}
