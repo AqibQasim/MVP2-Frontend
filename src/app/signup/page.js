@@ -399,7 +399,7 @@ function SignUp() {
       {alert && (
         <ErrorPopup
           message="Account Already Exist"
-          type="error" // Can be 'success', 'error', 'warning', 'info'
+          type="error"
           onClose={() => setalert(false)}
         />
       )}

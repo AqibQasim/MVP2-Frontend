@@ -77,9 +77,10 @@ function Login() {
       const result = await mvp2ApiHelper(payload);
       console.log(result);
       if (result.status === 200) {
-        //console.log("Logged in successfully");
-        //redirect(`/client/${result.id}`)
-        //redirect(`/client/1`)
+        const Authenticated = true;
+        if (Authenticated) {
+          localStorage.setItem("MVP_CLIENT_LOGGEDIN", true);
+        }
         router.push(`/client/${result.data.id}`);
       } else {
         setalert(true);
@@ -96,7 +97,6 @@ function Login() {
             Interactive <span className="gradient-text">Illustration</span>
           </Heading>
         </div>
-
         <div className="flex w-[33rem] flex-col items-start justify-start overflow-y-auto rounded-[36px] bg-white">
           <div className="flex w-full justify-between space-y-2 p-5">
             <Image src="/logo.svg" width={100} height={25} alt="MVP 2 Logo" />

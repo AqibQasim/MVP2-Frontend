@@ -5,13 +5,12 @@ import SvgIconPayment from "@/svgs/SvgIconPayment";
 import SvgIconRecommended from "@/svgs/SvgIconRecommended";
 import SvgIconSettings from "@/svgs/SvgIconSettings";
 import SvgIconTalent from "@/svgs/SvgIconTalent";
+// import SvgIconLogout from "@/svgs/SvgIconLogout"; // Assuming you have a logout icon
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 function ClientDashboardNavLinks({ clientId }) {
   const pathname = usePathname();
-  
-
   const clientDashboardLinks = [
     {
       name: "Dashboard",
@@ -56,19 +55,28 @@ function ClientDashboardNavLinks({ clientId }) {
   ];
 
   return (
-    <nav aria-label="Client Dashboard Navigation">
+    <nav
+      aria-label="Client Dashboard Navigation"
+      className="flex min-h-screen flex-col justify-between"
+    >
       <ul className="nav-links">
         {clientDashboardLinks.map((link) => (
           <li key={link.href}>
             <Link
-              className={`group flex items-center justify-start gap-3 rounded-[0.625rem] bg-transparent px-4 py-3 font-lufga text-sm font-medium text-grey-primary-shade-20 transition-colors duration-200 hover:bg-primary-tint-100 hover:text-primary-tint-20 ${pathname === link.href ? "!bg-primary text-neutral-white" : ""}`}
+              className={`group flex items-center justify-start gap-3 rounded-[0.625rem] bg-transparent px-4 py-3 font-lufga text-sm font-medium text-grey-primary-shade-20 transition-colors duration-200 hover:bg-primary-tint-100 hover:text-primary-tint-20 ${
+                pathname === link.href ? "!bg-primary text-neutral-white" : ""
+              }`}
               href={link.href}
             >
               {link.icon}
               <span>{link.name}</span>
               {link.amount ? (
                 <span
-                  className={`rounded-4xl ml-auto inline-flex h-[1.6rem] w-[1.95rem] items-center justify-center bg-grey-primary-tint-80 transition-colors duration-200 group-hover:bg-neutral-white ${pathname === link.href ? "!bg-neutral-white text-primary" : ""}`}
+                  className={`ml-auto inline-flex h-[1.6rem] w-[1.95rem] items-center justify-center rounded-4xl bg-grey-primary-tint-80 transition-colors duration-200 group-hover:bg-neutral-white ${
+                    pathname === link.href
+                      ? "!bg-neutral-white text-primary"
+                      : ""
+                  }`}
                 >
                   {link.amount > 9 ? "9+" : link.amount}
                 </span>
@@ -77,6 +85,17 @@ function ClientDashboardNavLinks({ clientId }) {
           </li>
         ))}
       </ul>
+
+      {/* Logout button fixed at the bottom */}
+      {/* <div className="p-4">
+        <Link
+          className="group flex items-center justify-start gap-3 rounded-[0.625rem] bg-transparent px-4 py-3 font-lufga text-sm font-medium text-grey-primary-shade-20 transition-colors duration-200 hover:bg-primary-tint-100 hover:text-primary-tint-20"
+          href="/logout"
+        >
+          <SvgIconLogout className="size-6" />
+          <span>Logout</span>
+        </Link>
+      </div>*/}
     </nav>
   );
 }
