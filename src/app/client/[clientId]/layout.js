@@ -6,6 +6,7 @@ import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 async function layout({ children, params }) {
   const clientId = params.clientId;
   const client = await getClientById(clientId);
+
   return (
     <div
       className={`${PAGE_HEIGHT_FIX} grid grid-cols-[17.0625rem_1fr] grid-rows-[max-content_1fr] gap-[6px] overflow-hidden`}

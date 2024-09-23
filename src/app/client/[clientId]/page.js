@@ -3,6 +3,7 @@ import ClientJobsOverviewTable from "@/components/ClientJobsOverviewTable";
 import ClientRecommendationCard from "@/components/ClientRecommendationCard";
 import {
   getClientById,
+  getClientJobs,
   getRecommendedCandidatesOfClient,
 } from "@/lib/data-service";
 
@@ -18,9 +19,10 @@ import {
 // }
 
 export default async function Page({ params }) {
-  const [client, recommendedCandidates] = await Promise.all([
+  const [client, recommendedCandidates, jobs] = await Promise.all([
     getClientById(params.clientId),
     getRecommendedCandidatesOfClient(params.clientId),
+    getClientJobs(params.clientId),
   ]);
 
   return (
@@ -30,7 +32,7 @@ export default async function Page({ params }) {
         recommendedCandidate={recommendedCandidates.customer}
         recommendedForJob={recommendedCandidates.job_postings}
       />
-      <ClientJobsOverviewTable client_id={params.clientId} />
+      <ClientJobsOverviewTable jobs={jobs} />
       <ClientEmployeesTable />
     </div>
   );
