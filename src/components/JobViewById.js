@@ -82,7 +82,7 @@ function JobViewById({ job }) {
 
   return (
     <div className="flex flex-row gap-2">
-      <div className="rounded-3xl bg-white p-4">
+      <div className="flex-1 rounded-3xl bg-white p-4">
         <div className="w-auto">
           <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-3">
