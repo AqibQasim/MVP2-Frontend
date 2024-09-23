@@ -6,7 +6,7 @@ export const metadata = {
     template: "%s / MVP2",
     default: "Welcome / MVP2",
   },
-  description: "Welcome to the official MVP2 site ",
+  description: "Welcome to the official MVP2 site Aqib ne GPT se bnaya hai",
 };
 
 export default function RootLayout({ children }) {
