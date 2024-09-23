@@ -77,12 +77,11 @@ function Login() {
       const result = await mvp2ApiHelper(payload);
       console.log(result);
       if (result.status === 200) {
-        //console.log("Logged in successfully");
-        //redirect(`/client/${result.id}`)
-        //redirect(`/client/1`)
-        router.push(`/client/${result.data.id}`);
-      } else {
-        setalert(true);
+        if(user_role==="customer"){
+          router.push(`/candidate/${result.data.id}`)
+        }else{
+          router.push(`/client/${result.data.id}`)
+        }
       }
     },
     [form, errors, user_role],
