@@ -1,7 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createJob, referCandidate } from "./data-service";
+import {
+  candidateUpdateProfile,
+  createJob,
+  referCandidate,
+} from "./data-service";
 
 export async function createAJobAction(formData) {
   const client_id = formData.get("client_id");
@@ -134,6 +138,7 @@ export async function updateCandidateProfileAction(formData) {
   const commitment = formData.get("commitment");
   const hourly_rate = formData.get("hourly_rate");
   const position = formData.get("position");
+  const candidateId = formData.get("candidateId");
   // Validations
   if (
     !experience ||
@@ -146,6 +151,7 @@ export async function updateCandidateProfileAction(formData) {
   }
   if (!hourly_rate) return { error: "Valid hourly rate is required." };
   if (!position) return { error: "Valid specialization rate is required." };
+  if (!candidateId) return { error: "Valid candidate id is required." };
 
   const updateProfileData = {
     experience,
@@ -153,5 +159,18 @@ export async function updateCandidateProfileAction(formData) {
     hourly_rate,
     position,
   };
+
   // Api call
+  const { message, error } = await candidateUpdateProfile(
+    updateProfileData,
+    candidateId,
+  );
+  console.log("error while updating candidate profile: ", error);
+
+  if (error) {
+    return { error };
+  }
+
+  revalidatePath(`/client/candidates`);
+  return { message: "Candidate profile successfully updated." };
 }

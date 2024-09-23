@@ -1,12 +1,27 @@
 import { updateCandidateProfileAction } from "@/lib/actions";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 import ButtonBack from "./ButtonBack";
 import ButtonCapsule from "./ButtonCapsule";
 import EntityCard from "./EntityCard";
 import Heading from "./Heading";
 import Hr from "./Hr";
 import Input from "./Input";
+import SubmitButton from "./SubmitButton";
 
-function CandidateProfileInfoForm({ onCloseModal, candidateId }) {
+function CandidateProfileInfoForm({ onCloseModal }) {
+  const [error, setError] = useState(null);
+  const params = useParams();
+  const candidateId = params.candidateId;
+  async function handleProfileUpdate(formData) {
+    const { error, message } = await updateCandidateProfileAction(formData);
+    if (error) {
+      console.log(error);
+      return setError(error);
+    }
+    if (message) return onCloseModal();
+  }
+
   return (
     <>
       <Heading xm>Additional info</Heading>
@@ -18,7 +33,14 @@ function CandidateProfileInfoForm({ onCloseModal, candidateId }) {
           profession: "richardfeynman@gmail.com",
         }}
       ></EntityCard>
-      <form action={updateCandidateProfileAction} className="mt-6 space-y-4.5">
+      <form action={handleProfileUpdate} className="mt-6 space-y-4.5">
+        <input
+          type="text"
+          hidden
+          name="candidateId"
+          id="candidateId"
+          value={candidateId}
+        />
         <SelectElement
           required
           label="experience"
@@ -53,6 +75,13 @@ function CandidateProfileInfoForm({ onCloseModal, candidateId }) {
             placeholder="8"
           />
         </div>
+
+        {error ? (
+          <div className="error">
+            <p className="text-red-500"> {error} </p>
+          </div>
+        ) : null}
+
         <div className="flex items-center justify-end gap-1.5">
           <ButtonBack
             type="button"
@@ -61,9 +90,10 @@ function CandidateProfileInfoForm({ onCloseModal, candidateId }) {
           >
             Close
           </ButtonBack>
-          <ButtonCapsule className="flex-[50%] !justify-between">
+          <SubmitButton pendingLabel="Updating...">Confirm</SubmitButton>
+          {/* <ButtonCapsule className="flex-[50%] !justify-between">
             Confirm
-          </ButtonCapsule>
+          </ButtonCapsule> */}
         </div>
       </form>
     </>

@@ -234,3 +234,23 @@ export async function setHourlyRate(params) {
   }
   return { status: result.status, data: result.data.result, error: null };
 }
+
+export async function candidateUpdateProfile(body, candidateId) {
+  const payload = {
+    endpoint: `profile-info-update/${candidateId}`,
+    method: "PUT",
+    body,
+  };
+
+  const result = await mvp2ApiHelper(payload);
+  if (result.status !== 200) {
+    console.error(result?.data?.message);
+    return { status: result.status, data: null, error: result.data.message };
+  }
+  return {
+    status: result.status,
+    data: result.data.data,
+    message: result.data.message,
+    error: null,
+  };
+}
