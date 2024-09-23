@@ -171,6 +171,6 @@ export async function updateCandidateProfileAction(formData) {
     return { error };
   }
 
-  revalidatePath(`/client/candidates`);
+  revalidatePath(`/client`);
   return { message: "Candidate profile successfully updated." };
 }

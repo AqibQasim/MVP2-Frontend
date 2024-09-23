@@ -90,10 +90,12 @@ function CandidateProfileInfoForm({ onCloseModal }) {
           >
             Close
           </ButtonBack>
-          <SubmitButton pendingLabel="Updating...">Confirm</SubmitButton>
-          {/* <ButtonCapsule className="flex-[50%] !justify-between">
+          <SubmitButton
+            className="flex-[50%] !justify-between"
+            pendingLabel="Updating..."
+          >
             Confirm
-          </ButtonCapsule> */}
+          </SubmitButton>
         </div>
       </form>
     </>

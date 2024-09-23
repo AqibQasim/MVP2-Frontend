@@ -1,16 +1,13 @@
 "use client";
-
 import { useFormStatus } from "react-dom";
+import ButtonCapsule from "./ButtonCapsule";
 
-export default function SubmitButton({ children, pendingLabel }) {
+export default function SubmitButton({ children, className, pendingLabel }) {
   const { pending } = useFormStatus();
 
   return (
-    <button
-      className="bg-accent-500 text-primary-800 hover:bg-accent-600 px-8 py-4 font-semibold transition-all disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300"
-      disabled={pending}
-    >
+    <ButtonCapsule className={`${className} `} disabled={pending}>
       {pending ? pendingLabel : children}
-    </button>
+    </ButtonCapsule>
   );
 }
