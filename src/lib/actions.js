@@ -128,3 +128,30 @@ export async function referCandidateToClientAction(params, closeModal) {
   return { message: "Candidate successfully referred to the client." };
   // redirect("/admin/candidates");
 }
+
+export async function updateCandidateProfileAction(formData) {
+  const experience = formData.get("experience");
+  const commitment = formData.get("commitment");
+  const hourly_rate = formData.get("hourly_rate");
+  const position = formData.get("position");
+  // Validations
+  if (
+    !experience ||
+    !["beginner", "intermediate", "expert"].includes(experience)
+  ) {
+    return { error: "Valid experience level is required." };
+  }
+  if (!commitment || !["full-time", "part-time"].includes(commitment.trim())) {
+    return { error: "Valid commitment is required." };
+  }
+  if (!hourly_rate) return { error: "Valid hourly rate is required." };
+  if (!position) return { error: "Valid specialization rate is required." };
+
+  const updateProfileData = {
+    experience,
+    commitment,
+    hourly_rate,
+    position,
+  };
+  // Api call
+}

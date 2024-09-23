@@ -2,7 +2,7 @@
 import SvgIconChevronLeft from "@/svgs/SvgIconChevronLeft";
 import { useRouter } from "next/navigation";
 
-function ButtonBack({ children, className, onClick }) {
+function ButtonBack({ children, className, onClick, ...rest }) {
   const router = useRouter();
   function handleBack() {
     if (onClick) return onClick?.();
@@ -11,6 +11,7 @@ function ButtonBack({ children, className, onClick }) {
   return (
     <button
       onClick={handleBack}
+      {...rest}
       className={`${className} flex items-center justify-center gap-2 rounded-full bg-primary-tint-100 p-3 text-neutral-dark`}
     >
       {" "}
