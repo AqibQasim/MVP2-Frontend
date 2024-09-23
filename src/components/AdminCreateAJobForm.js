@@ -159,12 +159,26 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="location" className="block text-gray-700">
-            Location
+          <label htmlFor="city" className="block text-gray-700">
+            City
           </label>
           <input
-            id="location"
-            name="location"
+            id="city"
+            name="city"
+            placeholder="Karachi"
+            className="w-full rounded-full border p-2"
+            type="text"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="country" className="block text-gray-700">
+            Country
+          </label>
+          <input
+            id="country"
+            name="country"
+            placeholder="Pakistan"
             className="w-full rounded-full border p-2"
             type="text"
             required

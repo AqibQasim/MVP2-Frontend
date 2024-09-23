@@ -1,7 +1,11 @@
 import ClientEmployeesTable from "@/components/ClientEmployeesTable";
 import ClientJobsOverviewTable from "@/components/ClientJobsOverviewTable";
 import ClientRecommendationCard from "@/components/ClientRecommendationCard";
-import { getClientById, getClients } from "@/lib/data-service";
+import {
+  getClientById,
+  getClientJobs,
+  getRecommendedCandidatesOfClient,
+} from "@/lib/data-service";
 
 // export async function generateMetadata({ params }) {
 //   const client = await getClientById(params.clientId);
@@ -15,12 +19,20 @@ import { getClientById, getClients } from "@/lib/data-service";
 // }
 
 export default async function Page({ params }) {
-  const client = await getClientById(params.clientId);
+  const [client, recommendedCandidates, jobs] = await Promise.all([
+    getClientById(params.clientId),
+    getRecommendedCandidatesOfClient(params.clientId),
+    getClientJobs(params.clientId),
+  ]);
 
   return (
     <div className="space-y-2">
-      <ClientRecommendationCard client={client} />
-      <ClientJobsOverviewTable client_id={params.clientId}/>
+      <ClientRecommendationCard
+        client={client}
+        recommendedCandidate={recommendedCandidates.customer}
+        recommendedForJob={recommendedCandidates.job_postings}
+      />
+      <ClientJobsOverviewTable jobs={jobs} />
       <ClientEmployeesTable />
     </div>
   );

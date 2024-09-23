@@ -5,15 +5,15 @@ import ButtonRounded from "./ButtonRounded";
 import EntityCard from "./EntityCard";
 import ScheduleCallModal from "./ScheduleCallModal";
 
-function ClientHeader() {
+function ClientHeader({ client }) {
   return (
     <div className="flex">
       <EntityCard
         lg
         entity={{
           image: "/avatars/avatar-2.png",
-          name: "Richard Feynman",
-          profession: "Richardfeynman@gmail.com",
+          name: client.name,
+          profession: client.email,
         }}
       />
       <div className="info ml-auto space-y-4">
@@ -26,14 +26,14 @@ function ClientHeader() {
               profession: "Account Executive - AE",
             }}
           />
+          {/* schedule-call */}
+          <ScheduleCallModal />
           <ButtonRounded>
             <SvgIconNotification />
           </ButtonRounded>
           <ButtonRounded>
             <SvgIconSettings />
           </ButtonRounded>
-          {/* schedule-call */}
-          <ScheduleCallModal />
         </div>
         <div className="joing-date float-right">
           <p className="capitalize text-grey-primary-shade-10">

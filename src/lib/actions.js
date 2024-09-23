@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { createJob, referCandidate } from "./data-service";
 
 export async function createAJobAction(formData) {
@@ -15,7 +14,9 @@ export async function createAJobAction(formData) {
   const start_date = formData.get("start_date");
   const workday_overlap = Number(formData.get("workday_overlap"));
   const skills = formData.getAll("skills");
-  const location = formData.get("location");
+  const city = formData.get("city");
+  const country = formData.get("country");
+  console.log(`Location: ${city}, ${country}`);
   const is_test_required = formData.get("is_test_required") === "true";
   const applied_customers_count = 0; // default to 0
   const status = "active"; // default to active
@@ -52,8 +53,11 @@ export async function createAJobAction(formData) {
   if (!workday_overlap || isNaN(workday_overlap) || workday_overlap <= 0) {
     return { error: "Workday overlap is required and must be a valid number." };
   }
-  if (!location || location.trim() === "") {
-    return { error: "Location is required." };
+  if (!city || city.trim() === "") {
+    return { error: "City is required." };
+  }
+  if (!country || country.trim() === "") {
+    return { error: "Country is required." };
   }
   if (skills.length === 0 || skills.some((skill) => skill.trim() === "")) {
     return { error: "At least one valid skill is required." };
@@ -72,19 +76,18 @@ export async function createAJobAction(formData) {
     skills,
     job_type,
     description,
+    commitment,
     status,
     applied_customers_count,
     application_questions,
     start_date,
-    location,
+    location: `${city}, ${country}`,
     project_length: `${project_length} Month`,
     is_test_required,
     experience,
     workday_overlap: `${workday_overlap} Hours`,
   };
   // commitment is not accepted
-  // commitment,
-
   console.log("Job data prepared for dispatch:", createJobData);
 
   const { error } = await createJob(createJobData);
@@ -102,16 +105,18 @@ export async function createAJobAction(formData) {
 }
 
 export async function referCandidateToClientAction(params, closeModal) {
-  const { client_id, customer_id, job_posting_id } = params;
+  const { client_id, customer_id, job_posting_id, hourly_rate } = params;
   console.log("Params in refer Candidate to client Action: ", params);
   if (!client_id) return { error: "Client id is required" };
   if (!customer_id) return { error: "Candidate id is required" };
   if (!job_posting_id) return { error: "Job id is required" };
+  if (!hourly_rate) return { error: "Hourly rate is required" };
 
   const { error, data } = await referCandidate({
     client_id,
     customer_id,
     job_posting_id,
+    hourly_rate,
   });
 
   if (error) {

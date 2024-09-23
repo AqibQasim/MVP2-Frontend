@@ -79,6 +79,7 @@ function SignUp() {
       if (Object.values(errors).every((err) => err === "")) {
         const generatedotp = generateOtp();
         setotp(generatedotp);
+        console.log(generatedotp);
 
         const payload = {
           endpoint: "send-email",

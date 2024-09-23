@@ -1,13 +1,14 @@
-import SvgIconJobStatus from "@/svgs/SvgIconJobStatus";
 import SvgIconWork from "@/svgs/SvgIconWork";
+import { useParams } from "next/navigation";
 import Capsule from "./Capsule";
+import CapsuleLink from "./CapsuleLink";
 import EntityCard from "./EntityCard";
-import IconWithBg from "./IconWithBg";
-import Skill from "./Skill";
+import SkillIconWithBg from "./SkillIconWithBg";
 import Table from "./Table";
 
 function ClientJobsOverviewRow({ job }) {
-  console.log(job);
+  const params = useParams();
+  const clientId = params?.clientId;
   return (
     <Table.Row>
       <EntityCard
@@ -19,17 +20,21 @@ function ClientJobsOverviewRow({ job }) {
       />
       <div className="skills flex items-center justify-center gap-1.5 text-center">
         {job.skills.map((skill, i) => (
-          <Skill key={i} skill={skill} />
+          <SkillIconWithBg key={i} icon={skill} />
         ))}
       </div>
       <div className="experience text-center">{job?.experience}</div>
-      <Capsule
-        className="mx-auto w-max !bg-primary-tint-100"
-        icon={<IconWithBg icon={<SvgIconJobStatus status={job?.status} />} />}
+      <div className="commit text-center"> {job.commitment} </div>
+      <Capsule className="status mx-auto w-max" status={job.status}>
+        {job.status}
+      </Capsule>
+      <CapsuleLink
+        className="action ml-auto"
+        href={`/client/${clientId}/jobs/${job.job_posting_id}`}
       >
         {" "}
-        {job.status}{" "}
-      </Capsule>
+        view details{" "}
+      </CapsuleLink>
     </Table.Row>
   );
 }
