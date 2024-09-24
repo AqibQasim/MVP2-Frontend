@@ -19,12 +19,6 @@ function TalentIdPage({ client_id, customer_id }) {
   const searchParams = useSearchParams();
   const job_posting_id = searchParams.get("job_posting_id");
 
-  console.log("CLI:", client_id);
-  console.log("CUS:", customer_id);
-  console.log("JOB:", job_posting_id);
-
-  console.log("Talent", talent);
-
   useEffect(() => {
     let isMounted = true;
     const route = `get-all-candidates-of-clients-job`;
