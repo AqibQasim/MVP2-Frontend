@@ -3,12 +3,12 @@ import ClientPaymentHistoryRow from "./ClientPaymentHistoryRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 
-function ClientPaymentHistoryTable({ clientId, paymentHistory }) {
+function ClientPaymentHistoryTable({ client_id, paymentHistory }) {
   return (
     <DashboardSection
       paragraph="Hey Richard Feynman, below is your"
       heading="Payment history"
-      href={`/client/${clientId}/payment-history`}
+      href={`/client/${client_id}/payment-history`}
     >
       <Table columns="grid-cols-[1fr_0.8fr_0.5fr_0.5fr_0.7fr_9.5rem]">
         <Table.Header>

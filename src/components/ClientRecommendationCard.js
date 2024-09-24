@@ -26,7 +26,7 @@ function ClientRecommendationCard({
               entity={{
                 image: "/avatars/avatar-1.png",
                 name: recommendedCandidate.name,
-                profession: recommendedCandidate.position,
+                profession: recommendedCandidate.specialization,
               }}
             />
             <div className="capsules inline-flex items-center justify-center gap-[6px]">
