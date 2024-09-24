@@ -255,8 +255,13 @@ export async function candidateUpdateProfile(body, candidateId) {
   };
 }
 
-export async function getAllRecommendedCandidates(clientId) {
+export async function getAllRecommendedCandidates(
+  clientId,
+  client_response = "all",
+) {
+  const hired = "accept";
   console.log("client id inside get function: ", clientId);
+  console.log("client Response inside get function: ", client_response);
   const payload = {
     endpoint: `get-all-candidates-of-clients-job?client_id=${clientId}`,
     method: "GET",
