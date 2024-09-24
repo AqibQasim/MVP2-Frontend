@@ -7,7 +7,7 @@ import Table from "./Table";
 import SvgIconRequestInterview from "@/svgs/SvgIconRequestInterview";
 
 function ClientRecommendedRow({ recommended }) {
-  // console.log(recommended);
+  console.log(recommended);
   const { customer: candidate, job_postings: job } = recommended;
 
   return (
@@ -15,7 +15,7 @@ function ClientRecommendedRow({ recommended }) {
       <EntityCard
         entity={{
           name: candidate?.name,
-          profession: candidate?.position,
+          profession: candidate?.specialization,
           image: "/avatars/avatar-1.png",
         }}
       />

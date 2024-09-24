@@ -4,9 +4,10 @@ import { getAllRecommendedCandidates } from "@/lib/data-service";
 async function Page({ params }) {
   const clientId = params.clientId;
   console.log("params: ", clientId);
+  const filter = "accept";
   const { data: hiredTalents, error } = await getAllRecommendedCandidates(
     clientId,
-    "accept",
+    filter,
   );
   if (error) console.log("Error: getting Hired Candidates: ", error);
   console.log("Hired Candidates: ", hiredTalents);
