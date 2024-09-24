@@ -84,7 +84,7 @@ function AdminCandidateRecommendedRow({ recommended }) {
         <EntityCard
           entity={{
             name: recommended?.name,
-            profession: "Front-end Developer",
+            profession: recommended?.specialization,
             image: "/avatars/avatar-1.png",
           }}
         />
@@ -101,7 +101,7 @@ function AdminCandidateRecommendedRow({ recommended }) {
         <div className="experience text-center">
           {recommended?.experience || "No experience"}
         </div>
-        <Capsule>{recommended?.job_type || "No job type"}</Capsule>
+        <Capsule>{recommended?.commitment || "No job type"}</Capsule>
 
         {/* Button to open form */}
         <button onClick={() => setShowForm(true)}>

@@ -12,7 +12,7 @@ const page = ({ params }) => {
   const [skills, setSkills] = useState(null);
   const hasPreparedTest = useRef(false); // Ref to track if prepareTest has been called
   const [questions,setQuestions]= useState(null);
-  const router= useRouter();
+  const [codingQuestion,setCodingQuestions]=useState(null);
 
   const closePopup = () => {
     setInstructionsPopup(false);
@@ -38,6 +38,14 @@ const page = ({ params }) => {
     [params.candidateId, skills],
   );
 
+  const codingTestPayload = useMemo(
+    () => ({
+      endpoint: `get-coding-question?candidate_id=${params.candidateId}`,
+      method: "GET",
+    }),
+    [],
+  );
+
   useEffect(() => {
     setIsLoading(true);
     fetchCandidateSkills();
@@ -51,9 +59,18 @@ const page = ({ params }) => {
     });
   }, [skillsPayload]);
 
+  const fetchCodingQuestion = useCallback(async () => {
+    mvp2ApiHelper(codingTestPayload).then((result) => {
+      if (result.status === 200) {
+        setCodingQuestions(result.data?.codingQuestion);
+      }
+    });
+  }, [prepareTestpayload]);
+
   useEffect(() => {
     if (skills && !hasPreparedTest.current) {
       prepareTest();
+      //fetchCodingQuestion();
       hasPreparedTest.current = true; // Set the flag to true after prepareTest is called
     }
   }, [skills]);
@@ -79,6 +96,8 @@ const page = ({ params }) => {
     "Make sure there’s no background noise while answering the questions.",
   ];
 
+  console.log("/////////////////////////////////////////////////////",codingQuestion)
+
   return (
     <html lang="en">
       <body>
@@ -96,6 +115,7 @@ const page = ({ params }) => {
             setIsLoading={setIsLoading}
             hasStarted={!instructionsPopup}
             questions={questions}
+            codingQuestions={codingQuestion}
           />
         </div>
       </body>

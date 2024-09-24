@@ -58,6 +58,10 @@ function CandidateEvaluateYourselfCard() {
     // console.log(payload.body)
   };
 
+  const handleBack= async()=>{
+    setOverlayVisible(false)
+  }
+
   return (
     <>
       <div className="relative h-full w-full gap-8 rounded-4xl bg-neutral-white px-8 py-10">
@@ -132,6 +136,7 @@ function CandidateEvaluateYourselfCard() {
             level4={level4}
             setLevel4={setLevel4}
             onContinue={handleStartAssessment}
+            onBack={handleBack}
             //onBack={}
             //   codingExpertise={codingExpertise}
             //   setCodingExpertise={setCodingExpertise}

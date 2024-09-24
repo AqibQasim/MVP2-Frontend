@@ -1,0 +1,347 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+/* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@200;300;600;800&family=Poppins:wght@100;200;300;500&display=swap');
+body{  margin: 0;
+  padding: 0;
+  font-family: "Poppins",sans-serif;
+}
+@layer utilities {
+  .btn-gradient {
+    background-image: linear-gradient(to right, theme('colors.btnPurple'), theme('colors.lightPurple'));
+  }
+
+  @layer utilities {
+  .pro-button-before {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    -webkit-box-shadow: 0px 0px 69px 0px rgba(255, 255, 255, 0.48);
+    -moz-box-shadow: 0px 0px 69px 0px rgba(255, 255, 255, 0.48);
+    box-shadow: 0px 0px 69px 0px rgba(255, 255, 255, 0.48);
+  }
+}
+} */
+
+/* .leftShadow {
+  position: relative;
+}
+
+.leftShadow::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 10%;
+  background: rgb(255, 255, 255, 1);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.099) 100%
+  );
+} */
+
+.main,
+.main * {
+  transition: background-color 150ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
+}
+
+.btn-gradient {
+  background-image: linear-gradient(
+    to right,
+    theme(colors.recruitinn.btnPurple),
+    theme(colors.recruitinn.lightPurple)
+  );
+}
+
+.btn-gradient:hover {
+  background: #d3cffc;
+  color: black;
+  border: solid 1px;
+  border-color: Light Grey;
+}
+.blurred-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(15px);
+}
+.fade-border-b {
+  position: relative;
+  border-bottom: 0.5px solid transparent;
+}
+.fade-border-b::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  background: linear-gradient(
+    to left,
+    transparent,
+    theme(colors.recruitinn.themePurple),
+    transparent
+  );
+}
+.fade-right-border {
+  position: relative;
+  border-right: 0.5px solid transparent;
+}
+.fade-right-border::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    theme(colors.recruitinn.themePurple),
+    transparent
+  );
+}
+.background-gradient {
+  z-index: 1;
+  border: 2px solid transparent;
+  background-image: linear-gradient(
+      to bottom,
+      theme(colors.recruitinn.elementGradOne),
+      theme(colors.recruitinn.elementGradTwo),
+      theme(colors.recruitinn.elementGradOne)
+    ),
+    linear-gradient(
+      to right,
+      theme(colors.recruitinn.somePurple),
+      theme(colors.recruitinn.themePurple)
+    );
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  -webkit-background-clip: content-box, border-box;
+  border-image-slice: 1;
+  border-image-source: linear-gradient(
+    to right,
+    theme(colors.recruitinn.somePurple),
+    theme(colors.recruitinn.themePurple)
+  );
+}
+.payment-pro-gradient {
+  background-image: linear-gradient(
+      to bottom,
+      theme(colors.recruitinn.elementGradOne),
+      transparent
+    ),
+    linear-gradient(
+      to bottom right,
+      theme(colors.recruitinn.elementGradOne),
+      theme(colors.recruitinn.darkPurple),
+      theme(colors.recruitinn.elementGradOne)
+    );
+}
+.payment-enterprise-gradient {
+  background-image: linear-gradient(
+      to bottom,
+      transparent,
+      theme(colors.recruitinn.elementGradOne)
+    ),
+    linear-gradient(
+      to bottom right,
+      theme(colors.recruitinn.elementGradOne),
+      theme(colors.recruitinn.elementGradOne),
+      theme(colors.recruitinn.goldenShade)
+    );
+}
+.right-dv-gradient {
+  background-image: linear-gradient(
+      to bottom,
+      transparent,
+      theme(colors.recruitinn.elementGradOne)
+    ),
+    linear-gradient(
+      to bottom right,
+      theme(colors.recruitinn.darkPurple),
+      theme(colors.recruitinn.elementGradOne)
+    );
+  border-image-source: linear-gradient(
+    to right,
+    theme(colors.recruitinn.somePurple),
+    theme(colors.recruitinn.themePurple)
+  );
+}
+.fourth-sec-gradient {
+  background-image: linear-gradient(
+      to bottom,
+      transparent,
+      theme(colors.recruitinn.elementGradOne)
+    ),
+    linear-gradient(
+      to right,
+      theme(colors.recruitinn.elementGradOne),
+      theme(colors.recruitinn.darkPurple),
+      theme(colors.recruitinn.elementGradOne)
+    );
+}
+
+.fourth-sec-gradient-white {
+  background: rgb(212, 149, 236);
+  background: radial-gradient(
+    circle,
+    rgba(212, 149, 236, 0.3983718487394958) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
+}
+.recruit-inns-way-grad {
+  background-image: linear-gradient(
+      to bottom,
+      transparent,
+      theme(colors.recruitinn.elementGradOne)
+    ),
+    linear-gradient(
+      to right,
+      theme(colors.recruitinn.elementGradOne),
+      theme(colors.recruitinn.darkPurple),
+      theme(colors.recruitinn.elementGradOne),
+      theme(colors.recruitinn.darkPurple)
+    );
+}
+.cards-gradient {
+  background-image: linear-gradient(
+      to bottom,
+      transparent,
+      theme(colors.recruitinn.smallDiv)
+    ),
+    linear-gradient(
+      to right,
+      theme(colors.recruitinn.smallDiv),
+      theme(colors.recruitinn.darkPurple),
+      theme(colors.recruitinn.darkPurple),
+      theme(colors.recruitinn.elementGradOne)
+    );
+}
+.gradient-text {
+  background: linear-gradient(to right, white, theme(colors.recruitinn.darkPurple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.golden-gradient-text {
+  background: linear-gradient(to right, white, theme(colors.recruitinn.goldenShade));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.recruitinn-div-grad {
+  background-image: linear-gradient(
+      to bottom,
+      transparent,
+      theme(colors.recruitinn.elementGradOne)
+    ),
+    linear-gradient(
+      to right,
+      theme(colors.recruitinn.darkPurple),
+      theme(colors.recruitinn.darkPurple),
+      theme(colors.recruitinn.goldenShade),
+      theme(colors.recruitinn.darkPurple),
+      theme(colors.recruitinn.darkPurple)
+    );
+}
+.btn-golden {
+  background: linear-gradient(
+    to right,
+    theme(colors.recruitinn.darkGolden),
+    theme(colors.recruitinn.goldenShade)
+  );
+}
+@media (max-width: 768px) {
+  .fade-right-border {
+    border: none;
+    border-right: none; /* Remove the border */
+    background-image: none; /* Remove the gradient */
+    /* Reset any other styling as needed */
+  }
+}
+.glowing-border-element {
+  position: relative;
+  overflow: hidden;
+  border-radius: 2rem;
+}
+.pricing .glowing-border-element::before {
+  content: "";
+  position: absolute;
+  height: 2px;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: blue;
+  animation: borderAnimation 8s infinite linear;
+}
+
+.payment-card-pro-button {
+  color: white;
+  background: rgb(34, 7, 114);
+  background: linear-gradient(
+    90deg,
+    rgba(34, 7, 114, 1) 0%,
+    rgba(97, 55, 219, 1) 100%
+  );
+}
+
+@keyframes borderAnimation {
+  0%,
+  100% {
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+  }
+  25% {
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 2px;
+  }
+  50% {
+    bottom: 0;
+    right: 0;
+    height: 2px;
+    width: 100%;
+  }
+  75% {
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 2px;
+  }
+}
+.loader {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #6137db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.bgcolor span {
+  background-color: #e7ffe0;
+  border: 1px solid #8df074;
+  color: black;
+}

@@ -52,12 +52,15 @@ function CandidateProfileInfoForm({ onCloseModal }) {
           options={["full-time", "part-time"]}
         />
         <div className="row space-y-2">
-          <label htmlFor="position" className="text-sm font-medium capitalize">
+          <label
+            htmlFor="specialization"
+            className="text-sm font-medium capitalize"
+          >
             Specialization
           </label>
           <Input
-            id="position"
-            name="position"
+            id="specialization"
+            name="specialization"
             placeholder="Back-end developer"
           />
         </div>

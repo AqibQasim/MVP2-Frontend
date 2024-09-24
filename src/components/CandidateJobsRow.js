@@ -7,13 +7,17 @@ import Skill from "./Skill";
 import Table from "./Table";
 
 function CandidateJobsRow({ job }) {
+  console.log(job);
   return (
     <Table.Row>
       <EntityCard
         icon={<SvgIconWork className="relative -right-[1.3px]" />}
-        entity={{
-          name: job?.position,
-        }}
+        entity={
+          {
+            // name: job?.position,
+            // name: job?.specialization,
+          }
+        }
       />
       <div className="skills flex items-center justify-center gap-1.5 text-center">
         {job.skills.map((skill, i) => (
