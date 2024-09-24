@@ -180,7 +180,7 @@ function Page() {
 
             // Transform charges data into client_payment_history format
             const transformedCharges = data.map((charge) => ({
-                name: charge.billing_details.name || 'Unknown Client', // Fallback if no name is available
+                name: charge.billing_details.name || 'Candidate ', // Fallback if no name is available
                 amount: `$${(charge.amount / 100).toFixed(2)}`, // Convert from cents to dollars
                 status: charge.status, // 'paid', 'pending', etc.
                 invoice: charge.id, // Assuming invoice refers to the charge id
