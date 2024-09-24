@@ -1,13 +1,14 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import CodingChild from "@/components/CodingChild";
-import { useParams } from "next/navigation";
+import { useParams,useRouter } from "next/navigation";
 import ErrorIndicator from "@/components/ErrorIndicator";
 import TestInstruction from "@/components/TestInstruction";
 import styles from "@/styles/coding-excercise.module.css";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 
 const page = () => {
+  const router= useRouter();
   const [Code, setCode] = useState(null);
   const [language, setLanguage] = useState(null);
   const [output, setOutput] = useState();
@@ -98,16 +99,16 @@ const page = () => {
     })
   }
 
-  useEffect(() => {
-    const testcomplete = localStorage.getItem("codingtestcompleted");
-    if (testcomplete) {
-      // router.push(`/test-submit-completion/${cid}`);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const testcomplete = localStorage.getItem("codingtestcompleted");
+  //   if (testcomplete) {
+  //     // router.push(`/test-submit-completion/${cid}`);
+  //   }
+  // }, []);
 
   async function codeSubmitHandler() {
     setIsLoading(true);
-    localStorage.setItem("codingtestcompleted", "true");
+    //localStorage.setItem("codingtestcompleted", "true");
     const reqBody = {
       code: Code,
       exercise: question,
@@ -116,19 +117,30 @@ const page = () => {
       candidate_id: cid,
     };
 
-    console.log("/////////////////////////////////",reqBody)
+    const codeSubmitPayload= {
+      endpoint: 'get-code-submit',
+      body: reqBody,
+      method: 'POST'
+    }
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/get-code-submit`,
-      {
-        method: "POST",
-        body: JSON.stringify(reqBody),
-        headers: { "Content-type": "application/json" },
+    mvp2ApiHelper(codeSubmitPayload).then(data=>{
+      console.log("response: ", data);
+      if(data.status===200){
+        router.push(`/candidate/${params.candidateId}/test/submit-test`)
       }
-    );
+    })
 
-    const data = await response.json();
-    console.log("response: ", data);
+    // const response = await fetch(
+    //   `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/get-code-submit`,
+    //   {
+    //     method: "POST",
+    //     body: JSON.stringify(reqBody),
+    //     headers: { "Content-type": "application/json" },
+    //   }
+    // );
+
+    // const data = await response.json();
+    // console.log("response: ", data);
     setIsLoading(false);
   }
 
