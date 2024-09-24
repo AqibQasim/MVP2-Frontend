@@ -9,20 +9,20 @@ function SvgIconEmployeeStatus({ status, className }) {
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <g clip-path="url(#clip0_2193_37424)">
+        <g clipPath="url(#clip0_2193_37424)">
           <path
             d="M9.89253 3.61035H12.3392V6.21702L14.0059 8.25035L12.3392 10.2837V12.8903H9.89253L7.99919 14.2503L6.07919 12.8903H3.61919V10.2837L2.00586 8.25702L3.61919 6.23035V3.617H6.07919L8.00586 2.26367L9.89919 3.62368L9.89253 3.61035Z"
             stroke="#6B50E6"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M6.19922 8.25077L7.39922 9.45077L9.79922 7.05078"
             stroke="#6B50E6"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </g>
         <defs>
@@ -48,20 +48,20 @@ function SvgIconEmployeeStatus({ status, className }) {
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <g clip-path="url(#clip0_2193_37424)">
+        <g clipPath="url(#clip0_2193_37424)">
           <path
             d="M9.89253 3.61035H12.3392V6.21702L14.0059 8.25035L12.3392 10.2837V12.8903H9.89253L7.99919 14.2503L6.07919 12.8903H3.61919V10.2837L2.00586 8.25702L3.61919 6.23035V3.617H6.07919L8.00586 2.26367L9.89919 3.62368L9.89253 3.61035Z"
             stroke="#6B50E6"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M6.19922 8.25077L7.39922 9.45077L9.79922 7.05078"
             stroke="#6B50E6"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </g>
         <defs>

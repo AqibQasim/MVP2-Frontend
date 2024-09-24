@@ -1,7 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createJob, referCandidate } from "./data-service";
+import {
+  candidateUpdateProfile,
+  createJob,
+  referCandidate,
+} from "./data-service";
 
 export async function createAJobAction(formData) {
   const client_id = formData.get("client_id");
@@ -127,4 +131,46 @@ export async function referCandidateToClientAction(params, closeModal) {
   revalidatePath("/admin/candidates");
   return { message: "Candidate successfully referred to the client." };
   // redirect("/admin/candidates");
+}
+
+export async function updateCandidateProfileAction(formData) {
+  const experience = formData.get("experience");
+  const commitment = formData.get("commitment");
+  const hourly_rate = formData.get("hourly_rate");
+  const position = formData.get("position");
+  const candidateId = formData.get("candidateId");
+  // Validations
+  if (
+    !experience ||
+    !["beginner", "intermediate", "expert"].includes(experience)
+  ) {
+    return { error: "Valid experience level is required." };
+  }
+  if (!commitment || !["full-time", "part-time"].includes(commitment.trim())) {
+    return { error: "Valid commitment is required." };
+  }
+  if (!hourly_rate) return { error: "Valid hourly rate is required." };
+  if (!position) return { error: "Valid specialization rate is required." };
+  if (!candidateId) return { error: "Valid candidate id is required." };
+
+  const updateProfileData = {
+    experience,
+    commitment,
+    hourly_rate,
+    position,
+  };
+
+  // Api call
+  const { message, error } = await candidateUpdateProfile(
+    updateProfileData,
+    candidateId,
+  );
+  console.log("error while updating candidate profile: ", error);
+
+  if (error) {
+    return { error };
+  }
+
+  revalidatePath(`/client`);
+  return { message: "Candidate profile successfully updated." };
 }

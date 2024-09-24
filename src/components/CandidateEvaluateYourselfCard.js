@@ -1,12 +1,11 @@
-
-import React, { useMemo, useState } from "react";
-import Heading from "./Heading";
-import Image from "next/image";
-import ButtonCapsule from "./ButtonCapsule";
-import Overlay from "./Overlay";
-import AddSkillForm from "./AddSkillForm";
-import { redirect, usePathname, useRouter } from "next/navigation";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
+import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
+import AddSkillForm from "./AddSkillForm";
+import CandidateProfileInfo from "./CandidateProfileInfo";
+import Heading from "./Heading";
+import Overlay from "./Overlay";
 
 function CandidateEvaluateYourselfCard() {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
@@ -22,12 +21,15 @@ function CandidateEvaluateYourselfCard() {
   const candidate_id = usePathname().split("/")[2];
   // const dispatch = useDispatch();
 
-  const skills = [
-    { skill: skill1, level: level1 },
-    { skill: skill2, level: level2 },
-    { skill: skill3, level: level3 },
-    { skill: skill4, level: level4 },
-  ];
+  const skills = useMemo(
+    () => [
+      { skill: skill1, level: level1 },
+      { skill: skill2, level: level2 },
+      { skill: skill3, level: level3 },
+      { skill: skill4, level: level4 },
+    ],
+    [level1, level2, level3, level4, skill1, skill2, skill3, skill4],
+  );
 
   const filledSkills = useMemo(
     () => skills.filter((skillObj) => skillObj.skill),
@@ -58,10 +60,14 @@ function CandidateEvaluateYourselfCard() {
 
   return (
     <>
-      <div className="h-full w-full gap-8 rounded-4xl bg-neutral-white px-8 py-10">
+      <div className="relative h-full w-full gap-8 rounded-4xl bg-neutral-white px-8 py-10">
         <Heading sm className="font-[500]" style={{ fontSize: "40px" }}>
           Here’s Where Your Journey Begins
         </Heading>
+
+        <div className="profile-candidate-info absolute right-4 top-3">
+          <CandidateProfileInfo />
+        </div>
 
         <div className="flex h-full w-full flex-col items-center justify-center">
           <div className="flex h-auto w-auto flex-col items-center justify-center space-y-6">

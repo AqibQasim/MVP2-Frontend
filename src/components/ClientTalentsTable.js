@@ -67,7 +67,7 @@ const talents = [
   },
 ];
 
-function ClientTalentsTable() {
+function ClientTalentsTable({ hiredTalents }) {
   const params = useParams();
   const clientId = params?.clientId;
 
@@ -89,8 +89,8 @@ function ClientTalentsTable() {
           <div className="actions text-right">Actions</div>
         </Table.Header>
         <Table.Body
-          data={talents}
-          render={(talents, i) => <ClientTalentsRow talent={talents} key={i} />}
+          data={hiredTalents}
+          render={(talent, i) => <ClientTalentsRow talent={talent} key={i} />}
         />
       </Table>
     </DashboardSection>

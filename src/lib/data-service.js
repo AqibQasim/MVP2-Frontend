@@ -234,3 +234,57 @@ export async function setHourlyRate(params) {
   }
   return { status: result.status, data: result.data.result, error: null };
 }
+
+export async function candidateUpdateProfile(body, candidateId) {
+  const payload = {
+    endpoint: `profile-info-update/${candidateId}`,
+    method: "PUT",
+    body,
+  };
+
+  const result = await mvp2ApiHelper(payload);
+  if (result.status !== 200) {
+    console.error(result?.data?.message);
+    return { status: result.status, data: null, error: result.data.message };
+  }
+  return {
+    status: result.status,
+    data: result.data.data,
+    message: result.data.message,
+    error: null,
+  };
+}
+
+export async function getAllRecommendedCandidates(
+  clientId,
+  client_response = "all",
+) {
+  const hired = "accept";
+  console.log("client id inside get function: ", clientId);
+  console.log("client Response inside get function: ", client_response);
+  const payload = {
+    endpoint: `get-all-candidates-of-clients-job?client_id=${clientId}`,
+    method: "GET",
+  };
+
+  const result = await mvp2ApiHelper(payload);
+  console.log("Result of get all candidates", result);
+  if (result.status !== 200) {
+    console.error(result?.data?.err);
+    return { status: result.status, error: result.data.err };
+  }
+
+  // FILTER
+  let candidates;
+
+  if (client_response === "all") {
+    candidates = result?.data.data;
+  }
+  if (client_response === hired) {
+    candidates = result?.data.data?.filter(
+      (candidate) => candidate.client_response === hired,
+    );
+  }
+
+  return { data: candidates };
+}

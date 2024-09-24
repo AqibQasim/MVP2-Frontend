@@ -3,7 +3,7 @@ import DashboardSection from "@/components/DashboardSection";
 import EntityCard from "@/components/EntityCard";
 import Heading from "@/components/Heading";
 import Skill from "@/components/Skill";
-import { formatCurrencyNoDecimals } from "@/utils/utility";
+import { formatCurrency, formatCurrencyNoDecimals } from "@/utils/utility";
 import IconWithBg from "./IconWithBg";
 import ScheduleInterviewModal from "./ScheduleInterviewModal";
 
@@ -26,18 +26,20 @@ function ClientRecommendationCard({
               entity={{
                 image: "/avatars/avatar-1.png",
                 name: recommendedCandidate.name,
-                profession: recommendedForJob.position,
+                profession: recommendedCandidate.position,
               }}
             />
             <div className="capsules inline-flex items-center justify-center gap-[6px]">
               <Capsule>
-                <p> [intermediate] </p>
+                <p> {recommendedCandidate.experience} </p>
               </Capsule>
               <Capsule>
                 <p> {recommendedForJob.job_type} </p>
               </Capsule>
               <Capsule icon={<IconWithBg icon="$" />}>
-                <p className="">{formatCurrencyNoDecimals(2000)}</p>
+                <p className="">
+                  {formatCurrency(recommendedCandidate.hourly_rate)}
+                </p>
               </Capsule>
             </div>
           </div>

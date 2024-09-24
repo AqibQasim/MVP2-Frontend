@@ -81,11 +81,11 @@ function Login() {
         if (Authenticated) {
           localStorage.setItem("MVP_CLIENT_LOGGEDIN", true);
         }
-        if(user_role==="customer"){
-          router.push(`/candidate/${result.data.id}`)
-        }else{
-          router.push(`/client/${result.data.id}`)
-        }
+        // if(user_role==="customer"){
+        //   router.push(`/candidate/${result.data.id}`)
+        // }else{
+        //   router.push(`/client/${result.data.id}`)
+        // }
       } else {
         setalert(true);
       }
