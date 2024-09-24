@@ -137,7 +137,7 @@ export async function updateCandidateProfileAction(formData) {
   const experience = formData.get("experience");
   const commitment = formData.get("commitment");
   const hourly_rate = formData.get("hourly_rate");
-  const position = formData.get("position");
+  const specialization = formData.get("specialization");
   const candidateId = formData.get("candidateId");
   // Validations
   if (
@@ -150,14 +150,15 @@ export async function updateCandidateProfileAction(formData) {
     return { error: "Valid commitment is required." };
   }
   if (!hourly_rate) return { error: "Valid hourly rate is required." };
-  if (!position) return { error: "Valid specialization rate is required." };
+  if (!specialization)
+    return { error: "Valid specialization rate is required." };
   if (!candidateId) return { error: "Valid candidate id is required." };
 
   const updateProfileData = {
     experience,
     commitment,
     hourly_rate,
-    position,
+    specialization,
   };
 
   // Api call
