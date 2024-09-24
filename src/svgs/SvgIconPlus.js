@@ -8,22 +8,22 @@ function SvgIconPlus({ className }) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_2347_37998)">
+      <g clipPath="url(#clip0_2347_37998)">
         <path
           d="M3.75 9H14.25"
           //   stroke="currentcolor"
           stroke="#9993B2"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
         <path
           d="M9 14.25V3.75"
           //   stroke="currentcolor"
           stroke="#9993B2"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </g>
       <defs>
