@@ -1,19 +1,19 @@
 "use client";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import CodingChild from "@/components/CodingChild";
-import { useParams,useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import ErrorIndicator from "@/components/ErrorIndicator";
 import TestInstruction from "@/components/TestInstruction";
 import styles from "@/styles/coding-excercise.module.css";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 
 const page = () => {
-  const router= useRouter();
+  const router = useRouter();
   const [Code, setCode] = useState(null);
   const [language, setLanguage] = useState(null);
   const [output, setOutput] = useState();
-  const [exampleInput,setExampleInput]= useState(null);
-  const [exampleOutput,setExampleOutput]=useState(null)
+  const [exampleInput, setExampleInput] = useState(null);
+  const [exampleOutput, setExampleOutput] = useState(null);
   const [question, setQuestion] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [constraints, setConstraints] = useState();
@@ -25,31 +25,27 @@ const page = () => {
   const params = useParams();
   const cid = params.candidateId;
 
-  const codingTestPayload = useMemo(
-    () => ({
+  const fetchCodingQuestion = () => {
+    const codingTestPayload = {
       endpoint: `get-coding-question?candidate_id=${params.candidateId}`,
       method: "GET",
-    }),
-    []
-  );
-
-  const fetchCodingQuestion = useCallback(async () => {
+    };
     mvp2ApiHelper(codingTestPayload).then((result) => {
       if (result.status === 200) {
         let codingQuestion = result?.data?.codingQuestion?.assessment;
         setQuestion(codingQuestion?.codingQuestion);
         setConstraints(codingQuestion?.constraints);
-        setExampleInput(codingQuestion?.exampleInput)
-        setExampleOutput(codingQuestion?.exampleOutput)
+        setExampleInput(codingQuestion?.exampleInput);
+        setExampleOutput(codingQuestion?.exampleOutput);
         setHasQuestionGenerated(true);
       }
     });
-  }, [codingTestPayload]);
+  };
 
   // Run fetchCodingQuestion only once when the component mounts
   useEffect(() => {
     fetchCodingQuestion();
-  }, [fetchCodingQuestion]);
+  }, []);
 
   const closePopup = () => {
     setInstructionsPopup(false);
@@ -77,26 +73,18 @@ const page = () => {
     }
     console.log("req body:", reqBody);
     setIsLoading(true);
-    const executeCodePayload={
-      endpoint: 'execute-code',
-      method:'POST',
-      body: reqBody
-    }
-    // const response = await fetch(
-    //   `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/execute-code`,
-    //   {
-    //     method: "POST",
-    //     body: JSON.stringify(reqBody),
-    //     headers: { "Content-type": "application/json" },
-    //   }
-    // );
-    // const data = await response.json();
-    mvp2ApiHelper(executeCodePayload).then(data=>{
+    const executeCodePayload = {
+      endpoint: "execute-code",
+      method: "POST",
+      body: reqBody,
+    };
+
+    mvp2ApiHelper(executeCodePayload).then((data) => {
       console.log("response: ", data);
       setOutput(data?.data?.data?.output);
-      console.log(output)
+      console.log(output);
       setIsLoading(false);
-    })
+    });
   }
 
   // useEffect(() => {
@@ -106,7 +94,7 @@ const page = () => {
   //   }
   // }, []);
 
-  async function codeSubmitHandler() {
+  function codeSubmitHandler() {
     setIsLoading(true);
     //localStorage.setItem("codingtestcompleted", "true");
     const reqBody = {
@@ -117,18 +105,18 @@ const page = () => {
       candidate_id: cid,
     };
 
-    const codeSubmitPayload= {
-      endpoint: 'get-code-submit',
+    const codeSubmitPayload = {
+      endpoint: "get-code-submit",
       body: reqBody,
-      method: 'POST'
-    }
+      method: "POST",
+    };
 
-    mvp2ApiHelper(codeSubmitPayload).then(data=>{
+    mvp2ApiHelper(codeSubmitPayload).then((data) => {
       console.log("response: ", data);
-      if(data.status===200){
-        router.push(`/candidate/${params.candidateId}/test/submit-test`)
+      if (data.status === 200) {
+        router.push(`/candidate/${params.candidateId}/test/submit-test`);
       }
-    })
+    });
 
     // const response = await fetch(
     //   `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/get-code-submit`,

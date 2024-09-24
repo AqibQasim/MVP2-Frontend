@@ -27,12 +27,6 @@ const CodingChild = ({
     setCode,
     setLanguage,
   }) => {
-    const router = useRouter();
-    const [requestBody, setRequestBody] = useState(null);
-    const [actvFlow, setActvflow] = useState(null);
-    const [assessmentId, setAssessmentId] = useState(null);
-    const [positionId, setPositionId] = useState(null);
-    const [candidateId, setCandidateId] = useState(null);
     const selectLanguageRef = useRef(null);
     const isAllowed = language !== null;
   
