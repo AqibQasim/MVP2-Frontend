@@ -67,7 +67,8 @@ const recommendedTalents = [
   },
 ];
 
-function ClientRecommendedTable() {
+function ClientRecommendedTable({ recommendedCandidates }) {
+  console.log("RC", recommendedCandidates);
   const params = useParams();
   const clientId = params?.clientId;
   return (
@@ -87,7 +88,7 @@ function ClientRecommendedTable() {
           <div className="actions text-right">Actions</div>
         </Table.Header>
         <Table.Body
-          data={recommendedTalents}
+          data={recommendedCandidates}
           //   data={[]}
           render={(recommended, i) => (
             <ClientRecommendedRow recommended={recommended} key={i} />

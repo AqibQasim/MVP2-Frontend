@@ -254,3 +254,20 @@ export async function candidateUpdateProfile(body, candidateId) {
     error: null,
   };
 }
+
+export async function getAllRecommendedCandidates(clientId) {
+  console.log("client id inside get function: ", clientId);
+  const payload = {
+    endpoint: `get-all-candidates-of-clients-job?client_id=${clientId}`,
+    method: "GET",
+  };
+
+  const result = await mvp2ApiHelper(payload);
+  console.log("Result of get all candidates", result);
+  if (result.status !== 200) {
+    console.error(result?.data?.message);
+    return { error: result.data.message };
+  }
+
+  return result?.data.data;
+}
