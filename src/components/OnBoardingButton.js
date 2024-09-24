@@ -12,7 +12,7 @@ function OnBoardingButton({ as = "button", href = "/", className, children, ...r
       </Link>
     );
   return (
-    <button {...rest} className={`${commonClasses} ${className}`}>
+    <button {...rest}  className={`${commonClasses} ${className}`}>
       {children}
       <Image src="/icons/right_arrow.svg" width={30} height={35} alt="MVP 2 Logo" className="inline-block" />
     </button>

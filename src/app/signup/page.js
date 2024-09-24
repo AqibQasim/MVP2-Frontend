@@ -4,24 +4,175 @@ import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
 import Overlay from "@/components/Overlay";
 import SuccessModal from "@/components/SuccessModal";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+
+import ErrorPopup from "@/components/ErrorPopup";
+import { revalidate } from "@/lib/data-service";
+import { useRouter } from "next/navigation";
 
 function SignUp() {
+  const router = useRouter();
   const [isOverlayVisible, setOverlayVisible] = useState(false);
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
-  const handleOpenOverlay = () => {
-    setOverlayVisible(true);
-  };
+  const [user_role, setUserRole] = useState("client");
+  const [errors, setErrors] = useState({});
+  const [otp, setotp] = useState(null);
+  const [alert, setalert] = useState(false);
+
+  const payload = useMemo(
+    () => ({
+      endpoint: "signup",
+      method: "POST",
+      body: {
+        email: form.email,
+        name: form.firstName + " " + form.lastName,
+        password: form.password,
+        user_role,
+        method: "signup",
+      },
+    }),
+    [form, user_role],
+  );
+
+  const handleSignup = useCallback(
+    async (event) => {
+      event.preventDefault();
+      if (Object.values(errors).some((err) => err !== "")) {
+        return; // Do not proceed with signup if there are validation errors
+      }
+      //console.log(payload);
+      const result = await mvp2ApiHelper(payload);
+      console.log(result);
+      if (result.status === 200) {
+        console.log("signed up successfully");
+        const revalidatePathOnSignup = `/admin/${user_role === "client" ? "clients" : "candidates"}`;
+        await revalidate(revalidatePathOnSignup);
+        setOverlayVisible(false);
+        router.push("/login");
+        console.log("is overlay is :", isOverlayVisible);
+        console.log("overlay should be unvisible now ...");
+      } else {
+        setalert(true);
+      }
+    },
+
+    [payload, errors, user_role, isOverlayVisible],
+  );
+
+  // Utility function to generate a random 6-digit OTP
+  const generateOtp = () => Math.floor(100000 + Math.random() * 900000);
+
+  const handleOpenOverlay = useCallback(
+    async (event) => {
+      event.preventDefault();
+
+      if (Object.values(errors).every((err) => err === "")) {
+        const generatedotp = generateOtp();
+        setotp(generatedotp);
+        console.log(generatedotp);
+
+        const payload = {
+          endpoint: "send-email",
+          method: "POST",
+          body: {
+            to: form.email, // Using form.email for the recipient
+            subject: "OTP",
+            text: `Your OTP code is: ${generatedotp}`, // Include the generated OTP
+          },
+        };
+
+        try {
+          const result = await mvp2ApiHelper(payload);
+
+          if (result.status === 200) {
+            console.log("Email sent successfully");
+            setOverlayVisible(true);
+          } else {
+            console.log("Failed to send email");
+          }
+        } catch (error) {
+          console.error("Error sending email: ", error);
+        }
+      }
+    },
+    [errors, form.email, user_role], // dependencies
+  );
+
+  // const handleOpenOverlay = (event) => {
+  //   event.preventDefault();
+  //   if (Object.values(errors).every((err) => err === "")) {
+  //     setOverlayVisible(true);
+  //   }
+  // };
 
   const handleCloseOverlay = () => {
     setOverlayVisible(false);
-    console.log(isOverlayVisible);
   };
-  useEffect(() => {
-    console.log("[isOverlayVisible]:", isOverlayVisible);
-  }, [isOverlayVisible]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+
+    // Real-time validation
+    validateField(name, value);
+  };
+
+  const isFormInvalid = useMemo(() => {
+    return (
+      Object.values(errors).some((err) => err !== "") ||
+      !form.firstName ||
+      !form.lastName ||
+      !form.email ||
+      !form.password ||
+      !form.confirmPassword
+    );
+  }, [errors, form]);
+
+  const validateField = (name, value) => {
+    let errorMsg = "";
+
+    switch (name) {
+      case "firstName":
+        if (!/^[A-Za-z]+$/.test(value)) {
+          errorMsg = "Invalid Firstname";
+        }
+        break;
+      case "lastName":
+        if (!/^[A-Za-z]+$/.test(value)) {
+          errorMsg = "Invalid Lastname";
+        }
+        break;
+      case "email":
+        if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value)) {
+          errorMsg = "Invalid email address";
+        }
+        break;
+      case "password":
+        if (!/^.{8,}$/.test(value)) {
+          errorMsg = "Password must be at least 8 characters";
+        }
+        break;
+      case "confirmPassword":
+        if (value !== form.password) {
+          errorMsg = "Passwords do not match";
+        }
+        break;
+      default:
+        break;
+    }
+
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMsg }));
+  };
 
   const mainHeading = (
     <span>
@@ -38,11 +189,16 @@ function SignUp() {
       </span>
     </span>
   );
-
   let text = (
     <>
       We&apos;ve sent a code to{" "}
-      <span className="font-semibold">janedoe@gmail.com</span>
+      <span className="font-semibold">{form.email}</span>
+    </>
+  );
+  let confirmationtext = (
+    <>
+      Your account is currently under review. Soon you’ll receive an email on{" "}
+      <span className="font-semibold"> {form.email} </span> upon approval
     </>
   );
 
@@ -59,10 +215,22 @@ function SignUp() {
           <div className="flex w-full justify-between space-y-2 p-5">
             <Image src="/logo.svg" width={100} height={25} alt="MVP 2 Logo" />
             <div className="flex gap-2">
-              <button className="rounded-full border-[1px] border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]">
+              <button
+                onClick={(e) => {
+                  //e.preventDefault();
+                  setUserRole("client");
+                }}
+                className={`rounded-full border-[1px] ${user_role === "client" ? "border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]" : "bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]"}`}
+              >
                 Client
               </button>
-              <button className="rounded-full bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]">
+              <button
+                onClick={(e) => {
+                  //e.preventDefault();
+                  setUserRole("customer");
+                }}
+                className={`rounded-full border-[1px] ${user_role === "customer" ? "border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]" : "bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]"}`}
+              >
                 Freelancer
               </button>
             </div>
@@ -79,37 +247,107 @@ function SignUp() {
                 className="inline-block"
               />
             </h2>
+            <form onSubmit={handleOpenOverlay}>
+              <div className="mt-5 flex gap-2">
+                <Input
+                  type="text"
+                  name="firstName"
+                  value={form.firstName}
+                  onChange={handleChange}
+                  placeholder="First name"
+                  className="mt-3"
+                />
+                <Input
+                  type="text"
+                  name="lastName"
+                  value={form.lastName}
+                  onChange={handleChange}
+                  placeholder="Last name"
+                  className="mt-3"
+                />
+              </div>
 
-            <div className="mt-5 flex gap-2">
-              <Input type="text" placeholder="First name" className="mt-3" />
-              <Input type="text" placeholder="Last name" className="mt-3" />
-            </div>
+              <div className="flex gap-2">
+                <div>
+                  {errors.firstName && (
+                    <p className="text-xs text-red-500">{errors.firstName}</p>
+                  )}
+                </div>
 
-            <Input type="text" placeholder="Enter email" className="mt-3" />
-            <div className="flex gap-2">
+                <div>
+                  {errors.lastName && (
+                    <p className="text-xs text-red-500">{errors.lastName}</p>
+                  )}
+                </div>
+              </div>
+
               <Input
-                type="password"
-                placeholder="Enter password"
+                type="text"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="Enter email"
                 className="mt-3"
               />
-              <Input
-                type="password"
-                placeholder="Confirm password"
-                className="mt-3"
-              />
-            </div>
-            <div className="mt-2 w-full text-start">
-              <input type="checkbox" className="border-none outline-none" />
-              <span className="ms-2 text-sm text-grey-primary">
-                I read and accept the{" "}
-              </span>
-              <button className="text-sm text-primary">
-                Terms and Conditions
-              </button>
-            </div>
-            <OnBoardingButton onClick={handleOpenOverlay}>
-              Create account
-            </OnBoardingButton>
+              {errors.email && (
+                <p className="text-xs text-red-500">{errors.email}</p>
+              )}
+
+              <div className="flex gap-2">
+                <Input
+                  type="password"
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  placeholder="Enter password"
+                  className="mt-3"
+                />
+                <Input
+                  type="password"
+                  name="confirmPassword"
+                  value={form.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm password"
+                  className="mt-3"
+                />
+              </div>
+              <div className="flex gap-2">
+                <div>
+                  {errors.password && (
+                    <p className="text-xs text-red-500">{errors.password}</p>
+                  )}
+                </div>
+                <div>
+                  {errors.confirmPassword && (
+                    <p className="text-xs text-red-500">
+                      {errors.confirmPassword}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="mt-2 w-full text-start">
+                <input
+                  type="checkbox"
+                  className="border-none outline-none"
+                  required
+                />
+                <span className="ms-2 text-sm text-grey-primary">
+                  I read and accept the{" "}
+                </span>
+                <button className="text-sm text-primary">
+                  Terms and Conditions
+                </button>
+              </div>
+              <OnBoardingButton
+                type="submit"
+                disabled={isFormInvalid}
+                className={`${
+                  isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
+                }`}
+              >
+                Create account
+              </OnBoardingButton>
+            </form>
             <div className="my-1 w-full text-center text-grey-primary-tint-30">
               <div className="flex items-center justify-center gap-2">
                 <Image
@@ -129,55 +367,45 @@ function SignUp() {
                 />
               </div>
             </div>
-            <button className="text-md w-full rounded-full border-[1px] bg-white px-4 py-2 text-center text-primary-tint-20">
-              {" "}
+            <button className="text-md w-full rounded-full border-[1px] bg-white px-4 py-2 font-semibold text-black shadow-md">
               <Image
                 src="google.svg"
-                width={23}
+                width={20}
                 height={20}
-                alt="google Logo"
+                alt="Google"
                 className="inline-block"
               />{" "}
-              Sign in with Google
+              Continue with Google
             </button>
-            <div className="mt-2">
-              <p className="me-1 inline-block text-xs text-grey-primary">
-                Already have an account?
-              </p>
-              <button className="text-xs text-primary underline">
-                Login now
-              </button>
-            </div>
-          </div>
-          <div className="align-end mt-auto px-7 py-5 text-start text-xs text-grey-primary">
-            <Image
-              src="icons/info_icon.svg"
-              width={14}
-              height={14}
-              alt="info icon"
-              className="inline-block"
-            />
-            <p className="ms-1 inline-block">
-              You’re registering as a client, but you can also switch to
-              freelancer later from settings.
-            </p>
           </div>
         </div>
       </div>
+
       {isOverlayVisible && (
         <Overlay isVisible={isOverlayVisible} closeoverlay={handleCloseOverlay}>
           <SuccessModal
-            // onClose={handleCloseOverlay}
+            onClose={handleCloseOverlay}
             imgSrc="/Message.png"
             mainHeading={mainHeading}
             text={text}
+            confirmationtext={confirmationtext}
             buttonText={"Verify email"}
             onBoarding={true}
             containsOtp={true}
+            otp={otp}
+            signupHandler={handleSignup}
           />
         </Overlay>
+      )}
+      {alert && (
+        <ErrorPopup
+          message="Account Already Exist"
+          type="error"
+          onClose={() => setalert(false)}
+        />
       )}
     </>
   );
 }
+
 export default SignUp;

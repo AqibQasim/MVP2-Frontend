@@ -9,13 +9,12 @@ import Table from "./Table";
 function ClientJobsRow({ job }) {
   const params = useParams();
   const clientId = params?.clientId;
-  console.log(job);
   return (
     <Table.Row>
       <EntityCard
         icon={<SvgIconWork className="relative -right-[1.3px]" />}
         entity={{
-          name: job?.role,
+          name: job?.position,
         }}
       />
       <div className="skills flex items-center justify-center gap-1.5 text-center">
@@ -24,7 +23,7 @@ function ClientJobsRow({ job }) {
         ))}
       </div>
       <div className="experience text-center">{job.experience}</div>
-      <div className="commitment text-center">{job.commit}</div>
+      <div className="commitment text-center">{job.commitment}</div>
       <Capsule
         status={job.status.toLowerCase()}
         className="!mx-auto mr-auto w-max"
@@ -40,7 +39,7 @@ function ClientJobsRow({ job }) {
       {/* <CapsuleLink className="ml-auto" href={`${job.id}`}> */}
       <CapsuleLink
         className="ml-auto"
-        href={`/client/${clientId}/jobs/${job.id}`}
+        href={`/client/${clientId}/jobs/${job.job_posting_id}`}
       >
         {" "}
         view talent{" "}

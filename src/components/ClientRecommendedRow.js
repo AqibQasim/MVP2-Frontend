@@ -7,24 +7,26 @@ import Table from "./Table";
 import SvgIconRequestInterview from "@/svgs/SvgIconRequestInterview";
 
 function ClientRecommendedRow({ recommended }) {
-  console.log(recommended);
+  // console.log(recommended);
+  const { customer: candidate, job_postings: job } = recommended;
+
   return (
     <Table.Row>
       <EntityCard
         entity={{
-          name: recommended?.role,
-          profession: recommended?.profession,
+          name: candidate?.name,
+          profession: candidate?.position,
           image: "/avatars/avatar-1.png",
         }}
       />
       <div className="skills flex items-center justify-center gap-1.5 text-center">
-        {recommended.skills.map((skill, i) => (
+        {job.skills.map((skill, i) => (
           <SkillIconWithBg key={i} icon={skill} />
         ))}
       </div>
-      <div className="job-title text-center">{recommended.jobTitle}</div>
-      <div className="experience text-center">{recommended.experience}</div>
-      <Capsule>{recommended.jobType}</Capsule>
+      <div className="job-title text-center">{job.position}</div>
+      <div className="experience text-center">{candidate.experience}</div>
+      <Capsule>{candidate.commitment}</Capsule>
       <Capsule
         className="ml-auto !bg-primary-tint-100"
         icon={<IconWithBg icon={<SvgIconRequestInterview />} />}

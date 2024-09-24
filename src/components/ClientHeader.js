@@ -3,9 +3,9 @@ import { useState, useRef, useEffect } from "react";
 import SvgIconNotification from "@/svgs/SvgIconNotification";
 import SvgIconSettings from "@/svgs/SvgIconSettings";
 import { formatDate } from "@/utils/utility";
-import ButtonCapsule from "./ButtonCapsule";
 import ButtonRounded from "./ButtonRounded";
 import EntityCard from "./EntityCard";
+import ScheduleCallModal from "./ScheduleCallModal";
 import { PopupModal } from "react-calendly";
 import Modal from "./AdminJobsFormModal";
 
@@ -24,8 +24,8 @@ function ClientHeader() {
         lg
         entity={{
           image: "/avatars/avatar-2.png",
-          name: "Richard Feynman",
-          profession: "Richardfeynman@gmail.com",
+          name: client.name,
+          profession: client.email,
         }}
       />
       <div className="info ml-auto space-y-4 "  >
@@ -38,6 +38,8 @@ function ClientHeader() {
               profession: "Account Executive - AE",
             }}
           />
+          {/* schedule-call */}
+          <ScheduleCallModal />
           <ButtonRounded>
             <SvgIconNotification />
           </ButtonRounded>

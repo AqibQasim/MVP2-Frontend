@@ -1,35 +1,81 @@
-import { useState } from "react";
-import SvgIconJobStatus from "@/svgs/SvgIconJobStatus";
+import { referCandidateToClientAction } from "@/lib/actions";
+import { fetchClientJobs, getClients } from "@/lib/data-service";
+import SvgIconRequestInterview from "@/svgs/SvgIconRequestInterview";
+import { useCallback, useEffect, useState } from "react";
+import Modal from "./AdminJobsFormModal";
 import Capsule from "./Capsule";
 import EntityCard from "./EntityCard";
 import IconWithBg from "./IconWithBg";
 import SkillIconWithBg from "./SkillIconWithBg";
 import Table from "./Table";
-import SvgIconRequestInterview from "@/svgs/SvgIconRequestInterview";
-import Modal from './AdminJobsFormModal' // Import your Modal component
 
 function AdminCandidateRecommendedRow({ recommended }) {
   const [showForm, setShowForm] = useState(false);
-  const [hourlyRate, setHourlyRate] = useState('');
-  const [selectedClient, setSelectedClient] = useState('');
+  const [hourlyRate, setHourlyRate] = useState("");
+  const [selectedClient, setSelectedClient] = useState("");
+  const [clients, setClients] = useState(null);
+  const [searchClient, setSearchClient] = useState("");
+  const [selectedClientId, setSelectedClientId] = useState("");
+  const [searchJob, setSearchJob] = useState("");
+  const [jobs, setFetchedJobs] = useState(null);
+  const [selectedJob, setSelectedJob] = useState("");
+  const [selectedJobId, setSelectedJobId] = useState("");
+  const [error, setError] = useState(null);
+  const [isClientsShow, setIsClientShow] = useState(false);
+  const [isJobsShow, setIsJobsShow] = useState(false);
 
-  // Static list of clients
-  const clients = [
-    { id: 1, name: 'Client A' },
-    { id: 2, name: 'Client B' },
-    { id: 3, name: 'Client C' },
-  ];
+  const filteredClients = clients?.filter((client) =>
+    client.name.toLowerCase().includes(searchClient.toLowerCase()),
+  );
 
-  // Function to handle form submission
-  const handleReferCandidate = (e) => {
-    e.preventDefault();
-    console.log('Hourly Rate:', hourlyRate);
-    console.log('Assigned to Client:', selectedClient);
+  const filteredJobs = jobs?.filter((job) =>
+    job.position.toLowerCase().includes(searchJob.toLowerCase()),
+  );
 
-    // Reset form and close modal
-    setHourlyRate('');
-    setSelectedClient('');
-    setShowForm(false);
+  const fetchClients = useCallback(async () => {
+    const f = await getClients();
+    if (f.status === 200) {
+      setClients(f.data);
+    }
+  }, []);
+
+  const fetchJobs = useCallback(async () => {
+    if (selectedClientId) {
+      const f = await fetchClientJobs(selectedClientId);
+      if (f.status === 200) {
+        setFetchedJobs(f.data.result);
+      }
+    }
+  }, [selectedClientId]);
+
+  useEffect(() => {
+    fetchClients();
+  }, [showForm]);
+
+  useEffect(() => {
+    fetchJobs();
+  }, [searchJob]);
+
+  const handleReferCandidate = async (formData) => {
+    // e.preventDefault();
+
+    const referClientBody = {
+      client_id: selectedClientId,
+      customer_id: recommended.customer_id,
+      job_posting_id: selectedJobId,
+      hourly_rate: hourlyRate,
+    };
+
+    const { error, message } =
+      await referCandidateToClientAction(referClientBody);
+    if (error) {
+      console.log({ Error: error });
+      return setError(error);
+    }
+    if (message) {
+      console.log("Refer Message: ", message);
+      return setShowForm(false);
+    }
   };
 
   return (
@@ -37,8 +83,8 @@ function AdminCandidateRecommendedRow({ recommended }) {
       <Table.Row>
         <EntityCard
           entity={{
-            name: recommended?.role,
-            profession: recommended?.profession,
+            name: recommended?.name,
+            profession: "Front-end Developer",
             image: "/avatars/avatar-1.png",
           }}
         />
@@ -52,11 +98,13 @@ function AdminCandidateRecommendedRow({ recommended }) {
           )}
         </div>
 
-        <div className="experience text-center">{recommended?.experience || "No experience"}</div>
-        <Capsule>{recommended?.jobType || "No job type"}</Capsule>
+        <div className="experience text-center">
+          {recommended?.experience || "No experience"}
+        </div>
+        <Capsule>{recommended?.job_type || "No job type"}</Capsule>
 
         {/* Button to open form */}
-        <button  onClick={() => setShowForm(true)}>
+        <button onClick={() => setShowForm(true)}>
           <Capsule
             className="ml-auto !bg-primary-tint-100"
             icon={<IconWithBg icon={<SvgIconRequestInterview />} />}
@@ -68,38 +116,96 @@ function AdminCandidateRecommendedRow({ recommended }) {
 
       {/* Modal for the referral form */}
       <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
-        <h3 className="mb-4 text-xl font-semibold">Refer {recommended?.role} to Client</h3>
-        <form onSubmit={handleReferCandidate}>
+        <h3 className="mb-4 text-xl font-semibold">
+          Refer {recommended?.role} to Client
+        </h3>
+        <form action={handleReferCandidate}>
           <label className="block">Hourly Rate</label>
           <input
             type="number"
+            name="hourlyRate"
+            id="hourlyRate"
             value={hourlyRate}
             onChange={(e) => setHourlyRate(e.target.value)}
             required
-            className="block w-full border px-2 py-1 mt-2"
+            className="mt-2 block w-full border px-2 py-1"
           />
 
-          <label className="block mt-4">Assign to Client</label>
-          <select
+          <label className="mt-4 block">Assign to Client</label>
+          <input
+            type="text"
+            value={searchClient}
+            onChange={(e) => {
+              setIsClientShow(true);
+              setSearchClient(e.target.value);
+            }}
+            placeholder="Search client by name"
+            className="mb-2 block w-full border px-2 py-1"
+          />
+
+          {/* <select
             value={selectedClient}
             onChange={(e) => setSelectedClient(e.target.value)}
             required
-            className="block w-full border px-2 py-1 mt-2"
-          >
-            <option value="">Select a client</option>
-            {clients.map((client) => (
-              <option key={client.id} value={client.id}>
+            className="mt-2 block w-full border px-2 py-1"
+          > */}
+          {/* <option value="">Select a client</option> */}
+          {isClientsShow &&
+            filteredClients?.map((client) => (
+              <option
+                onClick={() => {
+                  setIsClientShow(false);
+                  setSearchClient(client.name);
+                  setSelectedClient(client.name);
+                  setSelectedClientId(client.client_id);
+                }}
+                key={client.client_id}
+                value={client.client_id}
+              >
                 {client.name}
               </option>
             ))}
-          </select>
+
+          <label className="mt-4 block">Select Job</label>
+          <input
+            type="text"
+            value={searchJob}
+            onChange={(e) => {
+              setIsJobsShow(true);
+              setSearchJob(e.target.value);
+            }}
+            placeholder="Search Job"
+            className="mb-2 block w-full border px-2 py-1"
+          />
+
+          {isJobsShow &&
+            filteredJobs?.map((job) => (
+              <option
+                onClick={() => {
+                  setIsJobsShow(false);
+                  setSearchJob(job.position);
+                  setSelectedJob(job.position);
+                  setSelectedJobId(job.job_posting_id);
+                }}
+                key={job.job_posting_id}
+                value={job.job_posting_id}
+              >
+                {job.position}
+              </option>
+            ))}
+          {/* </select> */}
+          {/* Error Temp */}
+          {error ? <div className="error text-red-500"> {error} </div> : null}
 
           <div className="mt-4">
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 mr-2">
+            <button
+              type="submit"
+              className="mr-2 bg-blue-500 px-4 py-2 text-white"
+            >
               Confirm Referral
             </button>
             <button
-              type="button"
+              type="submit"
               onClick={() => setShowForm(false)}
               className="bg-gray-300 px-4 py-2"
             >

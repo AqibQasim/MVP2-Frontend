@@ -1,3 +1,6 @@
+export const PAGE_HEIGHT_FIX =
+  "size-full min-h-[calc(100dvh-2.25rem)] rounded-[2rem]";
+
 export function formatCurrency(price) {
   const formater = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -10,8 +13,10 @@ export function formatCurrencyNoDecimals(price) {
   const formatter = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-    minimumFractionDigits: 0, // No decimal places
-    maximumFractionDigits: 0, // No decimal places
+    // No decimal places
+    minimumFractionDigits: 0,
+    // No decimal places
+    maximumFractionDigits: 0,
   });
   return formatter.format(price);
 }
@@ -24,5 +29,3 @@ export function formatDate(date) {
   const options = { day: "numeric", month: "short", year: "numeric" };
   return new Date(date).toLocaleDateString("en-GB", options);
 }
-export const PAGE_HEIGHT_FIX =
-  "size-full min-h-[calc(100dvh-2.25rem)] rounded-[2rem]";

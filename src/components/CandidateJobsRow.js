@@ -7,13 +7,12 @@ import Skill from "./Skill";
 import Table from "./Table";
 
 function CandidateJobsRow({ job }) {
-  console.log(job);
   return (
     <Table.Row>
       <EntityCard
         icon={<SvgIconWork className="relative -right-[1.3px]" />}
         entity={{
-          name: job?.role,
+          name: job?.position,
         }}
       />
       <div className="skills flex items-center justify-center gap-1.5 text-center">
@@ -22,7 +21,7 @@ function CandidateJobsRow({ job }) {
         ))}
       </div>
       <div className="experience text-center">{job.experience}</div>
-      <div className="commitment text-center">{job.commit}</div>
+      <div className="commitment text-center">{job.commitment}</div>
       <Capsule
         className="mr-auto w-max !bg-primary-tint-100"
         icon={<IconWithBg icon={<SvgIconJobStatus status={job.status} />} />}

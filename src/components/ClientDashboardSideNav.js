@@ -1,13 +1,14 @@
+import { getClientJobs } from "@/lib/data-service";
 import ClientDashboardNavLinks from "./ClientDashboardNavLinks";
 import Logo from "./Logo";
 
-function ClientDashboardSideNav({ clientId }) {
-  console.log("Client id is this", clientId);
+async function ClientDashboardSideNav({ clientId }) {
+  const job = await getClientJobs(clientId);
 
   return (
     <div className="space-y-12">
       <Logo />
-      <ClientDashboardNavLinks clientId={clientId} />
+      <ClientDashboardNavLinks numberOfJobs={job.length} />
     </div>
   );
 }

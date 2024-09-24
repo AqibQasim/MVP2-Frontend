@@ -3,58 +3,7 @@ import CandidateJobsRow from "./CandidateJobsRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 
-const jobs = [
-  {
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commit: "full time",
-    status: "fulfilled",
-  },
-  {
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commit: "full time",
-    status: "open",
-  },
-  {
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commit: "full time",
-    status: "hired",
-  },
-  {
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commit: "full time",
-    status: "fulfilled",
-  },
-  {
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commit: "full time",
-    status: "open",
-  },
-  {
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commit: "full time",
-    status: "hired",
-  },
-];
-
-function AdminJobsList() {
+function AdminJobsList({ jobs }) {
   return (
     <DashboardSection
       className="!min-h-full"

@@ -1,23 +1,10 @@
-import CandidatePage from "@/components/CandidatePage";
-import { getDummyClientById, getDummyClients } from "@/lib/tempData";
+"use client";
+import CandidateEvaluateYourselfCard from "@/components/CandidateEvaluateYourselfCard";
 
-export async function generateMetadata({ params }) {
-  const {
-    company: { name },
-  } = await getDummyClientById(params.candidateId);
-  return { title: `Company ${name}` };
-}
-
-export async function generateStaticParams() {
-  const candidates = await getDummyClients();
-  const ids = candidates.map((candidate) => ({ cabinId: String(candidate.id) }));
-  return ids;
-}
-
-export default async function Page({ params }) {
+export default function Page({ params }) {
   return (
     <>
-      <CandidatePage params={params} />
+      <CandidateEvaluateYourselfCard />
     </>
   );
 }
