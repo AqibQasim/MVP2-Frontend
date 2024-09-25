@@ -8,8 +8,9 @@ import EntityCard from "./EntityCard";
 import ScheduleCallModal from "./ScheduleCallModal";
 import { PopupModal } from "react-calendly";
 import Modal from "./AdminJobsFormModal";
+import ButtonCapsule from "./ButtonCapsule";
 
-function ClientHeader() {
+function ClientHeader({client}) {
   const [isClient, setIsClient] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef(null);
@@ -39,7 +40,7 @@ function ClientHeader() {
             }}
           />
           {/* schedule-call */}
-          <ScheduleCallModal />
+          {/* <ScheduleCallModal /> */}
           <ButtonRounded>
             <SvgIconNotification />
           </ButtonRounded>
