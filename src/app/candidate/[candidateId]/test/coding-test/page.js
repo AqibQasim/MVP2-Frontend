@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import CodingChild from "@/components/CodingChild";
 import { useParams, useRouter } from "next/navigation";
 import ErrorIndicator from "@/components/ErrorIndicator";
@@ -21,7 +21,7 @@ const page = () => {
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [message, setMessage] = useState(false);
   const [instructionsPopup, setInstructionsPopup] = useState(true);
-  const [hasQuestionGenerated, setHasQuestionGenerated] = useState(false);
+  const hasQuestionGenerated = useRef(false);
   const params = useParams();
   const cid = params.candidateId;
 
@@ -32,20 +32,26 @@ const page = () => {
     };
     mvp2ApiHelper(codingTestPayload).then((result) => {
       if (result.status === 200) {
+        console.log("fetching questionssss")
         let codingQuestion = result?.data?.codingQuestion?.assessment;
         setQuestion(codingQuestion?.codingQuestion);
         setConstraints(codingQuestion?.constraints);
         setExampleInput(codingQuestion?.exampleInput);
         setExampleOutput(codingQuestion?.exampleOutput);
-        setHasQuestionGenerated(true);
       }
     });
   };
 
   // Run fetchCodingQuestion only once when the component mounts
   useEffect(() => {
-    fetchCodingQuestion();
+    if(!hasQuestionGenerated.current){
+      fetchCodingQuestion();
+      hasQuestionGenerated.current= true;
+    }
+
   }, []);
+
+
 
   const closePopup = () => {
     setInstructionsPopup(false);
