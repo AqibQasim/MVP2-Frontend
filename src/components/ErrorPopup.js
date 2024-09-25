@@ -1,7 +1,7 @@
 // components/AlertPopup.js
 import { useState } from "react";
 
-const ErrorPopup = ({ message, type = "error", onClose }) => {
+const ErrorPopup = ({ message, type, onClose }) => {
   const [isVisible, setIsVisible] = useState(true);
 
   const handleClose = () => {

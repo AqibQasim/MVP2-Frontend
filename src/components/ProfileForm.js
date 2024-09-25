@@ -1,15 +1,68 @@
-// components/ProfileForm.jsx
-
-import React from "react";
+import React, { useRef, useState } from "react";
 import Heading from "./Heading";
 import ButtonCapsule from "./ButtonCapsule";
 import ButtonRounded from "./ButtonRounded";
 import Button from "./Button";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
+import { usePathname } from "next/navigation";
+import ErrorPopup from "./ErrorPopup";
 
-const ProfileForm = () => {
+const ProfileForm = ({ client }) => {
+  const pathname = usePathname();
+  const client_id = pathname.split("/")[2];
+  const [sucess, setsuccess] = useState(false);
+  const [error, seterror] = useState(false);
+  const firstNameRef = useRef(null);
+  const lastNameRef = useRef(null);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+  const locationRef = useRef(null);
+  const cityRef = useRef(null);
+  const provinceRef = useRef(null);
+  const areaCodeRef = useRef(null);
+  const countryRef = useRef(null);
+
+  console.log("client is", client);
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    const payload = {
+      endpoint: `client-profile-update/${client_id}`, // Use the client ID
+      method: "PUT",
+      body: {
+        firstName: firstNameRef.current.value,
+        lastName: lastNameRef.current.value,
+        email: emailRef.current.value,
+        password: passwordRef.current.value,
+        client_location: locationRef.current.value,
+        city: cityRef.current.value,
+        province: provinceRef.current.value,
+        area_code: areaCodeRef.current.value,
+        country: countryRef.current.value,
+      },
+    };
+
+    try {
+      const result = await mvp2ApiHelper(payload);
+      if (result.status === 200) {
+        console.log("Client info updated successfully", result.data.result);
+        setsuccess(true);
+      } else {
+        console.error("Error updating client info", result?.data?.message);
+        seterror(true);
+      }
+    } catch (error) {
+      console.error("Error while updating profile", error);
+    }
+  };
+
+  // const [firstName, lastName] = client.name
+  //   ? client.name.split(" ", 2)
+  //   : ["", ""];
   return (
     <div className="">
-      <form>
+      <form onSubmit={submitHandler}>
         {/* Row for Email Address */}
         <div className="mb-4 grid grid-cols-4 items-start gap-4">
           {/* Section Heading */}
@@ -27,6 +80,8 @@ const ProfileForm = () => {
                   <label>First Name</label>
                 </b>
                 <input
+                  ref={firstNameRef}
+                  defaultValue={client.name?.split(" ", 2)[0] || ""}
                   type="text"
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
@@ -38,6 +93,8 @@ const ProfileForm = () => {
                   <label>Last Name</label>
                 </b>
                 <input
+                  ref={lastNameRef}
+                  defaultValue={client.name?.split(" ", 2)[1] || ""}
                   type="text"
                   className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
                 />
@@ -59,6 +116,9 @@ const ProfileForm = () => {
                   <label>Email</label>
                 </b>
                 <input
+                  disabled
+                  ref={emailRef}
+                  defaultValue={client.email || ""}
                   type="email"
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
@@ -68,18 +128,18 @@ const ProfileForm = () => {
         </div>
 
         <div className="mb-4 grid grid-cols-4 items-start gap-4">
-          {/* Section Heading */}
           <Heading xm className="col-span-1"></Heading>
-          {/* Input Group */}
+
           <div className="col-span-2">
-            {/* First Name and Last Name Row */}
             <div className="flex flex-col sm:flex-row sm:space-x-4">
-              {/* First Name */}
               <div className="flex flex-1 flex-col">
                 <b>
                   <label>Password</label>
                 </b>
                 <input
+                  disabled
+                  ref={passwordRef}
+                  defaultValue={client.password || ""}
                   type="password"
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
@@ -102,6 +162,8 @@ const ProfileForm = () => {
               {/* First Name */}
               <div className="flex flex-1 flex-col">
                 <input
+                  ref={locationRef}
+                  defaultValue={client.client_location || ""}
                   type="text"
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
@@ -125,6 +187,8 @@ const ProfileForm = () => {
               {/* First Name */}
               <div className="flex flex-1 flex-col">
                 <input
+                  ref={cityRef}
+                  defaultValue={client.city || ""}
                   type="text"
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
@@ -145,6 +209,8 @@ const ProfileForm = () => {
               <div className="flex flex-1 flex-col">
                 <input
                   type="text"
+                  ref={provinceRef}
+                  defaultValue={client.province || ""}
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
               </div>
@@ -152,6 +218,8 @@ const ProfileForm = () => {
               <div className="flex flex-1 flex-col">
                 <input
                   type="text"
+                  ref={areaCodeRef}
+                  defaultValue={client.area_code || ""}
                   className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
                 />
               </div>
@@ -171,6 +239,8 @@ const ProfileForm = () => {
               <div className="flex flex-1 flex-col">
                 <input
                   type="text"
+                  ref={countryRef}
+                  defaultValue={client.country || ""}
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
               </div>
@@ -184,7 +254,9 @@ const ProfileForm = () => {
           <button></button>
 
           <div className="col-span-2">
-            <ButtonCapsule className="w-[50%]">Update Info</ButtonCapsule>
+            <ButtonCapsule className="w-[50%]" type="submit">
+              Update Info
+            </ButtonCapsule>
           </div>
         </div>
 
@@ -205,6 +277,20 @@ const ProfileForm = () => {
           </button>
         </div> */}
       </form>
+      {sucess && (
+        <ErrorPopup
+          message="Profile Updated Successfully "
+          type="success"
+          onClose={() => setsuccess(false)}
+        />
+      )}
+      {error && (
+        <ErrorPopup
+          message="Something went wrong , please try again"
+          type="error"
+          onClose={() => seterror(false)}
+        />
+      )}
     </div>
   );
 };
