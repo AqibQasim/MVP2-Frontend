@@ -10,7 +10,6 @@ async function Page({ params }) {
     filter,
   );
   if (error) console.log("Error: getting Hired Candidates: ", error);
-  console.log("Hired Candidates: ", hiredTalents);
   return (
     <>
       <ClientTalentsTable hiredTalents={hiredTalents} />

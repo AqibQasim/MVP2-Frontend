@@ -68,10 +68,9 @@ const recommendedTalents = [
 ];
 
 function ClientRecommendedTable({ recommendedCandidates }) {
-  console.log("RC", recommendedCandidates);
   const params = useParams();
   const clientId = params?.clientId;
-  
+
   return (
     <DashboardSection
       className="!min-h-full"
