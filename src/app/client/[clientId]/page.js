@@ -4,7 +4,7 @@ import ClientRecommendationCard from "@/components/ClientRecommendationCard";
 import {
   getClientById,
   getClientJobs,
-  getRecommendedCandidatesOfClient,
+  getRecommendedCandidateOfClient,
 } from "@/lib/data-service";
 // export async function generateMetadata({ params }) {
 //   const client = await getClientById(params.clientId);
@@ -18,7 +18,7 @@ import {
 export default async function Page({ params }) {
   const [client, recommendedCandidates, jobs] = await Promise.all([
     getClientById(params.clientId),
-    getRecommendedCandidatesOfClient(params.clientId),
+    getRecommendedCandidateOfClient(params.clientId),
     getClientJobs(params.clientId),
   ]);
   return (

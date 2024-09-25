@@ -75,7 +75,7 @@ function CandidateReportCard({ candidateReport, handleOpenOverlay }) {
               <Skill score={score} />
             </div>
             <ButtonCapsule
-              handleOpenOverlay={handleOpenOverlay}
+              onPress={handleOpenOverlay}
             >
               {recommendationStatus}
             </ButtonCapsule>

@@ -49,6 +49,7 @@ function CandidateEvaluateYourselfCard() {
   );
 
   const handleStartAssessment = async () => {
+    console.log("clickeddddd")
     const result = await mvp2ApiHelper(payload);
     if (result.status === 200) {
       //router.push(`/candidate/${candidate_id}/test`,{skills:filledSkills})
