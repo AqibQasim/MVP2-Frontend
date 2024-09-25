@@ -72,7 +72,7 @@ function ClientRecommendationCard({
               >Schedule Inverview</ButtonCapsule>
 
               <PopupModal
-               url={`https://calendly.com/sanjaybaghtwani/30min?hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=4624e0&name${recommendedCandidate.name}=&email=${recommendedCandidate.email}`}
+               url={"https://calendly.com/sanjaybaghtwani/30min?hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=4624e0"}
                 rootElement={document.getElementById('scheduleCallBtn')}
                 text="Schedule Call"
                 textColor="#fff"
@@ -81,6 +81,11 @@ function ClientRecommendationCard({
                 overflow= "hidden"
                 onModalClose={() => setIsOpen(false)}
                 open={isOpen}
+                prefill={{
+                  guests: [
+                    recommendedCandidate.email
+                  ],
+                }}
                 // styles={{
                 //   height: '10px'
                 // }}
