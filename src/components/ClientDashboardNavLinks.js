@@ -9,9 +9,9 @@ import SvgIconTalent from "@/svgs/SvgIconTalent";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 
-function ClientDashboardNavLinks({ numberOfJobs }) {
+function ClientDashboardNavLinks({ numJobs, numRecommended, numHired }) {
   const pathname = usePathname();
-  
+
   const params = useParams();
   const clientId = params.clientId;
 
@@ -32,19 +32,19 @@ function ClientDashboardNavLinks({ numberOfJobs }) {
       name: "Recommended",
       href: `/client/${clientId}/recommended`,
       icon: <SvgIconRecommended className="size-6" />,
-      amount: 12,
+      amount: numRecommended,
     },
     {
       name: "Jobs",
       href: `/client/${clientId}/jobs`,
-      amount: numberOfJobs,
+      amount: numJobs,
       icon: <SvgIconJob className="size-6" />,
     },
     {
       name: "Talents",
       href: `/client/${clientId}/talents`,
       icon: <SvgIconTalent className="size-6" />,
-      amount: 9,
+      amount: numHired,
     },
     {
       name: "Payment",
