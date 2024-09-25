@@ -441,6 +441,13 @@ function SignUp() {
           />
         </Overlay>
       )}
+      {alert && (
+        <ErrorPopup
+          message="Account Already Exist"
+          type="error"
+          onClose={() => setalert(false)}
+        />
+      )}
     </>
   );
 }

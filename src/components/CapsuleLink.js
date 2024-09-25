@@ -8,8 +8,8 @@ function CapsuleLink({ href = "/", children, className }) {
       className={`${className} inline-flex w-max items-center justify-center gap-2 text-nowrap rounded-[2.5rem] bg-primary-tint-100 p-1 pl-3 font-satoshi text-sm font-bold capitalize text-primary-tint-20`}
     >
       {children}
-      <span className="rounded-full bg-neutral-white p-2.5">
-        <ChevronRight className="h-3 w-3" />
+      <span className="rounded-full bg-neutral-white p-1.5">
+        <ChevronRight className="h-2.5 w-2.5" />
       </span>
     </Link>
   );

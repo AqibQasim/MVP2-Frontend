@@ -1,13 +1,26 @@
+"use client";
+import { useState, useRef, useEffect } from "react";
 import SvgIconNotification from "@/svgs/SvgIconNotification";
 import SvgIconSettings from "@/svgs/SvgIconSettings";
 import { formatDate } from "@/utils/utility";
 import ButtonRounded from "./ButtonRounded";
 import EntityCard from "./EntityCard";
 import ScheduleCallModal from "./ScheduleCallModal";
+import { PopupModal } from "react-calendly";
+import Modal from "./AdminJobsFormModal";
+import ButtonCapsule from "./ButtonCapsule";
 
-function ClientHeader({ client }) {
+function ClientHeader({client}) {
+  const [isClient, setIsClient] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const buttonRef = useRef(null);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   return (
-    <div className="flex">
+    <div className="flex" id='scheduleCallBtn' >
       <EntityCard
         lg
         entity={{
@@ -16,7 +29,7 @@ function ClientHeader({ client }) {
           profession: client.email,
         }}
       />
-      <div className="info ml-auto space-y-4">
+      <div className="info ml-auto space-y-4 "  >
         <div className="buttons flex items-start justify-end gap-2">
           <EntityCard
             sm
@@ -26,20 +39,46 @@ function ClientHeader({ client }) {
               profession: "Account Executive - AE",
             }}
           />
+          {/* schedule-call */}
+          {/* <ScheduleCallModal /> */}
           <ButtonRounded>
             <SvgIconNotification />
           </ButtonRounded>
           <ButtonRounded>
             <SvgIconSettings />
           </ButtonRounded>
-          {/* schedule-call */}
-          <ScheduleCallModal />
+          
+          {isClient && (
+            <div>
+              <ButtonCapsule
+                ref={buttonRef}
+                handleOpenOverlay={() => setIsOpen(true)}
+                // id="scheduleCallBtn"
+                
+              >
+                Schedule a Call
+              </ButtonCapsule>
+              <PopupModal
+                url='https://calendly.com/sanjaybaghtwani/30min?hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=4624e0'
+                rootElement={document.getElementById('scheduleCallBtn')}
+                text="Schedule Call"
+                textColor="#fff"
+                color="#000"
+                height = "200px"
+                overflow= "hidden"
+                onModalClose={() => setIsOpen(false)}
+                open={isOpen}
+                // styles={{
+                //   height: '10px'
+                // }}
+              />
+            </div>
+          )}
         </div>
-        <div className="joing-date float-right">
+        <div className="join-date float-right">
           <p className="capitalize text-grey-primary-shade-10">
             Joined date:{" "}
             <span className="font-semibold">
-              {" "}
               {formatDate(new Date("2024-04-27"))}
             </span>
           </p>

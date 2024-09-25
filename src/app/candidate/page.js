@@ -1,7 +1,7 @@
-import { notFound } from "next/navigation";
+// import { notFound } from "next/navigation";
 
-function page() {
-  return notFound();
-}
+// function page() {
+//   return notFound();
+// }
 
-export default page;
+// export default page;

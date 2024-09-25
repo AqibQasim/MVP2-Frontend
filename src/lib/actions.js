@@ -1,8 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import { createJob, referCandidate } from "./data-service";
+import {
+  candidateUpdateProfile,
+  createJob,
+  referCandidate,
+} from "./data-service";
 
 export async function createAJobAction(formData) {
   const client_id = formData.get("client_id");
@@ -15,7 +18,9 @@ export async function createAJobAction(formData) {
   const start_date = formData.get("start_date");
   const workday_overlap = Number(formData.get("workday_overlap"));
   const skills = formData.getAll("skills");
-  const location = formData.get("location");
+  const city = formData.get("city");
+  const country = formData.get("country");
+  console.log(`Location: ${city}, ${country}`);
   const is_test_required = formData.get("is_test_required") === "true";
   const applied_customers_count = 0; // default to 0
   const status = "active"; // default to active
@@ -52,8 +57,11 @@ export async function createAJobAction(formData) {
   if (!workday_overlap || isNaN(workday_overlap) || workday_overlap <= 0) {
     return { error: "Workday overlap is required and must be a valid number." };
   }
-  if (!location || location.trim() === "") {
-    return { error: "Location is required." };
+  if (!city || city.trim() === "") {
+    return { error: "City is required." };
+  }
+  if (!country || country.trim() === "") {
+    return { error: "Country is required." };
   }
   if (skills.length === 0 || skills.some((skill) => skill.trim() === "")) {
     return { error: "At least one valid skill is required." };
@@ -77,7 +85,7 @@ export async function createAJobAction(formData) {
     applied_customers_count,
     application_questions,
     start_date,
-    location,
+    location: `${city}, ${country}`,
     project_length: `${project_length} Month`,
     is_test_required,
     experience,
@@ -123,4 +131,47 @@ export async function referCandidateToClientAction(params, closeModal) {
   revalidatePath("/admin/candidates");
   return { message: "Candidate successfully referred to the client." };
   // redirect("/admin/candidates");
+}
+
+export async function updateCandidateProfileAction(formData) {
+  const experience = formData.get("experience");
+  const commitment = formData.get("commitment");
+  const hourly_rate = formData.get("hourly_rate");
+  const specialization = formData.get("specialization");
+  const candidateId = formData.get("candidateId");
+  // Validations
+  if (
+    !experience ||
+    !["beginner", "intermediate", "expert"].includes(experience)
+  ) {
+    return { error: "Valid experience level is required." };
+  }
+  if (!commitment || !["full-time", "part-time"].includes(commitment.trim())) {
+    return { error: "Valid commitment is required." };
+  }
+  if (!hourly_rate) return { error: "Valid hourly rate is required." };
+  if (!specialization)
+    return { error: "Valid specialization rate is required." };
+  if (!candidateId) return { error: "Valid candidate id is required." };
+
+  const updateProfileData = {
+    experience,
+    commitment,
+    hourly_rate,
+    specialization,
+  };
+
+  // Api call
+  const { message, error } = await candidateUpdateProfile(
+    updateProfileData,
+    candidateId,
+  );
+  console.log("error while updating candidate profile: ", error);
+
+  if (error) {
+    return { error };
+  }
+
+  revalidatePath(`/client`);
+  return { message: "Candidate profile successfully updated." };
 }

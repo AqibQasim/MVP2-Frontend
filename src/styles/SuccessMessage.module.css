@@ -1,0 +1,69 @@
+.show {
+  animation: slideIn 0.5s forwards;
+}
+
+.hide {
+  animation: slideOut 0.5s forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+.successMessage {
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  color: #000;
+  padding: 10px;
+  text-align: center;
+  z-index: 1000; /* Make sure it's above other content */
+}
+
+.show {
+  position: fixed;
+  top: 0; /* Align to the top */
+  left: 0; /* Align to the left */
+  right: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  height: 2.5rem;
+  z-index: 999;
+  padding-top: 1rem;
+}
+
+.successMsgContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 30px;
+  border: 1px solid #6137db;
+  padding: 5px 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+  height: 100%;
+  width: auto;
+  background-color: #fff;
+  font-weight: 700;
+  overflow: hidden;
+}
+
+.errorMsgContainer img {
+  max-height: 25px;
+  max-width: 25px;
+}
