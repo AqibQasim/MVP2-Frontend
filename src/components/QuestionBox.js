@@ -7,7 +7,13 @@ import { useSpeechSynthesis } from "react-speech-kit";
 import ErrorIndicator from "./ErrorIndicator";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 
-const QuestionBox = ({ hasStarted, setIsLoading, isLoading, questions }) => {
+const QuestionBox = ({
+  hasStarted,
+  setIsLoading,
+  isLoading,
+  questions,
+  codingQuestions = null,
+}) => {
   // const { test } = useTest();
   const router = useRouter();
   const cid = usePathname().split("/")[2];
@@ -40,7 +46,7 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading, questions }) => {
   const minutes = Math.floor(timeLeft / 60);
   const remainingSeconds = timeLeft % 60;
   const [expertise, setExpertise] = useState();
-  const [isTestRequired, setIsTestRequired] = useState();
+  const [isTestRequired, setIsTestRequired] = useState(true);
   const [assessmentId, setAssessmentId] = useState();
   const [codeQues, setCodeQues] = useState();
   const [isFirstQues, setIsFirstQues] = useState(true);
@@ -48,6 +54,9 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading, questions }) => {
 
   useEffect(() => {
     setNewQuestions(questions?.question);
+    console.log(codingQuestions);
+    setCodeQues(codingQuestions?.codingQuestions);
+    setAssessmentId(codingQuestions?.assessment_id);
   }, [questions]);
   // const [isFirstQues, setIsFirstQues] = useState(0);
 
@@ -342,7 +351,7 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading, questions }) => {
           isProcessingRef.current = true;
           await processRecording(
             blob,
-            currentRecordingQuestionIndexRef.current
+            currentRecordingQuestionIndexRef.current,
           );
           isProcessingRef.current = false;
         };
@@ -445,8 +454,8 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading, questions }) => {
   // }, [assessmentId]);
 
   const submitTestHandler = async () => {
-  //   console.log("Submit test handler called. Assessment ID:", assessmentId);
-  //   localStorage.setItem("testcompleted", "true");
+    //   console.log("Submit test handler called. Assessment ID:", assessmentId);
+    //   localStorage.setItem("testcompleted", "true");
     if (isSubmitted) return;
     setIsSubmitted(true);
     setIsGeneratingResult(true);
@@ -457,10 +466,10 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading, questions }) => {
     // const userFlow = localStorage.getItem("activeFlow");
 
     // if (userFlow === "Candidate_self") {
-      const requestBody = {
-        candidate_id: cid,
-        question_answer: answers
-      }
+    const requestBody = {
+      candidate_id: cid,
+      question_answer: answers,
+    };
 
     try {
       // const response = await fetch(
@@ -474,20 +483,24 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading, questions }) => {
       //   }
       // );
 
-      const payload= {
-        endpoint:'take-test',
+      const payload = {
+        endpoint: "take-test",
         body: requestBody,
-        method:'POST'
-      }
-      const response= await mvp2ApiHelper(payload);
+        method: "POST",
+      };
+      const response = await mvp2ApiHelper(payload);
       const data = response.data;
       console.log("take-test api response:", data);
       //console.log("value in test_req state:", test_req);
       //console.log("test_req state = ", test_req === "true");
       //console.log("a_ID:", a_id);
 
-      setIsLoading(false);
-      window.location.href=`/candidate/${cid}`;
+      if (isTestRequired) {
+        router.push(`/candidate/${cid}/test/coding-test`);
+      } else {
+        setIsLoading(false);
+        window.location.href = `/candidate/${cid}`;
+      }
       // router.back();
 
       // const rBody = {
@@ -501,7 +514,7 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading, questions }) => {
       //       assessmentId
       //     );
       //     router.push(
-      //       `/coding-excercise?a_id=${assessmentId}&pid=${pid}&cid=${cid}`
+      //       `/coding-excercise?a_id=${assessmentId}&cid=${cid}`
       //     );
       //   } else {
       //     console.error("Assessment ID is not available.");
@@ -534,7 +547,7 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading, questions }) => {
       // }
     } catch (err) {
       console.error("Failed to submit test:", err);
-    } 
+    }
     // finally {
     //   setTimeout(() => {
     //     setIsLoading(false);
@@ -555,7 +568,7 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading, questions }) => {
           setAnswers((prevAnswers) => {
             return prevAnswers.some(
               (ans) =>
-                ans.question === newQuestions[currentQuestion - 1]?.question
+                ans.question === newQuestions[currentQuestion - 1]?.question,
             )
               ? prevAnswers
               : [
@@ -619,7 +632,7 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading, questions }) => {
         console.log(
           "base64Data",
           base64Data,
-          "=============== END OF DATA ================="
+          "=============== END OF DATA =================",
         );
         const questionBeingAnswered = currentQuestion;
         const finalData = await sendAudioToServer(base64Data);
@@ -662,12 +675,12 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading, questions }) => {
       setIsLoading(true);
       setIsTranscriptionComplete(true);
       console.log("send audio to server:", base64Data);
-      const payload= {
-        endpoint:'speech-to-text',
-        method:'POST',
+      const payload = {
+        endpoint: "speech-to-text",
+        method: "POST",
         body: { audio: base64Data },
-      }
-      const response = await mvp2ApiHelper(payload)
+      };
+      const response = await mvp2ApiHelper(payload);
       console.log("audio response:", response.data?.transcriptionResult);
       setIsTranscriptionComplete(false);
       setCurrentQuestion((prevCurrent) => prevCurrent + 1);
@@ -682,10 +695,10 @@ const QuestionBox = ({ hasStarted, setIsLoading, isLoading, questions }) => {
         setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
         console.log(
           "currentQuestion State inside if condition:",
-          currentQuestion
+          currentQuestion,
         );
         console.log(
-          console.log("state of currentQuestionIndex:", currentQuestionIndex)
+          console.log("state of currentQuestionIndex:", currentQuestionIndex),
         );
         setIsLoading(false);
       }

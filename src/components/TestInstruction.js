@@ -29,7 +29,7 @@ const TestInstruction = ({
               <div className="max-h-[19rem] rounded-4xl bg-[#F8F7FA] p-6 text-gray-700">
                 <ul className="list-none">
                   {options.map((option, index) => (
-                    <div className="h-auto">
+                    <div key={index} className="h-auto">
                       <li key={index} className="flex items-center space-x-2">
                         <span className="h-2 w-2 rounded-full bg-purple-500"></span>
                         <span>{option}</span>

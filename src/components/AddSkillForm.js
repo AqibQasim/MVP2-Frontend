@@ -7,6 +7,7 @@ import Heading from "./Heading";
 import Capsule from "./Capsule";
 import ButtonCapsule from "./ButtonCapsule";
 import ButtonBack from "./ButtonBack";
+import { useRouter } from "next/navigation";
 
 // useFormContext
 const AddSkillForm = ({
@@ -63,6 +64,7 @@ const AddSkillForm = ({
   // }, [codingSkill, codingLevel]);
 
   const iconSize = 25;
+  const router= useRouter();
 
   return (
     <>
@@ -198,7 +200,7 @@ const AddSkillForm = ({
             </select>
           </div>
           <div className="flex justify-end pr-7 pt-2">
-            <ButtonBack className={"flex w-[220px] items-center gap-2"}>
+            <ButtonBack onClick={onBack} className={"flex w-[220px] items-center gap-2"}>
               Back
             </ButtonBack>
             <ButtonCapsule onPress={onContinue}>Start Assessment</ButtonCapsule>
