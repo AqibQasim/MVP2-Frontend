@@ -17,7 +17,8 @@ const cityTimezones = {
 
 export function cityTimezoneOffset(city) {
   const location = city.split(",");
-  const cityName = location.at(0);
+  const cityPreName = location.at(0).trim();
+  const cityName = cityPreName.charAt(0).toUpperCase() + cityPreName.slice(1);
   const timezone = cityTimezones[cityName];
 
   if (!timezone) {

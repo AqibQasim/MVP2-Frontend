@@ -8,9 +8,7 @@ import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
 import { useCallback, useMemo, useState } from "react";
-
 import ErrorPopup from "@/components/ErrorPopup";
-import { revalidate } from "@/lib/data-service";
 import { useRouter } from "next/navigation";
 
 function SignUp() {
@@ -27,7 +25,6 @@ function SignUp() {
   const [user_role, setUserRole] = useState("client");
   const [errors, setErrors] = useState({});
   const [otp, setotp] = useState(null);
-  const [alert, setalert] = useState(false);
 
   const payload = useMemo(
     () => ({
@@ -45,29 +42,76 @@ function SignUp() {
   );
 
   const handleSignup = useCallback(
-    async (event) => {
-      event.preventDefault();
-      if (Object.values(errors).some((err) => err !== "")) {
-        return; // Do not proceed with signup if there are validation errors
+  async (event) => {
+    event.preventDefault();
+    if (Object.values(errors).some((err) => err !== "")) {
+      return; // Do not proceed with signup if there are validation errors
+    }
+
+    try {
+      // Call the Stripe customer creation API
+      const stripeResponse = await fetch('/api/create-customer', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: form.email,
+          name: form.firstName + " " + form.lastName,
+        }),
+      });
+
+      const stripeData = await stripeResponse.json();
+
+      if (stripeResponse.status !== 200) {
+        throw new Error(stripeData.error);
       }
-      //console.log(payload);
+
+      console.log("Stripe customer created successfully:", stripeData.customer);
+
+    
+      // Proceed with the rest of the signup process
       const result = await mvp2ApiHelper(payload);
-      console.log(result);
+      console.log("RESULT from signup: ", result.data.client_id);
+
+
+      const createAccountResponse = await fetch('http://localhost:3001/create-stripe-account', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          client_id: result.data.client_id,
+          stripe_id: stripeData.customer.id,
+        }),
+      });
+
+      const createAccountData = await createAccountResponse.json();
+
+      if (createAccountResponse.status !== 200) {
+        throw new Error(createAccountData.error);
+      }
+      console.log("Stripe account created successfully:", createAccountData);
+
+
       if (result.status === 200) {
-        console.log("signed up successfully");
+        console.log("Signed up successfully");
         const revalidatePathOnSignup = `/admin/${user_role === "client" ? "clients" : "candidates"}`;
         await revalidate(revalidatePathOnSignup);
         setOverlayVisible(false);
         router.push("/login");
-        console.log("is overlay is :", isOverlayVisible);
-        console.log("overlay should be unvisible now ...");
       } else {
-        setalert(true);
-      }
-    },
+        // setalert(true);
+      console.error("Error during signup:", error);
 
-    [payload, errors, user_role, isOverlayVisible],
-  );
+      }
+    } catch (error) {
+      console.error("Error during signup:", error);
+      // setalert(true);
+    }
+  },
+  [payload, errors, user_role, isOverlayVisible, form],
+);
 
   // Utility function to generate a random 6-digit OTP
   const generateOtp = () => Math.floor(100000 + Math.random() * 900000);
