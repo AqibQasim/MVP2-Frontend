@@ -22,9 +22,8 @@ async function layout({ children, params }) {
   if (!candidate?.name) notFound();
   console.log("Candidate", candidate);
   const showCandidateInformationForm =
-    !candidate?.commitment ||
-    !candidate?.job_type ||
     !candidate?.specialization ||
+    !candidate?.commitment ||
     !candidate?.hourly_rate;
 
   if (showCandidateInformationForm) return <CandidateProfileInfo />;
