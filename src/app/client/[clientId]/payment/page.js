@@ -197,7 +197,7 @@ function Page() {
                     billing_details: {
                         name: cardholderName, // Cardholder name
                     },},
-                return_url: `${window.location.origin}/client/655ca164-e37f-433e-b8f3-1149aacafdf3`,
+                return_url: `${window.location.origin}/client/${client_id}`,
             },
         });
 
@@ -207,7 +207,6 @@ function Page() {
             console.log('Payment method setup complete');
         }
     };
-    
  useEffect(() => {
     const fetchData = async () => {
         try {
