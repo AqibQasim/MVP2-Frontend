@@ -1,17 +1,15 @@
+"use client"
+
 import AdminJobsList from "@/components/AdminJobsList";
 import { getJobs } from "@/lib/data-service";
-
-export const metadata = {
-  title: "Jobs",
-};
-
-export const revalidate = 60 * 60 * 24; // invalidate every 24 hours
+import { useState } from "react";
+import CustomersList from "@/components/CustomersList";
 
 async function page() {
-  const jobs = await getJobs();
+
   return (
     <>
-      
+      <CustomersList/>
     </>
   );
 }

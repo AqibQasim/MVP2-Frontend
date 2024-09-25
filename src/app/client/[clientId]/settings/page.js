@@ -1,9 +1,15 @@
 import ClientSettings from "@/components/ClientSettings";
+import { getClientById } from "@/lib/data-service";
 
-function Page() {
+async function Page({ params }) {
+  const clientId = params.clientId;
+  const client = await getClientById(clientId);
+
+  console.log("client is :", { client });
+
   return (
     <>
-      <ClientSettings />
+      <ClientSettings client={client} />
     </>
   );
 }

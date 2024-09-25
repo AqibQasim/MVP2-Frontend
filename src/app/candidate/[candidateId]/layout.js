@@ -29,6 +29,7 @@ async function layout({ children, params }) {
   if (showCandidateInformationForm) return <CandidateProfileInfo />;
 
   console.log("candidateId here ", candidateId);
+  console.log("params are : ", params);
   return (
     <div
       className={`${PAGE_HEIGHT_FIX} grid !h-[calc(100dvh-2.25rem)] grid-cols-[17.0625rem_1fr] grid-rows-[max-content_1fr] gap-[6px] overflow-hidden`}
