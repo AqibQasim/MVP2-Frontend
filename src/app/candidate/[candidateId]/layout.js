@@ -1,16 +1,31 @@
 import CandidateDashboardSideNav from "@/components/CandidateDashboardSideNav";
 import CandidateHeader from "@/components/CandidateHeader";
 import CandidateProfileInfo from "@/components/CandidateProfileInfo";
-import { getCandidate } from "@/lib/data-service";
+import { getCandidate, getCandidates } from "@/lib/data-service";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
+import { notFound } from "next/navigation";
+
+export async function generateStaticParams() {
+  const candidates = await getCandidates();
+  const ids = candidates.map((candidate) => ({
+    candidateId: String(candidate.customer_id),
+  }));
+
+  return ids;
+}
 
 async function layout({ children, params }) {
   const candidateId = params.candidateId;
   const { data: candidate } = await getCandidate(candidateId);
+
+  // using this until build errors are fixed
+  if (!candidate?.name) notFound();
   console.log("Candidate", candidate);
-  const { commitment, job_type, specialization, hourly_rate } = candidate;
   const showCandidateInformationForm =
-    !commitment || !job_type || !specialization || !hourly_rate;
+    !candidate?.commitment ||
+    !candidate?.job_type ||
+    !candidate?.specialization ||
+    !candidate?.hourly_rate;
 
   if (showCandidateInformationForm) return <CandidateProfileInfo />;
 

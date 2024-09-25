@@ -45,7 +45,7 @@ function CandidateEvaluateYourselfCard() {
         expertise: filledSkills,
       },
     }),
-    [skills],
+    [candidate_id, filledSkills],
   );
 
   const handleStartAssessment = async () => {

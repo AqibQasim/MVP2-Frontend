@@ -177,11 +177,24 @@ export async function getCandidate(candidateId) {
   };
 
   const result = await mvp2ApiHelper(payload);
-  console.log("Get Candidate Result: ", result);
   if (result.status !== 200) {
     return { error: result.data.message, status: result.status };
   }
   return { data: result.data.data, status: result.status };
+}
+
+// THIS IS BEING USED FOR STATIC PARAM GENERATION
+export async function getCandidates() {
+  const payload = {
+    endpoint: "customers",
+    method: "GET",
+  };
+  const result = await mvp2ApiHelper(payload);
+  if (result?.status === 200) {
+    return result?.data?.data;
+  }
+  // candidate not found page when the guy doesnt exist
+  notFound();
 }
 
 export async function fetchClientJobs(client_id) {
