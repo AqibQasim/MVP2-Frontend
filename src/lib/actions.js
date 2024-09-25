@@ -172,6 +172,7 @@ export async function updateCandidateProfileAction(formData) {
     return { error };
   }
 
-  revalidatePath(`/client`);
+  revalidatePath(`/client/`);
+  revalidatePath(`/candidate/${candidateId}`);
   return { message: "Candidate profile successfully updated." };
 }

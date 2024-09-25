@@ -157,7 +157,7 @@ export async function revalidate(path) {
   }
 }
 
-export async function fetchCandidates() {
+export async function fetchRecommendedCandidates() {
   const payload = {
     endpoint: "customers",
     method: "GET",
@@ -168,6 +168,33 @@ export async function fetchCandidates() {
   }
 
   throw new Error(result.data.message);
+}
+
+export async function getCandidate(candidateId) {
+  const payload = {
+    endpoint: `customers?customer_id=${candidateId}`,
+    method: "GET",
+  };
+
+  const result = await mvp2ApiHelper(payload);
+  if (result.status !== 200) {
+    return { error: result.data.message, status: result.status };
+  }
+  return { data: result.data.data, status: result.status };
+}
+
+// THIS IS BEING USED FOR STATIC PARAM GENERATION
+export async function getCandidates() {
+  const payload = {
+    endpoint: "customers",
+    method: "GET",
+  };
+  const result = await mvp2ApiHelper(payload);
+  if (result?.status === 200) {
+    return result?.data?.data;
+  }
+  // candidate not found page when the guy doesnt exist
+  notFound();
 }
 
 export async function fetchClientJobs(client_id) {

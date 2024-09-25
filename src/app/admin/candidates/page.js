@@ -1,5 +1,5 @@
 import AdminCandidatesTable from "@/components/AdminCandidatesTable";
-import { fetchCandidates } from "@/lib/data-service";
+import { fetchRecommendedCandidates } from "@/lib/data-service";
 
 export const metadata = {
   title: "Candidates",
@@ -8,7 +8,7 @@ export const metadata = {
 export const revalidate = 60 * 60 * 24; // invalidate every 24 hours
 
 const page = async () => {
-  const candidates = await fetchCandidates();
+  const candidates = await fetchRecommendedCandidates();
 
   return (
     <>

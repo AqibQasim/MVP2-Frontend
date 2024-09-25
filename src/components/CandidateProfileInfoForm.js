@@ -1,15 +1,14 @@
+"use client";
 import { updateCandidateProfileAction } from "@/lib/actions";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import ButtonBack from "./ButtonBack";
-import ButtonCapsule from "./ButtonCapsule";
 import EntityCard from "./EntityCard";
 import Heading from "./Heading";
 import Hr from "./Hr";
 import Input from "./Input";
 import SubmitButton from "./SubmitButton";
 
-function CandidateProfileInfoForm({ onCloseModal }) {
+function CandidateProfileInfoForm() {
   const [error, setError] = useState(null);
   const params = useParams();
   const candidateId = params.candidateId;
@@ -86,15 +85,8 @@ function CandidateProfileInfoForm({ onCloseModal }) {
         ) : null}
 
         <div className="flex items-center justify-end gap-1.5">
-          <ButtonBack
-            type="button"
-            onClick={() => onCloseModal()}
-            className="flex-[40%] !justify-start text-sm font-bold"
-          >
-            Close
-          </ButtonBack>
           <SubmitButton
-            className="flex-[50%] !justify-between"
+            className="!justify-between gap-36"
             pendingLabel="Updating..."
           >
             Confirm
