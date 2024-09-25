@@ -1,11 +1,11 @@
 "use client";
+import CandidateProfileForm from "./CandidateProfileForm";
 import DashboardSection from "./DashboardSection";
-import ProfileForm from "./ProfileForm";
 
 function CandidateSettings() {
   return (
     <DashboardSection className="!min-h-full" paragraph="" heading="Settings">
-      <ProfileForm />
+      <CandidateProfileForm />
     </DashboardSection>
   );
 }
