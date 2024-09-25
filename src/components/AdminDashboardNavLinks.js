@@ -35,6 +35,12 @@ function AdminDashboardNavLinks() {
       amount: 0,
       icon: <SvgIconPayment className="size-6" />,
     },
+    {
+      name: "Payments",
+      href: `/admin/payments`,
+      amount: 0,
+      icon: <SvgIconPayment className="size-6" />,
+    },
   ];
 
   return (

@@ -1,3 +1,5 @@
+"use client"
+
 import Capsule from "@/components/Capsule";
 import DashboardSection from "@/components/DashboardSection";
 import EntityCard from "@/components/EntityCard";
@@ -6,12 +8,20 @@ import Skill from "@/components/Skill";
 import { formatCurrency, formatCurrencyNoDecimals } from "@/utils/utility";
 import IconWithBg from "./IconWithBg";
 import ScheduleInterviewModal from "./ScheduleInterviewModal";
+import ButtonCapsule from "./ButtonCapsule";
+import {  useState, useRef, useEffect } from "react";
+import { PopupModal } from "react-calendly";
 
 function ClientRecommendationCard({
   client = {},
   recommendedCandidate = {},
   recommendedForJob = {},
 }) {
+
+
+  const [isOpen, setIsOpen] = useState(false);
+  const buttonRef = useRef(null);
+
   return (
     <DashboardSection
       paragraph={`Hey ${client.name}, here's your new`}
@@ -53,7 +63,33 @@ function ClientRecommendationCard({
               <Skill score={8.0} />
             </div>
             {/* ScheduleInterview */}
-            <ScheduleInterviewModal />
+            {/* <ScheduleInterviewModal /> */}
+             <ButtonCapsule
+                ref={buttonRef}
+                handleOpenOverlay={() => setIsOpen(true)}
+                // id="scheduleCallBtn"
+                
+              >Schedule Inverview</ButtonCapsule>
+
+              <PopupModal
+               url={"https://calendly.com/sanjaybaghtwani/30min?hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=4624e0"}
+                rootElement={document.getElementById('scheduleCallBtn')}
+                text="Schedule Call"
+                textColor="#fff"
+                color="#000"
+                height = "200px"
+                overflow= "hidden"
+                onModalClose={() => setIsOpen(false)}
+                open={isOpen}
+                prefill={{
+                  guests: [
+                    recommendedCandidate.email
+                  ],
+                }}
+                // styles={{
+                //   height: '10px'
+                // }}
+              />
           </div>
         </div>
       )}
