@@ -8,7 +8,7 @@ import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
 import { useCallback, useMemo, useState } from "react";
-
+import ErrorPopup from "@/components/ErrorPopup";
 import { useRouter } from "next/navigation";
 
 function SignUp() {
