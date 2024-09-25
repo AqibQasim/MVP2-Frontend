@@ -1,0 +1,59 @@
+.assessmentContainer {
+  /* display: flex;
+  flex-direction: column;
+  width: 90%; */
+}
+
+.header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h2 {
+  margin: 1rem 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.summary {
+  background-color: #f8f7fa;
+  border-radius: 20px;
+  border: 1px solid #ebebeb;
+  height: auto;
+  padding: 1.5rem;
+}
+
+.summary p::-webkit-scrollbar {
+  width: 6px;
+}
+
+.summary p::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+.summary p {
+  margin-top: 1rem;
+  margin-bottom: 0;
+  overflow-y: scroll;
+}
+
+.summary h4 {
+  margin-top: 0;
+  /* margin: 1rem 0; */
+}
+@media only screen and (max-width: 1024px) {
+  .summary {
+    font-size: small;
+  }
+  .header {
+    font-size: small;
+  }
+}
+
+.ReportOverlay_infoDiv__TaAh_ {
+  width: 90%;
+  margin-top: 1rem;
+  font-size: 16px;
+}

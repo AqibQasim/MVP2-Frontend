@@ -38,13 +38,13 @@ const page = ({ params }) => {
     [params.candidateId, skills],
   );
 
-  const codingTestPayload = useMemo(
-    () => ({
-      endpoint: `get-coding-question?candidate_id=${params.candidateId}`,
-      method: "GET",
-    }),
-    [],
-  );
+  // const codingTestPayload = useMemo(
+  //   () => ({
+  //     endpoint: `get-coding-question?candidate_id=${params.candidateId}`,
+  //     method: "GET",
+  //   }),
+  //   [],
+  // );
 
   useEffect(() => {
     setIsLoading(true);
@@ -59,13 +59,13 @@ const page = ({ params }) => {
     });
   }, [skillsPayload]);
 
-  const fetchCodingQuestion = useCallback(async () => {
-    mvp2ApiHelper(codingTestPayload).then((result) => {
-      if (result.status === 200) {
-        setCodingQuestions(result.data?.codingQuestion);
-      }
-    });
-  }, [prepareTestpayload]);
+  // const fetchCodingQuestion = useCallback(async () => {
+  //   mvp2ApiHelper(codingTestPayload).then((result) => {
+  //     if (result.status === 200) {
+  //       setCodingQuestions(result.data?.codingQuestion);
+  //     }
+  //   });
+  // }, [prepareTestpayload]);
 
   useEffect(() => {
     if (skills && !hasPreparedTest.current) {

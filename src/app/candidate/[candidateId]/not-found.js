@@ -18,7 +18,7 @@ function NotFound({ error }) {
       </p>
       <Button as="link" href="/">
         Back to home
-      </Button>
+      </Button> 
     </main>
   );
 }

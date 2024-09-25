@@ -1,13 +1,17 @@
 "use client";
 import CandidateEvaluateYourselfCard from "@/components/CandidateEvaluateYourselfCard";
 import CandidateReportCard from "@/components/CandidateReportCard";
+import ReportOverlay from "@/components/ReportOverlay";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { useEffect, useState } from "react";
 
 export default function CandidateIdPage({ candidateId }) {
   const [candidateReport, setCandidateReport] = useState(null);
+  const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
 
-  const getCandidateRsult = () => {
+  console.log("overlayyyyy: ", isReportOverlayOpened);
+
+  const getCandidateResult = () => {
     const payload = {
       endpoint: `get-customer-result?customer_id=${candidateId}`,
       method: "GET",
@@ -17,20 +21,39 @@ export default function CandidateIdPage({ candidateId }) {
     });
   };
 
-  console.log(candidateReport);
-
   useEffect(() => {
-    getCandidateRsult();
+    getCandidateResult();
   }, [candidateId]);
 
+  // Function to handle opening the overlay
+  const handleOpenOverlay = () => {
+    setIsReportOverlayOpened(true);
+  };
+
+  // Function to handle closing the overlay
+  const handleCloseOverlay = () => {
+    setIsReportOverlayOpened(false);
+  };
+
   return (
-    <>
+    <div>
       {!candidateReport ? (
         <CandidateEvaluateYourselfCard />
       ) : (
-        <CandidateReportCard candidateReport={candidateReport} />
+        <div>
+          <CandidateReportCard
+            candidateReport={candidateReport}
+            handleOpenOverlay={handleOpenOverlay} // Pass the function to open overlay
+          />
+          {isReportOverlayOpened && (
+            <ReportOverlay
+              reportOverlay={isReportOverlayOpened}
+              onClose={handleCloseOverlay} // Pass the function to close overlay
+              selectedCandidate={candidateReport}
+            />
+          )}
+        </div>
       )}
-      {/* <CandidatePage params={params} /> */}
-    </>
+    </div>
   );
 }

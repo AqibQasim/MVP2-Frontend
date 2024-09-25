@@ -1,9 +1,9 @@
 import ChevronRight from "@/svgs/ChevronRight";
 
-function ButtonCapsule({ className, children, handleOpenOverlay, id }) {
+function ButtonCapsule({ className, children, onPress, id }) {
   return (
     <button
-      onClick={handleOpenOverlay}
+      onClick={onPress}
       className={`${className} gap-4.5 inline-flex items-center justify-center rounded-[2.5rem] bg-primary p-1.5 pl-5 text-sm font-bold capitalize text-neutral-white`}
       id={id}
       
