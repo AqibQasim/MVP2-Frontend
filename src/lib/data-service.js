@@ -69,7 +69,7 @@ export async function getClientJobs(clientId) {
   return { error: result.data.message };
 }
 
-export async function getRecommendedCandidatesOfClient(clientId) {
+export async function getRecommendedCandidateOfClient(clientId) {
   const payload = {
     endpoint: `assigned-customer/${clientId}`,
     method: "GET",
@@ -260,15 +260,12 @@ export async function getAllRecommendedCandidates(
   client_response = "all",
 ) {
   const hired = "accept";
-  console.log("client id inside get function: ", clientId);
-  console.log("client Response inside get function: ", client_response);
   const payload = {
     endpoint: `get-all-candidates-of-clients-job?client_id=${clientId}`,
     method: "GET",
   };
 
   const result = await mvp2ApiHelper(payload);
-  console.log("Result of get all candidates", result);
   if (result.status !== 200) {
     console.error(result?.data?.err);
     return { status: result.status, error: result.data.err };
