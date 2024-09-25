@@ -1,28 +1,17 @@
 "use client";
 import CandidateEvaluateYourselfCard from "@/components/CandidateEvaluateYourselfCard";
-import CandidatePage from "@/components/CandidatePage";
 import CandidateReportCard from "@/components/CandidateReportCard";
+import ReportOverlay from "@/components/ReportOverlay";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
-import { getDummyClientById, getDummyClients } from "@/lib/tempData";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-// export async function generateMetadata({ params }) {
-//   const {
-//     company: { name },
-//   } = await getDummyClientById(params.candidateId);
-//   return { title: `Company ${name}` };
-// }
-
-// export async function generateStaticParams() {
-//   const candidates = await getDummyClients();
-//   const ids = candidates.map((candidate) => ({ cabinId: String(candidate.id) }));
-//   return ids;
-// }
-
-export default async function Page({ params }) {
+export default function Page({ params }) {
   const [candidateReport, setCandidateReport] = useState(null);
+  const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
 
-  const getCandidateRsult = () => {
+  console.log("overlayyyyy: ",isReportOverlayOpened)
+
+  const getCandidateResult = () => {
     const payload = {
       endpoint: `get-customer-result?customer_id=${params.candidateId}`,
       method: "GET",
@@ -32,21 +21,39 @@ export default async function Page({ params }) {
     });
   };
 
-  console.log(candidateReport)
-
   useEffect(() => {
-    getCandidateRsult();
+    getCandidateResult();
   }, [params.candidateId]);
 
-  
+  // Function to handle opening the overlay
+  const handleOpenOverlay = () => {
+    setIsReportOverlayOpened(true);
+  };
+
+  // Function to handle closing the overlay
+  const handleCloseOverlay = () => {
+    setIsReportOverlayOpened(false);
+  };
+
   return (
-    <>
+    <div>
       {!candidateReport ? (
         <CandidateEvaluateYourselfCard />
       ) : (
-        <CandidateReportCard candidateReport={candidateReport} />
+        <div>
+          <CandidateReportCard
+            candidateReport={candidateReport}
+            handleOpenOverlay={handleOpenOverlay} // Pass the function to open overlay
+          />
+          {isReportOverlayOpened && (
+            <ReportOverlay
+            reportOverlay={isReportOverlayOpened}
+              onClose={handleCloseOverlay} // Pass the function to close overlay
+              selectedCandidate={candidateReport}
+            />
+          )}
+        </div>
       )}
-      {/* <CandidatePage params={params} /> */}
-    </>
+    </div>
   );
 }
