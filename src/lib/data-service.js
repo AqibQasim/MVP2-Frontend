@@ -157,7 +157,7 @@ export async function revalidate(path) {
   }
 }
 
-export async function fetchCandidates() {
+export async function fetchRecommendedCandidates() {
   const payload = {
     endpoint: "customers",
     method: "GET",
@@ -168,6 +168,20 @@ export async function fetchCandidates() {
   }
 
   throw new Error(result.data.message);
+}
+
+export async function getCandidate(candidateId) {
+  const payload = {
+    endpoint: `customers?customer_id=${candidateId}`,
+    method: "GET",
+  };
+
+  const result = await mvp2ApiHelper(payload);
+  console.log("Get Candidate Result: ", result);
+  if (result.status !== 200) {
+    return { error: result.data.message, status: result.status };
+  }
+  return { data: result.data.data, status: result.status };
 }
 
 export async function fetchClientJobs(client_id) {

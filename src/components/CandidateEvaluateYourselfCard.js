@@ -58,9 +58,9 @@ function CandidateEvaluateYourselfCard() {
     // console.log(payload.body)
   };
 
-  const handleBack= async()=>{
-    setOverlayVisible(false)
-  }
+  const handleBack = async () => {
+    setOverlayVisible(false);
+  };
 
   return (
     <>
@@ -68,10 +68,6 @@ function CandidateEvaluateYourselfCard() {
         <Heading sm className="font-[500]" style={{ fontSize: "40px" }}>
           Here’s Where Your Journey Begins
         </Heading>
-
-        <div className="profile-candidate-info absolute right-4 top-3">
-          <CandidateProfileInfo />
-        </div>
 
         <div className="flex h-full w-full flex-col items-center justify-center">
           <div className="flex h-auto w-auto flex-col items-center justify-center space-y-6">
