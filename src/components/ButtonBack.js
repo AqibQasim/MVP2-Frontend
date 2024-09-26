@@ -15,7 +15,11 @@ function ButtonBack({ children, className, onClick, ...rest }) {
       className={`${className} flex items-center justify-center gap-2 rounded-full bg-primary-tint-100 p-3 text-neutral-dark`}
     >
       {" "}
-      <SvgIconChevronLeft className="size-3.5" /> <span>{children}</span>
+      <span className="rounded-[150px] bg-neutral-white px-4 py-3 text-neutral-dark">
+        <SvgIconChevronLeft className="h-[10px] w-[9px]" />
+      </span>{" "}
+      <span> {children} </span>{" "}
+      {/* <SvgIconChevronLeft className="size-3.5" /> <span>{children}</span> */}
     </button>
   );
 }

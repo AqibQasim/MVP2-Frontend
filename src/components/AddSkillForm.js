@@ -1,13 +1,11 @@
 // import { useFormContext } from "@/contexts/FormContext";
-import styles from "../styles/AddSkillForm.module.css";
-import Image from "next/image";
-import { forwardRef, useState, useEffect } from "react";
 import { getSvg } from "@/utils/helper";
-import Heading from "./Heading";
-import Capsule from "./Capsule";
-import ButtonCapsule from "./ButtonCapsule";
-import ButtonBack from "./ButtonBack";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import styles from "../styles/AddSkillForm.module.css";
+import ButtonBack from "./ButtonBack";
+import ButtonCapsule from "./ButtonCapsule";
+import Heading from "./Heading";
 
 // useFormContext
 const AddSkillForm = ({
@@ -64,13 +62,13 @@ const AddSkillForm = ({
   // }, [codingSkill, codingLevel]);
 
   const iconSize = 25;
-  const router= useRouter();
+  const router = useRouter();
 
   return (
     <>
       <div className="flex w-full flex-col items-center justify-center gap-8">
         <div className="w-full justify-start">
-          <Heading sm className="font-[500px]" style={{ fontSize: "40px" }}>
+          <Heading className="!font-medium">
             Technologies You’ll Be Asked about
           </Heading>
         </div>
@@ -200,7 +198,10 @@ const AddSkillForm = ({
             </select>
           </div>
           <div className="flex justify-end pr-7 pt-2">
-            <ButtonBack onClick={onBack} className={"flex w-[220px] items-center gap-2"}>
+            <ButtonBack
+              onClick={onBack}
+              className={"flex w-[220px] items-center !justify-start !gap-3"}
+            >
               Back
             </ButtonBack>
             <ButtonCapsule onPress={onContinue}>Start Assessment</ButtonCapsule>
