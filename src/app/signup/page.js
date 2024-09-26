@@ -13,7 +13,6 @@ import { useCallback, useMemo, useState } from "react";
 
 function Page() {
   const router = useRouter();
-  const [alert, setalert] = useState(false);
   const [isOverlayVisible, setOverlayVisible] = useState(false);
   const [form, setForm] = useState({
     firstName: "",
