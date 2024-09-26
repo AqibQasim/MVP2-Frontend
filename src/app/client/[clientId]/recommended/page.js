@@ -9,7 +9,7 @@ async function Page({ params }) {
 
   if (error) console.log("Error: getting recommeneded Candidates: ", error);
 
-  console.log("on page: ", recommendedCandidatesForJobs);
+  console.log("on Page: ", recommendedCandidatesForJobs);
   return (
     <>
       <ClientRecommendedTable

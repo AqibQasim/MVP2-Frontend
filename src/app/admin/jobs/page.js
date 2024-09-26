@@ -7,7 +7,7 @@ export const metadata = {
 
 export const revalidate = 60 * 60 * 24; // invalidate every 24 hours
 
-async function page() {
+async function Page() {
   const jobs = await getJobs();
   return (
     <>
@@ -16,4 +16,4 @@ async function page() {
   );
 }
 
-export default page;
+export default Page;

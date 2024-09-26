@@ -2,7 +2,7 @@ import JobViewById from "@/components/JobViewById";
 import { fetchClientJob } from "@/lib/data-service";
 import { cityTimezoneOffset } from "@/utils/cityTimezoneOffset";
 
-async function page({ params }) {
+async function Page({ params }) {
   const { data: job } = await fetchClientJob(params.clientId, params.jobId);
 
   // Example usage
@@ -16,4 +16,4 @@ async function page({ params }) {
   );
 }
 
-export default page;
+export default Page;
