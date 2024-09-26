@@ -109,21 +109,21 @@ function Page() {
                 }
 
                 const { data } = await paymentMethodsResponse.json();
-                console.log("Payment Data is: ", data)
+                console.log("Payment Data is: ", data[0].id)
                 setPaymentMethods(data); // Assuming `data` contains the payment methods
 
                 // Create payment intent
-                const paymentIntentResponse = await fetch('/api/create-payment-intent', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ amount: 100, customer: clientCustomerID }), // Replace with actual amount
-                });
+                // const paymentIntentResponse = await fetch('/api/create-payment-intent', {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //     },
+                //     body: JSON.stringify({ amount: 100, customer: clientCustomerID }), // Replace with actual amount
+                // });
 
-                if (!paymentIntentResponse.ok) {
-                    throw new Error(`HTTP error! status: ${paymentIntentResponse.status}`);
-                }
+                // if (!paymentIntentResponse.ok) {
+                //     throw new Error(`HTTP error! status: ${paymentIntentResponse.status}`);
+                // }
 
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -132,9 +132,10 @@ function Page() {
 
         fetchData();
     }, [clientCustomerID]); // Empty dep
+    
 
        const handleSubscription = async () => {
-        const customPrice = 10; // Example price in cents (10.00 USD)
+        const customPrice = 6969; // Example price in cents (10.00 USD)
 
         try {
             // Fetch client secret for subscription
@@ -143,7 +144,7 @@ function Page() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ customerId: clientCustomerID, price: customPrice, paymentMethodId: 'test' }),
+                body: JSON.stringify({ customerId: clientCustomerID, price: customPrice, paymentMethodId: paymentMethods[0].id }),
             });
 
             if (!subscriptionResponse.ok) {

@@ -62,7 +62,7 @@ function ClientPaymentMethod({ paymentMethods, stripe, clientSecret, stripePromi
                         name: cardholderName,
                     },
                 },
-                return_url: `${window.location.origin}/client/655ca164-e37f-433e-b8f3-1149aacafdf3/payment`,
+                return_url: `${window.location.href}`,
             },
         });
 

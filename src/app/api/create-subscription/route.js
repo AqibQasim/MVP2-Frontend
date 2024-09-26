@@ -32,7 +32,7 @@ export async function POST(req) {
                     price: stripePrice.id,
                 },
             ],
-            default_payment_method: 'pm_1Q2vU2CtLGKA7fQGm4k1bqP4',
+            default_payment_method: paymentMethodId,
             expand: ['latest_invoice.payment_intent'],
         });
 

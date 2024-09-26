@@ -9,6 +9,7 @@ async function page() {
 
   return (
     <>
+    
       <CustomersList/>
     </>
   );

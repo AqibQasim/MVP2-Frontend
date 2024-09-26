@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 
 function SignUp() {
   const router = useRouter();
+  const [alert, setalert] = useState(false);
   const [isOverlayVisible, setOverlayVisible] = useState(false);
   const [form, setForm] = useState({
     firstName: "",

@@ -6,8 +6,7 @@ const stripe = new Stripe('sk_test_51OfPQBCtLGKA7fQGrCJBt8ahBHMTm4H533SgJpd9FnRk
 
 export async function GET() {
   try {
-    const customers = await stripe.customers.list({
-    });
+    const customers = await stripe.customers.list({limit:100});
 
     return NextResponse.json({ data: customers.data }, { status: 200 });
   } catch (error) {
