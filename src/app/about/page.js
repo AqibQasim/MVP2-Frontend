@@ -1,12 +1,15 @@
 import Heading from "@/components/Heading";
 import LoggedInUserTest from "@/components/LoggedInUserTest";
-import SignOutButton from "@/components/SignoutButton";
+import SignOutButton from "@/components/SignOutButton";
+import { auth } from "@/lib/auth";
 
 export const metadata = {
   title: "About",
 };
 
-function Page() {
+async function Page() {
+  const session = await auth();
+  console.log(session);
   return (
     <>
       <Heading>About Page</Heading>
