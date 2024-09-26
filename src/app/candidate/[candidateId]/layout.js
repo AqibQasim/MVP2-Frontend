@@ -5,21 +5,21 @@ import { getCandidate, getCandidates } from "@/lib/data-service";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import { notFound } from "next/navigation";
 
-export async function generateStaticParams() {
-  const candidates = await getCandidates();
-  const ids = candidates.map((candidate) => ({
-    candidateId: String(candidate.customer_id),
-  }));
+// export async function generateStaticParams() {
+//   const candidates = await getCandidates();
+//   const ids = candidates.map((candidate) => ({
+//     candidateId: String(candidate.customer_id),
+//   }));
 
-  return ids;
-}
+//   return ids;
+// }
 
 async function layout({ children, params }) {
   const candidateId = params.candidateId;
   const { data: candidate } = await getCandidate(candidateId);
 
   // using this until build errors are fixed
-  if (!candidate?.name) notFound();
+  // if (!candidate?.name) notFound();
   console.log("Candidate", candidate);
   const showCandidateInformationForm =
     !candidate?.specialization ||

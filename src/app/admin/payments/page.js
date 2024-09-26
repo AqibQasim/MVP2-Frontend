@@ -5,7 +5,7 @@ import { getJobs } from "@/lib/data-service";
 import { useState } from "react";
 import CustomersList from "@/components/CustomersList";
 
-async function page() {
+async function Page() {
 
   return (
     <>
@@ -14,4 +14,4 @@ async function page() {
   );
 }
 
-export default page;
+export default Page;
