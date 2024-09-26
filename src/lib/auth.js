@@ -21,11 +21,11 @@ const authConfig = {
     async signIn(user, account, profile) {
       // Get User
       try {
-        const existingUser = await getUser(user.email);
+        // const existingUser = await getUser(user.email);
 
-        // First time ? create user
-        if (!existingUser)
-          await createUser({ email: user.email, fullName: user.name });
+        // // First time ? create user
+        // if (!existingUser)
+        //   await createUser({ email: user.email, fullName: user.name });
 
         return true;
       } catch (error) {
@@ -35,15 +35,15 @@ const authConfig = {
     // runs after signin callback
     // and also each time the session is checkout out
     // example when we call auth function
-    async session({ session, user }) {
-      // get new user
-      const client = await getUser(session.user.email);
-      //   mutate session object
-      const clientOrCandidate = client?.client_id ? "client_id" : "customer_id";
+    // async session({ session, user }) {
+    //   // get new user
+    //   const client = await getUser(session.user.email);
+    //   //   mutate session object
+    //   const clientOrCandidate = client?.client_id ? "client_id" : "customer_id";
 
-      session.user.userId = client?.[clientOrCandidate];
-      return session;
-    },
+    //   session.user.userId = client?.[clientOrCandidate];
+    //   return session;
+    // },
   },
   pages: {
     signIn: "/login",
