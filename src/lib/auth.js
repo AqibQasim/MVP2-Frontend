@@ -9,9 +9,20 @@ const authConfig = {
     }),
     // CredentialProvider,
   ],
+  callbacks: {
+    authorized({ auth, request }) {
+      // can do advance authorization based on request
+      return !!auth?.user;
+    },
+  },
+  pages: {
+    signIn: "/login",
+  },
 };
 
 export const {
   auth,
+  signIn,
+  signOut,
   handlers: { GET, POST },
 } = NextAuth(authConfig);

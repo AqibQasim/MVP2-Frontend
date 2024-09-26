@@ -9,6 +9,7 @@ import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import Link from "next/link";
 import { redirect, useRouter } from "next/navigation";
 import ErrorPopup from "@/components/ErrorPopup";
+import SignInButton from "@/components/SignInButton";
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
@@ -193,16 +194,9 @@ function Login() {
                 />
               </div>
             </div>
-            <button className="text-md w-full rounded-full border-[1px] bg-white px-4 py-2 text-center text-primary-tint-20">
-              <Image
-                src="google.svg"
-                width={23}
-                height={20}
-                alt="google Logo"
-                className="inline-block"
-              />
-              Sign in with Google
-            </button>
+            {/* Google signin */}
+            <SignInButton />
+            {/* ---- */}
             <div className="mt-2">
               <p className="me-1 inline-block text-xs text-grey-primary">
                 Don’t have an account?

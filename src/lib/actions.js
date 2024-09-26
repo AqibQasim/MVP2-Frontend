@@ -6,6 +6,15 @@ import {
   createJob,
   referCandidate,
 } from "./data-service";
+import { signIn } from "./auth";
+
+export async function signInAction() {
+  await signIn("google", { redirectTo: "/about" });
+}
+
+export async function signOutAction() {
+  await signIn({ redirectTo: "/" });
+}
 
 export async function createAJobAction(formData) {
   const client_id = formData.get("client_id");
