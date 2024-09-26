@@ -25,6 +25,7 @@ function Page() {
   const [user_role, setUserRole] = useState("client");
   const [errors, setErrors] = useState({});
   const [otp, setotp] = useState(null);
+  const [alert,setAlert]=useState(false);
 
   const payload = useMemo(
     () => ({
@@ -104,12 +105,12 @@ function Page() {
           setOverlayVisible(false);
           router.push("/login");
         } else {
-          // setalert(true);
+          setAlert(true);
           console.error("Error during signup:", error);
         }
       } catch (error) {
         console.error("Error during signup:", error);
-        // setalert(true);
+        setAlert(true);
       }
     },
     [payload, errors, user_role, isOverlayVisible, form],
@@ -447,7 +448,7 @@ function Page() {
         <ErrorPopup
           message="Account Already Exist"
           type="error"
-          onClose={() => setalert(false)}
+          onClose={() => setAlert(false)}
         />
       )}
     </>
