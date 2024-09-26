@@ -2,12 +2,12 @@
 import CandidateProfileForm from "./CandidateProfileForm";
 import DashboardSection from "./DashboardSection";
 
-function CandidateSettings() {
+function CandidateSettings({ candidate }) {
   return (
     <DashboardSection className="!min-h-full" paragraph="" heading="Settings">
-      <CandidateProfileForm />
+      <CandidateProfileForm candidate={candidate} />
     </DashboardSection>
   );
-}
+};
 
 export default CandidateSettings;

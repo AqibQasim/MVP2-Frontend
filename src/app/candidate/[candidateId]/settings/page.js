@@ -1,9 +1,14 @@
 import CandidateSettings from "@/components/CandidateSettings";
+import { getCandidateById } from "@/lib/data-service";
 
-function Page() {
+function Page({ params }) {
+  const candidateId = params.candidateId;
+  const candidate = getCandidateById(candidateId);
+
+  console.log("candidate id  is: ", candidateId);
   return (
     <>
-      <CandidateSettings />
+      <CandidateSettings candidate={candidate} />
     </>
   );
 }
