@@ -6,7 +6,7 @@ import styles from "@/styles/test.module.css";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 
-const page = ({ params }) => {
+const Page = ({ params }) => {
   const [instructionsPopup, setInstructionsPopup] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [skills, setSkills] = useState(null);
@@ -91,7 +91,7 @@ const page = ({ params }) => {
   const instructions = [
     "Make sure your connection is stable.",
     "Your score will reflect on your profile.",
-    "Avoid refreshing your page during the interview.",
+    "Avoid refreshing your Page during the interview.",
     "Give your answers in English.",
     "Make sure there’s no background noise while answering the questions.",
   ];
@@ -123,4 +123,4 @@ const page = ({ params }) => {
   );
 };
 
-export default page;
+export default Page;

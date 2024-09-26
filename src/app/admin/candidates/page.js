@@ -7,7 +7,7 @@ export const metadata = {
 
 export const revalidate = 60 * 60 * 24; // invalidate every 24 hours
 
-const page = async () => {
+const Page = async () => {
   const candidates = await fetchRecommendedCandidates();
 
   return (
@@ -17,4 +17,4 @@ const page = async () => {
   );
 };
 
-export default page;
+export default Page;

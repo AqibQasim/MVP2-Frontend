@@ -7,7 +7,7 @@ import TestInstruction from "@/components/TestInstruction";
 import styles from "@/styles/coding-excercise.module.css";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const [Code, setCode] = useState(null);
   const [language, setLanguage] = useState(null);
@@ -221,4 +221,4 @@ const page = () => {
     </html>
   );
 };
-export default page;
+export default Page;

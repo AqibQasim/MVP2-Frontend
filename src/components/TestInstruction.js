@@ -41,7 +41,7 @@ const TestInstruction = ({
               </div>
             </div>
             <div className="flex justify-end">
-              <ButtonCapsule onPress={onClose}>Let's Start</ButtonCapsule>
+              <ButtonCapsule onPress={onClose}>Let&#39;s Start</ButtonCapsule>
             </div>
           </div>
         )}
