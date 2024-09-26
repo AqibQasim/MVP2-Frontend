@@ -193,8 +193,8 @@ export async function getCandidates() {
   if (result?.status === 200) {
     return result?.data?.data;
   }
-  // candidate not found page when the guy doesnt exist
-  notFound();
+  // candidate not found Page when the guy doesnt exist
+  // notFound();
 }
 
 export async function fetchClientJobs(client_id) {
