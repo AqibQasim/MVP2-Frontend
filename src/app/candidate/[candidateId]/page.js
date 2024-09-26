@@ -1,6 +1,5 @@
 import CandidateIdPage from "@/components/CandidateIdPage";
-import CandidateProfileInfo from "@/components/CandidateProfileInfo";
-import { getCandidate, getCandidates } from "@/lib/data-service";
+import { getCandidates } from "@/lib/data-service";
 
 async function Page({ params }) {
   const candidates = await getCandidates();

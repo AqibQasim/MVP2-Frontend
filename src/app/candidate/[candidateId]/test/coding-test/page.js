@@ -1,11 +1,11 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
 import CodingChild from "@/components/CodingChild";
-import { useParams, useRouter } from "next/navigation";
 import ErrorIndicator from "@/components/ErrorIndicator";
 import TestInstruction from "@/components/TestInstruction";
-import styles from "@/styles/coding-excercise.module.css";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
+import styles from "@/styles/coding-excercise.module.css";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 const Page = () => {
   const router = useRouter();
@@ -32,7 +32,7 @@ const Page = () => {
     };
     mvp2ApiHelper(codingTestPayload).then((result) => {
       if (result.status === 200) {
-        console.log("fetching questionssss")
+        console.log("fetching questionssss");
         let codingQuestion = result?.data?.codingQuestion?.assessment;
         setQuestion(codingQuestion?.codingQuestion);
         setConstraints(codingQuestion?.constraints);
@@ -44,14 +44,12 @@ const Page = () => {
 
   // Run fetchCodingQuestion only once when the component mounts
   useEffect(() => {
-    if(!hasQuestionGenerated.current){
+    if (!hasQuestionGenerated.current) {
       fetchCodingQuestion();
-      hasQuestionGenerated.current= true;
+      hasQuestionGenerated.current = true;
+      console.log("This is useRef Current", hasQuestionGenerated.current);
     }
-
   }, []);
-
-
 
   const closePopup = () => {
     setInstructionsPopup(false);
@@ -168,57 +166,50 @@ const Page = () => {
   ];
 
   return (
-    <html lang="en">
-      <body>
-        <div className={styles.codingExcercise}>
-          {showErrorMessage && (
-            <ErrorIndicator
-              showErrorMessage={showErrorMessage}
-              msgText={message}
+    <div className={styles.codingExcercise}>
+      {showErrorMessage && (
+        <ErrorIndicator showErrorMessage={showErrorMessage} msgText={message} />
+      )}
+      {!hasQuestionGenerated ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20 backdrop-blur-sm">
+          <div className={styles.loader}></div>
+          <div className={styles.generatingResultText}>
+            Please wait, it might take some time, AI is generating your coding
+            question.
+          </div>
+        </div>
+      ) : (
+        <>
+          {instructionsPopup && (
+            <TestInstruction
+              onClose={closePopup}
+              heading="Coding Instructions"
+              options={instructions}
             />
           )}
-          {!hasQuestionGenerated ? (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20 backdrop-blur-sm">
-              <div className={styles.loader}></div>
-              <div className={styles.generatingResultText}>
-                Please wait, it might take some time, AI is generating your
-                coding question.
-              </div>
-            </div>
-          ) : (
-            <>
-              {instructionsPopup && (
-                <TestInstruction
-                  onClose={closePopup}
-                  heading="Coding Instructions"
-                  options={instructions}
-                />
-              )}
-              <CodingChild
-                cid={cid}
-                formatTime={formatTime}
-                timeLeft={timeLeft}
-                codeSubmitHandler={codeSubmitHandler}
-                constraints={constraints}
-                setConstraints={setConstraints}
-                question={question}
-                setQuestion={setQuestion}
-                isLoading={isLoading}
-                setIsLoading={setIsLoading}
-                output={output}
-                exampleInput={exampleInput}
-                exampleOutput={exampleOutput}
-                executeCode={executeCode}
-                code={Code}
-                language={language}
-                setCode={setCode}
-                setLanguage={setLanguage}
-              />
-            </>
-          )}
-        </div>
-      </body>
-    </html>
+          <CodingChild
+            cid={cid}
+            formatTime={formatTime}
+            timeLeft={timeLeft}
+            codeSubmitHandler={codeSubmitHandler}
+            constraints={constraints}
+            setConstraints={setConstraints}
+            question={question}
+            setQuestion={setQuestion}
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
+            output={output}
+            exampleInput={exampleInput}
+            exampleOutput={exampleOutput}
+            executeCode={executeCode}
+            code={Code}
+            language={language}
+            setCode={setCode}
+            setLanguage={setLanguage}
+          />
+        </>
+      )}
+    </div>
   );
 };
 export default Page;
