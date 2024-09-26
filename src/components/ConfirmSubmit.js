@@ -7,7 +7,7 @@ function ConfirmSubmit({ onCloseModal, onSubmit }) {
       <div className="bg-white-purple-shade border border-light-grey rounded-3xl text-start p-6 mb-6">
         <p className="text-sm font-medium">
           {" "}
-          Are you sure you wish to submit the test? Once submitted, you won't be
+          Are you sure you wish to submit the test? Once submitted, you won&#39;t be
           able to make any changes. Please review your answers carefully before
           proceeding
         </p>

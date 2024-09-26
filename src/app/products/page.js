@@ -13,7 +13,7 @@ function Page({ searchParams }) {
     <div>
       <Heading> Products </Heading>
       {/* // use a loader as fallback here */}
-      <Suspense fallback={<p>Loading page</p>}>
+      <Suspense fallback={<p>Loading Page</p>}>
         <ProductList />
       </Suspense>
     </div>

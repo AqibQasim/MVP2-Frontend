@@ -16,7 +16,7 @@ async function layout({ children, params }) {
   //   // Check if user is logged in
   //   const isLoggedIn = localStorage.getItem("MVP_CLIENT_LOGGEDIN");
 
-  //   // If not logged in, redirect to login page
+  //   // If not logged in, redirect to login Page
   //   if (!isLoggedIn) {
   //     // router.push("/login");
   //     window.location.href("/login");

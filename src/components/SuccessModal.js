@@ -76,7 +76,7 @@ const SuccessModal = ({
         <div className="mt-[3rem] flex w-auto justify-center rounded-full border-[1px] border-primary bg-primary-tint-90 px-[0.2rem] py-[0.3rem]">
           <span className="font-lufga text-[0.6rem] text-primary">
             <span className="font-semibold">Note:</span> Do not refresh, close,
-            or click the back button on this page. Your data might be lost.
+            or click the back button on this Page. Your data might be lost.
           </span>
         </div>
       )}

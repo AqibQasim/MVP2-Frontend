@@ -207,7 +207,7 @@ export async function getCandidates() {
   if (result?.status === 200) {
     return result?.data?.data;
   }
-  // candidate not found page when the guy doesnt exist
+  // candidate not found Page when the guy doesnt exist
   notFound();
 }
 

@@ -2,7 +2,7 @@ import CandidateIdPage from "@/components/CandidateIdPage";
 import CandidateProfileInfo from "@/components/CandidateProfileInfo";
 import { getCandidateById, getCandidates } from "@/lib/data-service";
 
-async function page({ params }) {
+async function Page({ params }) {
   const candidates = await getCandidates();
   const candidate = await getCandidateById(params.candidateId);
   console.log("Candidates on Page", candidates);
@@ -16,4 +16,4 @@ async function page({ params }) {
   );
 }
 
-export default page;
+export default Page;
