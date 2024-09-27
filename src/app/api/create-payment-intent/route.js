@@ -5,7 +5,7 @@ const stripe = new Stripe('sk_test_51OfPQBCtLGKA7fQGrCJBt8ahBHMTm4H533SgJpd9FnRk
 
 export async function POST(req) {
     try {
-        const { amount } = await req.json(); // Get the amount from the request body
+        const { amount, customer } = await req.json(); // Get the amount from the request body
 
         // Validate the amount
         if (!amount || amount <= 0) {
@@ -15,10 +15,10 @@ export async function POST(req) {
         // Create a Payment Intent
         const paymentIntent = await stripe.paymentIntents.create({
             payment_method_types: ['card'],
-            amount: 80000,
+            amount: amount,
             currency: 'usd', // Change to your desired currency
-            customer: 'cus_QsTUOnWq3fWwlo',
-            payment_method: 'pm_1Q0iiRCtLGKA7fQGVFIgMWfT',
+            customer: customer,
+            payment_method: 'pm_1Q2vU2CtLGKA7fQGm4k1bqP4',
             off_session: true, // Indicates that this is an off-session payment
             confirm: true, 
         });

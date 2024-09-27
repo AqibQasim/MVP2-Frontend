@@ -11,6 +11,12 @@ function ClientPaymentMethod({ paymentMethods, stripe, clientSecret, stripePromi
     const paymentElementRef = useRef(null);
     const [cardholderName, setCardholderName] = useState('');
     const [elements, setElements] = useState(null);
+    const [selectedMethodId, setSelectedMethodId] = useState(null);
+
+ 
+     useEffect(() => {
+        setSelectedMethodId(paymentMethods[0]?.id)
+     },[paymentMethods])
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
@@ -24,6 +30,11 @@ function ClientPaymentMethod({ paymentMethods, stripe, clientSecret, stripePromi
             setElements(null);
         }
     };
+
+     const handleSelectMethod = (methodId) => {
+        setSelectedMethodId(methodId);
+    };
+
 
     useEffect(() => {
         const initializeElements = async () => {
@@ -62,7 +73,7 @@ function ClientPaymentMethod({ paymentMethods, stripe, clientSecret, stripePromi
                         name: cardholderName,
                     },
                 },
-                return_url: `${window.location.origin}/client/655ca164-e37f-433e-b8f3-1149aacafdf3/payment`,
+                return_url: `${window.location.href}`,
             },
         });
 
@@ -84,6 +95,8 @@ function ClientPaymentMethod({ paymentMethods, stripe, clientSecret, stripePromi
                         last4={method.card.last4}
                         name={method.billing_details.name}
                         date={`${method.card.exp_month}/${method.card.exp_year}`}
+                        selected={method.id === selectedMethodId}
+                        onSelect={() => handleSelectMethod(method.id)}
                     />
                 ))}
 

@@ -8,13 +8,13 @@ export const metadata = {
 export const revalidate = 60 * 60 * 24; // invalidate every 24 hours
 
 const Page = async () => {
-  const candidates = await fetchRecommendedCandidates();
-
-  return (
-    <>
-      <AdminCandidatesTable candidates={candidates} />
-    </>
-  );
+  try {
+    const candidates = await fetchRecommendedCandidates();
+    return <AdminCandidatesTable candidates={candidates} />;
+  } catch (error) {
+    console.error("Error fetching candidates:", error);
+    return <div>Failed to load candidates.</div>;
+  }
 };
 
 export default Page;

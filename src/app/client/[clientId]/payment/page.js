@@ -1,11 +1,12 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import ClientPaymentHistorySummary from "@/components/ClientPaymentHistorySummary";
 import ClientPaymentHistoryTable from "@/components/ClientPaymentHistoryTable";
 import ClientPaymentMethod from "@/components/ClientPaymentMethod";
 import { usePathname } from "next/navigation";
 import ClientSideModal from "@/components/ClientSideModal";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 
 const stripePromise = loadStripe('pk_test_51OfPQBCtLGKA7fQGNEt4t2Nn4S9RxfXQxl4nqi8TK5vWM87A8AZPmdgEZyHHSi3OcpKx8uOGPLnyYSbwbimbSAbF00vZRmnYK1');
 
@@ -35,6 +36,21 @@ const client_payment_history = [
 
 // ]
 
+
+export async function getClientStripe(clientId) {
+  const payload = {
+    endpoint: `get-client-stripe-account?client_id=${clientId}`,
+    method: "GET",
+  };
+  const result = await mvp2ApiHelper(payload);
+  if (result.status === 200) {
+    return result.data.data.stripe_id;
+  }
+  console.error(result?.data?.message);
+  return null; // Return null or handle the error appropriately
+}
+
+
 function Page() {
     const pathname = usePathname();
     const client_id = pathname.split('/')[2];
@@ -45,7 +61,22 @@ function Page() {
     const [paymentMethods, setPaymentMethods] = useState([]);
     const [cardholderName, setCardholderName] = useState('');
     const [clientCharges, setClientCharges] = useState([]);
+    const [clientCustomerID, setclientCustomerID] = useState('');
+    const [totalPayments, setTotalPayments] = useState(0);
     
+    
+
+     useEffect(() => {
+    const fetchClientStripe = async () => {
+      const clientCustomerID = await getClientStripe(client_id);
+      setclientCustomerID(clientCustomerID)
+      console.log("RESULT FROM BK API", clientCustomerID);
+    };
+
+    fetchClientStripe();
+  }, [client_id]);
+    
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -55,7 +86,7 @@ function Page() {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ customer_id: 'cus_QsTUOnWq3fWwlo' }), // Replace with actual customer ID
+                    body: JSON.stringify({ customer_id: clientCustomerID }), // Replace with actual customer ID
                 });
 
                 if (!setupIntentResponse.ok) {
@@ -71,7 +102,7 @@ function Page() {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ customer_id: 'cus_QsTUOnWq3fWwlo' }), // Replace with actual customer ID
+                    body: JSON.stringify({ customer_id: clientCustomerID }), // Replace with actual customer ID
                 });
 
                 if (!paymentMethodsResponse.ok) {
@@ -79,21 +110,21 @@ function Page() {
                 }
 
                 const { data } = await paymentMethodsResponse.json();
-                console.log("Payment Data is: ", data)
+                console.log("Payment Data is: ", data[0].id)
                 setPaymentMethods(data); // Assuming `data` contains the payment methods
 
                 // Create payment intent
-                const paymentIntentResponse = await fetch('/api/create-payment-intent', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ amount: 69696969 }), // Replace with actual amount
-                });
+                // const paymentIntentResponse = await fetch('/api/create-payment-intent', {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //     },
+                //     body: JSON.stringify({ amount: 100, customer: clientCustomerID }), // Replace with actual amount
+                // });
 
-                if (!paymentIntentResponse.ok) {
-                    throw new Error(`HTTP error! status: ${paymentIntentResponse.status}`);
-                }
+                // if (!paymentIntentResponse.ok) {
+                //     throw new Error(`HTTP error! status: ${paymentIntentResponse.status}`);
+                // }
 
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -101,7 +132,32 @@ function Page() {
         };
 
         fetchData();
-    }, []); // Empty dep
+    }, [clientCustomerID]); // Empty dep
+    
+
+       const handleSubscription = async () => {
+        const customPrice = 6969; // Example price in cents (10.00 USD)
+
+        try {
+            // Fetch client secret for subscription
+            const subscriptionResponse = await fetch('/api/create-subscription', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ customerId: clientCustomerID, price: customPrice, paymentMethodId: paymentMethods[0].id }),
+            });
+
+            if (!subscriptionResponse.ok) {
+                throw new Error(`HTTP error! status: ${subscriptionResponse.status}`);
+            }
+
+            const { clientSecret } = await subscriptionResponse.json();
+            setClientSecret(clientSecret);
+        } catch (error) {
+            console.error('Error creating subscription:', error);
+        }
+    };
 
     useEffect(() => {
         const initializeStripe = async () => {
@@ -143,7 +199,7 @@ function Page() {
                     billing_details: {
                         name: cardholderName, // Cardholder name
                     },},
-                return_url: `${window.location.origin}/client/655ca164-e37f-433e-b8f3-1149aacafdf3`,
+                return_url: `${window.location.origin}/client/${client_id}`,
             },
         });
 
@@ -153,7 +209,6 @@ function Page() {
             console.log('Payment method setup complete');
         }
     };
-    
  useEffect(() => {
     const fetchData = async () => {
         try {
@@ -162,7 +217,7 @@ function Page() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ customer_id: 'cus_QsTUOnWq3fWwlo' }), // Replace with actual customer ID
+                body: JSON.stringify({ customer_id: clientCustomerID }), // Replace with actual customer ID
             });
 
             if (!chargesResponse.ok) {
@@ -178,12 +233,16 @@ function Page() {
                 return;
             }
 
+            
             // Transform charges data into client_payment_history format
             const transformedCharges = data.map((charge) => ({
                 name: charge.billing_details.name || 'Candidate ', // Fallback if no name is available
                 amount: `$${(charge.amount / 100).toFixed(2)}`, // Convert from cents to dollars
                 status: charge.status, // 'paid', 'pending', etc.
                 invoice: charge.id, // Assuming invoice refers to the charge id
+                receipt_url: charge.receipt_url,
+                date: convertUnixToDate(charge.created)
+                
             }));
 
             setClientCharges(transformedCharges);
@@ -194,17 +253,39 @@ function Page() {
     };
 
     fetchData();
-}, []); // Ensure `useEffect` is properly configured to run only once on mount
+}, [clientCustomerID]); // Ensure `useEffect` is properly configured to run only once on mount
+
+const totalPaymentsByClient = useMemo(() => {
+    return clientCharges.reduce((total, charge) => {
+      const amount = parseFloat(charge.amount.replace('$', '')) || 0;
+      return total + amount;
+    }, 0);
+  }, [clientCharges]);
+
+function convertUnixToDate(unixTimestamp) {
+    const milliseconds = unixTimestamp * 1000; // Convert seconds to milliseconds
+    const dateObject = new Date(milliseconds);
+
+    // Define options for toLocaleDateString
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+
+    return dateObject.toLocaleDateString('en-GB', options); // Format as a human-readable date string
+}
+
 
     return (
         <div className="max-w-full space-y-2">
-            <ClientPaymentHistorySummary
-                client_id={client_id}
-                total_payment_by_client={3600}
-                total_hires={9}
-                next_payment={'15 July 2024 - 0.00'}
-                last_payment={'$16,000 - 1st July 2024 - 00.00'}
-            />
+              {clientCharges.length > 0 ? (
+        <ClientPaymentHistorySummary
+          client_id={client_id}
+          total_payment_by_client={`${totalPaymentsByClient}`}
+          total_hires={9}
+          next_payment={'15 July 2024 - 0.00'}
+          last_payment={`${clientCharges[0].amount} - ${clientCharges[0].date} - 00.00`}
+        />
+      ) : (
+        <p>Loading payment history...</p>
+      )}
             {/* <div className="w-full gap-4 rounded-[24px] bg-neutral-white p-6">
                 <form onSubmit={handleSubmit}>
                      <label>
@@ -234,18 +315,19 @@ function Page() {
                     <p>No payment methods available.</p>
                 )}
             </div> */}
-             {paymentMethods.length > 0 ? (
+             
                 <ClientPaymentMethod paymentMethods={paymentMethods} handleSubmit={handleSubmit} paymentElementRef={paymentElementRef} stripe={stripe}
     elements={elements}
     clientSecret={clientSecret}/>
-            ) :
+            {/* ) :
             (
                 <div className="w-full gap-4 rounded-[24px] bg-neutral-white p-6">
                     <h2 className="text-xl font-semibold">Existing Payment Methods</h2>
                     <p>No payment methods available.</p>
                 </div>
                 )
-            }
+             */}
+             <button onClick={handleSubscription}>Create Subscription</button>
             <ClientPaymentHistoryTable client_id={client_id} paymentHistory={clientCharges} />
         </div>
     );

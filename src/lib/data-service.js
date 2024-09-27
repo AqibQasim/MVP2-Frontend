@@ -99,6 +99,20 @@ export async function getClientById(id) {
   notFound();
 }
 
+export async function getCandidateById(id) {
+  const payload = {
+    endpoint: `customers?customer_id=${id}`,
+    method: "GET",
+  };
+  const result = await mvp2ApiHelper(payload);
+  if (result.status === 200) {
+    console.log(result?.data);
+    return result?.data;
+  }
+  console.error(result?.data?.message);
+  notFound();
+}
+
 export async function getClientJobs(clientId) {
   const payload = {
     endpoint: `client/job-posting/${clientId}`,

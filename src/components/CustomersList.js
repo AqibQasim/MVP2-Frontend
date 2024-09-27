@@ -79,22 +79,24 @@ function CustomersList() {
   }
 
   return (
-    <div className='rounded-3xl bg-neutral-white p-6'>
+    <div className='rounded-3xl  bg-neutral-white p-6 '>
       <Heading>Clients List</Heading>
-      <ul className='flex flex-col gap-3'>
-      <li className='grid grid-cols-3  text-start '>
-            <div >ID</div> 
-            <div> Name</div>  
-            <div >Email</div>
-          </li>
-        {customers.map((customer) => (
-          <li className='grid grid-cols-3 text-start cursor-pointer' key={customer.id} onClick={() => handleCustomerClick(customer.id)}>
-            <div >{customer.id}</div> 
-            <div> {customer.name}</div>  
-            <div >{customer.email}</div>
-          </li>
-        ))}
-      </ul>
+      <div className=' h-[90vh] p-5 overflow-y-auto'>
+        <ul className='flex flex-col gap-3 '>
+        <li className='grid grid-cols-3  text-start '>
+              <div >ID</div> 
+              <div> Name</div>  
+              <div >Email</div>
+            </li>
+          {customers.map((customer) => (
+            <li className='grid grid-cols-3 text-start cursor-pointer' key={customer.id} onClick={() => handleCustomerClick(customer.id)}>
+              <div >{customer.id}</div>
+              <div> {customer.name}</div>  
+              <div >{customer.email}</div>
+            </li>
+          ))}
+        </ul>
+      </div>
 
       {/* Modal for Client Payment History */}
     {/* Modal for Client Payment History */}

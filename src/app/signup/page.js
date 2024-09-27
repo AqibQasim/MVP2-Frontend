@@ -6,6 +6,7 @@ import OnBoardingButton from "@/components/OnBoardingButton";
 import Overlay from "@/components/Overlay";
 import SuccessModal from "@/components/SuccessModal";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
+import { revalidate } from "@/lib/data-service";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -25,7 +26,7 @@ function Page() {
   const [user_role, setUserRole] = useState("client");
   const [errors, setErrors] = useState({});
   const [otp, setotp] = useState(null);
-  const [alert,setAlert]=useState(false);
+  const [alert, setAlert] = useState(false);
 
   const payload = useMemo(
     () => ({
@@ -75,7 +76,7 @@ function Page() {
 
         // Proceed with the rest of the signup process
         const result = await mvp2ApiHelper(payload);
-        console.log("RESULT from signup: ", result.data.client_id);
+        console.log("RESULT from signup: ", result.data.status);
 
         const createAccountResponse = await fetch(
           "http://localhost:3001/create-stripe-account",
@@ -98,25 +99,22 @@ function Page() {
         }
         console.log("Stripe account created successfully:", createAccountData);
 
-        if (result.status === 200) {
+        if (result.data.status === 200) {
           console.log("Signed up successfully");
-          const revalidatePathOnSignup = `/admin/${user_role === "client" ? "clients" : "candidates"}`;
-          await revalidate(revalidatePathOnSignup);
+          // const revalidatePathOnSignup = `/admin/${user_role === "client" ? "clients" : "candidates"}`;
+          // await revalidate(revalidatePathOnSignup);
           setOverlayVisible(false);
           router.push("/login");
         } else {
-          setAlert(true);
           console.error("Error during signup:", error);
         }
       } catch (error) {
         console.error("Error during signup:", error);
-        setAlert(true);
       }
     },
     [payload, errors, user_role, isOverlayVisible, form],
   );
 
-  // Utility function to generate a random 6-digit OTP
   const generateOtp = () => Math.floor(100000 + Math.random() * 900000);
 
   const handleOpenOverlay = useCallback(
@@ -124,31 +122,56 @@ function Page() {
       event.preventDefault();
 
       if (Object.values(errors).every((err) => err === "")) {
-        const generatedotp = generateOtp();
-        setotp(generatedotp);
-        console.log(generatedotp);
-
-        const payload = {
-          endpoint: "send-email",
-          method: "POST",
-          body: {
-            to: form.email, // Using form.email for the recipient
-            subject: "OTP",
-            text: `Your OTP code is: ${generatedotp}`, // Include the generated OTP
-          },
-        };
-
         try {
-          const result = await mvp2ApiHelper(payload);
-
-          if (result.status === 200) {
-            console.log("Email sent successfully");
-            setOverlayVisible(true);
+          // Determine the correct API based on user_role
+          let apiUrl = "";
+          if (user_role === "client") {
+            apiUrl = `http://localhost:3001/client-by-email?email=${form.email}`;
+          } else if (user_role === "customer") {
+            apiUrl = `http://localhost:3001/customer-by-email?email=${form.email}`;
           } else {
-            console.log("Failed to send email");
+            console.error("Unknown user role");
+            return;
+          }
+
+          // Check if the user exists
+          const checkUserResponse = await fetch(apiUrl, { method: "GET" });
+
+          if (checkUserResponse.status === 200) {
+            console.log("User exists, not sending OTP");
+            setAlert(true);
+            return;
+          }
+
+          if (checkUserResponse.status === 404) {
+            // User not found, proceed to send email
+            const generatedotp = generateOtp();
+            setotp(generatedotp);
+            console.log(generatedotp);
+
+            const payload = {
+              endpoint: "send-email",
+              method: "POST",
+              body: {
+                to: form.email, // Using form.email for the recipient
+                subject: "OTP",
+                text: `Your OTP code is: ${generatedotp}`, // Include the generated OTP
+              },
+            };
+
+            const result = await mvp2ApiHelper(payload);
+            
+            if (result.status === 200) {
+              console.log("Email sent successfully");
+              setOverlayVisible(true);
+            } else {
+              console.log("Failed to send email");
+            }
+          } else {
+            console.error("Error checking user existence");
           }
         } catch (error) {
-          console.error("Error sending email: ", error);
+          console.error("Error checking user existence: ", error);
         }
       }
     },

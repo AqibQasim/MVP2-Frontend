@@ -33,8 +33,8 @@ const ProfileForm = ({ client }) => {
       body: {
         firstName: firstNameRef.current.value,
         lastName: lastNameRef.current.value,
-        email: emailRef.current.value,
-        password: passwordRef.current.value,
+        // email: emailRef.current.value,
+        // password: passwordRef.current.value,
         client_location: locationRef.current.value,
         city: cityRef.current.value,
         province: provinceRef.current.value,
