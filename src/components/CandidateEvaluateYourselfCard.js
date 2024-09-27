@@ -7,7 +7,7 @@ import CandidateProfileInfo from "./CandidateProfileInfo";
 import Heading from "./Heading";
 import Overlay from "./Overlay";
 
-function CandidateEvaluateYourselfCard() {
+function CandidateEvaluateYourselfCard({ candidate }) {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
   const [skill1, setSkill1] = useState("");
   const [skill2, setSkill2] = useState("");
@@ -49,7 +49,7 @@ function CandidateEvaluateYourselfCard() {
   );
 
   const handleStartAssessment = async () => {
-    console.log("clickeddddd")
+    console.log("clickeddddd");
     const result = await mvp2ApiHelper(payload);
     if (result.status === 200) {
       //router.push(`/candidate/${candidate_id}/test`,{skills:filledSkills})
@@ -86,7 +86,7 @@ function CandidateEvaluateYourselfCard() {
             {/* Welcome Message */}
             <div className="text-center">
               <Heading sm className="font-medium" style={{ fontSize: "34px" }}>
-                Welcome, Richard Feynman
+                Welcome, {candidate?.name || "Richard Feynman"}
               </Heading>
               <p className="text-grey-primary-shade-30">
                 Are you ready to tackle the AI Assessment to stand out amongst

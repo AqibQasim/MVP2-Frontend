@@ -1,13 +1,12 @@
 import CandidateIdPage from "@/components/CandidateIdPage";
-import { getCandidates } from "@/lib/data-service";
+import { getCandidate } from "@/lib/data-service";
 
 async function Page({ params }) {
-  const candidates = await getCandidates();
-  console.log("Candidates on Page", candidates);
+  const { data: candidate } = await getCandidate(params.candidateId);
 
   return (
     <div>
-      <CandidateIdPage candidateId={params.candidateId} />
+      <CandidateIdPage candidate={candidate} />
     </div>
   );
 }
