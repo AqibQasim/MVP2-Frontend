@@ -50,11 +50,17 @@ export async function checkClientByEmail(email) {
   };
   const result = await mvp2ApiHelper(payload);
   if (result.status !== 200) {
-    // console.log("Failed result of check client by EMAIL: ", result);
-    return false;
+    return {
+      data: null,
+      existingUser: result.status === 200,
+      error: result.data.message,
+    };
   }
-  // console.log(" Successresult of check client by EMAIL: ", result);
-  return true;
+  return {
+    data: result.data.data,
+    existingUser: result.status === 200,
+    error: null,
+  };
 }
 
 export async function checkCustomerByEmail(email) {
@@ -64,26 +70,32 @@ export async function checkCustomerByEmail(email) {
   };
   const result = await mvp2ApiHelper(payload);
   if (result.status !== 200) {
-    // console.log("Failed result of check CUSTOMER by EMAIL: ", result);
-    return false;
+    return {
+      data: null,
+      existingUser: result.status === 200,
+      error: result.data.message,
+    };
   }
-  // console.log(" Successresult of check CUSTOMER by EMAIL: ", result);
-  return true;
+  return {
+    data: result.data.data,
+    existingUser: result.status === 200,
+    error: null,
+  };
 }
 
-export async function createCustomer(body) {
+export async function createUserGoogle(body) {
   console.log(body);
   const payload = {
-    endpoint: "signup",
+    endpoint: "signup-google",
     method: "POST",
     body,
   };
   console.log(payload);
 
   const result = await mvp2ApiHelper(payload);
-  console.log("create customer result: ", result);
-  // if (result.status !== 200) throw new Error("Customer could not be created");
-  // return result;
+  console.log("create user Google result: ", result);
+  if (result.status !== 200) throw new Error(result.data.message);
+  return result;
 }
 
 export async function getClientById(id) {
