@@ -4,6 +4,7 @@ import OnBoardingButton from "./OnBoardingButton";
 import Input from "./Input";
 import ConfirmationModal from "./ConfirmationModal"; // Import the new component
 import Overlay from "./Overlay";
+import ErrorPopup from "./ErrorPopup";
 const SuccessModal = ({
   imgSrc,
   mainHeading,
@@ -18,6 +19,7 @@ const SuccessModal = ({
 }) => {
   const [isSecondPopupVisible, setIsSecondPopupVisible] = useState(false);
   const [enteredOtp, setEnteredOtp] = useState("");
+  const [error, setError] = useState(false);
   const handleOtpChange = (event) => {
     setEnteredOtp(event.target.value);
   };
@@ -28,6 +30,7 @@ const SuccessModal = ({
       setIsSecondPopupVisible(true);
       onClose;
     } else {
+      setError(true);
       console.log("Incorrect OTP");
     }
   };
@@ -93,6 +96,14 @@ const SuccessModal = ({
             // onClose={onClose}
           />
         </Overlay>
+      )}
+
+      {error && (
+        <ErrorPopup
+          message="OTP is incorrect"
+          type="error"
+          onClose={() => setError(false)}
+        />
       )}
     </div>
   );
