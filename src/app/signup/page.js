@@ -6,6 +6,7 @@ import OnBoardingButton from "@/components/OnBoardingButton";
 import Overlay from "@/components/Overlay";
 import SuccessModal from "@/components/SuccessModal";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
+import { revalidate } from "@/lib/data-service";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -75,7 +76,7 @@ function Page() {
 
         // Proceed with the rest of the signup process
         const result = await mvp2ApiHelper(payload);
-        console.log("RESULT from signup: ", result.data.client_id);
+        console.log("RESULT from signup: ", result.data.status);
 
         const createAccountResponse = await fetch(
           "http://localhost:3001/create-stripe-account",
@@ -98,10 +99,10 @@ function Page() {
         }
         console.log("Stripe account created successfully:", createAccountData);
 
-        if (result.status === 200) {
+        if (result.data.status === 200) {
           console.log("Signed up successfully");
-          const revalidatePathOnSignup = `/admin/${user_role === "client" ? "clients" : "candidates"}`;
-          await revalidate(revalidatePathOnSignup);
+          // const revalidatePathOnSignup = `/admin/${user_role === "client" ? "clients" : "candidates"}`;
+          // await revalidate(revalidatePathOnSignup);
           setOverlayVisible(false);
           router.push("/login");
         } else {
@@ -159,7 +160,7 @@ function Page() {
             };
 
             const result = await mvp2ApiHelper(payload);
-
+            
             if (result.status === 200) {
               console.log("Email sent successfully");
               setOverlayVisible(true);
