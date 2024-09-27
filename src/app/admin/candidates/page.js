@@ -7,16 +7,6 @@ export const metadata = {
 
 export const revalidate = 60 * 60 * 24; // invalidate every 24 hours
 
-// const Page = async () => {
-//   const candidates = await fetchRecommendedCandidates();
-
-//   return (
-//     <>
-//       <AdminCandidatesTable candidates={candidates} />
-//     </>
-//   );
-// };
-
 const Page = async () => {
   try {
     const candidates = await fetchRecommendedCandidates();
