@@ -8,12 +8,16 @@ export const metadata = {
 export const revalidate = 60 * 60 * 24; // invalidate every 24 hours
 
 async function Page() {
-  const jobs = await getJobs();
-  return (
-    <>
-      <AdminJobsList jobs={jobs} />
-    </>
-  );
+  try {
+    const jobs = await getJobs();
+    if (!jobs || jobs.length === 0) {
+      throw new Error("No jobs found");
+    }
+    return <AdminJobsList jobs={jobs} />;
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    return <div>Failed to load jobs.</div>;
+  }
 }
 
 export default Page;
