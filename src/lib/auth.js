@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
+import { checkClientByEmail, checkCustomerByEmail } from "./data-service";
 
 const authConfig = {
   providers: [
@@ -18,16 +19,37 @@ const authConfig = {
     // can perform all kind of operations that are associated with the sugnin process
     // bit like middleware
     // happen after credential, but before really logged in to application
-    async signIn(user, account, profile) {
-      // Get User
+    async signIn({ user, account, profile, context }) {
+      // Get user
       try {
+        let existingUser = null;
+        const { userRole } = context; //client || customer
+        console.log("User role in google callback: ", userRole);
+        if (userRole === "customer") {
+          existingUser = await checkCustomerByEmail(user.email);
+          if (!existingUser)
+            // await createCustomer({ email: user.email, fullName: user.name });
+            await createCustomer({
+              email: user.email,
+              name: user.name,
+              user_role: userRole,
+              method: "signup",
+            });
+          return true;
+        }
+
+        existingUser = await checkClientByEmail(user.email);
+        if (!existingUser)
+          await createUser({ email: user.email, fullName: user.name });
+        return true;
+
         // const existingUser = await getUser(user.email);
 
         // // First time ? create user
         // if (!existingUser)
         //   await createUser({ email: user.email, fullName: user.name });
 
-        return true;
+        // return true;
       } catch (error) {
         return false;
       }

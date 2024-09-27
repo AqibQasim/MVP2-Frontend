@@ -8,8 +8,9 @@ import {
 } from "./data-service";
 import { signIn } from "./auth";
 
-export async function signInAction() {
-  await signIn("google", { redirectTo: "/about" });
+export async function signInAction(userRole) {
+  console.log("user Role on google sign in: ", userRole);
+  await signIn("google", { redirectTo: "/about", userRole });
 }
 
 export async function signOutAction() {

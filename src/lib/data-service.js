@@ -42,6 +42,50 @@ export const getProducts = async function () {
   }
 };
 
+// for auth
+export async function checkClientByEmail(email) {
+  const payload = {
+    endpoint: `client-by-email?email=${email}`,
+    method: "GET",
+  };
+  const result = await mvp2ApiHelper(payload);
+  if (result.status !== 200) {
+    // console.log("Failed result of check client by EMAIL: ", result);
+    return false;
+  }
+  // console.log(" Successresult of check client by EMAIL: ", result);
+  return true;
+}
+
+export async function checkCustomerByEmail(email) {
+  const payload = {
+    endpoint: `customer-by-email?email=${email}`,
+    method: "GET",
+  };
+  const result = await mvp2ApiHelper(payload);
+  if (result.status !== 200) {
+    // console.log("Failed result of check CUSTOMER by EMAIL: ", result);
+    return false;
+  }
+  // console.log(" Successresult of check CUSTOMER by EMAIL: ", result);
+  return true;
+}
+
+export async function createCustomer(body) {
+  console.log(body);
+  const payload = {
+    endpoint: "signup",
+    method: "POST",
+    body,
+  };
+  console.log(payload);
+
+  const result = await mvp2ApiHelper(payload);
+  console.log("create customer result: ", result);
+  // if (result.status !== 200) throw new Error("Customer could not be created");
+  // return result;
+}
+
 export async function getClientById(id) {
   const payload = {
     endpoint: `client?client_id=${id}`,

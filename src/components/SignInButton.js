@@ -1,7 +1,10 @@
 import { signInAction } from "@/lib/actions";
 import Image from "next/image";
 
-function SignInButton() {
+function SignInButton({ userRole }) {
+  const handleGoogleSignIn = async (userRole) => {
+    await signInAction(userRole);
+  };
   return (
     <form action={signInAction}>
       <button className="text-md w-full rounded-full border-[1px] bg-white px-4 py-2 text-center text-primary-tint-20">

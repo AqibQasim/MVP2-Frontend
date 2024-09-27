@@ -195,7 +195,7 @@ function Login() {
               </div>
             </div>
             {/* Google signin */}
-            <SignInButton />
+            <SignInButton userRole={user_role} />
             {/* ---- */}
             <div className="mt-2">
               <p className="me-1 inline-block text-xs text-grey-primary">
