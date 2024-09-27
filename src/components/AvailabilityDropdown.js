@@ -1,5 +1,5 @@
-import React from 'react';
-import ButtonDown from '@/svgs/ButtonDown';
+import React from "react";
+import ButtonDown from "@/svgs/ButtonDown";
 
 function AvailabilityDropdown({
   options = [], // List of options for the dropdown
@@ -12,28 +12,22 @@ function AvailabilityDropdown({
 
   return (
     <div className={`relative ${className}`}>
-      <div className="icon-container">
+      {/* comment icon now */}
+      {/* <div className="icon-container">
         <div className="bg-white rounded-full h-7 w-7"></div>
-      </div>
-      <select
-        className={commonClasses}
-        {...rest}
-      >
-        {placeholder && (
-          <option value="">
-            {placeholder}
-          </option>
-        )}
+      </div> */}
+      <select className={commonClasses} {...rest}>
+        {placeholder && <option value="">{placeholder}</option>}
         {options.map((option, index) => (
           <option key={index} value={option.value}>
             {option.label}
           </option>
         ))}
       </select>
-    
-      <div className="custom-arrow ">
-      <ButtonDown />
-</div>
+
+      {/* <div className="custom-arrow">
+        <ButtonDown />
+      </div> */}
     </div>
   );
 }

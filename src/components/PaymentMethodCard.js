@@ -5,6 +5,8 @@ function PaymentMethodCard({
   last4 = "7460",
   name = "Richard Feymman",
   date = "12/2050",
+  selected,
+  onSelect
 }) {
   return (
     <div className="relative flex w-full items-center justify-start gap-8 rounded-xl bg-grey-primary-tint-90 p-4">
@@ -40,7 +42,13 @@ function PaymentMethodCard({
         </p>
       </div>
       <div className="settings? ml-auto mr-0.5">
-        <div className="dot block h-4 w-4 rounded-full border-4 border-primary-tint-80 bg-primary"></div>
+        {/* <div className="dot block h-4 w-4 rounded-full border-4 border-primary-tint-80 bg-primary"></div> */}
+        <div
+          className={`dot block h-4 w-4 rounded-full border-4 cursor-pointer ${
+            selected ? " border-primary-tint-80 bg-primary" : "border-primary-tint-80 bg-gray-600"
+          }`}
+          onClick={onSelect}
+        ></div>
       </div>
       <div className="settings absolute right-4 top-4 flex items-center justify-center gap-[2px]">
         {Array(3)

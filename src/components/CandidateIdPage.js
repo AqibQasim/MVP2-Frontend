@@ -5,7 +5,7 @@ import ReportOverlay from "@/components/ReportOverlay";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { useEffect, useState } from "react";
 
-export default function CandidateIdPage({ candidateId }) {
+export default function CandidateIdPage({ candidate }) {
   const [candidateReport, setCandidateReport] = useState(null);
   const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
 
@@ -13,7 +13,7 @@ export default function CandidateIdPage({ candidateId }) {
 
   const getCandidateResult = () => {
     const payload = {
-      endpoint: `get-customer-result?customer_id=${candidateId}`,
+      endpoint: `get-customer-result?customer_id=${candidate?.customer_id}`,
       method: "GET",
     };
     mvp2ApiHelper(payload).then((result) => {
@@ -23,7 +23,8 @@ export default function CandidateIdPage({ candidateId }) {
 
   useEffect(() => {
     getCandidateResult();
-  }, [candidateId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [candidate?.customer_id]);
 
   // Function to handle opening the overlay
   const handleOpenOverlay = () => {
