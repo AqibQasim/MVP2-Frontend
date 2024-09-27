@@ -52,7 +52,7 @@ function ClientHeader({client}) {
             <div>
               <ButtonCapsule
                 ref={buttonRef}
-                handleOpenOverlay={() => setIsOpen(true)}
+                onPress={() => setIsOpen(true)}
                 // id="scheduleCallBtn"
                 
               >

@@ -66,7 +66,7 @@ function ClientRecommendationCard({
             {/* <ScheduleInterviewModal /> */}
              <ButtonCapsule
                 ref={buttonRef}
-                handleOpenOverlay={() => setIsOpen(true)}
+                onPress={() => setIsOpen(true)}
                 // id="scheduleCallBtn"
                 
               >Schedule Inverview</ButtonCapsule>
