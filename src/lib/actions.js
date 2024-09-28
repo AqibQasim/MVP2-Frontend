@@ -1,16 +1,17 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { signIn } from "./auth";
 import {
   candidateUpdateProfile,
   createJob,
   referCandidate,
 } from "./data-service";
-import { signIn } from "./auth";
 
-export async function signInAction(userRole) {
-  console.log("user Role on google sign in: ", userRole);
-  await signIn("google", { redirectTo: "/about", userRole });
+export async function signInAction(user_role) {
+  console.log("user Role on google sign in: ", user_role);
+  // await signIn("google", { redirectTo: "/about", user_role });
+  await signIn("google", { redirectTo: "/about" });
 }
 
 export async function signOutAction() {
