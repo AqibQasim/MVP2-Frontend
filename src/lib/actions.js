@@ -1,21 +1,30 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { signIn } from "./auth";
+import { cookies } from "next/headers";
+import { signIn, signOut } from "./auth";
 import {
   candidateUpdateProfile,
   createJob,
   referCandidate,
 } from "./data-service";
 
-export async function signInAction(user_role) {
-  console.log("user Role on google sign in: ", user_role);
-  // await signIn("google", { redirectTo: "/about", user_role });
-  await signIn("google", { redirectTo: "/about" });
+export async function signInAction(formData) {
+  const user_role = formData.get("user_role");
+  cookies().set({
+    name: "user_role",
+    value: user_role,
+    maxAge: 60,
+    path: "/",
+    httpOnly: true,
+  });
+  await signIn("google", {
+    redirectTo: `/about`,
+  });
 }
 
 export async function signOutAction() {
-  await signIn({ redirectTo: "/" });
+  await signOut({ redirectTo: "/" });
 }
 
 export async function createAJobAction(formData) {
