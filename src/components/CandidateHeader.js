@@ -2,14 +2,20 @@
 import AvailabilityDropdown from "@/components/AvailabilityDropdown";
 import SvgIconNotification from "@/svgs/SvgIconNotification";
 import { formatDate } from "@/utils/utility";
-import { useState } from "react";
+import { useState,useEffect, useRef,} from "react";
 import ButtonCapsule from "./ButtonCapsule";
 import ButtonRounded from "./ButtonRounded";
 import EntityCard from "./EntityCard";
+import { PopupModal } from "react-calendly";
 
 function CandidateHeader({ candidate }) {
   // State to keep track of the selected value
   const [selectedValue, setSelectedValue] = useState("");
+    const [isOpen, setIsOpen] = useState(false);
+  const buttonRef = useRef(null);
+  
+  const [isCandidate, setIsCandidate] = useState(false);
+
 
   // Options for the dropdown
   const options = [{ value: "Offline", label: "Offline" }];
@@ -20,8 +26,13 @@ function CandidateHeader({ candidate }) {
     console.log("Selected value:", event.target.value);
   };
 
+   useEffect(() => {
+    setIsCandidate(true);
+  }, []);
+
+
   return (
-    <div className="flex">
+    <div className="flex " id='scheduleCallBtn'>
       <EntityCard
         lg
         entity={{
@@ -48,14 +59,32 @@ function CandidateHeader({ candidate }) {
             }}
           />
 
+{isCandidate && (
+  <div>
           <ButtonCapsule
-          // ref={buttonRef}
-          // handleOpenOverlay={() => setIsOpen(true)}
-          // id="scheduleCallBtn"
-          >
-            Schedule a Call
-          </ButtonCapsule>
-
+                ref={buttonRef}
+                onPress={() => setIsOpen(true)}
+                // id="scheduleCallBtn"
+                
+              >
+                Schedule a Call
+              </ButtonCapsule>
+               <PopupModal
+                url='https://calendly.com/sanjaybaghtwani/30min?hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=4624e0'
+                rootElement={document.getElementById('scheduleCallBtn')}
+                text="Schedule Call"
+                textColor="#fff"
+                color="#000"
+                height = "200px"
+                overflow= "hidden"
+                onModalClose={() => setIsOpen(false)}
+                open={isOpen}
+                // styles={{
+                //   height: '10px'
+                // }}
+              />
+              </div>
+ )}
           <ButtonRounded>
             <SvgIconNotification />
           </ButtonRounded>
