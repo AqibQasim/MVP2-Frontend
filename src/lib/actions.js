@@ -11,6 +11,7 @@ import {
 
 export async function signInAction(formData) {
   const user_role = formData.get("user_role");
+  const path = user_role === "client" ? "client" : "candidate";
   cookies().set({
     name: "user_role",
     value: user_role,
@@ -19,7 +20,7 @@ export async function signInAction(formData) {
     httpOnly: true,
   });
   await signIn("google", {
-    redirectTo: `/about`,
+    redirectTo: `/${path}`,
   });
 }
 
