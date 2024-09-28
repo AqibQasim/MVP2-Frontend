@@ -10,7 +10,7 @@ function ClientPaymentHistoryTable({ client_id, paymentHistory }) {
       heading="Payment history"
       href={`/client/${client_id}/payment-history`}
     >
-      <Table columns="grid-cols-[1fr_0.8fr_0.5fr_0.5fr_0.7fr_9.5rem]">
+      <Table columns="grid-cols-[0fr_0.8fr_0.5fr_0.5fr_0.7fr_1fr]">
         <Table.Header>
           <div className="info">Info</div>
           <div className="date text-center">Date</div>

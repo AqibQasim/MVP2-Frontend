@@ -7,6 +7,11 @@ import IconWithBg from "./IconWithBg";
 import Table from "./Table";
 
 function ClientPaymentHistoryRow({ payment }) {
+  const handleReceiptClick = (url) => {
+    if (url) {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+  };
   return (
     <Table.Row>
       <EntityCard
@@ -25,7 +30,7 @@ function ClientPaymentHistoryRow({ payment }) {
       />
       {/* <Capsule>{payment.jobType}</Capsule> */}
       <div className="date text-nowrap text-center">
-        {formatDate(new Date("2024-09-20"))}
+        {payment.date}
       </div>
       <Capsule status={payment?.status} className="status !text-center">
         <p>{payment.status}</p>
@@ -33,10 +38,11 @@ function ClientPaymentHistoryRow({ payment }) {
       <div className="amount text-center">{payment.amount}</div>
       <div className="amount text-center">{payment.invoice}</div>
       <Capsule
-        className="ml-auto !bg-primary-tint-100"
+        className="ml-auto !bg-primary-tint-100 cursor-pointer"
         icon={<IconWithBg icon={<SvgIconDownload />} />}
+        onClick={() => handleReceiptClick(payment.receipt_url)}
       >
-        Download
+        view
       </Capsule>
     </Table.Row>
   );

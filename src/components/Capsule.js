@@ -1,4 +1,4 @@
-function Capsule({ children, icon = null, className = "", status = "none" }) {
+function Capsule({ children, icon = null, className = "", status = "none", onClick }) {
   const statusClasses = {
     none: " ",
     paid: "bg-primary-tint-100 text-primary-tint-20",
@@ -16,7 +16,10 @@ function Capsule({ children, icon = null, className = "", status = "none" }) {
   const containerClasses = `${icon ? iconClasses : noIconClasses} ${statusClasses[status]} ${baseClasses} bg-grey-primary-tint-90`;
 
   return (
-    <div className={`${className} ${containerClasses}`}>
+    <div
+      className={`${className} ${containerClasses} ${onClick ? 'cursor-pointer' : ''}`}
+      onClick={onClick}
+    >
       {icon && icon}
       {children}
     </div>

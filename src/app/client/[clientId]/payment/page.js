@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import ClientPaymentHistorySummary from "@/components/ClientPaymentHistorySummary";
 import ClientPaymentHistoryTable from "@/components/ClientPaymentHistoryTable";
@@ -61,7 +61,8 @@ function Page() {
     const [paymentMethods, setPaymentMethods] = useState([]);
     const [cardholderName, setCardholderName] = useState('');
     const [clientCharges, setClientCharges] = useState([]);
-     const [clientCustomerID, setclientCustomerID] = useState('');
+    const [clientCustomerID, setclientCustomerID] = useState('');
+    const [totalPayments, setTotalPayments] = useState(0);
     
     
 
@@ -232,12 +233,16 @@ function Page() {
                 return;
             }
 
+            
             // Transform charges data into client_payment_history format
             const transformedCharges = data.map((charge) => ({
                 name: charge.billing_details.name || 'Candidate ', // Fallback if no name is available
                 amount: `$${(charge.amount / 100).toFixed(2)}`, // Convert from cents to dollars
                 status: charge.status, // 'paid', 'pending', etc.
                 invoice: charge.id, // Assuming invoice refers to the charge id
+                receipt_url: charge.receipt_url,
+                date: convertUnixToDate(charge.created)
+                
             }));
 
             setClientCharges(transformedCharges);
@@ -250,15 +255,37 @@ function Page() {
     fetchData();
 }, [clientCustomerID]); // Ensure `useEffect` is properly configured to run only once on mount
 
+const totalPaymentsByClient = useMemo(() => {
+    return clientCharges.reduce((total, charge) => {
+      const amount = parseFloat(charge.amount.replace('$', '')) || 0;
+      return total + amount;
+    }, 0);
+  }, [clientCharges]);
+
+function convertUnixToDate(unixTimestamp) {
+    const milliseconds = unixTimestamp * 1000; // Convert seconds to milliseconds
+    const dateObject = new Date(milliseconds);
+
+    // Define options for toLocaleDateString
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+
+    return dateObject.toLocaleDateString('en-GB', options); // Format as a human-readable date string
+}
+
+
     return (
         <div className="max-w-full space-y-2">
-            <ClientPaymentHistorySummary
-                client_id={client_id}
-                total_payment_by_client={3600}
-                total_hires={9}
-                next_payment={'15 July 2024 - 0.00'}
-                last_payment={'$16,000 - 1st July 2024 - 00.00'}
-            />
+              {clientCharges.length > 0 ? (
+        <ClientPaymentHistorySummary
+          client_id={client_id}
+          total_payment_by_client={`${totalPaymentsByClient}`}
+          total_hires={9}
+          next_payment={'15 July 2024 - 0.00'}
+          last_payment={`${clientCharges[0].amount} - ${clientCharges[0].date} - 00.00`}
+        />
+      ) : (
+        <p>Loading payment history...</p>
+      )}
             {/* <div className="w-full gap-4 rounded-[24px] bg-neutral-white p-6">
                 <form onSubmit={handleSubmit}>
                      <label>
