@@ -6,11 +6,15 @@ import ConfirmationModal from "./ConfirmationModal"; // Import the new component
 import Overlay from "./Overlay";
 import { generateOtp } from "@/utils/generateOtp";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
+import OTPInput from "react-otp-input";
+import ButtonCapsule from "./ButtonCapsule";
+import { candidateUpdateProfile } from "@/lib/data-service";
 const ForgotPasswordModal = ({
   imgSrc,
   //mainHeading,
   //text,
   //buttonText,
+  user_role,
   onBoarding,
   onClose,
   containsOtp,
@@ -18,22 +22,55 @@ const ForgotPasswordModal = ({
   //confirmationtext,
 }) => {
   const [isSecondPopupVisible, setIsSecondPopupVisible] = useState(false);
-  const [email, setEmail]= useState(null);
+  const [email, setEmail] = useState(null);
   const [enteredOtp, setEnteredOtp] = useState("");
-  const [popupState,setPopupState]=useState("email");
+  const [popupState, setPopupState] = useState("email");
   const [otp, setotp] = useState(null);
-  const [textInputType,setTextInputType]=useState("email");
-  const [errors, setError] = useState(false);
+  const [error, setError] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [password, setPassword] = useState(null);
+  const [confirmPassword, setConfirmPassword] = useState(null)
 
 
-  const handleOtpChange = (event) => {
-    setEnteredOtp(event.target.value);
+  const handlePasswordReset = async() => {
+    if (password === confirmPassword) {
+
+      const body={
+        password
+      }
+
+      const response= await candidateUpdateProfile
+    }
+  }
+
+
+
+  const validateField = (name, value) => {
+    let errorMsg = "";
+
+    switch (name) {
+      case "password":
+        if (!/^.{8,}$/.test(value)) {
+          errorMsg = "Password must be at least 8 characters";
+        }
+        break;
+      case "confirmPassword":
+        if (value !== password) {
+          errorMsg = "Passwords do not match";
+        }
+        break;
+      default:
+        break;
+    }
+
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMsg }));
   };
 
   const handleOtpVerification = () => {
-    if (enteredOtp === otp.toString()) {
+
+    if (enteredOtp.toString() === otp.toString()) {
       console.log("OTP verified successfully");
-      setIsSecondPopupVisible(true);
+      setPopupState("reset-password");
       onClose;
     } else {
       console.log("Incorrect OTP");
@@ -44,7 +81,7 @@ const ForgotPasswordModal = ({
     async (event) => {
       event.preventDefault();
 
-      if (Object.values(errors).every((err) => err === "")) {
+      if (Object.values(error).every((err) => err === "")) {
         const generatedotp = generateOtp();
         setotp(generatedotp);
         console.log(generatedotp);
@@ -81,22 +118,24 @@ const ForgotPasswordModal = ({
   //   onClose; // Close the first popup
   // };
 
-  const mainHeading = (heading)=>(
+  const mainHeading = (heading, gradientText) => (
     <span>
       {heading}{" "}
-      {/* <span
-        style={{
-          backgroundImage: "linear-gradient(to right, #4624E0, white)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          display: "inline",
-        }}
-      >
-        Code.
-      </span> */}
+      {
+        (gradientText) &&
+        <span
+          style={{
+            backgroundImage: "linear-gradient(to right, #4624E0, white)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            display: "inline",
+          }}
+        >
+          Code.
+        </span>}
     </span>
   );
-  let text = (t)=>(
+  let text = (t) => (
     <>
       {t}
     </>
@@ -108,7 +147,7 @@ const ForgotPasswordModal = ({
     </>
   );
 
-  const buttonText=(t)=>(
+  const buttonText = (t) => (
     <>
       {t}
     </>
@@ -126,34 +165,102 @@ const ForgotPasswordModal = ({
         />
         <div className="flex flex-col items-center justify-center">
           <h2 className="w-[100%] text-center text-xl font-semibold">
-            {mainHeading("Forgot Password?")}
+            {(popupState === "email") && mainHeading("Forgot Password?")}
+            {(popupState === "otp") && mainHeading("Enter your", "code")}
+            {(popupState === "reset-password") && mainHeading(`Set new password`)}
           </h2>
-          <p className="mt-[0.5rem] w-[100%] text-center text-sm">{text("Enter email for instructions")}</p>
-          {popupState==="email" && (
+          <p className="mt-[0.5rem] w-[100%] text-center text-sm">
+            {(popupState === "email") && text("Enter email for instructions")}
+            {(popupState === "otp") && text(`We've sent code to ${email}`)}
+            {(popupState === "reset-password") && text(`Must be at least 8 characters`)}
+          </p>
+          {popupState === "email" && (
             <Input
               type='email'
+              name='email'
               placeholder={"Enter your email"}
               className="mt-5 py-3 text-center"
-              onChange={(e)=>{
+              onChange={(e) => {
                 setEmail(e.target.value);
               }}
             />
           )}
-        </div>
-        
-          <OnBoardingButton onClick={(e)=>{
-            if(popupState==="email" && email){
-                setPopupState("otp");
-                sendOtp(e);
-            }
+          {
+            popupState === "otp" && (
+              <div className="flex justify-center items-center flex-col">
+                <OTPInput
+                  value={enteredOtp}
+                  onChange={setEnteredOtp}
+                  containerStyle={'w-full h-[4.5rem] gap-[0.625rem] justify-center'}
+                  numInputs={6}
+                  inputStyle={"rounded-lg text-[24px] border border-gray-300 focus:border-primary"}
+                  //renderSeparator={<span className="w-1" />}
+                  renderInput={(props) => <input {...props} style={{
+                    width: '3rem',
+                    height: '4.13rem',
+                    textAlign: 'center'
+                  }} type="number" />}
+                />
+                <div className="flex gap-1">Didn't get the code?
+                  <div onClick={(e) => sendOtp(e)} className="text-primary">Click to resend</div>
+                </div>
+              </div>
 
-            if(popupState==="otp"){
-                if(enteredOtp) handleOtpVerification(e);
-            }
-          }}>
-            {(popupState==="email")&&buttonText("Send 4-digit code")}
-            {(popupState==="otp")&&buttonText("Continue")}
-          </OnBoardingButton>
+            )
+          }
+
+          {popupState === "reset-password" && (
+            <div>
+              <Input
+                type='password'
+                name='password'
+                placeholder={"Password"}
+                className="mt-5 py-3 text-start"
+                onChange={(e) => {
+                  const {name,value}=e.target;
+                  setPassword(value);
+                  validateField(name,value);
+                }}
+              />
+              <div>
+                {errors.password && (
+                  <p className="text-xs text-red-500">{errors.password}</p>
+                )}
+              </div>
+              <Input
+                type='password'
+                name='confirmPassword'
+                placeholder={"Confirm Password"}
+                className="mt-5 py-3 text-start"
+                onChange={(e) => {
+                  const {name,value}=e.target;
+                  setConfirmPassword(value);
+                  validateField(name,value);
+                }}
+              />
+              <div>
+                {errors.confirmPassword && (
+                  <p className="text-xs text-red-500">{errors.confirmPassword}</p>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <ButtonCapsule className='mt-3 w-full justify-between' onPress={(e) => {
+          if (popupState === "email" && email) {
+            setPopupState("otp");
+            sendOtp(e);
+          }
+
+          if (popupState === "otp") {
+            if (enteredOtp) handleOtpVerification(e);
+          }
+        }}>
+          {(popupState === "email") && buttonText("Send 4-digit code")}
+          {(popupState === "otp") && buttonText("Continue")}
+          {(popupState === "reset-password") && buttonText("Set password")}
+        </ButtonCapsule>
         {/* ) : (
           <OnBoardingButton onClick={onClose}>
             Okay I understand
@@ -161,14 +268,14 @@ const ForgotPasswordModal = ({
         )} */}
       </div>
 
-      {!onBoarding && (
+      {/* {!onBoarding && (
         <div className="mt-[3rem] flex w-auto justify-center rounded-full border-[1px] border-primary bg-primary-tint-90 px-[0.2rem] py-[0.3rem]">
           <span className="font-lufga text-[0.6rem] text-primary">
             <span className="font-semibold">Note:</span> Do not refresh, close,
             or click the back button on this Page. Your data might be lost.
           </span>
         </div>
-      )}
+      )} */}
 
       {isSecondPopupVisible && (
         <Overlay isVisible={isSecondPopupVisible} closeoverlay={onClose}>
@@ -179,7 +286,7 @@ const ForgotPasswordModal = ({
             buttonText={"Okay I understand"}
             signupHandler={signupHandler}
             confirmationtext={confirmationtext}
-            // onClose={onClose}
+          // onClose={onClose}
           />
         </Overlay>
       )}

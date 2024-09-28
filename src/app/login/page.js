@@ -237,8 +237,9 @@ function Login() {
         </div>
       </div>
       {isForgotPasswordOpened && (
-        <Overlay isVisible={isForgotPasswordOpened} closeoverlay={handleCloseOverlay}>
+        <Overlay width={"27.813rem"} height={"30.813rem"} isVisible={isForgotPasswordOpened} closeoverlay={handleCloseOverlay}>
           <ForgotPasswordModal
+          user_role={user_role}
             onClose={handleCloseOverlay}
             imgSrc="/Message.png"
             // mainHeading={mainHeading}
