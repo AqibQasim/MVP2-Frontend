@@ -63,6 +63,57 @@ export async function checkClientByEmail(email) {
   };
 }
 
+export async function checkUserRoleAndId(email, name, user_role) {
+  try {
+    let user = null;
+    if (user_role === "customer") {
+      const { existingUser, data: customer } =
+        await checkCustomerByEmail(email);
+
+      if (!existingUser) {
+        user = await createUserGoogle({
+          email,
+          name,
+          user_role,
+          method: "signup",
+        });
+        return {
+          user_role,
+          customer_id: user.customer_id,
+        };
+      }
+
+      return {
+        user_role,
+        customer_id: customer?.customer_id || null,
+      };
+    } else if (user_role === "client") {
+      const { existingUser, data: client } = await checkClientByEmail(email);
+
+      if (!existingUser) {
+        user = await createUserGoogle({
+          email,
+          name,
+          user_role,
+          method: "signup",
+        });
+        return {
+          user_role,
+          client_id: user.client_id,
+        };
+      }
+
+      return {
+        user_role,
+        client_id: client?.client_id || null,
+      };
+    }
+  } catch (error) {
+    console.error("Error in checkUserRoleAndId:", error);
+    throw new Error("Failed to check or create user.", error);
+  }
+}
+
 export async function checkCustomerByEmail(email) {
   const payload = {
     endpoint: `customer-by-email?email=${email}`,
