@@ -19,7 +19,7 @@ function AdminCandidatesTable({ candidates }) {
           <div className="actions text-right">Actions</div>
         </Table.Header>
         <Table.Body
-          data={candidates}
+          data={candidates?.data}
           render={(recommended, i) => (
             <AdminCandidateRecommendedRow recommended={recommended} key={i} />
           )}
