@@ -36,12 +36,16 @@ async function layout({ children, params }) {
         <ClientDashboardSideNav clientId={clientId} />
         <ClientLogout />
       </aside>
-      <AuthCheck>
+      {/* <AuthCheck>
         <div className="body-scroll overflow-y-scroll rounded-3xl bg-transparent">
           {" "}
           {children}{" "}
         </div>
-      </AuthCheck>
+      </AuthCheck> */}
+      <div className="body-scroll overflow-y-scroll rounded-3xl bg-transparent">
+        {" "}
+        {children}{" "}
+      </div>
     </div>
   );
 }

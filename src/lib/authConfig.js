@@ -18,85 +18,106 @@ export const authConfig = {
   callbacks: {
     async authorized({ auth, request }) {
       const user = auth?.user;
-      const userRoleCookie = cookies().get("credentialLoginToken");
-      const credentialUser = userRoleCookie ? userRoleCookie.value : null;
-      const { anyNameForData, error: credentialUserError } =
-        await validateAndDecodeToken(credentialUser);
+      const credentialUserToken =
+        cookies().get("credentialLoginToken")?.value || null;
+      const { anyNameForData: credentialUser, error: credentialUserError } =
+        await validateAndDecodeToken(credentialUserToken);
 
-      if (!user) {
+      const url = request?.nextUrl;
+      const pathname = url?.pathname;
+      const isAuthenticated = user || credentialUser?.id;
+      const loginPage = pathname === "/login";
+      const signupPage = pathname === "/signup";
+      const googleUserRedirectPath = user
+        ? `/${user.user_role}/${user[`${user.user_role}_id`]}`
+        : null;
+
+      const credentialUserRedirectPath = credentialUser?.id
+        ? `/${credentialUser.user_role}/${credentialUser.id}`
+        : null;
+
+      if (isAuthenticated && (loginPage || signupPage)) {
+        const redirectPath = user
+          ? googleUserRedirectPath
+          : credentialUserRedirectPath;
+        return NextResponse.redirect(new URL(redirectPath, request.url));
+      }
+
+      // NOT AUTHENTICATED
+      if (!isAuthenticated) {
         console.log("User not authenticated");
         return false;
       }
 
-      const userRole = user?.user_role;
-      const url = request?.nextUrl;
-      const pathname = url?.pathname;
+      // Client/Candidate route protection
       const visitedId = pathname.split("/").at(2);
-      const ids = {
-        client: "client_id",
-        customer: "customer_id",
-      };
-      const currentUserId = user[ids[userRole]];
-      const isImposter = currentUserId !== visitedId;
-      const isClient = userRole === "client";
-      const isCandidate = userRole === "customer";
-      const clientRoute = pathname.startsWith("/client");
       const candidateRoute = pathname.startsWith("/candidate");
-      const onClientPage = pathname === "/client";
-      const onCandidatePage = pathname === "/candidate";
-      const onCandidateRoute = pathname.startsWith("/candidate");
-      const onClientRoute = pathname.startsWith("/client");
+      const clientRoute = pathname.startsWith("/client");
 
-      //   Log important values for debugging
-      console.log("AUTH OBJECT", auth);
-      console.log("USER ROLE", userRole);
-      console.log("IS IMPOSTER: ?", isImposter);
-      console.log("Current User ID", currentUserId);
-      console.log("Request URL", url);
-      console.log("Request Pathname", pathname);
-      console.log("Visited ID", visitedId);
-      console.log("IS CLIENT: ", isClient);
-      console.log("IS CANDIDATE: ", isCandidate);
+      // Google login?
+      if (user) {
+        const googleUserRole = user?.user_role;
+        const ids = {
+          client: "client_id",
+          customer: "customer_id",
+        };
+        const currentUserId = user[ids[googleUserRole]];
+        const isCandidate = googleUserRole === "customer";
+        const isImposter = currentUserId !== visitedId;
 
-      // Candidate
-      if (onCandidateRoute) {
-        if (!isCandidate) {
-          return NextResponse.redirect(new URL("/login", request.url));
+        if (candidateRoute) {
+          if (!isCandidate || (visitedId && isImposter)) {
+            return NextResponse.redirect(new URL("/login", request.url));
+          }
+          if (pathname === "/candidate" && currentUserId) {
+            return NextResponse.redirect(
+              new URL(`/candidate/${currentUserId}`, request.url),
+            );
+          }
         }
-        if (visitedId && isImposter) {
-          return NextResponse.redirect(new URL("/login", request.url));
+
+        if (clientRoute) {
+          const isClient = googleUserRole === "client";
+          if (!isClient || (visitedId && isImposter)) {
+            return NextResponse.redirect(new URL("/login", request.url));
+          }
+          if (pathname === "/client" && currentUserId) {
+            return NextResponse.redirect(
+              new URL(`/client/${currentUserId}`, request.url),
+            );
+          }
         }
-        if (onCandidatePage && currentUserId) {
-          return NextResponse.redirect(
-            new URL(`/candidate/${currentUserId}`, request.url),
-          );
+      } else if (credentialUser) {
+        const credentialUserRole = credentialUser.user_role;
+        const credentialUserId = credentialUser.id;
+        const isCandidate = credentialUserRole === "customer";
+        const isClient = credentialUserRole === "client";
+        const isImposter = credentialUserId !== visitedId;
+
+        if (candidateRoute) {
+          if (!isCandidate || (visitedId && isImposter)) {
+            return NextResponse.redirect(new URL("/login", request.url));
+          }
+          if (pathname === "/candidate" && credentialUserId) {
+            return NextResponse.redirect(
+              new URL(`/candidate/${credentialUserId}`, request.url),
+            );
+          }
+        }
+
+        if (clientRoute) {
+          if (!isClient || (visitedId && isImposter)) {
+            return NextResponse.redirect(new URL("/login", request.url));
+          }
+          if (pathname === "/client" && credentialUserId) {
+            return NextResponse.redirect(
+              new URL(`/client/${credentialUserId}`, request.url),
+            );
+          }
         }
       }
 
-      // CLIENT
-      //   if (onClientRoute) {
-      //     console.log("CLIENT ROUTE");
-      //     if (!isClient) {
-      //       console.log("CLIENT ROUTE BUT NOT A CLIENT GO HOME");
-      //       return NextResponse.redirect(new URL("/login", request.url));
-      //     }
-      //     if (visitedId && isImposter) {
-      //       console.log("CLIENT ROUTE BUT A IMPOSTER GO HOME");
-      //       return NextResponse.redirect(new URL("/login", request.url));
-      //     }
-      //     if (onClientPage && currentUserId) {
-      //       console.log(
-      //         "CLIENT ROUTE ON CLIENT PAGE GO TO U'R ID PAGE: ",
-      //         currentUserId,
-      //       );
-      //       return NextResponse.redirect(
-      //         new URL(`/client/${currentUserId}`, request.url),
-      //       );
-      //     }
-      //   }
-
-      console.log("OK TO PROCEEED");
-
+      console.log("OK TO PROCEED");
       return true;
     },
     async signIn({ user, account, profile }) {

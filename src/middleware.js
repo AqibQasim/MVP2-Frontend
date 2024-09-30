@@ -10,6 +10,6 @@ import { auth } from "@/lib/auth";
 export const middleware = auth;
 
 export const config = {
-  // matcher: ["/client/:path*", "/candidate/:path*"],
-  matcher: ["/candidate/:path*"],
+  matcher: ["/client/:path*", "/candidate/:path*", "/login", "/signup"],
+  // matcher: ["/candidate/:path*"],
 };

@@ -81,10 +81,9 @@ function Login() {
         const Authenticated = true;
         if (Authenticated) {
           localStorage.setItem("MVP_CLIENT_LOGGEDIN", true);
-          // Calculate expiration date: 1 week from now
+
           const now = new Date();
           now.setTime(now.getTime() + 60 * 60 * 60 * 10 + 36000000); // 36000000 ms = 10 hours
-          // now.setTime(now.getTime() + 60 * 60 * 60 * 10);
           const expires = now.toUTCString();
 
           const token = result.data.token;
