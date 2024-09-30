@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Capsule from "@/components/Capsule";
 import DashboardSection from "@/components/DashboardSection";
@@ -9,7 +9,7 @@ import { formatCurrency, formatCurrencyNoDecimals } from "@/utils/utility";
 import IconWithBg from "./IconWithBg";
 import ScheduleInterviewModal from "./ScheduleInterviewModal";
 import ButtonCapsule from "./ButtonCapsule";
-import {  useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { PopupModal } from "react-calendly";
 
 function ClientRecommendationCard({
@@ -17,10 +17,14 @@ function ClientRecommendationCard({
   recommendedCandidate = {},
   recommendedForJob = {},
 }) {
-
-
+  const [isMounted, setIsMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef(null);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  if (!isMounted) return null;
 
   return (
     <DashboardSection
@@ -64,32 +68,33 @@ function ClientRecommendationCard({
             </div>
             {/* ScheduleInterview */}
             {/* <ScheduleInterviewModal /> */}
-             <ButtonCapsule
-                ref={buttonRef}
-                onPress={() => setIsOpen(true)}
-                // id="scheduleCallBtn"
-                
-              >Schedule Inverview</ButtonCapsule>
+            <ButtonCapsule
+              ref={buttonRef}
+              onPress={() => setIsOpen(true)}
+              // id="scheduleCallBtn"
+            >
+              Schedule Inverview
+            </ButtonCapsule>
 
-              <PopupModal
-               url={"https://calendly.com/sanjaybaghtwani/30min?hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=4624e0"}
-                rootElement={document.getElementById('scheduleCallBtn')}
-                text="Schedule Call"
-                textColor="#fff"
-                color="#000"
-                height = "200px"
-                overflow= "hidden"
-                onModalClose={() => setIsOpen(false)}
-                open={isOpen}
-                prefill={{
-                  guests: [
-                    recommendedCandidate.email
-                  ],
-                }}
-                // styles={{
-                //   height: '10px'
-                // }}
-              />
+            <PopupModal
+              url={
+                "https://calendly.com/sanjaybaghtwani/30min?hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=4624e0"
+              }
+              rootElement={document.getElementById("scheduleCallBtn")}
+              text="Schedule Call"
+              textColor="#fff"
+              color="#000"
+              height="200px"
+              overflow="hidden"
+              onModalClose={() => setIsOpen(false)}
+              open={isOpen}
+              prefill={{
+                guests: [recommendedCandidate.email],
+              }}
+              // styles={{
+              //   height: '10px'
+              // }}
+            />
           </div>
         </div>
       )}

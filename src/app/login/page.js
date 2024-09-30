@@ -1,18 +1,18 @@
 "use client";
 import ErrorPopup from "@/components/ErrorPopup";
+import ForgotPasswordModal from "@/components/ForgotPasswordModal";
 import Heading from "@/components/Heading";
 import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
+import Overlay from "@/components/Overlay";
 import SignInButton from "@/components/SignInButton";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
+import LoaderIcon from "@/svgs/LoaderIcon";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect, useRouter } from "next/navigation";
-import ErrorPopup from "@/components/ErrorPopup";
-import LoaderIcon from "@/svgs/LoaderIcon";
-import ForgotPasswordModal from "@/components/ForgotPasswordModal";
-import Overlay from "@/components/Overlay";
+import { useRouter } from "next/navigation";
+import { useState, useMemo, useCallback, useEffect } from "react";
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
