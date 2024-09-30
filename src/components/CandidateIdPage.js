@@ -5,7 +5,7 @@ import ReportOverlay from "@/components/ReportOverlay";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { useEffect, useState } from "react";
 
-export default function CandidateIdPage({ candidate }) {
+export default function CandidateIdPage({ candidate, candidateId }) {
   const [candidateReport, setCandidateReport] = useState(null);
   const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
 
@@ -13,7 +13,7 @@ export default function CandidateIdPage({ candidate }) {
 
   const getCandidateResult = () => {
     const payload = {
-      endpoint: `get-customer-result?customer_id=${candidate?.customer_id}`,
+      endpoint: `get-customer-result?customer_id=${candidateId}`,
       method: "GET",
     };
     mvp2ApiHelper(payload).then((result) => {
