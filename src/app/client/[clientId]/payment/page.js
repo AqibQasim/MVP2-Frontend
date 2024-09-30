@@ -63,6 +63,7 @@ function Page() {
     const [clientCharges, setClientCharges] = useState([]);
     const [clientCustomerID, setclientCustomerID] = useState('');
     const [totalPayments, setTotalPayments] = useState(0);
+    const [selectedMethodId, setSelectedMethodId] = useState(''); 
     
     
 
@@ -136,7 +137,7 @@ function Page() {
     
 
        const handleSubscription = async () => {
-        const customPrice = 6969; // Example price in cents (10.00 USD)
+        const customPrice = 10000; 
 
         try {
             // Fetch client secret for subscription
@@ -145,7 +146,7 @@ function Page() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ customerId: clientCustomerID, price: customPrice, paymentMethodId: paymentMethods[0].id }),
+                body: JSON.stringify({ customerId: clientCustomerID, price: customPrice, paymentMethodId: selectedMethodId  }),
             });
 
             if (!subscriptionResponse.ok) {
@@ -280,8 +281,8 @@ function convertUnixToDate(unixTimestamp) {
           client_id={client_id}
           total_payment_by_client={`${totalPaymentsByClient}`}
           total_hires={9}
-          next_payment={'15 July 2024 - 0.00'}
-          last_payment={`${clientCharges[0].amount} - ${clientCharges[0].date} - 00.00`}
+          next_payment={'15 July 2024 - 0:00'}
+          last_payment={`${clientCharges[0].amount} - ${clientCharges[0].date} - 00:00`}
         />
       ) : (
         <p>Loading payment history...</p>
@@ -316,9 +317,16 @@ function convertUnixToDate(unixTimestamp) {
                 )}
             </div> */}
              
-                <ClientPaymentMethod paymentMethods={paymentMethods} handleSubmit={handleSubmit} paymentElementRef={paymentElementRef} stripe={stripe}
-    elements={elements}
-    clientSecret={clientSecret}/>
+                <ClientPaymentMethod 
+                paymentMethods={paymentMethods} 
+                handleSubmit={handleSubmit}
+                paymentElementRef={paymentElementRef}
+                stripe={stripe}
+                elements={elements}
+                clientSecret={clientSecret}
+                onSelect={setSelectedMethodId} 
+                />
+
             {/* ) :
             (
                 <div className="w-full gap-4 rounded-[24px] bg-neutral-white p-6">

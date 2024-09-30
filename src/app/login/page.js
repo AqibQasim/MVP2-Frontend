@@ -10,12 +10,20 @@ import Link from "next/link";
 import { redirect, useRouter } from "next/navigation";
 import ErrorPopup from "@/components/ErrorPopup";
 import LoaderIcon from "@/svgs/LoaderIcon";
+import ForgotPasswordModal from "@/components/ForgotPasswordModal";
+import Overlay from "@/components/Overlay";
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
   const router = useRouter();
   const [alert, setalert] = useState(false);
   const [isLoading, setisLoading] = useState(false);
+  const [user_role, setUserRole] = useState("client");
+  const [isForgotPasswordOpened, setIsForgotPasswordOpened] = useState(false);
+
+  const handleCloseOverlay = () => {
+    setIsForgotPasswordOpened(false);
+  };
 
   const validateField = (name, value) => {
     let errorMsg = "";
@@ -51,7 +59,6 @@ function Login() {
     setForm((prevForm) => ({ ...prevForm, [name]: value }));
     validateField(name, value);
   };
-  const [user_role, setUserRole] = useState("client");
 
   const payload = useMemo(
     () => ({
@@ -169,14 +176,15 @@ function Login() {
             )}
 
             <div className="mt-2 w-full text-right">
-              <button className="text-sm text-primary">Forgot Password?</button>
+              <button
+                onClick={() => setIsForgotPasswordOpened(true)}
+                className="text-sm text-primary">Forgot Password?</button>
             </div>
             <OnBoardingButton
               onClick={handleLogin}
               disabled={isFormInvalid}
-              className={`${
-                isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
-              }`}
+              className={`${isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
+                }`}
             >
               {isLoading ? (
                 <div className="flex items-center">
@@ -240,6 +248,22 @@ function Login() {
           </div>
         </div>
       </div>
+      {isForgotPasswordOpened && (
+        <Overlay width={"27.813rem"} height={"30.813rem"} isVisible={isForgotPasswordOpened} closeoverlay={handleCloseOverlay}>
+          <ForgotPasswordModal
+            user_role={user_role}
+            onClose={handleCloseOverlay}
+            imgSrc="/Message.png"
+            // mainHeading={mainHeading}
+            // text={text}
+            // confirmationtext={confirmationtext}
+            //buttonText={"Verify email"}
+            onBoarding={true}
+            containsOtp={true}
+          //signupHandler={handleSignup}
+          />
+        </Overlay>
+      )}
       {alert && (
         <ErrorPopup
           message="Incorrect email or password"

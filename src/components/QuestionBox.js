@@ -454,7 +454,7 @@ const QuestionBox = ({
   // }, [assessmentId]);
 
   const submitTestHandler = async () => {
-    //   console.log("Submit test handler called. Assessment ID:", assessmentId);
+    console.log("Submit test handler called");
     //   localStorage.setItem("testcompleted", "true");
     if (isSubmitted) return;
     setIsSubmitted(true);
