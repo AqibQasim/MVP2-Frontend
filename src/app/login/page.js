@@ -16,7 +16,8 @@ function Login() {
   const [errors, setErrors] = useState({ email: "", password: "" });
   const router = useRouter();
   const [alert, setalert] = useState(false);
-  const [isForgotPasswordOpened,setIsForgotPasswordOpened]=useState(false);
+  const [user_role, setUserRole] = useState("client");
+  const [isForgotPasswordOpened, setIsForgotPasswordOpened] = useState(false);
 
   const handleCloseOverlay = () => {
     setIsForgotPasswordOpened(false);
@@ -56,7 +57,6 @@ function Login() {
     setForm((prevForm) => ({ ...prevForm, [name]: value }));
     validateField(name, value);
   };
-  const [user_role, setUserRole] = useState("client");
 
   const payload = useMemo(
     () => ({
@@ -171,15 +171,14 @@ function Login() {
 
             <div className="mt-2 w-full text-right">
               <button
-              onClick={()=>setIsForgotPasswordOpened(true)}
-              className="text-sm text-primary">Forgot Password?</button>
+                onClick={() => setIsForgotPasswordOpened(true)}
+                className="text-sm text-primary">Forgot Password?</button>
             </div>
             <OnBoardingButton
               onClick={handleLogin}
               disabled={isFormInvalid}
-              className={`${
-                isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
-              }`}
+              className={`${isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
+                }`}
             >
               Login to proceed
             </OnBoardingButton>
@@ -239,7 +238,7 @@ function Login() {
       {isForgotPasswordOpened && (
         <Overlay width={"27.813rem"} height={"30.813rem"} isVisible={isForgotPasswordOpened} closeoverlay={handleCloseOverlay}>
           <ForgotPasswordModal
-          user_role={user_role}
+            user_role={user_role}
             onClose={handleCloseOverlay}
             imgSrc="/Message.png"
             // mainHeading={mainHeading}
@@ -248,7 +247,7 @@ function Login() {
             //buttonText={"Verify email"}
             onBoarding={true}
             containsOtp={true}
-            //signupHandler={handleSignup}
+          //signupHandler={handleSignup}
           />
         </Overlay>
       )}
