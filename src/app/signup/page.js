@@ -27,6 +27,7 @@ function Page() {
   const [errors, setErrors] = useState({});
   const [otp, setotp] = useState(null);
   const [alert, setAlert] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
 
   const payload = useMemo(
     () => ({
@@ -46,6 +47,7 @@ function Page() {
   const handleSignup = useCallback(
     async (event) => {
       event.preventDefault();
+      setisLoading(true);
       if (Object.values(errors).some((err) => err !== "")) {
         return; // Do not proceed with signup if there are validation errors
       }
@@ -104,6 +106,7 @@ function Page() {
           // const revalidatePathOnSignup = `/admin/${user_role === "client" ? "clients" : "candidates"}`;
           // await revalidate(revalidatePathOnSignup);
           setOverlayVisible(false);
+          setisLoading(false);
           router.push("/login");
         } else {
           console.error("Error during signup:", error);
@@ -134,7 +137,6 @@ function Page() {
             return;
           }
 
-          // Check if the user exists
           const checkUserResponse = await fetch(apiUrl, { method: "GET" });
 
           if (checkUserResponse.status === 200) {
@@ -160,7 +162,7 @@ function Page() {
             };
 
             const result = await mvp2ApiHelper(payload);
-            
+
             if (result.status === 200) {
               console.log("Email sent successfully");
               setOverlayVisible(true);
@@ -463,6 +465,7 @@ function Page() {
             onBoarding={true}
             containsOtp={true}
             otp={otp}
+            isLoading={isLoading}
             signupHandler={handleSignup}
           />
         </Overlay>

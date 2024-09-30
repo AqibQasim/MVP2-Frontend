@@ -16,6 +16,7 @@ const SuccessModal = ({
   signupHandler,
   confirmationtext,
   otp,
+  isLoading
 }) => {
   const [isSecondPopupVisible, setIsSecondPopupVisible] = useState(false);
   const [enteredOtp, setEnteredOtp] = useState("");
@@ -93,6 +94,7 @@ const SuccessModal = ({
             buttonText={"Okay I understand"}
             signupHandler={signupHandler}
             confirmationtext={confirmationtext}
+            isLoading={isLoading}
             // onClose={onClose}
           />
         </Overlay>

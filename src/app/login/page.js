@@ -9,11 +9,13 @@ import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import Link from "next/link";
 import { redirect, useRouter } from "next/navigation";
 import ErrorPopup from "@/components/ErrorPopup";
+import LoaderIcon from "@/svgs/LoaderIcon";
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
   const router = useRouter();
   const [alert, setalert] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
 
   const validateField = (name, value) => {
     let errorMsg = "";
@@ -69,6 +71,8 @@ function Login() {
     async (event) => {
       event.preventDefault();
 
+      setisLoading(true);
+
       // Validate all fields before submission
       if (!form.email || !form.password || errors.email || errors.password) {
         return; // Don't proceed if there are validation errors
@@ -82,8 +86,10 @@ function Login() {
           localStorage.setItem("MVP_CLIENT_LOGGEDIN", true);
           if (user_role === "customer") {
             router.push(`/candidate/${result.data.id}`);
+            setisLoading(false);
           } else {
             router.push(`/client/${result.data.id}`);
+            setisLoading(false);
           }
         }
       } else {
@@ -172,7 +178,14 @@ function Login() {
                 isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
               }`}
             >
-              Login to proceed
+              {isLoading ? (
+                <div className="flex items-center">
+                  <LoaderIcon />
+                  <span className="ml-2">Logging in...</span>
+                </div>
+              ) : (
+                "Login to proceed"
+              )}
             </OnBoardingButton>
             <div className="my-1 w-full text-center text-grey-primary-tint-30">
               <div className="flex items-center justify-center gap-2">
