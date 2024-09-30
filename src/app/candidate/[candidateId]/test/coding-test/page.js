@@ -118,7 +118,7 @@ const Page = () => {
     mvp2ApiHelper(codeSubmitPayload).then((data) => {
       console.log("response: ", data);
       if (data.status === 200) {
-        router.push(`/candidate/${params.candidateId}/test/submit-test`);
+        window.location.href=`/candidate/${params.candidateId}`;
       }
     });
 

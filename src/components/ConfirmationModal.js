@@ -1,5 +1,6 @@
 import Image from "next/image";
 import OnBoardingButton from "./OnBoardingButton";
+import LoaderIcon from "@/svgs/LoaderIcon";
 
 const ConfirmationModal = ({
   imgSrc,
@@ -8,6 +9,7 @@ const ConfirmationModal = ({
   buttonText,
   onClose,
   confirmationtext,
+  isLoading,
   signupHandler,
 }) => {
   return (
@@ -28,8 +30,16 @@ const ConfirmationModal = ({
             {confirmationtext}
           </p>
         </div>
+        {isLoading}
         <OnBoardingButton onClick={signupHandler}>
-          {buttonText}
+          {isLoading ? (
+            <div className="flex items-center">
+              <LoaderIcon />
+              <span className="ml-2">Signing in...</span>
+            </div>
+          ) : (
+            "Okay I underStand"
+          )}
         </OnBoardingButton>
       </div>
     </div>

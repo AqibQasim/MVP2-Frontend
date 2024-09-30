@@ -8,13 +8,23 @@ import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
+import { redirect, useRouter } from "next/navigation";
+import ErrorPopup from "@/components/ErrorPopup";
+import LoaderIcon from "@/svgs/LoaderIcon";
+import ForgotPasswordModal from "@/components/ForgotPasswordModal";
+import Overlay from "@/components/Overlay";
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
   const router = useRouter();
   const [alert, setalert] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
+  const [user_role, setUserRole] = useState("client");
+  const [isForgotPasswordOpened, setIsForgotPasswordOpened] = useState(false);
+
+  const handleCloseOverlay = () => {
+    setIsForgotPasswordOpened(false);
+  };
 
   const validateField = (name, value) => {
     let errorMsg = "";
@@ -50,7 +60,6 @@ function Login() {
     setForm((prevForm) => ({ ...prevForm, [name]: value }));
     validateField(name, value);
   };
-  const [user_role, setUserRole] = useState("client");
 
   const payload = useMemo(
     () => ({
@@ -69,6 +78,8 @@ function Login() {
   const handleLogin = useCallback(
     async (event) => {
       event.preventDefault();
+
+      setisLoading(true);
 
       // Validate all fields before submission
       if (!form.email || !form.password || errors.email || errors.password) {
@@ -91,8 +102,10 @@ function Login() {
 
           if (user_role === "customer") {
             router.push(`/candidate/${result.data.id}`);
+            setisLoading(false);
           } else {
             router.push(`/client/${result.data.id}`);
+            setisLoading(false);
           }
         }
       } else {
@@ -172,7 +185,12 @@ function Login() {
             )}
 
             <div className="mt-2 w-full text-right">
-              <button className="text-sm text-primary">Forgot Password?</button>
+              <button
+                onClick={() => setIsForgotPasswordOpened(true)}
+                className="text-sm text-primary"
+              >
+                Forgot Password?
+              </button>
             </div>
             <OnBoardingButton
               onClick={handleLogin}
@@ -181,7 +199,14 @@ function Login() {
                 isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
               }`}
             >
-              Login to proceed
+              {isLoading ? (
+                <div className="flex items-center">
+                  <LoaderIcon />
+                  <span className="ml-2">Logging in...</span>
+                </div>
+              ) : (
+                "Login to proceed"
+              )}
             </OnBoardingButton>
             <div className="my-1 w-full text-center text-grey-primary-tint-30">
               <div className="flex items-center justify-center gap-2">
@@ -229,6 +254,27 @@ function Login() {
           </div>
         </div>
       </div>
+      {isForgotPasswordOpened && (
+        <Overlay
+          width={"27.813rem"}
+          height={"30.813rem"}
+          isVisible={isForgotPasswordOpened}
+          closeoverlay={handleCloseOverlay}
+        >
+          <ForgotPasswordModal
+            user_role={user_role}
+            onClose={handleCloseOverlay}
+            imgSrc="/Message.png"
+            // mainHeading={mainHeading}
+            // text={text}
+            // confirmationtext={confirmationtext}
+            //buttonText={"Verify email"}
+            onBoarding={true}
+            containsOtp={true}
+            //signupHandler={handleSignup}
+          />
+        </Overlay>
+      )}
       {alert && (
         <ErrorPopup
           message="Incorrect email or password"

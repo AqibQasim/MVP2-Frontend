@@ -27,6 +27,7 @@ function Page() {
   const [errors, setErrors] = useState({});
   const [otp, setotp] = useState(null);
   const [alert, setAlert] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
 
   const payload = useMemo(
     () => ({
@@ -46,6 +47,7 @@ function Page() {
   const handleSignup = useCallback(
     async (event) => {
       event.preventDefault();
+      setisLoading(true);
       if (Object.values(errors).some((err) => err !== "")) {
         return; // Do not proceed with signup if there are validation errors
       }
@@ -79,7 +81,7 @@ function Page() {
         console.log("RESULT from signup: ", result.data.status);
 
         const createAccountResponse = await fetch(
-          "http://localhost:3001/create-stripe-account",
+          `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-stripe-account`,
           {
             method: "POST",
             headers: {
@@ -104,6 +106,7 @@ function Page() {
           // const revalidatePathOnSignup = `/admin/${user_role === "client" ? "clients" : "candidates"}`;
           // await revalidate(revalidatePathOnSignup);
           setOverlayVisible(false);
+          setisLoading(false);
           router.push("/login");
         } else {
           console.error("Error during signup:", error);
@@ -126,15 +129,14 @@ function Page() {
           // Determine the correct API based on user_role
           let apiUrl = "";
           if (user_role === "client") {
-            apiUrl = `http://localhost:3001/client-by-email?email=${form.email}`;
+            apiUrl = `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/client-by-email?email=${form.email}`;
           } else if (user_role === "customer") {
-            apiUrl = `http://localhost:3001/customer-by-email?email=${form.email}`;
+            apiUrl = `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/customer-by-email?email=${form.email}`;
           } else {
             console.error("Unknown user role");
             return;
           }
 
-          // Check if the user exists
           const checkUserResponse = await fetch(apiUrl, { method: "GET" });
 
           if (checkUserResponse.status === 200) {
@@ -160,7 +162,7 @@ function Page() {
             };
 
             const result = await mvp2ApiHelper(payload);
-            
+
             if (result.status === 200) {
               console.log("Email sent successfully");
               setOverlayVisible(true);
@@ -463,6 +465,7 @@ function Page() {
             onBoarding={true}
             containsOtp={true}
             otp={otp}
+            isLoading={isLoading}
             signupHandler={handleSignup}
           />
         </Overlay>
