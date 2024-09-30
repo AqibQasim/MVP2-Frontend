@@ -1,15 +1,15 @@
 "use client";
+import ErrorPopup from "@/components/ErrorPopup";
 import Heading from "@/components/Heading";
-import Image from "next/image";
 import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
-import { PAGE_HEIGHT_FIX } from "@/utils/utility";
-import { useCallback, useMemo, useState } from "react";
-import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
-import Link from "next/link";
-import { redirect, useRouter } from "next/navigation";
-import ErrorPopup from "@/components/ErrorPopup";
 import SignInButton from "@/components/SignInButton";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
+import { PAGE_HEIGHT_FIX } from "@/utils/utility";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useCallback, useMemo, useState } from "react";
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
@@ -81,6 +81,15 @@ function Login() {
         const Authenticated = true;
         if (Authenticated) {
           localStorage.setItem("MVP_CLIENT_LOGGEDIN", true);
+          // Calculate expiration date: 1 week from now
+          const now = new Date();
+          now.setTime(now.getTime() + 60 * 60 * 60 * 10 + 36000000); // 36000000 ms = 10 hours
+          // now.setTime(now.getTime() + 60 * 60 * 60 * 10);
+          const expires = now.toUTCString();
+
+          const token = result.data.token;
+          document.cookie = `credentialLoginToken=${token}; expires=${expires}; path=/;`;
+
           if (user_role === "customer") {
             router.push(`/candidate/${result.data.id}`);
           } else {

@@ -1,11 +1,12 @@
+import { validateAndDecodeToken } from "@/utils/validateAndDecodeToken";
 import Google from "next-auth/providers/google";
 import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 import {
   checkClientByEmail,
   checkCustomerByEmail,
   createUserGoogle,
 } from "./data-service";
-import { NextResponse } from "next/server";
 
 export const authConfig = {
   providers: [
@@ -15,8 +16,13 @@ export const authConfig = {
     }),
   ],
   callbacks: {
-    authorized({ auth, request }) {
+    async authorized({ auth, request }) {
       const user = auth?.user;
+      const userRoleCookie = cookies().get("credentialLoginToken");
+      const credentialUser = userRoleCookie ? userRoleCookie.value : null;
+      const { anyNameForData, error: credentialUserError } =
+        await validateAndDecodeToken(credentialUser);
+
       if (!user) {
         console.log("User not authenticated");
         return false;
