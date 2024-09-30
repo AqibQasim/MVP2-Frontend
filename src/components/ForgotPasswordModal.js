@@ -9,6 +9,7 @@ import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import OTPInput from "react-otp-input";
 import ButtonCapsule from "./ButtonCapsule";
 import { candidateUpdateProfile } from "@/lib/data-service";
+import { useRouter } from "next/navigation";
 const ForgotPasswordModal = ({
   imgSrc,
   //mainHeading,
@@ -21,6 +22,7 @@ const ForgotPasswordModal = ({
   signupHandler,
   //confirmationtext,
 }) => {
+  const router = useRouter();
   const [isSecondPopupVisible, setIsSecondPopupVisible] = useState(false);
   const [email, setEmail] = useState(null);
   const [enteredOtp, setEnteredOtp] = useState("");
@@ -32,14 +34,29 @@ const ForgotPasswordModal = ({
   const [confirmPassword, setConfirmPassword] = useState(null)
 
 
-  const handlePasswordReset = async() => {
+  const handlePasswordReset = async () => {
     if (password === confirmPassword) {
 
-      const body={
-        password
+      const body = {
+        new_password: password,
+        email,
+        user_role
       }
 
-      const response= await candidateUpdateProfile
+      const payload = {
+        method: 'POST',
+        endpoint: 'password-reset',
+        body
+      }
+
+      const response = await mvp2ApiHelper(payload);
+      if (response.status === 200) {
+        console.log(response.data)
+        onClose();
+      } else {
+        console.log(response.data)
+        setErrors((prevErrors) => ({ ...prevErrors, ['passwordResetError']: response.data?.message }));
+      }
     }
   }
 
@@ -217,9 +234,9 @@ const ForgotPasswordModal = ({
                 placeholder={"Password"}
                 className="mt-5 py-3 text-start"
                 onChange={(e) => {
-                  const {name,value}=e.target;
+                  const { name, value } = e.target;
                   setPassword(value);
-                  validateField(name,value);
+                  validateField(name, value);
                 }}
               />
               <div>
@@ -233,9 +250,9 @@ const ForgotPasswordModal = ({
                 placeholder={"Confirm Password"}
                 className="mt-5 py-3 text-start"
                 onChange={(e) => {
-                  const {name,value}=e.target;
+                  const { name, value } = e.target;
                   setConfirmPassword(value);
-                  validateField(name,value);
+                  validateField(name, value);
                 }}
               />
               <div>
@@ -247,7 +264,13 @@ const ForgotPasswordModal = ({
           )}
         </div>
 
-        <ButtonCapsule className='mt-3 w-full justify-between' onPress={(e) => {
+        <div>
+          {errors.passwordResetError && (
+            <p className="text-xs text-red-500">{errors.passwordResetError}</p>
+          )}
+        </div>
+
+        <ButtonCapsule className='mt-3 w-full justify-between' onPress={async (e) => {
           if (popupState === "email" && email) {
             setPopupState("otp");
             sendOtp(e);
@@ -255,6 +278,10 @@ const ForgotPasswordModal = ({
 
           if (popupState === "otp") {
             if (enteredOtp) handleOtpVerification(e);
+          }
+
+          if (popupState === "reset-password") {
+            await handlePasswordReset();
           }
         }}>
           {(popupState === "email") && buttonText("Send 4-digit code")}
