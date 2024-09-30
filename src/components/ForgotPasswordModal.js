@@ -83,14 +83,41 @@ const ForgotPasswordModal = ({
     setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMsg }));
   };
 
+  const validateUser = async () => {
+    let endpoint = null;
+
+    if (user_role === 'client') {
+      endpoint = `client-by-email?email=${email}`
+    }
+
+    if (user_role === 'customer') {
+      endpoint = `customer-by-email?email=${email}`
+    }
+    const userPayload = {
+      endpoint,
+      method: 'GET'
+    }
+
+    const result = await mvp2ApiHelper(userPayload);
+
+    if (result.status !== 200) {
+      setErrors((prevErrors) => ({ ...prevErrors, ['passwordResetError']: result?.data?.message }));
+      console.log(result?.data?.message);
+      //setOverlayVisible(true);
+    }else{
+      setErrors((prevErrors) => ({ ...prevErrors, ['passwordResetError']: null }));
+    }
+  }
+
   const handleOtpVerification = () => {
 
     if (enteredOtp.toString() === otp.toString()) {
+      setErrors((prevErrors) => ({ ...prevErrors, ['passwordResetError']: null }));
       console.log("OTP verified successfully");
       setPopupState("reset-password");
       onClose;
     } else {
-      console.log("Incorrect OTP");
+      setErrors((prevErrors) => ({ ...prevErrors, ['passwordResetError']: 'Incorrect OTP' }));
     }
   };
 
@@ -207,6 +234,13 @@ const ForgotPasswordModal = ({
               <div className="flex justify-center items-center flex-col">
                 <OTPInput
                   value={enteredOtp}
+                  onPaste={(e) => {
+                    const pastedData = e.clipboardData.getData('text');         
+                    // Check if the pasted data contains exactly the right number of digits
+                    if (pastedData.length === 6) {
+                      setEnteredOtp(pastedData);  // Set the OTP value if the length matches
+                    }
+                  }}
                   onChange={setEnteredOtp}
                   containerStyle={'w-full h-[4.5rem] gap-[0.625rem] justify-center'}
                   numInputs={6}
@@ -272,8 +306,11 @@ const ForgotPasswordModal = ({
 
         <ButtonCapsule className='mt-3 w-full justify-between' onPress={async (e) => {
           if (popupState === "email" && email) {
-            setPopupState("otp");
-            sendOtp(e);
+            await validateUser();
+            if (errors?.passwordResetError===null) {
+              sendOtp(e);
+              setPopupState("otp");
+            }
           }
 
           if (popupState === "otp") {
