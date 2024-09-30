@@ -6,7 +6,7 @@ import DashboardSection from "./DashboardSection";
 import PaymentMethodCard from "./PaymentMethodCard";
 import Modal from "./AdminJobsFormModal";
 
-function ClientPaymentMethod({ paymentMethods, stripe, clientSecret, stripePromise }) {
+function ClientPaymentMethod({ paymentMethods, stripe, clientSecret, stripePromise, onSelect }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const paymentElementRef = useRef(null);
     const [cardholderName, setCardholderName] = useState('');
@@ -96,7 +96,10 @@ function ClientPaymentMethod({ paymentMethods, stripe, clientSecret, stripePromi
                         name={method.billing_details.name}
                         date={`${method.card.exp_month}/${method.card.exp_year}`}
                         selected={method.id === selectedMethodId}
-                        onSelect={() => handleSelectMethod(method.id)}
+                         onSelect={() => {
+                        handleSelectMethod(method.id);
+                        onSelect(method.id); // Call onSelect to update the state in the parent
+                    }}
                     />
                 ))}
 
