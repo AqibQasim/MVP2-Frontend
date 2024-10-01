@@ -123,15 +123,15 @@ export async function createAJobAction(formData) {
   }
 
   revalidatePath(`/client/${createJobData.client_id}`);
+  revalidatePath(`/client/${createJobData.client_id}/jobs`);
   revalidatePath("/admin/jobs");
   return { message: "Candidate successfully referred to the client." };
 
   // redirect("/admin/clients");
 }
 
-export async function referCandidateToClientAction(params, closeModal) {
+export async function referCandidateToClientAction(params) {
   const { client_id, customer_id, job_posting_id, hourly_rate } = params;
-  console.log("Params in refer Candidate to client Action: ", params);
   if (!client_id) return { error: "Client id is required" };
   if (!customer_id) return { error: "Candidate id is required" };
   if (!job_posting_id) return { error: "Job id is required" };
@@ -147,9 +147,6 @@ export async function referCandidateToClientAction(params, closeModal) {
   if (error) {
     return { error };
   }
-  const path = `/client/${client_id}/recommended`;
-  console.log("path: ", path);
-  console.log("/client/69761e97-1650-4580-9464-497bfc6ba1a5/recommended");
 
   revalidatePath(`/client/${client_id}`);
   revalidatePath(`/client/${client_id}/recommended`);
