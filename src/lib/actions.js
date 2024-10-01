@@ -147,11 +147,14 @@ export async function referCandidateToClientAction(params, closeModal) {
   if (error) {
     return { error };
   }
+  const path = `/client/${client_id}/recommended`;
+  console.log("path: ", path);
+  console.log("/client/69761e97-1650-4580-9464-497bfc6ba1a5/recommended");
 
+  revalidatePath(`/client/${client_id}`);
   revalidatePath(`/client/${client_id}/recommended`);
   revalidatePath("/admin/candidates");
   return { message: "Candidate successfully referred to the client." };
-  // redirect("/admin/candidates");
 }
 
 export async function updateCandidateProfileAction(formData) {

@@ -210,6 +210,11 @@ export async function getClients() {
   };
 
   const result = await mvp2ApiHelper(payload);
+  console.log("Clients results", result);
+  if (result.status !== 200) {
+    console.error(result.data.message);
+    throw new Error(result.data.message);
+  }
   return {
     status: result.status,
     data: result.data,

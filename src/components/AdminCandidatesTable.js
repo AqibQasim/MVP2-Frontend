@@ -1,5 +1,5 @@
 "use client";
-import AdminCandidateRecommendedRow from "./AdminCandidateRecommendedRow";
+import AdminCandidateRow from "./AdminCandidateRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 
@@ -20,8 +20,8 @@ function AdminCandidatesTable({ candidates }) {
         </Table.Header>
         <Table.Body
           data={candidates?.data}
-          render={(recommended, i) => (
-            <AdminCandidateRecommendedRow recommended={recommended} key={i} />
+          render={(candidate, i) => (
+            <AdminCandidateRow candidate={candidate} key={i} />
           )}
         />
       </Table>
