@@ -1,15 +1,18 @@
 import ClientDashboardSideNav from "@/components/ClientDashboardSideNav";
 import ClientHeader from "@/components/ClientHeader";
+import ClientLogout from "@/components/ClientLogout";
 import { getClientById } from "@/lib/data-service";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
-import ClientLogout from "@/components/ClientLogout";
 
-import AuthCheck from "@/components/AuthCheck";
+import SignOutButton from "@/components/SignOutButton";
+import { auth } from "@/lib/auth";
 // import { useRouter } from "next/router";
 
 async function layout({ children, params }) {
   const clientId = params.clientId;
   console.log("clientId", clientId);
+  const session = await auth();
+
   // const router = useRouter();
 
   // useEffect(() => {
@@ -34,7 +37,7 @@ async function layout({ children, params }) {
       </header>
       <aside className="col-start-1 row-span-2 row-start-1 rounded-4xl bg-neutral-white p-6">
         <ClientDashboardSideNav clientId={clientId} />
-        <ClientLogout />
+        {session?.user ? <SignOutButton /> : <ClientLogout />}
       </aside>
       {/* <AuthCheck>
         <div className="body-scroll overflow-y-scroll rounded-3xl bg-transparent">

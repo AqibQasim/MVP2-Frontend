@@ -4,6 +4,7 @@ import Heading from "@/components/Heading";
 import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
 import Overlay from "@/components/Overlay";
+import SignInButton from "@/components/SignInButton";
 import SuccessModal from "@/components/SuccessModal";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { revalidate } from "@/lib/data-service";
@@ -444,7 +445,11 @@ function Page() {
                 />
               </div>
             </div>
-            <button className="text-md w-full rounded-full border-[1px] bg-white px-4 py-2 font-semibold text-black shadow-md">
+
+            {/* Google signin */}
+            <SignInButton user_role={user_role} />
+
+            {/* <button className="text-md w-full rounded-full border-[1px] bg-white px-4 py-2 font-semibold text-black shadow-md">
               <Image
                 src="google.svg"
                 width={20}
@@ -453,7 +458,7 @@ function Page() {
                 className="inline-block"
               />{" "}
               Continue with Google
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
