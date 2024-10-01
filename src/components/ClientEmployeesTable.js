@@ -3,28 +3,28 @@ import ClientEmployeesRow from "./ClientEmployeesRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 
-const employees = [
-  {
-    name: "Richard Feynman",
-    image: "/avatars/avatar-1.png",
-    profession: "Software Developer",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commitment: "part-time",
-    status: "hired",
-  },
-  {
-    name: "John Doe",
-    image: "/avatars/avatar-1.png",
-    profession: "Back-end Developer",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commitment: "full-time",
-    status: "trial",
-  },
-];
+// const employees = [
+//   {
+//     name: "Richard Feynman",
+//     image: "/avatars/avatar-1.png",
+//     profession: "Software Developer",
+//     skills: ["react", "python", "javascript"],
+//     experience: "expert",
+//     commitment: "part-time",
+//     status: "hired",
+//   },
+//   {
+//     name: "John Doe",
+//     image: "/avatars/avatar-1.png",
+//     profession: "Back-end Developer",
+//     skills: ["react", "python", "javascript"],
+//     experience: "expert",
+//     commitment: "full-time",
+//     status: "trial",
+//   },
+// ];
 
-function ClientEmployeesTable() {
+function ClientEmployeesTable({ hiredCandidates }) {
   return (
     <DashboardSection paragraph="Employees you’ve" heading="Recently hired">
       <Table columns="grid-cols-[1fr_1fr_0.7fr_0.7fr_0.7fr_0.7fr]">
@@ -37,9 +37,9 @@ function ClientEmployeesTable() {
           <div className="action text-center">Action</div>
         </Table.Header>
         <Table.Body
-          data={employees}
-          render={(employee, i) => (
-            <ClientEmployeesRow employee={employee} key={i} />
+          data={hiredCandidates}
+          render={(hiredCandidate, i) => (
+            <ClientEmployeesRow hiredCandidate={hiredCandidate} key={i} />
           )}
         />
       </Table>
