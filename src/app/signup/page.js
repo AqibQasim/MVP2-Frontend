@@ -80,27 +80,32 @@ function Page() {
         const result = await mvp2ApiHelper(payload);
         console.log("RESULT from signup: ", result.data.status);
 
-        const createAccountResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-stripe-account`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+        let createAccountData;
+
+        if (user_role === "client") {
+          const createAccountResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-stripe-account`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                client_id: result.data.client_id,
+                stripe_id: stripeData.customer.id,
+              }),
             },
-            body: JSON.stringify({
-              client_id: result.data.client_id,
-              stripe_id: stripeData.customer.id,
-            }),
-          },
-        );
+          );
+          createAccountData = await createAccountResponse.json();
 
-        const createAccountData = await createAccountResponse.json();
-
-        if (createAccountResponse.status !== 200) {
-          throw new Error(createAccountData.error);
+          if (createAccountResponse.status !== 200) {
+            throw new Error(createAccountData.error);
+          }
+          console.log(
+            "Stripe account created successfully:",
+            createAccountData,
+          );
         }
-        console.log("Stripe account created successfully:", createAccountData);
-
         if (result.data.status === 200) {
           console.log("Signed up successfully");
           // const revalidatePathOnSignup = `/admin/${user_role === "client" ? "clients" : "candidates"}`;
