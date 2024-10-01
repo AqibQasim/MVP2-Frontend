@@ -28,6 +28,16 @@ function Page() {
   const [otp, setotp] = useState(null);
   const [alert, setAlert] = useState(false);
   const [isLoading, setisLoading] = useState(false);
+  const [show, setShow] = useState(false);
+  const [show2, setShow2] = useState(false);
+
+
+  const handClick = () => {
+    setShow(!show)
+  }
+  const handClick2 = () => {
+    setShow2(!show2)
+  }
 
   const payload = useMemo(
     () => ({
@@ -371,22 +381,66 @@ function Page() {
               )}
 
               <div className="flex gap-2">
+              <div className="flex"  >
                 <Input
-                  type="password"
+                   type= {show ? "text" :"password" }
                   name="password"
                   value={form.password}
                   onChange={handleChange}
                   placeholder="Enter password"
                   className="mt-3"
                 />
+                 <p className=" ml-[-6vh] " > 
+                  {show ?
+                   <Image
+                  src="eye-close.svg"
+                  width={20}
+                  height={20}
+                  alt="line"
+                  onClick={handClick}
+                  className="inline-block mb-[-6vh] cursor-pointer "
+                  />:
+                  <Image
+                  src="eye.svg"
+                  width={20}
+                  height={20}
+                  alt="line"
+                  onClick={handClick}
+                  className="inline-block mb-[-6vh] cursor-pointer "
+                  />}
+                
+                </p>
+                </div>
+                <div className="flex"  >
                 <Input
-                  type="password"
+                   type= {show2 ? "text" :"password" }
                   name="confirmPassword"
                   value={form.confirmPassword}
                   onChange={handleChange}
                   placeholder="Confirm password"
                   className="mt-3"
                 />
+                 <p className=" ml-[-6vh] " > 
+                  {show2?
+                   <Image
+                  src="eye-close.svg"
+                  width={20}
+                  height={20}
+                  alt="line"
+                  onClick={handClick2}
+                  className="inline-block mb-[-6vh] cursor-pointer "
+                  />:
+                  <Image
+                  src="eye.svg"
+                  width={20}
+                  height={20}
+                  alt="line"
+                  onClick={handClick2}
+                  className="inline-block mb-[-6vh] cursor-pointer "
+                  />}
+                
+                </p>
+                </div>
               </div>
               <div className="flex gap-2">
                 <div>
