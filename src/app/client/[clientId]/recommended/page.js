@@ -8,8 +8,13 @@ async function Page({ params }) {
     await getAllRecommendedCandidates(clientId);
 
   if (error) console.log("Error: getting recommeneded Candidates: ", error);
+  if (error)
+    return (
+      <>
+        <h1>Error: getting recommeneded Candidates</h1> <p> {error} </p>
+      </>
+    );
 
-  console.log("on Page: ", recommendedCandidatesForJobs);
   return (
     <>
       <ClientRecommendedTable
