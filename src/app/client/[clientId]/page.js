@@ -1,3 +1,4 @@
+"use client";
 import ClientEmployeesTable from "@/components/ClientEmployeesTable";
 import ClientJobsOverviewTable from "@/components/ClientJobsOverviewTable";
 import ClientRecommendationCard from "@/components/ClientRecommendationCard";
@@ -6,15 +7,8 @@ import {
   getClientJobs,
   getRecommendedCandidateOfClient,
 } from "@/lib/data-service";
-// export async function generateMetadata({ params }) {
-//   const client = await getClientById(params.clientId);
-//   return { title: `Client ${client?.name}` };
-// }
-// export async function generateStaticParams() {
-//   const clients = await getClients();
-//   const ids = clients.map((client) => ({ clientId: String(client.client_id) }));
-//   return ids;
-// }
+import { useState } from "react";
+
 export default async function Page({ params }) {
   const [client, recommendedCandidates, jobs] = await Promise.all([
     getClientById(params.clientId),
@@ -23,6 +17,10 @@ export default async function Page({ params }) {
   ]);
   return (
     <div className="space-y-2">
+      {/* {showResponseMessage && (
+        <ErrorIndicator showErrorMessage={showResponseMessage} 
+        msgText={"Your Interview with the client has ended. Do you want to accept this client for trial?"} />
+      )} */}
       <ClientRecommendationCard
         client={client}
         recommendedCandidate={recommendedCandidates.customer}

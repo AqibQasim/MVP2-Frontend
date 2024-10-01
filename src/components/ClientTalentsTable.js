@@ -4,69 +4,6 @@ import ClientTalentsRow from "./ClientTalentsRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 
-const talents = [
-  {
-    id: 1,
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["javascript", "react", "python"],
-    jobTitle: "Front-end developer",
-    experience: "Intermediate",
-    jobType: "full time",
-    dateHired: "20-Sep-2024",
-  },
-  {
-    id: 2,
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["javascript", "react", "python"],
-    jobTitle: "Front-end developer",
-    experience: "Intermediate",
-    jobType: "full time",
-    dateHired: "20-Sep-2024",
-  },
-  {
-    id: 3,
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["javascript", "react", "python"],
-    jobTitle: "Front-end developer",
-    experience: "Intermediate",
-    jobType: "full time",
-    dateHired: "20-Sep-2024",
-  },
-  {
-    id: 4,
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["javascript", "react", "python"],
-    jobTitle: "Front-end developer",
-    experience: "Intermediate",
-    jobType: "full time",
-    dateHired: "20-Sep-2024",
-  },
-  {
-    id: 5,
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["javascript", "react", "python"],
-    jobTitle: "Front-end developer",
-    experience: "Intermediate",
-    jobType: "full time",
-    dateHired: "20-Sep-2024",
-  },
-  {
-    id: 6,
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["javascript", "react", "python"],
-    jobTitle: "Front-end developer",
-    experience: "Intermediate",
-    jobType: "full time",
-    dateHired: "20-Sep-2024",
-  },
-];
-
 function ClientTalentsTable({ hiredTalents }) {
   const params = useParams();
   const clientId = params?.clientId;
