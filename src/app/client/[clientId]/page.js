@@ -2,6 +2,7 @@ import ClientEmployeesTable from "@/components/ClientEmployeesTable";
 import ClientJobsOverviewTable from "@/components/ClientJobsOverviewTable";
 import ClientRecommendationCard from "@/components/ClientRecommendationCard";
 import {
+  getAllRecommendedCandidates,
   getClientById,
   getClientJobs,
   getRecommendedCandidateOfClient,
@@ -16,11 +17,16 @@ import {
 //   return ids;
 // }
 export default async function Page({ params }) {
-  const [client, recommendedCandidates, jobs] = await Promise.all([
-    getClientById(params.clientId),
-    getRecommendedCandidateOfClient(params.clientId),
-    getClientJobs(params.clientId),
-  ]);
+  const filter = "accept";
+  const [client, recommendedCandidates, jobs, hiredCandidates] =
+    await Promise.all([
+      getClientById(params.clientId),
+      getRecommendedCandidateOfClient(params.clientId),
+      getClientJobs(params.clientId),
+      getAllRecommendedCandidates(params.clientId, filter),
+    ]);
+  const { data: hiredTalents, error } = hiredCandidates;
+
   return (
     <div className="space-y-2">
       <ClientRecommendationCard
@@ -29,7 +35,7 @@ export default async function Page({ params }) {
         recommendedForJob={recommendedCandidates.job_postings}
       />
       <ClientJobsOverviewTable jobs={jobs} />
-      <ClientEmployeesTable />
+      <ClientEmployeesTable hiredCandidates={hiredTalents} />
     </div>
   );
 }
