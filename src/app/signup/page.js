@@ -109,10 +109,10 @@ function Page() {
         }
         if (result.data.status === 200) {
           console.log("Signed up successfully");
-          // const revalidatePathOnSignup = `/admin/${user_role === "client" ? "clients" : "candidates"}`;
-          // await revalidate(revalidatePathOnSignup);
           setOverlayVisible(false);
           setisLoading(false);
+          const revalidatePathOnSignup = `/admin/${user_role === "client" ? "clients" : "candidates"}`;
+          await revalidate(revalidatePathOnSignup);
           router.push("/login");
         } else {
           console.error("Error during signup:", error);
