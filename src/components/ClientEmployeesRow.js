@@ -26,7 +26,7 @@ function ClientEmployeesRow({ hiredCandidate }) {
       <div className="experience text-center">{customer?.experience}</div>
       <div className="commit text-center"> {customer?.commitment} </div>
       <Capsule className="status mx-auto w-max" status={customer?.status}>
-        {customer.status}
+        {customer?.status || "[status]"}
       </Capsule>
       <CapsuleLink
         className="action ml-auto"
