@@ -31,33 +31,33 @@ const ForgotPasswordModal = ({
   const [error, setError] = useState(false);
   const [errors, setErrors] = useState({});
   const [password, setPassword] = useState(null);
-  const [confirmPassword, setConfirmPassword] = useState(null)
-
+  const [confirmPassword, setConfirmPassword] = useState(null);
 
   const handlePasswordReset = async () => {
     const body = {
       new_password: password,
       email,
-      user_role
-    }
+      user_role,
+    };
 
     const payload = {
-      method: 'POST',
-      endpoint: 'password-reset',
-      body
-    }
+      method: "POST",
+      endpoint: "password-reset",
+      body,
+    };
 
     const response = await mvp2ApiHelper(payload);
     if (response.status === 200) {
-      console.log(response.data)
+      console.log(response.data);
       onClose();
     } else {
-      console.log(response.data)
-      setErrors((prevErrors) => ({ ...prevErrors, ['passwordResetError']: response.data?.message }));
+      console.log(response.data);
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        ["passwordResetError"]: response.data?.message,
+      }));
     }
-  }
-
-
+  };
 
   const validateField = (name, value) => {
     let errorMsg = "";
@@ -83,38 +83,49 @@ const ForgotPasswordModal = ({
   const validateUser = async () => {
     let endpoint = null;
 
-    if (user_role === 'client') {
-      endpoint = `client-by-email?email=${email}`
+    if (user_role === "client") {
+      endpoint = `client-by-email?email=${email}`;
     }
 
-    if (user_role === 'customer') {
-      endpoint = `customer-by-email?email=${email}`
+    if (user_role === "customer") {
+      endpoint = `customer-by-email?email=${email}`;
     }
     const userPayload = {
       endpoint,
-      method: 'GET'
-    }
+      method: "GET",
+    };
 
     const result = await mvp2ApiHelper(userPayload);
 
     if (result.status !== 200) {
-      setErrors((prevErrors) => ({ ...prevErrors, ['passwordResetError']: result?.data?.message }));
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        ["passwordResetError"]: result?.data?.message,
+      }));
       console.log(result?.data?.message);
       //setOverlayVisible(true);
     } else {
-      setErrors((prevErrors) => ({ ...prevErrors, ['passwordResetError']: null }));
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        ["passwordResetError"]: null,
+      }));
     }
-  }
+  };
 
   const handleOtpVerification = () => {
-
     if (enteredOtp.toString() === otp.toString()) {
-      setErrors((prevErrors) => ({ ...prevErrors, ['passwordResetError']: null }));
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        ["passwordResetError"]: null,
+      }));
       console.log("OTP verified successfully");
       setPopupState("reset-password");
       onClose;
     } else {
-      setErrors((prevErrors) => ({ ...prevErrors, ['passwordResetError']: 'Incorrect OTP' }));
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        ["passwordResetError"]: "Incorrect OTP",
+      }));
     }
   };
 
@@ -154,16 +165,10 @@ const ForgotPasswordModal = ({
     [email], // dependencies
   );
 
-  // const handleVerifyEmailClick = () => {
-  //   setIsSecondPopupVisible(true);
-  //   onClose; // Close the first popup
-  // };
-
   const mainHeading = (heading, gradientText) => (
     <span>
       {heading}{" "}
-      {
-        (gradientText) &&
+      {gradientText && (
         <span
           style={{
             backgroundImage: "linear-gradient(to right, #4624E0, white)",
@@ -173,14 +178,11 @@ const ForgotPasswordModal = ({
           }}
         >
           Code.
-        </span>}
+        </span>
+      )}
     </span>
   );
-  let text = (t) => (
-    <>
-      {t}
-    </>
-  );
+  let text = (t) => <>{t}</>;
   let confirmationtext = (
     <>
       Your account is currently under review. Soon you’ll receive an email on{" "}
@@ -188,11 +190,7 @@ const ForgotPasswordModal = ({
     </>
   );
 
-  const buttonText = (t) => (
-    <>
-      {t}
-    </>
-  )
+  const buttonText = (t) => <>{t}</>;
 
   return (
     <div className="pt flex h-[100%] w-[100%] flex-col items-center justify-around font-lufga">
@@ -206,19 +204,20 @@ const ForgotPasswordModal = ({
         />
         <div className="flex flex-col items-center justify-center">
           <h2 className="w-[100%] text-center text-xl font-semibold">
-            {(popupState === "email") && mainHeading("Forgot Password?")}
-            {(popupState === "otp") && mainHeading("Enter your", "code")}
-            {(popupState === "reset-password") && mainHeading(`Set new password`)}
+            {popupState === "email" && mainHeading("Forgot Password?")}
+            {popupState === "otp" && mainHeading("Enter your", "code")}
+            {popupState === "reset-password" && mainHeading(`Set new password`)}
           </h2>
           <p className="mt-[0.5rem] w-[100%] text-center text-sm">
-            {(popupState === "email") && text("Enter email for instructions")}
-            {(popupState === "otp") && text(`We've sent code to ${email}`)}
-            {(popupState === "reset-password") && text(`Must be at least 8 characters`)}
+            {popupState === "email" && text("Enter email for instructions")}
+            {popupState === "otp" && text(`We have sent code to ${email}`)}
+            {popupState === "reset-password" &&
+              text(`Must be at least 8 characters`)}
           </p>
           {popupState === "email" && (
             <Input
-              type='email'
-              name='email'
+              type="email"
+              name="email"
               placeholder={"Enter your email"}
               className="mt-5 py-3 text-center"
               onChange={(e) => {
@@ -226,42 +225,52 @@ const ForgotPasswordModal = ({
               }}
             />
           )}
-          {
-            popupState === "otp" && (
-              <div className="flex justify-center items-center flex-col">
-                <OTPInput
-                  value={enteredOtp}
-                  onPaste={(e) => {
-                    const pastedData = e.clipboardData.getData('text');
-                    // Check if the pasted data contains exactly the right number of digits
-                    if (pastedData.length === 6) {
-                      setEnteredOtp(pastedData);  // Set the OTP value if the length matches
-                    }
-                  }}
-                  onChange={setEnteredOtp}
-                  containerStyle={'w-full h-[4.5rem] gap-[0.625rem] justify-center'}
-                  numInputs={6}
-                  inputStyle={"rounded-lg text-[24px] border border-gray-300 focus:border-primary"}
-                  //renderSeparator={<span className="w-1" />}
-                  renderInput={(props) => <input {...props} style={{
-                    width: '3rem',
-                    height: '4.13rem',
-                    textAlign: 'center'
-                  }} type="number" />}
-                />
-                <div className="flex gap-1">Didn't get the code?
-                  <div onClick={(e) => sendOtp(e)} className="text-primary">Click to resend</div>
+          {popupState === "otp" && (
+            <div className="flex flex-col items-center justify-center">
+              <OTPInput
+                value={enteredOtp}
+                onPaste={(e) => {
+                  const pastedData = e.clipboardData.getData("text");
+                  // Check if the pasted data contains exactly the right number of digits
+                  if (pastedData.length === 6) {
+                    setEnteredOtp(pastedData); // Set the OTP value if the length matches
+                  }
+                }}
+                onChange={setEnteredOtp}
+                containerStyle={
+                  "w-full h-[4.5rem] gap-[0.625rem] justify-center"
+                }
+                numInputs={6}
+                inputStyle={
+                  "rounded-lg text-[24px] border border-gray-300 focus:border-primary"
+                }
+                //renderSeparator={<span className="w-1" />}
+                renderInput={(props) => (
+                  <input
+                    {...props}
+                    style={{
+                      width: "3rem",
+                      height: "4.13rem",
+                      textAlign: "center",
+                    }}
+                    type="number"
+                  />
+                )}
+              />
+              <div className="flex gap-1">
+                Did not get the code?
+                <div onClick={(e) => sendOtp(e)} className="text-primary">
+                  Click to resend
                 </div>
               </div>
-
-            )
-          }
+            </div>
+          )}
 
           {popupState === "reset-password" && (
             <div>
               <Input
-                type='password'
-                name='password'
+                type="password"
+                name="password"
                 placeholder={"Password"}
                 className="mt-5 py-3 text-start"
                 onChange={(e) => {
@@ -276,8 +285,8 @@ const ForgotPasswordModal = ({
                 )}
               </div>
               <Input
-                type='password'
-                name='confirmPassword'
+                type="password"
+                name="confirmPassword"
                 placeholder={"Confirm Password"}
                 className="mt-5 py-3 text-start"
                 onChange={(e) => {
@@ -288,7 +297,9 @@ const ForgotPasswordModal = ({
               />
               <div>
                 {errors.confirmPassword && (
-                  <p className="text-xs text-red-500">{errors.confirmPassword}</p>
+                  <p className="text-xs text-red-500">
+                    {errors.confirmPassword}
+                  </p>
                 )}
               </div>
             </div>
@@ -301,26 +312,32 @@ const ForgotPasswordModal = ({
           )}
         </div>
 
-        <ButtonCapsule className='mt-3 w-full justify-between' onPress={async (e) => {
-          if (popupState === "email" && email) {
-            await validateUser();
-            if (errors?.passwordResetError === null || errors?.passwordResetError===undefined) {
-              sendOtp(e);
-              setPopupState("otp");
+        <ButtonCapsule
+          className="mt-3 w-full justify-between"
+          onPress={async (e) => {
+            if (popupState === "email" && email) {
+              await validateUser();
+              if (
+                errors?.passwordResetError === null ||
+                errors?.passwordResetError === undefined
+              ) {
+                sendOtp(e);
+                setPopupState("otp");
+              }
             }
-          }
 
-          if (popupState === "otp") {
-            if (enteredOtp) handleOtpVerification(e);
-          }
+            if (popupState === "otp") {
+              if (enteredOtp) handleOtpVerification(e);
+            }
 
-          if (popupState === "reset-password") {
-            await handlePasswordReset();
-          }
-        }}>
-          {(popupState === "email") && buttonText("Send 4-digit code")}
-          {(popupState === "otp") && buttonText("Continue")}
-          {(popupState === "reset-password") && buttonText("Set password")}
+            if (popupState === "reset-password") {
+              await handlePasswordReset();
+            }
+          }}
+        >
+          {popupState === "email" && buttonText("Send 4-digit code")}
+          {popupState === "otp" && buttonText("Continue")}
+          {popupState === "reset-password" && buttonText("Set password")}
         </ButtonCapsule>
         {/* ) : (
           <OnBoardingButton onClick={onClose}>
@@ -343,11 +360,11 @@ const ForgotPasswordModal = ({
           <ConfirmationModal
             imgSrc="/Tick.png"
             mainHeading="Your account is successfully created"
-            text="Your account is currently under review. Soon you’ll receive an email on janedoe@gmail.com upon approval"
+            text="Your account is currently under review. Soon you will receive an email on janedoe@gmail.com upon approval"
             buttonText={"Okay I understand"}
             signupHandler={signupHandler}
             confirmationtext={confirmationtext}
-          // onClose={onClose}
+            // onClose={onClose}
           />
         </Overlay>
       )}
