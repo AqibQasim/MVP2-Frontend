@@ -210,6 +210,10 @@ export async function getClients() {
   };
 
   const result = await mvp2ApiHelper(payload);
+  if (result.status !== 200) {
+    console.error(result.data.message);
+    return { data: null, error: result.data.message };
+  }
   return {
     status: result.status,
     data: result.data,
@@ -251,10 +255,15 @@ export async function getJobs() {
 
   const result = await mvp2ApiHelper(payload);
   if (result?.status === 200) {
-    return result?.data?.result;
+    return {
+      data: result?.data?.result,
+      error: null,
+    };
   }
-
-  throw new Error(result.data.message);
+  return {
+    data: null,
+    error: result.data.message,
+  };
 }
 
 // to revalidate a path from client side component
@@ -285,10 +294,10 @@ export async function fetchRecommendedCandidates() {
   };
   const result = await mvp2ApiHelper(payload);
   if (result?.status === 200) {
-    return result?.data;
+    return { data: result.data, error: null };
   }
 
-  throw new Error(result.data.message);
+  return { data: null, error: result.data.message };
 }
 
 export async function getCandidate(candidateId) {

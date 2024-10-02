@@ -11,8 +11,8 @@ const Page = ({ params }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [skills, setSkills] = useState(null);
   const hasPreparedTest = useRef(false); // Ref to track if prepareTest has been called
-  const [questions,setQuestions]= useState(null);
-  const [codingQuestion,setCodingQuestions]=useState(null);
+  const [questions, setQuestions] = useState(null);
+  const [codingQuestion, setCodingQuestions] = useState(null);
 
   const closePopup = () => {
     setInstructionsPopup(false);
@@ -84,9 +84,9 @@ const Page = ({ params }) => {
     });
   }, [prepareTestpayload]);
 
-  useEffect(()=>{
-    console.log(questions)
-  },[questions])
+  useEffect(() => {
+    console.log(questions);
+  }, [questions]);
 
   const instructions = [
     "Make sure your connection is stable.",
@@ -96,7 +96,10 @@ const Page = ({ params }) => {
     "Make sure there’s no background noise while answering the questions.",
   ];
 
-  console.log("/////////////////////////////////////////////////////",codingQuestion)
+  console.log(
+    "/////////////////////////////////////////////////////",
+    codingQuestion,
+  );
 
   return (
     <html lang="en">

@@ -9,7 +9,7 @@ import IconWithBg from "./IconWithBg";
 import SkillIconWithBg from "./SkillIconWithBg";
 import Table from "./Table";
 
-function AdminCandidateRecommendedRow({ recommended }) {
+function AdminCandidateRow({ candidate }) {
   const [showForm, setShowForm] = useState(false);
   const [hourlyRate, setHourlyRate] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
@@ -61,7 +61,7 @@ function AdminCandidateRecommendedRow({ recommended }) {
 
     const referClientBody = {
       client_id: selectedClientId,
-      customer_id: recommended.customer_id,
+      customer_id: candidate.customer_id,
       job_posting_id: selectedJobId,
       hourly_rate: hourlyRate,
     };
@@ -83,14 +83,14 @@ function AdminCandidateRecommendedRow({ recommended }) {
       <Table.Row>
         <EntityCard
           entity={{
-            name: recommended?.name,
-            profession: recommended?.specialization,
+            name: candidate?.name,
+            profession: candidate?.specialization,
             image: "/avatars/avatar-1.png",
           }}
         />
         <div className="skills flex items-center justify-center gap-1.5 text-center">
-          {recommended?.skills?.length > 0 ? (
-            recommended.skills.map((skill, i) => (
+          {candidate?.skills?.length > 0 ? (
+            candidate.skills.map((skill, i) => (
               <SkillIconWithBg key={i} icon={skill} />
             ))
           ) : (
@@ -99,9 +99,9 @@ function AdminCandidateRecommendedRow({ recommended }) {
         </div>
 
         <div className="experience text-center">
-          {recommended?.experience || "No experience"}
+          {candidate?.experience || "No experience"}
         </div>
-        <Capsule>{recommended?.commitment || "No job type"}</Capsule>
+        <Capsule>{candidate?.commitment || "No job type"}</Capsule>
 
         {/* Button to open form */}
         <button onClick={() => setShowForm(true)}>
@@ -117,7 +117,7 @@ function AdminCandidateRecommendedRow({ recommended }) {
       {/* Modal for the referral form */}
       <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
         <h3 className="mb-4 text-xl font-semibold">
-          Refer {recommended?.role} to Client
+          Refer {candidate?.role} to Client
         </h3>
         <form action={handleReferCandidate}>
           <label className="block">Hourly Rate</label>
@@ -218,4 +218,4 @@ function AdminCandidateRecommendedRow({ recommended }) {
   );
 }
 
-export default AdminCandidateRecommendedRow;
+export default AdminCandidateRow;
