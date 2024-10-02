@@ -9,11 +9,13 @@ import ScheduleCallModal from "./ScheduleCallModal";
 import { PopupModal } from "react-calendly";
 import Modal from "./AdminJobsFormModal";
 import ButtonCapsule from "./ButtonCapsule";
+import { useRouter } from "next/navigation";
 
-function ClientHeader({ client }) {
+function ClientHeader({client, client_id}) {
   const [isClient, setIsClient] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef(null);
+  const router= useRouter();
 
   useEffect(() => {
     setIsClient(true);
@@ -41,7 +43,11 @@ function ClientHeader({ client }) {
           />
           {/* schedule-call */}
           {/* <ScheduleCallModal /> */}
-          <ButtonRounded>
+          <ButtonRounded onClick={()=>{
+            //open notification screen
+            //console.log("notification pressed")
+            router.push(`/client/${client_id}/notifications`)
+          }}>
             <SvgIconNotification />
           </ButtonRounded>
           <ButtonRounded>
@@ -53,13 +59,13 @@ function ClientHeader({ client }) {
               <ButtonCapsule
                 ref={buttonRef}
                 onPress={() => setIsOpen(true)}
-                // id="scheduleCallBtn"
+                //id="scheduleCallBtn"                
               >
                 Schedule a Call
               </ButtonCapsule>
               <PopupModal
-                url="https://calendly.com/sanjaybaghtwani/co-ventech/30min?hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=4624e0"
-                rootElement={document.getElementById("scheduleCallBtn")}
+                url='https://calendly.com/sanjaybaghtwani/co-ventech/30min?hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=4624e0'
+                rootElement={document.getElementById('scheduleCallBtn')}
                 text="Schedule Call"
                 textColor="#fff"
                 color="#000"
