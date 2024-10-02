@@ -266,6 +266,7 @@ function Login() {
               </Link>
             </div>
           </div>
+          
           <div className="align-end mt-auto px-7 py-5 text-start text-xs text-grey-primary">
             <Image
               src="icons/info_icon.svg"

@@ -161,6 +161,7 @@ function AdminCandidateRow({ candidate }) {
                 }}
                 key={client.client_id}
                 value={client.client_id}
+                className="cursor-pointer"
               >
                 {client.name}
               </option>
@@ -189,6 +190,7 @@ function AdminCandidateRow({ candidate }) {
                 }}
                 key={job.job_posting_id}
                 value={job.job_posting_id}
+                 className="cursor-pointer"
               >
                 {job.position}
               </option>

@@ -250,7 +250,7 @@ const ForgotPasswordModal = ({
                   }} type="number" />}
                 />
                 <div className="flex gap-1">Didn't get the code?
-                  <div onClick={(e) => sendOtp(e)} className="text-primary">Click to resend</div>
+                  <div onClick={(e) => sendOtp(e)} className="text-primary cursor-pointer ">Click to resend</div>
                 </div>
               </div>
 
