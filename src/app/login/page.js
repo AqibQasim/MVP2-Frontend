@@ -13,6 +13,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useMemo, useCallback, useEffect } from "react";
+
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
@@ -21,10 +22,15 @@ function Login() {
   const [isLoading, setisLoading] = useState(false);
   const [user_role, setUserRole] = useState("client");
   const [isForgotPasswordOpened, setIsForgotPasswordOpened] = useState(false);
+  const [show, setShow] = useState(false);
 
   const handleCloseOverlay = () => {
     setIsForgotPasswordOpened(false);
   };
+
+  const handClick = () => {
+    setShow(!show)
+  }
 
   const validateField = (name, value) => {
     let errorMsg = "";
@@ -181,15 +187,36 @@ function Login() {
             {errors.email && (
               <p className="text-xs text-red-500">{errors.email}</p>
             )}
-
-            <Input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              placeholder="Enter your password"
-              className="mt-3"
-            />
+             <div className="flex"  >
+               <Input
+               type= {show ? "text" :"password" }
+               name="password"
+               value={form.password}
+               onChange={handleChange}
+               placeholder="Enter your password"
+               className="mt-3"
+               /> 
+               <p className=" ml-[-6vh] " > 
+                  {show ?
+                   <Image
+                  src="eye-close.svg"
+                  width={20}
+                  height={20}
+                  alt="line"
+                  onClick={handClick}
+                  className="inline-block mb-[-6vh] cursor-pointer "
+                  />:
+                  <Image
+                  src="eye.svg"
+                  width={20}
+                  height={20}
+                  alt="line"
+                  onClick={handClick}
+                  className="inline-block mb-[-6vh] cursor-pointer "
+                  />}
+                
+                </p>
+              </div>
             {errors.password && (
               <p className="text-xs text-red-500">{errors.password}</p>
             )}
