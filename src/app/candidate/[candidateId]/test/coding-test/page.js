@@ -4,6 +4,7 @@ import ErrorIndicator from "@/components/ErrorIndicator";
 import TestInstruction from "@/components/TestInstruction";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import styles from "@/styles/coding-excercise.module.css";
+import "@/styles/globals.css";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -118,7 +119,8 @@ const Page = () => {
     mvp2ApiHelper(codeSubmitPayload).then((data) => {
       console.log("response: ", data);
       if (data.status === 200) {
-        window.location.href=`/candidate/${params.candidateId}`;
+        router.push(`/candidate/${params.candidateId}`);
+        // window.location.href=`/candidate/${params.candidateId}`;
       }
     });
 
