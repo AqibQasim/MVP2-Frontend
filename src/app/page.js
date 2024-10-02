@@ -1,4 +1,13 @@
-function Home() {
+import { createUserGoogle } from "@/lib/data-service";
+
+async function Home() {
+  // await createUserGoogle({
+  //   email: "exampleone@gmail.com",
+  //   name: "Example One",
+  //   user_role: "customer",
+  //   method: "signup",
+  // });
+
   return (
     <>
       <h1 className="font-satoshi text-7xl font-black text-primary-shade-10">

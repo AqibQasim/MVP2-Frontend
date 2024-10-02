@@ -1,11 +1,32 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
+import { signIn, signOut } from "./auth";
 import {
   candidateUpdateProfile,
   createJob,
   referCandidate,
 } from "./data-service";
+
+export async function signInAction(formData) {
+  const user_role = formData.get("user_role");
+  const path = user_role === "client" ? "client" : "candidate";
+  cookies().set({
+    name: "user_role",
+    value: user_role,
+    maxAge: 60,
+    path: "/",
+    httpOnly: true,
+  });
+  await signIn("google", {
+    redirectTo: `/${path}`,
+  });
+}
+
+export async function signOutAction() {
+  await signOut({ redirectTo: "/" });
+}
 
 export async function createAJobAction(formData) {
   const client_id = formData.get("client_id");

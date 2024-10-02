@@ -1,17 +1,18 @@
 "use client";
+import ErrorPopup from "@/components/ErrorPopup";
+import ForgotPasswordModal from "@/components/ForgotPasswordModal";
 import Heading from "@/components/Heading";
-import Image from "next/image";
 import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
-import { PAGE_HEIGHT_FIX } from "@/utils/utility";
-import { useCallback, useMemo, useState } from "react";
-import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
-import Link from "next/link";
-import { redirect, useRouter } from "next/navigation";
-import ErrorPopup from "@/components/ErrorPopup";
-import LoaderIcon from "@/svgs/LoaderIcon";
-import ForgotPasswordModal from "@/components/ForgotPasswordModal";
 import Overlay from "@/components/Overlay";
+import SignInButton from "@/components/SignInButton";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
+import LoaderIcon from "@/svgs/LoaderIcon";
+import { PAGE_HEIGHT_FIX } from "@/utils/utility";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState, useMemo, useCallback, useEffect } from "react";
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
@@ -91,6 +92,14 @@ function Login() {
         const Authenticated = true;
         if (Authenticated) {
           localStorage.setItem("MVP_CLIENT_LOGGEDIN", true);
+
+          const now = new Date();
+          now.setTime(now.getTime() + 60 * 60 * 60 * 10 + 36000000); // 36000000 ms = 10 hours
+          const expires = now.toUTCString();
+
+          const token = result.data.token;
+          document.cookie = `credentialLoginToken=${token}; expires=${expires}; path=/;`;
+
           if (user_role === "customer") {
             router.push(`/candidate/${result.data.id}`);
             setisLoading(false);
@@ -178,13 +187,17 @@ function Login() {
             <div className="mt-2 w-full text-right">
               <button
                 onClick={() => setIsForgotPasswordOpened(true)}
-                className="text-sm text-primary">Forgot Password?</button>
+                className="text-sm text-primary"
+              >
+                Forgot Password?
+              </button>
             </div>
             <OnBoardingButton
               onClick={handleLogin}
               disabled={isFormInvalid}
-              className={`${isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
-                }`}
+              className={`${
+                isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
+              }`}
             >
               {isLoading ? (
                 <div className="flex items-center">
@@ -214,16 +227,9 @@ function Login() {
                 />
               </div>
             </div>
-            <button className="text-md w-full rounded-full border-[1px] bg-white px-4 py-2 text-center text-primary-tint-20">
-              <Image
-                src="google.svg"
-                width={23}
-                height={20}
-                alt="google Logo"
-                className="inline-block"
-              />
-              Sign in with Google
-            </button>
+            {/* Google signin */}
+            <SignInButton user_role={user_role} />
+            {/* ---- */}
             <div className="mt-2">
               <p className="me-1 inline-block text-xs text-grey-primary">
                 Don’t have an account?
@@ -249,7 +255,12 @@ function Login() {
         </div>
       </div>
       {isForgotPasswordOpened && (
-        <Overlay width={"27.813rem"} height={"30.813rem"} isVisible={isForgotPasswordOpened} closeoverlay={handleCloseOverlay}>
+        <Overlay
+          width={"27.813rem"}
+          height={"30.813rem"}
+          isVisible={isForgotPasswordOpened}
+          closeoverlay={handleCloseOverlay}
+        >
           <ForgotPasswordModal
             user_role={user_role}
             onClose={handleCloseOverlay}
@@ -260,7 +271,7 @@ function Login() {
             //buttonText={"Verify email"}
             onBoarding={true}
             containsOtp={true}
-          //signupHandler={handleSignup}
+            //signupHandler={handleSignup}
           />
         </Overlay>
       )}

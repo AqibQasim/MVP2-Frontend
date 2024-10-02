@@ -4,6 +4,7 @@ import Heading from "@/components/Heading";
 import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
 import Overlay from "@/components/Overlay";
+import SignInButton from "@/components/SignInButton";
 import SuccessModal from "@/components/SuccessModal";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { revalidate } from "@/lib/data-service";
@@ -80,27 +81,32 @@ function Page() {
         const result = await mvp2ApiHelper(payload);
         console.log("RESULT from signup: ", result.data.status);
 
-        const createAccountResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-stripe-account`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+        let createAccountData;
+
+        if (user_role === "client") {
+          const createAccountResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-stripe-account`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                client_id: result.data.client_id,
+                stripe_id: stripeData.customer.id,
+              }),
             },
-            body: JSON.stringify({
-              client_id: result.data.client_id,
-              stripe_id: stripeData.customer.id,
-            }),
-          },
-        );
+          );
+          createAccountData = await createAccountResponse.json();
 
-        const createAccountData = await createAccountResponse.json();
-
-        if (createAccountResponse.status !== 200) {
-          throw new Error(createAccountData.error);
+          if (createAccountResponse.status !== 200) {
+            throw new Error(createAccountData.error);
+          }
+          console.log(
+            "Stripe account created successfully:",
+            createAccountData,
+          );
         }
-        console.log("Stripe account created successfully:", createAccountData);
-
         if (result.data.status === 200) {
           console.log("Signed up successfully");
           // const revalidatePathOnSignup = `/admin/${user_role === "client" ? "clients" : "candidates"}`;
@@ -439,7 +445,11 @@ function Page() {
                 />
               </div>
             </div>
-            <button className="text-md w-full rounded-full border-[1px] bg-white px-4 py-2 font-semibold text-black shadow-md">
+
+            {/* Google signin */}
+            <SignInButton user_role={user_role} />
+
+            {/* <button className="text-md w-full rounded-full border-[1px] bg-white px-4 py-2 font-semibold text-black shadow-md">
               <Image
                 src="google.svg"
                 width={20}
@@ -448,7 +458,7 @@ function Page() {
                 className="inline-block"
               />{" "}
               Continue with Google
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

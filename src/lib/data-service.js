@@ -42,6 +42,113 @@ export const getProducts = async function () {
   }
 };
 
+// for auth
+export async function checkClientByEmail(email) {
+  const payload = {
+    endpoint: `client-by-email?email=${email}`,
+    method: "GET",
+  };
+  const result = await mvp2ApiHelper(payload);
+  if (result.status !== 200) {
+    return {
+      data: null,
+      existingUser: result.status === 200,
+      error: result.data.message,
+    };
+  }
+  return {
+    data: result.data.data,
+    existingUser: result.status === 200,
+    error: null,
+  };
+}
+
+export async function checkUserRoleAndId(email, name, user_role) {
+  try {
+    let user = null;
+    if (user_role === "customer") {
+      const { existingUser, data: customer } =
+        await checkCustomerByEmail(email);
+
+      if (!existingUser) {
+        user = await createUserGoogle({
+          email,
+          name,
+          user_role,
+          method: "signup",
+        });
+        return {
+          user_role,
+          customer_id: user.customer_id,
+        };
+      }
+
+      return {
+        user_role,
+        customer_id: customer?.customer_id || null,
+      };
+    } else if (user_role === "client") {
+      const { existingUser, data: client } = await checkClientByEmail(email);
+
+      if (!existingUser) {
+        user = await createUserGoogle({
+          email,
+          name,
+          user_role,
+          method: "signup",
+        });
+        return {
+          user_role,
+          client_id: user.client_id,
+        };
+      }
+
+      return {
+        user_role,
+        client_id: client?.client_id || null,
+      };
+    }
+  } catch (error) {
+    console.error("Error in checkUserRoleAndId:", error);
+    throw new Error("Failed to check or create user.", error);
+  }
+}
+
+export async function checkCustomerByEmail(email) {
+  const payload = {
+    endpoint: `customer-by-email?email=${email}`,
+    method: "GET",
+  };
+  const result = await mvp2ApiHelper(payload);
+  if (result.status !== 200) {
+    return {
+      data: null,
+      existingUser: result.status === 200,
+      error: result.data.message,
+    };
+  }
+  return {
+    data: result.data.data,
+    existingUser: result.status === 200,
+    error: null,
+  };
+}
+
+export async function createUserGoogle(body) {
+  console.log(body);
+  const payload = {
+    endpoint: "signup-google",
+    method: "POST",
+    body,
+  };
+  console.log(payload);
+
+  const result = await mvp2ApiHelper(payload);
+  console.log("create user Google result: ", result);
+  if (result.status !== 200) throw new Error(result.data.message);
+  return result;
+}
+
 export async function getClientById(id) {
   const payload = {
     endpoint: `client?client_id=${id}`,

@@ -1,12 +1,12 @@
-"use client";
 import ClientDashboardSideNav from "@/components/ClientDashboardSideNav";
 import ClientHeader from "@/components/ClientHeader";
+import ClientLogout from "@/components/ClientLogout";
 import { getClientById } from "@/lib/data-service";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
-import ClientLogout from "@/components/ClientLogout";
 
-import AuthCheck from "@/components/AuthCheck";
-import { useState } from "react";
+import SignOutButton from "@/components/SignOutButton";
+import { auth } from "@/lib/auth";
+// import { useState } from "react";
 import ClientAlertMessage from "@/components/ClientAlertMessage";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 // import { useRouter } from "next/router";
@@ -14,7 +14,9 @@ import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 async function layout({ children, params }) {
   const clientId = params.clientId;
   console.log("clientId", clientId);
-  const [showResponseMessage,setShowResponseMessage]=useState(true);
+  const session = await auth();
+
+  //const [showResponseMessage,setShowResponseMessage]=useState(true);
   // const router = useRouter();
 
   // useEffect(() => {
@@ -30,47 +32,51 @@ async function layout({ children, params }) {
 
   const client = await getClientById(clientId);
 
-  const handleAcceptClientResponse=()=>{
-    const payload={
-      endpoint: 'client/client-response',
-      method:'POST',
-      body:{
-        client_id: params?.clientId,
-        customer_id: '22c58f17-d88e-414a-8414-88fa0daeb99e',
-        job_posting_id: '8d99fa98-4f49-4696-8086-e6e415da3963',
-        job_status:'trial',
-        talent_status:'trial',
-        response_status:'accept'
-      }
-    }
+  // const handleAcceptClientResponse=()=>{
+  //   const payload={
+  //     endpoint: 'client/client-response',
+  //     method:'POST',
+  //     body:{
+  //       client_id: params?.clientId,
+  //       customer_id: '22c58f17-d88e-414a-8414-88fa0daeb99e',
+  //       job_posting_id: '8d99fa98-4f49-4696-8086-e6e415da3963',
+  //       job_status:'trial',
+  //       talent_status:'trial',
+  //       response_status:'accept'
+  //     }
+  //   }
 
-    mvp2ApiHelper(payload).then(result=>{
-      console.log(result);
-    })
-  }
+  //   mvp2ApiHelper(payload).then(result=>{
+  //     console.log(result)
+  //   })
+  // }
 
   return (
     <div
       className={`${PAGE_HEIGHT_FIX} grid grid-cols-[17.0625rem_1fr] grid-rows-[max-content_1fr] gap-[6px] overflow-hidden`}
     >
-      {showResponseMessage && (
-        <ClientAlertMessage showResponseMessage={showResponseMessage} 
-        onAccept={handleAcceptClientResponse}
+      {/* {true && (
+        <ClientAlertMessage showResponseMessage= {true}//{showResponseMessage} 
+        //onAccept={handleAcceptClientResponse}
         msgText={"Your Interview with the client has ended. Do you want to accept this client for trial?"} />
-      )}
+      )} */}
       <header className="rounded-4xl bg-neutral-white p-4">
-        <ClientHeader client={client} />
+        <ClientHeader client_id={clientId} client={client} />
       </header>
       <aside className="col-start-1 row-span-2 row-start-1 rounded-4xl bg-neutral-white p-6">
         <ClientDashboardSideNav clientId={clientId} />
-        <ClientLogout />
+        {session?.user ? <SignOutButton /> : <ClientLogout />}
       </aside>
-      <AuthCheck>
+      {/* <AuthCheck>
         <div className="body-scroll overflow-y-scroll rounded-3xl bg-transparent">
           {" "}
           {children}{" "}
         </div>
-      </AuthCheck>
+      </AuthCheck> */}
+      <div className="body-scroll overflow-y-scroll rounded-3xl bg-transparent">
+        {" "}
+        {children}{" "}
+      </div>
     </div>
   );
 }
