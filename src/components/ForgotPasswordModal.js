@@ -318,8 +318,8 @@ const ForgotPasswordModal = ({
             if (popupState === "email" && email) {
               await validateUser();
               if (
-                errors?.passwordResetError === null ||
-                errors?.passwordResetError === undefined
+                errors?.passwordResetError === null //||
+                //errors?.passwordResetError === undefined
               ) {
                 sendOtp(e);
                 setPopupState("otp");

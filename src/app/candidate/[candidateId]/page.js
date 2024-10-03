@@ -10,9 +10,9 @@ async function Page({ params }) {
   console.log("candidates are :", candidate);
 
   return (
-    <div>
+    <>
       <CandidateIdPage candidate={candidate} candidateId={params.candidateId} />
-    </div>
+    </>
   );
 }
 

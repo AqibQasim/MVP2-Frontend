@@ -37,7 +37,7 @@ export default function CandidateIdPage({ candidate, candidateId }) {
   };
 
   return (
-    <div>
+    <>
       {!candidateReport ? (
         <CandidateEvaluateYourselfCard />
       ) : (
@@ -55,6 +55,6 @@ export default function CandidateIdPage({ candidate, candidateId }) {
           )}
         </div>
       )}
-    </div>
+    </>
   );
 }

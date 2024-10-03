@@ -64,8 +64,7 @@ function CandidateEvaluateYourselfCard({ candidate }) {
   };
 
   return (
-    <>
-      <div className="relative h-full w-full gap-8 rounded-4xl bg-neutral-white px-8 py-10">
+      <div className="flex-grow size-full gap-8 rounded-4xl bg-neutral-white px-8 py-10">
         <Heading sm className="font-[500]" style={{ fontSize: "40px" }}>
           Here’s Where Your Journey Begins
         </Heading>
@@ -111,40 +110,40 @@ function CandidateEvaluateYourselfCard({ candidate }) {
             </div>
           </div>
         </div>
+        {isOverlayVisible && (
+          <Overlay width={"70.75rem"} height={"83%"} isVisible={isOverlayVisible}>
+            <AddSkillForm
+              skill1={skill1}
+              setSkill1={setSkill1}
+              skill2={skill2}
+              setSkill2={setSkill2}
+              skill3={skill3}
+              setSkill3={setSkill3}
+              skill4={skill4}
+              setSkill4={setSkill4}
+              level1={level1}
+              setLevel1={setLevel1}
+              level2={level2}
+              setLevel2={setLevel2}
+              level3={level3}
+              setLevel3={setLevel3}
+              level4={level4}
+              setLevel4={setLevel4}
+              onContinue={handleStartAssessment}
+              onBack={handleBack}
+              //onBack={}
+              //   codingExpertise={codingExpertise}
+              //   setCodingExpertise={setCodingExpertise}
+              //   isTestRequired={isTestRequired}
+              //   setIsTestRequired={setIsTestRequired}
+              //   expertiseRef={expertiseRef}
+              //   setTechStack={setTechStack}
+            />
+          </Overlay>
+        )}
       </div>
 
-      {isOverlayVisible && (
-        <Overlay width={"70.75rem"} height={"83%"} isVisible={isOverlayVisible}>
-          <AddSkillForm
-            skill1={skill1}
-            setSkill1={setSkill1}
-            skill2={skill2}
-            setSkill2={setSkill2}
-            skill3={skill3}
-            setSkill3={setSkill3}
-            skill4={skill4}
-            setSkill4={setSkill4}
-            level1={level1}
-            setLevel1={setLevel1}
-            level2={level2}
-            setLevel2={setLevel2}
-            level3={level3}
-            setLevel3={setLevel3}
-            level4={level4}
-            setLevel4={setLevel4}
-            onContinue={handleStartAssessment}
-            onBack={handleBack}
-            //onBack={}
-            //   codingExpertise={codingExpertise}
-            //   setCodingExpertise={setCodingExpertise}
-            //   isTestRequired={isTestRequired}
-            //   setIsTestRequired={setIsTestRequired}
-            //   expertiseRef={expertiseRef}
-            //   setTechStack={setTechStack}
-          />
-        </Overlay>
-      )}
-    </>
+    
   );
 }
 

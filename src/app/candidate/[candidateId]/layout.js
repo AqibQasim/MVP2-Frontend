@@ -40,10 +40,15 @@ async function layout({ children, params }) {
       <aside className="col-start-1 row-span-2 row-start-1 rounded-4xl bg-neutral-white p-6">
         <CandidateDashboardSideNav candidateId={candidateId} />
       </aside>
-      <div className="body-scroll overflow-y-scroll rounded-3xl bg-transparent">
+      {/* <div className="body-scroll overflow-y-scroll rounded-3xl bg-transparent">
         {" "}
         {children}{" "}
-      </div>
+      </div> */}
+      <main className="flex flex-col items-center justify-center col-start-2 row-start-2 h-full">
+        <div className="size-full body-scroll overflow-y-scroll rounded-3xl bg-transparent flex-grow">
+          {children}
+        </div>
+      </main>
     </div>
   );
 }
