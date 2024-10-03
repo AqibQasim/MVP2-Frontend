@@ -9,7 +9,12 @@ import SvgIconTalent from "@/svgs/SvgIconTalent";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 
-function ClientDashboardNavLinks({ numJobs, numRecommended, numHired }) {
+function ClientDashboardNavLinks({
+  numJobs,
+  numRecommended,
+  numHired,
+  children,
+}) {
   const pathname = usePathname();
 
   const params = useParams();
@@ -61,7 +66,7 @@ function ClientDashboardNavLinks({ numJobs, numRecommended, numHired }) {
   return (
     <nav
       aria-label="Client Dashboard Navigation"
-      className="flex min-h-screen flex-col justify-between"
+      className="flex h-[calc(100%-5.25rem)] flex-col justify-between"
     >
       <ul className="nav-links">
         {clientDashboardLinks.map((link) => (
@@ -85,17 +90,7 @@ function ClientDashboardNavLinks({ numJobs, numRecommended, numHired }) {
           </li>
         ))}
       </ul>
-
-      {/* Logout button fixed at the bottom */}
-      {/* <div className="p-4">
-        <Link
-          className="group flex items-center justify-start gap-3 rounded-[0.625rem] bg-transparent px-4 py-3 font-lufga text-sm font-medium text-grey-primary-shade-20 transition-colors duration-200 hover:bg-primary-tint-100 hover:text-primary-tint-20"
-          href="/logout"
-        >
-          <SvgIconLogout className="size-6" />
-          <span>Logout</span>
-        </Link>
-      </div>*/}
+      {children}
     </nav>
   );
 }
