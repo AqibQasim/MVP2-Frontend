@@ -123,6 +123,7 @@ const Page = () => {
         // router.push(`/candidate`);
         // window.location.href = "/candidate";
         window.location.replace("/candidate");
+        setIsLoading(false);
       }
     });
 
@@ -137,7 +138,6 @@ const Page = () => {
 
     // const data = await response.json();
     // console.log("response: ", data);
-    setIsLoading(false);
   }
 
   const formatTime = (timeLeft) => {
