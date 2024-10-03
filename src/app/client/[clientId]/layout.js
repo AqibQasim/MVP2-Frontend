@@ -1,15 +1,11 @@
 import ClientDashboardSideNav from "@/components/ClientDashboardSideNav";
 import ClientHeader from "@/components/ClientHeader";
-import ClientLogout from "@/components/ClientLogout";
 import { getClientById } from "@/lib/data-service";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 
-import SignOutButton from "@/components/SignOutButton";
 import { auth } from "@/lib/auth";
-// import { useState } from "react";
 import ClientAlertMessage from "@/components/ClientAlertMessage";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
-// import { useRouter } from "next/router";
 
 async function layout({ children, params }) {
   const clientId = params.clientId;
@@ -53,7 +49,7 @@ async function layout({ children, params }) {
 
   return (
     <div
-      className={`${PAGE_HEIGHT_FIX} grid grid-cols-[17.0625rem_1fr] grid-rows-[max-content_1fr] gap-[6px] overflow-hidden`}
+      className={`${PAGE_HEIGHT_FIX} grid !h-[calc(100dvh-2.25rem)] grid-cols-[17.0625rem_1fr] grid-rows-[max-content_1fr] gap-[6px] overflow-hidden`}
     >
       {/* {true && (
         <ClientAlertMessage showResponseMessage= {true}//{showResponseMessage} 
@@ -65,7 +61,6 @@ async function layout({ children, params }) {
       </header>
       <aside className="col-start-1 row-span-2 row-start-1 rounded-4xl bg-neutral-white p-6">
         <ClientDashboardSideNav clientId={clientId} />
-        {session?.user ? <SignOutButton /> : <ClientLogout />}
       </aside>
       {/* <AuthCheck>
         <div className="body-scroll overflow-y-scroll rounded-3xl bg-transparent">
