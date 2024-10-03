@@ -1,4 +1,3 @@
-"use client";
 import ClientEmployeesTable from "@/components/ClientEmployeesTable";
 import ClientJobsOverviewTable from "@/components/ClientJobsOverviewTable";
 import ClientRecommendationCard from "@/components/ClientRecommendationCard";
@@ -8,7 +7,6 @@ import {
   getClientJobs,
   getRecommendedCandidateOfClient,
 } from "@/lib/data-service";
-import { useState } from "react";
 
 export default async function Page({ params }) {
   const filter = "accept";
