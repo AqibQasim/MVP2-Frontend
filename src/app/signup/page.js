@@ -391,7 +391,7 @@ function Page() {
                   placeholder="Enter password"
                   className="mt-3"
                 />
-                 <p className=" ml-[-6vh] " > 
+                 <p className=" ml-[-37px] " > 
                   {show ?
                    <Image
                   src="eye-close.svg"
@@ -399,7 +399,7 @@ function Page() {
                   height={20}
                   alt="line"
                   onClick={handClick}
-                  className="inline-block mb-[-6vh] cursor-pointer "
+                  className="inline-block mt-[24px] cursor-pointer "
                   />:
                   <Image
                   src="eye.svg"
@@ -407,7 +407,7 @@ function Page() {
                   height={20}
                   alt="line"
                   onClick={handClick}
-                  className="inline-block mb-[-6vh] cursor-pointer "
+                  className="inline-block mt-[24px] cursor-pointer "
                   />}
                 
                 </p>
@@ -421,7 +421,7 @@ function Page() {
                   placeholder="Confirm password"
                   className="mt-3"
                 />
-                 <p className=" ml-[-6vh] " > 
+                 <p className=" ml-[-37px] " > 
                   {show2?
                    <Image
                   src="eye-close.svg"
@@ -429,7 +429,7 @@ function Page() {
                   height={20}
                   alt="line"
                   onClick={handClick2}
-                  className="inline-block mb-[-6vh] cursor-pointer "
+                  className="inline-block mt-[24px] cursor-pointer "
                   />:
                   <Image
                   src="eye.svg"
@@ -437,7 +437,7 @@ function Page() {
                   height={20}
                   alt="line"
                   onClick={handClick2}
-                  className="inline-block mb-[-6vh] cursor-pointer "
+                  className="inline-block mt-[24px] cursor-pointer "
                   />}
                 
                 </p>
