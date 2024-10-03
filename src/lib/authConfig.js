@@ -33,7 +33,7 @@ export const authConfig = {
         : null;
 
       const credentialUserRedirectPath = credentialUser?.id
-        ? `/${credentialUser.user_role}/${credentialUser.id}`
+        ? `/${credentialUser.user_role === "client" ? credentialUser.user_role : "candidate"}/${credentialUser.id}`
         : null;
 
       if (isAuthenticated && (loginPage || signupPage)) {
