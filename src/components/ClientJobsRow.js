@@ -7,6 +7,7 @@ import SkillIconWithBg from "./SkillIconWithBg";
 import Table from "./Table";
 
 function ClientJobsRow({ job }) {
+  console.log(job)
   const params = useParams();
   const clientId = params?.clientId;
   return (
@@ -15,6 +16,7 @@ function ClientJobsRow({ job }) {
         icon={<SvgIconWork className="relative -right-[1.3px]" />}
         entity={{
           name: job?.position,
+          profession: job?.specialization || 'No specialization'
         }}
       />
       <div className="skills flex items-center justify-center gap-1.5 text-center">
@@ -42,7 +44,7 @@ function ClientJobsRow({ job }) {
         href={`/client/${clientId}/jobs/${job.job_posting_id}`}
       >
         {" "}
-        view talent{" "}
+        view details{" "}
       </CapsuleLink>
     </Table.Row>
   );

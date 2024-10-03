@@ -9,18 +9,20 @@ import ScheduleCallModal from "./ScheduleCallModal";
 import { PopupModal } from "react-calendly";
 import Modal from "./AdminJobsFormModal";
 import ButtonCapsule from "./ButtonCapsule";
+import { useRouter } from "next/navigation";
 
-function ClientHeader({client}) {
+function ClientHeader({client, client_id}) {
   const [isClient, setIsClient] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef(null);
+  const router= useRouter();
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   return (
-    <div className="flex" id='scheduleCallBtn' >
+    <div className="flex" id="scheduleCallBtn">
       <EntityCard
         lg
         entity={{
@@ -29,7 +31,7 @@ function ClientHeader({client}) {
           profession: client.email,
         }}
       />
-      <div className="info ml-auto space-y-4 "  >
+      <div className="info ml-auto space-y-4">
         <div className="buttons flex items-start justify-end gap-2">
           <EntityCard
             sm
@@ -41,31 +43,34 @@ function ClientHeader({client}) {
           />
           {/* schedule-call */}
           {/* <ScheduleCallModal /> */}
-          <ButtonRounded>
+          <ButtonRounded onClick={()=>{
+            //open notification screen
+            //console.log("notification pressed")
+            router.push(`/client/${client_id}/notifications`)
+          }}>
             <SvgIconNotification />
           </ButtonRounded>
           <ButtonRounded>
             <SvgIconSettings />
           </ButtonRounded>
-          
+
           {isClient && (
             <div>
               <ButtonCapsule
                 ref={buttonRef}
                 onPress={() => setIsOpen(true)}
-                // id="scheduleCallBtn"
-                
+                //id="scheduleCallBtn"                
               >
                 Schedule a Call
               </ButtonCapsule>
               <PopupModal
-                url='https://calendly.com/sanjaybaghtwani/30min?hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=4624e0'
+                url='https://calendly.com/sanjaybaghtwani/co-ventech/30min?hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=4624e0'
                 rootElement={document.getElementById('scheduleCallBtn')}
                 text="Schedule Call"
                 textColor="#fff"
                 color="#000"
-                height = "200px"
-                overflow= "hidden"
+                height="200px"
+                overflow="hidden"
                 onModalClose={() => setIsOpen(false)}
                 open={isOpen}
                 // styles={{

@@ -45,18 +45,6 @@
   border-radius: 32px !important;
   background-color: theme(colors.grey.primary.tint.40);
 }
-
-/* Firefox */
-/* .body-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: theme(colors.grey.primary.tint.40) transparent;
-} */
-
-/* Fallback for older browsers */
-/* .body-scroll {
-  overflow-y: scroll;
-} */
-
 svg {
   height: 18px;
   width: 18px;

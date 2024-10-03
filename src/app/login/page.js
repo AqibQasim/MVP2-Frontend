@@ -85,15 +85,18 @@ function Login() {
     async (event) => {
       event.preventDefault();
 
-      setisLoading(true);
+      setisLoading(true); // Start loading
 
       // Validate all fields before submission
       if (!form.email || !form.password || errors.email || errors.password) {
-        return; // Don't proceed if there are validation errors
+        setisLoading(false); // Stop loading if validation fails
+        return;
       }
+
       console.log(payload);
       const result = await mvp2ApiHelper(payload);
       console.log(result);
+
       if (result.status === 200) {
         const Authenticated = true;
         if (Authenticated) {
@@ -106,15 +109,22 @@ function Login() {
           const token = result.data.token;
           document.cookie = `credentialLoginToken=${token}; expires=${expires}; path=/;`;
 
+          // Handle navigation loading
+          const handleRouteChangeComplete = () => {
+            setisLoading(false); // Stop loading when navigation is complete
+            router.events.off("routeChangeComplete", handleRouteChangeComplete);
+          };
+
+          router?.events?.on("routeChangeComplete", handleRouteChangeComplete);
+
           if (user_role === "customer") {
             router.push(`/candidate/${result.data.id}`);
-            setisLoading(false);
           } else {
             router.push(`/client/${result.data.id}`);
-            setisLoading(false);
           }
         }
       } else {
+        setisLoading(false);
         setalert(true);
       }
     },

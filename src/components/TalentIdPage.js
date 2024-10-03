@@ -13,6 +13,7 @@ import IconWithBg from "./IconWithBg";
 import TalentDescription from "./TalentDescription";
 import { cityTimezoneOffset } from "@/utils/cityTimezoneOffset";
 import { formatDate } from "@/utils/utility";
+import ButtonCapsuleWhite from "./ButtonCapsuleWhite";
 
 function TalentIdPage({ client_id, customer_id }) {
   const [talent, setTalent] = useState(null);
@@ -98,7 +99,8 @@ function TalentIdPage({ client_id, customer_id }) {
         className={`${showPaymentHistory ? "min-h-auto mb-2" : "min-h-full"} space-y-4 rounded-3xl bg-neutral-white p-6`}
       >
         <div className="top flex items-center justify-start gap-3">
-          <ButtonBack />
+          {/* <ButtonBack /> */}
+          <ButtonCapsuleWhite />
           <Heading sm>Profile Overview</Heading>
           <Capsule className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
             Trial - 1st April - 14 April

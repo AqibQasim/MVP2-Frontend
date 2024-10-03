@@ -10,7 +10,7 @@ import IconWithBg from "./IconWithBg";
 import ScheduleInterviewModal from "./ScheduleInterviewModal";
 import ButtonCapsule from "./ButtonCapsule";
 import { useState, useRef, useEffect } from "react";
-import { PopupModal } from "react-calendly";
+import { PopupModal, useCalendlyEventListener } from "react-calendly";
 
 function ClientRecommendationCard({
   client = {},
@@ -20,6 +20,16 @@ function ClientRecommendationCard({
   const [isMounted, setIsMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef(null);
+
+  useCalendlyEventListener({
+    onProfilePageViewed: () => {
+      console.log("//////////////////////////")
+    },
+    onDateAndTimeSelected: () => console.log("onDateAndTimeSelected"),
+    onEventTypeViewed: () => console.log("onEventTypeViewed"),
+    onEventScheduled: (e) => console.log(e.data),
+    onPageHeightResize: (e) => console.log(e.data.payload.height),
+  });
 
   useEffect(() => {
     setIsMounted(true);
@@ -71,14 +81,15 @@ function ClientRecommendationCard({
             <ButtonCapsule
               ref={buttonRef}
               onPress={() => setIsOpen(true)}
-              // id="scheduleCallBtn"
+            id="root"
             >
               Schedule Inverview
             </ButtonCapsule>
 
             <PopupModal
+            onDateAndTimeSelected={()=>console.log("date and time selected")}
               url={
-                "https://calendly.com/sanjaybaghtwani/30min?hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=4624e0"
+                "https://calendly.com/sanjaybaghtwani/co-ventech/30min?hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=4624e0"
               }
               rootElement={document.getElementById("scheduleCallBtn")}
               text="Schedule Call"
@@ -90,10 +101,11 @@ function ClientRecommendationCard({
               open={isOpen}
               prefill={{
                 guests: [recommendedCandidate.email],
+                
               }}
-              // styles={{
-              //   height: '10px'
-              // }}
+            // styles={{
+            //   height: '10px'
+            // }}
             />
           </div>
         </div>
