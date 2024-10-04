@@ -196,7 +196,7 @@ function Login() {
                placeholder="Enter your password"
                className="mt-3"
                /> 
-               <p className=" ml-[-6vh] " > 
+               <p className=" ml-[-37px] " > 
                   {show ?
                    <Image
                   src="eye-close.svg"
@@ -204,7 +204,7 @@ function Login() {
                   height={20}
                   alt="line"
                   onClick={handClick}
-                  className="inline-block mb-[-6vh] cursor-pointer "
+                  className="inline-block mt-[24px] cursor-pointer "
                   />:
                   <Image
                   src="eye.svg"
@@ -212,7 +212,7 @@ function Login() {
                   height={20}
                   alt="line"
                   onClick={handClick}
-                  className="inline-block mb-[-6vh] cursor-pointer "
+                  className="inline-block mt-[24px] cursor-pointer "
                   />}
                 
                 </p>
