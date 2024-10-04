@@ -12,6 +12,7 @@ import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
+import Link from "next/link";
 
 function Page() {
   const router = useRouter();
@@ -466,9 +467,9 @@ function Page() {
                 <span className="ms-2 text-sm text-grey-primary">
                   I read and accept the{" "}
                 </span>
-                <button className="text-sm text-primary">
+                <span className="text-sm text-grey-primary ">
                   Terms and Conditions
-                </button>
+                </span>
               </div>
               <OnBoardingButton
                 type="submit"
@@ -513,7 +514,19 @@ function Page() {
               />{" "}
               Continue with Google
             </button> */}
+              
+
           </div>
+
+          <div className="mb-[15px] ml-[90px]">
+              <p className="me-1 inline-block text-xs text-grey-primary">
+              Already have an account?
+              </p>
+              <Link href={"/login"} className="text-xs text-primary underline">
+                Sign in now
+              </Link>
+            </div>
+          
         </div>
       </div>
 
