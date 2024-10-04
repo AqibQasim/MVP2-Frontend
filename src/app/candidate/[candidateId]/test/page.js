@@ -2,9 +2,9 @@
 import QuestionBox from "@/components/QuestionBox";
 import TestInstruction from "@/components/TestInstruction";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
-import styles from "@/styles/test.module.css";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState, useRef } from "react";
+import styles from "@/styles/test.module.css";
 
 const Page = ({ params }) => {
   const [instructionsPopup, setInstructionsPopup] = useState(true);
