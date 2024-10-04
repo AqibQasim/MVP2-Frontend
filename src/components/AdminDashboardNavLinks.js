@@ -11,6 +11,18 @@ function AdminDashboardNavLinks() {
 
   const candidateDashboardLinks = [
     {
+      name: "Dashboard",
+      href: `/admin/dashboard`,
+      icon: (
+        <SvgIconDashboard
+          className="size-6"
+          secondColor={
+            pathname === `/admin/dashboard`
+          }
+        />
+      ),
+    },
+    {
       name: "Clients",
       href: `/admin/clients`,
       amount: 0,

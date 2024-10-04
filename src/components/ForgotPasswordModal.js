@@ -225,46 +225,36 @@ const ForgotPasswordModal = ({
               }}
             />
           )}
-          {popupState === "otp" && (
-            <div className="flex flex-col items-center justify-center">
-              <OTPInput
-                value={enteredOtp}
-                onPaste={(e) => {
-                  const pastedData = e.clipboardData.getData("text");
-                  // Check if the pasted data contains exactly the right number of digits
-                  if (pastedData.length === 6) {
-                    setEnteredOtp(pastedData); // Set the OTP value if the length matches
-                  }
-                }}
-                onChange={setEnteredOtp}
-                containerStyle={
-                  "w-full h-[4.5rem] gap-[0.625rem] justify-center"
-                }
-                numInputs={6}
-                inputStyle={
-                  "rounded-lg text-[24px] border border-gray-300 focus:border-primary"
-                }
-                //renderSeparator={<span className="w-1" />}
-                renderInput={(props) => (
-                  <input
-                    {...props}
-                    style={{
-                      width: "3rem",
-                      height: "4.13rem",
-                      textAlign: "center",
-                    }}
-                    type="number"
-                  />
-                )}
-              />
-              <div className="flex gap-1">
-                Did not get the code?
-                <div onClick={(e) => sendOtp(e)} className="text-primary">
-                  Click to resend
+          {
+            popupState === "otp" && (
+              <div className="flex justify-center items-center flex-col">
+                <OTPInput
+                  value={enteredOtp}
+                  onPaste={(e) => {
+                    const pastedData = e.clipboardData.getData('text');
+                    // Check if the pasted data contains exactly the right number of digits
+                    if (pastedData.length === 6) {
+                      setEnteredOtp(pastedData);  // Set the OTP value if the length matches
+                    }
+                  }}
+                  onChange={setEnteredOtp}
+                  containerStyle={'w-full h-[4.5rem] gap-[0.625rem] justify-center'}
+                  numInputs={6}
+                  inputStyle={"rounded-lg text-[24px] border border-gray-300 focus:border-primary"}
+                  //renderSeparator={<span className="w-1" />}
+                  renderInput={(props) => <input {...props} style={{
+                    width: '3rem',
+                    height: '4.13rem',
+                    textAlign: 'center'
+                  }} type="number" />}
+                />
+                <div className="flex gap-1">Didn't get the code?
+                  <div onClick={(e) => sendOtp(e)} className="text-primary cursor-pointer ">Click to resend</div>
                 </div>
               </div>
-            </div>
-          )}
+
+            )
+          }
 
           {popupState === "reset-password" && (
             <div>
@@ -364,7 +354,7 @@ const ForgotPasswordModal = ({
             buttonText={"Okay I understand"}
             signupHandler={signupHandler}
             confirmationtext={confirmationtext}
-            // onClose={onClose}
+          // onClose={onClose}
           />
         </Overlay>
       )}

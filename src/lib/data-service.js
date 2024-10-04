@@ -442,3 +442,16 @@ export async function getAllRecommendedCandidates(
 
   return { data: candidates };
 }
+
+export async function fetchCandidatesJobStatus(job_status) {
+  const payload = {
+    endpoint: `get-job-candidates?job_status=${job_status}`,
+    method: "GET",
+  };
+  const result = await mvp2ApiHelper(payload);
+  if (result?.status === 200) {
+    return { data: result.data, error: null };
+  }
+
+  return { data: null, error: result.data.message };
+}

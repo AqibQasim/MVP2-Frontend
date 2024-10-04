@@ -9,7 +9,7 @@ import IconWithBg from "./IconWithBg";
 import SkillIconWithBg from "./SkillIconWithBg";
 import Table from "./Table";
 
-function AdminCandidateRow({ candidate }) {
+function AdminCandidateRow({ candidate, job, client }) {
   const [showForm, setShowForm] = useState(false);
   const [hourlyRate, setHourlyRate] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
@@ -84,24 +84,25 @@ function AdminCandidateRow({ candidate }) {
         <EntityCard
           entity={{
             name: candidate?.name,
-            profession: candidate?.specialization,
+            //profession: candidate?.specialization,
             image: "/avatars/avatar-1.png",
           }}
         />
         <div className="skills flex items-center justify-center gap-1.5 text-center">
-          {candidate?.skills?.length > 0 ? (
+          {/* {candidate?.skills?.length > 0 ? (
             candidate.skills.map((skill, i) => (
               <SkillIconWithBg key={i} icon={skill} />
             ))
           ) : (
             <span>No skills available</span>
-          )}
+          )} */}
+          {client?.name}
         </div>
 
         <div className="experience text-center">
-          {candidate?.experience || "No experience"}
+          {job?.job_status || "No experience"}
         </div>
-        <Capsule>{candidate?.commitment || "No job type"}</Capsule>
+        <Capsule>{job?.commitment || "No job type"}</Capsule>
 
         {/* Button to open form */}
         <button onClick={() => setShowForm(true)}>
@@ -161,6 +162,7 @@ function AdminCandidateRow({ candidate }) {
                 }}
                 key={client.client_id}
                 value={client.client_id}
+                className="cursor-pointer"
               >
                 {client.name}
               </option>
@@ -189,6 +191,7 @@ function AdminCandidateRow({ candidate }) {
                 }}
                 key={job.job_posting_id}
                 value={job.job_posting_id}
+                 className="cursor-pointer"
               >
                 {job.position}
               </option>
