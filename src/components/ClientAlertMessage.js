@@ -14,16 +14,16 @@ const ClientAlertMessage = ({ showMessage, msgText, onAccept, onReject }) => {
                 <div
                     className={
                         //`${styles.successMsgContainer} ${styles.errorMsgContainer}`
-                        'flex items-center justify-between p-2 w-[55rem]'
+                        'flex items-center justify-between p-2 w-full'
                     }
                 >
-                    <div className="flex items-center">
+                    <div className="flex items-center ">
                         <SvgIconWork className="relative -right-[1.3px] mr-3" />
                         <p className={'w-[30.5rem]'}>{msgText}</p>
                     </div>
-                    <div className="">
+                    <div className="pr-4">
                         <ButtonCapsule onPress={onAccept} className={'w-[8rem]'}>Accept</ButtonCapsule>
-                        <ButtonCapsule onPress={onReject} className={'bg-slate-100 w-[8rem]'}>
+                        <ButtonCapsule onPress={onReject} className={'bg-slate-100 ml-2 w-[8rem]'}>
                             <div className="text-black">Decline</div>
                         </ButtonCapsule>
                     </div>
