@@ -11,6 +11,8 @@ const Page = async () => {
   const { data: candidates, error } = await fetchRecommendedCandidates();
   if (error) throw new Error(error);
 
+  console.log(candidates)
+
   return <AdminCandidatesTable candidates={candidates} />;
 };
 

@@ -289,7 +289,7 @@ export async function revalidate(path) {
 
 export async function fetchRecommendedCandidates() {
   const payload = {
-    endpoint: "customers",
+    endpoint: "get-customer-result",
     method: "GET",
   };
   const result = await mvp2ApiHelper(payload);
@@ -372,7 +372,7 @@ export async function referCandidate(params) {
     console.error(result?.data?.message);
     return { status: result.status, data: null, error: result.data };
   }
-  return { status: result.status, data: result.data.data, error: null };
+  return { status: result.status, data: result?.data?.data, error: null };
 }
 
 export async function setHourlyRate(params) {

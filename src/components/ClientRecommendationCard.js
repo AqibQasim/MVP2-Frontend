@@ -33,6 +33,7 @@ function ClientRecommendationCard({
 
   useEffect(() => {
     setIsMounted(true);
+    console.log("mounted");
   }, []);
   if (!isMounted) return null;
 

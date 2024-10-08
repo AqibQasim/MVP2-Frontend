@@ -5,7 +5,13 @@ import React from 'react'
 
 async function Page() {
     const { data: candidateJobStatus, error } = await fetchCandidatesJobStatus('hired-and-trial');
-    if (error) throw new Error(error);
+    if (error) {
+        return (
+            <div>
+                {error}
+            </div>
+        )
+    };
   
     return <AdminCandidatesClientsHiringTable candidateJobStatus={candidateJobStatus} />;
 }

@@ -6,7 +6,7 @@ import { formatDate } from "@/utils/utility";
 import ButtonRounded from "./ButtonRounded";
 import EntityCard from "./EntityCard";
 import ScheduleCallModal from "./ScheduleCallModal";
-import { PopupModal } from "react-calendly";
+import { PopupModal , useCalendlyEventListener } from "react-calendly";
 import Modal from "./AdminJobsFormModal";
 import ButtonCapsule from "./ButtonCapsule";
 import { useRouter } from "next/navigation";
@@ -16,6 +16,16 @@ function ClientHeader({client, client_id}) {
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef(null);
   const router= useRouter();
+
+  useCalendlyEventListener({
+    onProfilePageViewed: () => {
+      console.log("//////////////////////////")
+    },
+    onDateAndTimeSelected: () => console.log("onDateAndTimeSelected"),
+    onEventTypeViewed: () => console.log("onEventTypeViewed"),
+    onEventScheduled: (e) => console.log(e.data),
+    onPageHeightResize: (e) => console.log(e.data.payload.height),
+  });
 
   useEffect(() => {
     setIsClient(true);

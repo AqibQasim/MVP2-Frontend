@@ -16,13 +16,16 @@ function AdminCandidatesTable({ candidates }) {
           <div className="skills text-center">Skills</div>
           <div className="experience text-center">Experience</div>
           <div className="job-type text-center">Job type</div>
+          <div>Score</div>
           <div className="actions text-right">Actions</div>
         </Table.Header>
         <Table.Body
           data={candidates?.data}
-          render={(candidate, i) => (
-            <AdminCandidateRow candidate={candidate} key={i} />
-          )}
+          render={(candidate, i) => {
+            const res= (candidate?.result?.softskillRating+candidate?.result?.technicalRating)/2
+            return(
+            <AdminCandidateRow score={res} candidate={candidate?.customer} key={i} />
+          )}}
         />
       </Table>
     </DashboardSection>
