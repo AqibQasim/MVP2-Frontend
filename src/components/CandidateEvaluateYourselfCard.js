@@ -64,86 +64,83 @@ function CandidateEvaluateYourselfCard({ candidate }) {
   };
 
   return (
-      <div className="flex-grow size-full gap-8 rounded-4xl bg-neutral-white px-8 py-10">
-        <Heading sm className="font-[500]" style={{ fontSize: "40px" }}>
-          Here’s Where Your Journey Begins
-        </Heading>
+    <div className="size-full flex-grow gap-8 rounded-4xl bg-neutral-white px-8 py-10">
+      <Heading sm className="font-[350]" style={{ fontSize: "40px" }}>
+        Here’s Where Your Journey Begins
+      </Heading>
 
-        <div className="flex h-full w-full flex-col items-center justify-center">
-          <div className="flex h-auto w-auto flex-col items-center justify-center space-y-6">
-            {/* Profile Image */}
-            <div className="relative h-[140px] w-[140px] overflow-hidden rounded-full bg-bg-avatar">
+      <div className="flex h-full w-full flex-col items-center justify-center">
+        <div className="flex h-auto w-auto flex-col items-center justify-center space-y-6">
+          {/* Profile Image */}
+          <div className="relative h-[140px] w-[140px] overflow-hidden rounded-full bg-bg-avatar">
+            <Image
+              src={"/avatars/avatar-3.svg"}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover"
+              alt="Avatar image"
+            />
+          </div>
+
+          {/* Welcome Message */}
+          <div className="text-center">
+            <Heading sm className="font-medium" style={{ fontSize: "34px" }}>
+              Welcome, {candidate?.name || "Richard Feynman"}
+            </Heading>
+            <p className="text-grey-primary-shade-30">
+              Are you ready to tackle the AI Assessment to stand out amongst
+              other candidates?
+            </p>
+          </div>
+
+          <div>
+            <button
+              onClick={() => setOverlayVisible(true)}
+              className="flex flex-row items-center justify-between gap-2 rounded-full bg-primary px-5 py-2 text-sm font-bold capitalize text-neutral-white"
+            >
+              Evaluate yourself
               <Image
-                src={"/avatars/avatar-4.svg"}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-cover"
-                alt="Avatar image"
+                width={23}
+                height={24.3}
+                src={"/evaluate-yourself.svg"}
+                alt="Evaluate yourself ic on"
               />
-            </div>
-
-            {/* Welcome Message */}
-            <div className="text-center">
-              <Heading sm className="font-medium" style={{ fontSize: "34px" }}>
-                Welcome, {candidate?.name || "Richard Feynman"}
-              </Heading>
-              <p className="text-grey-primary-shade-30">
-                Are you ready to tackle the AI Assessment to stand out amongst
-                other candidates?
-              </p>
-            </div>
-
-            {/* Evaluate Yourself Button */}
-            <div>
-              <button
-                onClick={() => setOverlayVisible(true)}
-                className="flex flex-row items-center justify-between gap-2 rounded-full bg-primary px-5 py-2 text-sm font-bold capitalize text-neutral-white"
-              >
-                Evaluate yourself
-                <Image
-                  width={23}
-                  height={24.3}
-                  src={"/evaluate-yourself.svg"}
-                  alt="Evaluate yourself icon"
-                />
-              </button>
-            </div>
+            </button>
           </div>
         </div>
-        {isOverlayVisible && (
-          <Overlay width={"70.75rem"} height={"83%"} isVisible={isOverlayVisible}>
-            <AddSkillForm
-              skill1={skill1}
-              setSkill1={setSkill1}
-              skill2={skill2}
-              setSkill2={setSkill2}
-              skill3={skill3}
-              setSkill3={setSkill3}
-              skill4={skill4}
-              setSkill4={setSkill4}
-              level1={level1}
-              setLevel1={setLevel1}
-              level2={level2}
-              setLevel2={setLevel2}
-              level3={level3}
-              setLevel3={setLevel3}
-              level4={level4}
-              setLevel4={setLevel4}
-              onContinue={handleStartAssessment}
-              onBack={handleBack}
-              //onBack={}
-              //   codingExpertise={codingExpertise}
-              //   setCodingExpertise={setCodingExpertise}
-              //   isTestRequired={isTestRequired}
-              //   setIsTestRequired={setIsTestRequired}
-              //   expertiseRef={expertiseRef}
-              //   setTechStack={setTechStack}
-            />
-          </Overlay>
-        )}
       </div>
-
-    
+      {isOverlayVisible && (
+        <Overlay width={"70.75rem"} height={"83%"} isVisible={isOverlayVisible}>
+          <AddSkillForm
+            skill1={skill1}
+            setSkill1={setSkill1}
+            skill2={skill2}
+            setSkill2={setSkill2}
+            skill3={skill3}
+            setSkill3={setSkill3}
+            skill4={skill4}
+            setSkill4={setSkill4}
+            level1={level1}
+            setLevel1={setLevel1}
+            level2={level2}
+            setLevel2={setLevel2}
+            level3={level3}
+            setLevel3={setLevel3}
+            level4={level4}
+            setLevel4={setLevel4}
+            onContinue={handleStartAssessment}
+            onBack={handleBack}
+            //onBack={}
+            //   codingExpertise={codingExpertise}
+            //   setCodingExpertise={setCodingExpertise}
+            //   isTestRequired={isTestRequired}
+            //   setIsTestRequired={setIsTestRequired}
+            //   expertiseRef={expertiseRef}
+            //   setTechStack={setTechStack}
+          />
+        </Overlay>
+      )}
+    </div>
   );
 }
 

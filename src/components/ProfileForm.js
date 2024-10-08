@@ -6,6 +6,7 @@ import Button from "./Button";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { usePathname } from "next/navigation";
 import ErrorPopup from "./ErrorPopup";
+import ButtonBack from "./ButtonBack";
 
 const ProfileForm = ({ client }) => {
   const pathname = usePathname();
@@ -248,17 +249,34 @@ const ProfileForm = ({ client }) => {
           </div>
         </div>
 
-        <div className="mb-4 mt-4 grid grid-cols-4 items-start gap-4">
+
+        <div className="mb-4 mt-8 grid grid-cols-4 items-start gap-3">
           {/* Section Heading */}
-          <Heading xm className="col-span-1"></Heading>
-          <button></button>
+          <Heading xm className="col-span-1">
+          </Heading>
 
           <div className="col-span-2">
-            <ButtonCapsule className="w-[50%]" type="submit">
-              Update Info
-            </ButtonCapsule>
+            <div className="flex flex-col sm:flex-row sm:space-x-4">
+              {/* First Name */}
+              <div className="flex flex-1  flex-col" style={{ flex: '0 0 27%' }}>  
+                
+                 <ButtonBack className="py-[7px] ">
+                    back
+                 </ButtonBack>
+
+              </div>
+
+              <div className="flex   flex-col" style={{ flex: '0 0 70%' }}>
+                <ButtonCapsule className="" type="submit">
+                   Update Info
+              </ButtonCapsule>
+              </div>
+            </div>
           </div>
         </div>
+
+
+      
 
         {/* Buttons */}
         {/* <div className="mt-6 flex justify-between">

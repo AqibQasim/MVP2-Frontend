@@ -169,7 +169,7 @@ function ClientPaymentMethod({ paymentMethods, stripe, clientSecret, stripePromi
                             />
                         </label>
                         <div id="payment-element" ref={paymentElementRef}></div>
-                        <button type="submit" className="mt-2 p-3 bg-primary text-white rounded-full">
+                        <button type="submit" className="mt-3 p-3 bg-primary text-white rounded-xl">
                             Save Payment Method
                         </button>
                     </form>

@@ -5,8 +5,8 @@ import Image from "next/image";
 import Assessment from "@/components/Assessment";
 import ErrorIndicator from "./ErrorIndicator";
 import styles from "@/styles/ReportOverlay.module.css";
-import downloadIcon from '../../public/icons/download.svg'
-import candidateImage from '../../public/avatars/avatar-3.svg'
+import downloadIcon from "../../public/icons/download.svg";
+import candidateImage from "../../public/avatars/avatar-3.svg";
 // import html2canvas from "html2canvas";
 // import jsPDF from "jspdf";
 import generatePDF from "@/utils/generatePDF";
@@ -221,7 +221,7 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
           <div className={styles.coverContainer}>
             <div className={styles.topContainer}>
               <div className={styles.avatarContainer}>
-                <Image src="/avatarDefault.svg" width={65} height={84} />
+                <Image src="/avatars/avatar-3.svg" width={65} height={84} />
               </div>
               <div className={styles.information}>
                 <h1>{selectedCandidate?.name}</h1>
@@ -233,7 +233,7 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
                         calculateCumulativeMean(
                           selectedCandidate?.result?.technicalRating,
                           selectedCandidate?.result?.softskillRating,
-                          codingResult?.data?.result?.technicalRating
+                          codingResult?.data?.result?.technicalRating,
                         ),
                       ),
                     ),
@@ -244,7 +244,7 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
                       calculateCumulativeMean(
                         selectedCandidate?.result?.technicalRating,
                         selectedCandidate?.result?.softskillRating,
-                        codingResult?.data?.result?.technicalRating
+                        codingResult?.data?.result?.technicalRating,
                       ),
                     ),
                   )}
@@ -254,7 +254,7 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
                         calculateCumulativeMean(
                           selectedCandidate?.result?.technicalRating,
                           selectedCandidate?.result?.softskillRating,
-                          codingResult?.data?.result?.technicalRating
+                          codingResult?.data?.result?.technicalRating,
                         ),
                       ),
                     )}
@@ -399,7 +399,7 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
                 </span>
                 Back
               </button> */}
-              <ButtonBack onClose={onClose}>Back</ButtonBack>
+              <ButtonBack onClick={onClose}>Back</ButtonBack>
               {!isLoading && (
                 <button
                   className={styles.downloadButton}
