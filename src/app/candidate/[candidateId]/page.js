@@ -11,7 +11,7 @@ async function Page({ params }) {
 
   return (
     <>
-      <CandidateIdPage candidate={candidate} candidateId={params.candidateId} />
+      <CandidateIdPage candidate={candidate} candidateId={params.candidateId}  />
     </>
   );
 }
