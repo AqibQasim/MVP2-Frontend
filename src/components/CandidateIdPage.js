@@ -44,12 +44,12 @@ export default function CandidateIdPage({ candidate, candidateId }) {
         <div>
           <CandidateReportCard
             candidateReport={candidateReport}
-            handleOpenOverlay={handleOpenOverlay} // Pass the function to open overlay
+            handleOpenOverlay={handleOpenOverlay} 
           />
           {isReportOverlayOpened && (
             <ReportOverlay
               reportOverlay={isReportOverlayOpened}
-              onClose={handleCloseOverlay} // Pass the function to close overlay
+              onClose={handleCloseOverlay} 
               selectedCandidate={candidateReport}
             />
           )}

@@ -65,7 +65,7 @@ function CandidateEvaluateYourselfCard({ candidate }) {
 
   return (
     <div className="size-full flex-grow gap-8 rounded-4xl bg-neutral-white px-8 py-10">
-      <Heading sm className="font-[400]" style={{ fontSize: "40px" }}>
+      <Heading sm className="font-[350]" style={{ fontSize: "40px" }}>
         Here’s Where Your Journey Begins
       </Heading>
 
@@ -74,7 +74,7 @@ function CandidateEvaluateYourselfCard({ candidate }) {
           {/* Profile Image */}
           <div className="relative h-[140px] w-[140px] overflow-hidden rounded-full bg-bg-avatar">
             <Image
-              src={"/avatars/avatar-4.svg"}
+              src={"/avatars/avatar-3.svg"}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="object-cover"
