@@ -2,7 +2,7 @@
 import AvailabilityDropdown from "@/components/AvailabilityDropdown";
 import SvgIconNotification from "@/svgs/SvgIconNotification";
 import { formatDate } from "@/utils/utility";
-import { useState,useEffect, useRef,} from "react";
+import { useState, useEffect, useRef } from "react";
 import ButtonCapsule from "./ButtonCapsule";
 import ButtonRounded from "./ButtonRounded";
 import EntityCard from "./EntityCard";
@@ -11,11 +11,10 @@ import { PopupModal } from "react-calendly";
 function CandidateHeader({ candidate }) {
   // State to keep track of the selected value
   const [selectedValue, setSelectedValue] = useState("");
-    const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef(null);
-  
-  const [isCandidate, setIsCandidate] = useState(false);
 
+  const [isCandidate, setIsCandidate] = useState(false);
 
   // Options for the dropdown
   const options = [{ value: "Un-Available", label: "Un-Available" }];
@@ -26,17 +25,16 @@ function CandidateHeader({ candidate }) {
     console.log("Selected value:", event.target.value);
   };
 
-   useEffect(() => {
+  useEffect(() => {
     setIsCandidate(true);
   }, []);
 
-
   return (
-    <div className="flex " id='scheduleCallBtn'>
+    <div className="flex" id="scheduleCallBtn">
       <EntityCard
         lg
         entity={{
-          image: "/avatars/avatar-2.png",
+          image: "/avatars/avatar-3.svg",
           name: candidate?.name,
           profession: candidate?.specialization,
         }}
@@ -59,32 +57,31 @@ function CandidateHeader({ candidate }) {
             }}
           />
 
-{isCandidate && (
-  <div>
-          <ButtonCapsule
+          {isCandidate && (
+            <div>
+              <ButtonCapsule
                 ref={buttonRef}
                 onPress={() => setIsOpen(true)}
                 // id="scheduleCallBtn"
-                
               >
                 Schedule a Call
               </ButtonCapsule>
-               <PopupModal
-                url='https://calendly.com/sanjaybaghtwani/co-ventech/30min?hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=4624e0'
-                rootElement={document.getElementById('scheduleCallBtn')}
+              <PopupModal
+                url="https://calendly.com/sanjaybaghtwani/30min?hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=4624e0"
+                rootElement={document.getElementById("scheduleCallBtn")}
                 text="Schedule Call"
                 textColor="#fff"
                 color="#000"
-                height = "200px"
-                overflow= "hidden"
+                height="200px"
+                overflow="hidden"
                 onModalClose={() => setIsOpen(false)}
                 open={isOpen}
                 // styles={{
                 //   height: '10px'
                 // }}
               />
-              </div>
- )}
+            </div>
+          )}
           <ButtonRounded>
             <SvgIconNotification />
           </ButtonRounded>

@@ -38,11 +38,11 @@ function CandidateJobsTable() {
 
   return (
     <DashboardSection
-      className="!min-h-full"
+      className="!min-h-full overflow-auto"
       paragraph="These are all"
       heading="Your jobs"
     >
-      <Table columns="grid-cols-[1fr_1.7fr_6rem_5rem_7.1rem_8.1rem]">
+      <Table columns="grid-cols-[1fr_1.7fr_6rem_5rem_7.1rem_8.1rem]  "     >
         <Table.Header>
           <div className="name">Info</div>
           <div className="email text-center">Skills</div>
@@ -53,9 +53,7 @@ function CandidateJobsTable() {
         </Table.Header>
         <Table.Body
           data={jobs}
-          render={(job, i) => (
-            <CandidateJobsRow job={job.customer_info} key={i} />
-          )}
+          render={(job, i) => <CandidateJobsRow job={job} key={i}    />}
         />
       </Table>
     </DashboardSection>

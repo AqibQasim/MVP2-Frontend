@@ -44,8 +44,8 @@ async function layout({ children, params }) {
         {" "}
         {children}{" "}
       </div> */}
-      <main className="flex flex-col items-center justify-center col-start-2 row-start-2 h-full">
-        <div className="size-full body-scroll overflow-y-scroll rounded-3xl bg-transparent flex-grow">
+      <main className="flex flex-col items-center justify-center body-scroll overflow-y-scroll col-start-2 row-start-2 h-full">
+        <div className="size-full  rounded-3xl bg-transparent flex-grow">
           {children}
         </div>
       </main>

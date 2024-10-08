@@ -23,7 +23,7 @@ function ClientRecommendationCard({
 
   useCalendlyEventListener({
     onProfilePageViewed: () => {
-      console.log("//////////////////////////")
+      console.log("//////////////////////////");
     },
     onDateAndTimeSelected: () => console.log("onDateAndTimeSelected"),
     onEventTypeViewed: () => console.log("onEventTypeViewed"),
@@ -88,7 +88,9 @@ function ClientRecommendationCard({
             </ButtonCapsule>
 
             <PopupModal
-              onDateAndTimeSelected={() => console.log("date and time selected")}
+              onDateAndTimeSelected={() =>
+                console.log("date and time selected")
+              }
               url={
                 "https://calendly.com/sanjaybaghtwani/co-ventech/30min?hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=4624e0"
               }
@@ -101,12 +103,11 @@ function ClientRecommendationCard({
               onModalClose={() => setIsOpen(false)}
               open={isOpen}
               prefill={{
-                guests: ['sanjay1402k@gmail.com'],
+                guests: [recommendedCandidate.email],
               }}
-              
-            // styles={{
-            //   height: '10px'
-            // }}
+              // styles={{
+              //   height: '10px'
+              // }}
             />
           </div>
         </div>

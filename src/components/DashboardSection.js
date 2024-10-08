@@ -13,7 +13,7 @@ function DashboardSection({
   href = null,
 }) {
   return (
-    <div className={`${className} rounded-3xl bg-neutral-white p-6`}>
+    <div className={`${className} rounded-3xl  bg-neutral-white p-6`}>
       <div className="head flex items-center justify-start">
         <div className="">
           <p className="text-sm font-medium text-grey-primary-shade-30">
@@ -33,7 +33,7 @@ function DashboardSection({
         ) : null}
       </div>
       <Hr />
-      <div className="body"> {children} </div>
+      <div className="body  "> {children} </div>
     </div>
   );
 }
