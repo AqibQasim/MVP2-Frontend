@@ -12,7 +12,7 @@ function ButtonBack({ children, className, onClick, ...rest }) {
     <button
       onClick={handleBack}
       {...rest}
-      className={`${className} flex items-center justify-center gap-2 rounded-full bg-primary-tint-100 p-3 text-neutral-dark`}
+      className={`${className} flex items-center justify-between gap-2 rounded-full bg-primary-tint-100 p-3 text-neutral-dark`}
     >
       {" "}
       <span className="rounded-[150px] bg-neutral-white px-4 py-3 text-neutral-dark">

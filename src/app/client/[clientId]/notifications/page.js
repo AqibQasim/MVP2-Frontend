@@ -48,10 +48,10 @@ function Page({ params }) {
   return (
     <div className='w-full h-full bg-white'>
       <div className="space-y-4">
-        <p className="text-sm font-medium text-grey-primary-shade-30">
+        <p className="text-sm ml-4 font-medium text-grey-primary-shade-30">
           These are your
         </p>
-        <Heading sm>Notifications</Heading>
+        <Heading className='ml-5' >Notifications</Heading>
       </div>
       <ClientAlertMessage showResponseMessage={true}//{showResponseMessage}
         onAccept={handleAcceptClientResponse}
