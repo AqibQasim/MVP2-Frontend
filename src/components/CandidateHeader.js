@@ -18,7 +18,7 @@ function CandidateHeader({ candidate }) {
 
 
   // Options for the dropdown
-  const options = [{ value: "Offline", label: "Offline" }];
+  const options = [{ value: "Un-Available", label: "Un-Available" }];
 
   // Handle change event
   const handleChange = (event) => {

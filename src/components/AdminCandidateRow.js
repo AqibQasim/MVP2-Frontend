@@ -9,7 +9,7 @@ import IconWithBg from "./IconWithBg";
 import SkillIconWithBg from "./SkillIconWithBg";
 import Table from "./Table";
 
-function AdminCandidateRow({ candidate, job, client }) {
+function AdminCandidateRow({ candidate, score }) {
   const [showForm, setShowForm] = useState(false);
   const [hourlyRate, setHourlyRate] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
@@ -84,25 +84,28 @@ function AdminCandidateRow({ candidate, job, client }) {
         <EntityCard
           entity={{
             name: candidate?.name,
-            //profession: candidate?.specialization,
+            profession: candidate?.specialization,
             image: "/avatars/avatar-1.png",
           }}
         />
         <div className="skills flex items-center justify-center gap-1.5 text-center">
-          {/* {candidate?.skills?.length > 0 ? (
-            candidate.skills.map((skill, i) => (
+          {candidate?.expertise?.length > 0 ? (
+            candidate.expertise.map((skill, i) => (
               <SkillIconWithBg key={i} icon={skill} />
             ))
           ) : (
             <span>No skills available</span>
-          )} */}
-          {client?.name}
+          )}
         </div>
 
         <div className="experience text-center">
-          {job?.job_status || "No experience"}
+          {candidate?.experience || "No experience"}
         </div>
-        <Capsule>{job?.commitment || "No job type"}</Capsule>
+        <Capsule>{candidate?.commitment || "No job type"}</Capsule>
+
+        <div className="experience text-center">
+          {score}/10
+        </div>
 
         {/* Button to open form */}
         <button onClick={() => setShowForm(true)}>

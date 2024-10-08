@@ -33,6 +33,7 @@ function ClientRecommendationCard({
 
   useEffect(() => {
     setIsMounted(true);
+    console.log("mounted");
   }, []);
   if (!isMounted) return null;
 
@@ -103,6 +104,7 @@ function ClientRecommendationCard({
                 guests: [recommendedCandidate.email],
 
               }}
+              
             // styles={{
             //   height: '10px'
             // }}
