@@ -12,8 +12,8 @@ function Page({ params }) {
       method: 'POST',
       body: {
         client_id: params?.clientId,
-        customer_id: 'a0f92f65-121c-449d-b199-93eb52a1bb90',
-        job_posting_id: '4b91db71-854b-44cc-882e-fff4dee10be8',
+        customer_id: 'e1b8ae93-587d-4040-8bcf-b94eb7665b19',
+        job_posting_id: '50f8de65-257b-49e4-8de6-3b23daffa33a',
         job_status: 'trial',
         talent_status: 'trial',
         response_status: 'accept'
