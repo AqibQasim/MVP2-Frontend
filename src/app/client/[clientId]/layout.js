@@ -62,12 +62,6 @@ async function layout({ children, params }) {
       <aside className="col-start-1 row-span-2 row-start-1 rounded-4xl bg-neutral-white p-6">
         <ClientDashboardSideNav clientId={clientId} />
       </aside>
-      {/* <AuthCheck>
-        <div className="body-scroll overflow-y-scroll rounded-3xl bg-transparent">
-          {" "}
-          {children}{" "}
-        </div>
-      </AuthCheck> */}
       <div className="body-scroll overflow-y-scroll rounded-3xl bg-transparent">
         {" "}
         {children}{" "}

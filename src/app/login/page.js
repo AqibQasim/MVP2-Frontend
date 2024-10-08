@@ -29,8 +29,8 @@ function Login() {
   };
 
   const handClick = () => {
-    setShow(!show)
-  }
+    setShow(!show);
+  };
 
   const validateField = (name, value) => {
     let errorMsg = "";
@@ -187,36 +187,37 @@ function Login() {
             {errors.email && (
               <p className="text-xs text-red-500">{errors.email}</p>
             )}
-             <div className="flex"  >
-               <Input
-               type= {show ? "text" :"password" }
-               name="password"
-               value={form.password}
-               onChange={handleChange}
-               placeholder="Enter your password"
-               className="mt-3"
-               /> 
-               <p className=" ml-[-37px] " > 
-                  {show ?
-                   <Image
-                  src="eye-close.svg"
-                  width={20}
-                  height={20}
-                  alt="line"
-                  onClick={handClick}
-                  className="inline-block mt-[24px] cursor-pointer "
-                  />:
+            <div className="flex">
+              <Input
+                type={show ? "text" : "password"}
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                placeholder="Enter your password"
+                className="mt-3"
+              />
+              <p className="ml-[-37px]">
+                {show ? (
                   <Image
-                  src="eye.svg"
-                  width={20}
-                  height={20}
-                  alt="line"
-                  onClick={handClick}
-                  className="inline-block mt-[24px] cursor-pointer "
-                  />}
-                
-                </p>
-              </div>
+                    src="eye-close.svg"
+                    width={20}
+                    height={20}
+                    alt="line"
+                    onClick={handClick}
+                    className="mt-[24px] inline-block cursor-pointer"
+                  />
+                ) : (
+                  <Image
+                    src="eye.svg"
+                    width={20}
+                    height={20}
+                    alt="line"
+                    onClick={handClick}
+                    className="mt-[24px] inline-block cursor-pointer"
+                  />
+                )}
+              </p>
+            </div>
             {errors.password && (
               <p className="text-xs text-red-500">{errors.password}</p>
             )}

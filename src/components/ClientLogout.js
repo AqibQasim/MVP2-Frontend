@@ -8,6 +8,7 @@ export default function ClientLogout({ className }) {
   const handleLogout = () => {
     // Clear localStorage and redirect to login
     localStorage.removeItem("MVP_CLIENT_LOGGEDIN");
+    localStorage.removeItem("");
     // remove cookie
     document.cookie =
       "credentialLoginToken=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
