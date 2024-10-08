@@ -47,8 +47,8 @@ function Page({ params }) {
 
   return (
     <div className='w-full h-full bg-white'>
-      <div className="space-y-4">
-        <p className="text-sm ml-4 font-medium text-grey-primary-shade-30">
+      <div className="space-y-2">
+        <p className="text-sm pt-10 pl-4 font-medium text-grey-primary-shade-30">
           These are your
         </p>
         <Heading className='ml-5' >Notifications</Heading>
