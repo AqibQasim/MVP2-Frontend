@@ -101,8 +101,7 @@ function ClientRecommendationCard({
               onModalClose={() => setIsOpen(false)}
               open={isOpen}
               prefill={{
-                guests: [recommendedCandidate.email],
-
+                guests: ['sanjay1402k@gmail.com'],
               }}
               
             // styles={{
