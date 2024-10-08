@@ -64,7 +64,7 @@ function ClientHeader({client, client_id}) {
                 Schedule a Call
               </ButtonCapsule>
               <PopupModal
-                url='https://calendly.com/sanjaybaghtwani/co-ventech/30min?hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=4624e0'
+                url='https://calendly.com/sanjaybaghtwani/co-ventech/30min?name=test&email=test@gmail.com&hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=4624e0'
                 rootElement={document.getElementById('scheduleCallBtn')}
                 text="Schedule Call"
                 textColor="#fff"
@@ -76,6 +76,10 @@ function ClientHeader({client, client_id}) {
                 // styles={{
                 //   height: '10px'
                 // }}
+                prefill={{
+                  mame:['test'],
+                  email: ['test@gmail.com'],
+              }}
               />
             </div>
           )}
