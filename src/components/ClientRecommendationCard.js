@@ -35,7 +35,6 @@ function ClientRecommendationCard({
       console.error("Error fetching event details:", error);
     }
   };
-
   useCalendlyEventListener({
     onEventScheduled: (e) => {
       console.log("Fetching event details from:", e.data.payload.event.uri);
