@@ -1,8 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Heading from "./Heading";
 import ButtonCapsule from "./ButtonCapsule";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import ErrorPopup from "./ErrorPopup";
+// import { useEffect } from "react/cjs/react.production.min";
 
 const CandidateProfileForm = ({ candidate }) => {
   const parsedValue = JSON.parse(candidate.value);
@@ -18,6 +19,12 @@ const CandidateProfileForm = ({ candidate }) => {
   const stateRef = useRef(null);
   const areaCodeRef = useRef(null);
   const countryRef = useRef(null);
+
+
+
+  useEffect(() => {
+    console.log("the parsed customer id is ", parsedValue.data.customer_id)
+  }, [parsedValue])
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -50,6 +57,7 @@ const CandidateProfileForm = ({ candidate }) => {
       console.error("Error while updating profile:", error);
     }
   };
+
 
   return (
     <div className="">
