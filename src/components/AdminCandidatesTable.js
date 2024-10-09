@@ -10,14 +10,14 @@ function AdminCandidatesTable({ candidates }) {
       paragraph="These are all"
       heading="Candidates"
     >
-      <Table columns="grid-cols-[1fr_0.7fr_1fr_1fr_1fr]">
+      <Table columns="grid-cols-[1.7fr_1.7fr_10rem_8rem_8.1rem_9.8rem]">
         <Table.Header>
           <div className="info">Info</div>
           <div className="skills text-center">Skills</div>
           <div className="experience text-center">Experience</div>
           <div className="job-type text-center">Job type</div>
-          <div>Score</div>
-          <div className="actions text-right">Actions</div>
+          <div   className= 'text-center' >Score</div>
+          <div className="actions text-center">Actions</div>
         </Table.Header>
         <Table.Body
           data={candidates?.data}
@@ -33,3 +33,6 @@ function AdminCandidatesTable({ candidates }) {
 }
 
 export default AdminCandidatesTable;
+
+
+
