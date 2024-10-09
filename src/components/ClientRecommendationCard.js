@@ -25,7 +25,7 @@ function ClientRecommendationCard({
     try {
       const response = await fetch(eventUri, {
         headers: {
-          Authorization: `Bearer eyJraWQiOiIxY2UxZTEzNjE3ZGNmNzY2YjNjZWJjY2Y4ZGM1YmFmYThhNjVlNjg0MDIzZjdjMzJiZTgzNDliMjM4MDEzNWI0IiwidHlwIjoiUEFUIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJodHRwczovL2F1dGguY2FsZW5kbHkuY29tIiwiaWF0IjoxNzI4NDY2NTQxLCJqdGkiOiIwZWNkMDU3YS0xZjI2LTQwYzctOGI3OC01OGFiNGFhYWQzNDciLCJ1c2VyX3V1aWQiOiJlODdmYmZhOS01YmUxLTRjNzEtOTFlYi1hODkzMDE3OTBhMWMifQ.Bdt_S_5FmvQpHZjJIjzbEY86erxCicLQYlTsoY0dXvCk4VQGWdaOg1cNiGe6E7Mu3LdCIThGWeoOeQTYZvVqPQ`, // Replace with your actual API key
+          Authorization: `Bearer ${process.env.CALENDLY_TOKEN}`, // Replace with your actual API key
         },
       });
       const data = await response.json();
@@ -66,7 +66,7 @@ function ClientRecommendationCard({
       {!recommendedCandidate?.name ? (
         <p>No data to show</p>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-4 scheduleCallBtn">
           <div className="flex items-start justify-between">
             <EntityCard
               entity={{
@@ -122,9 +122,7 @@ function ClientRecommendationCard({
               onModalClose={() => setIsOpen(false)}
               open={isOpen}
               prefill={{
-                name: "Aqib", // Prefill the candidate's name
-                email: "muhammad44aqib@gmail.com", // Prefill the candidate's email
-                guests: [{ email: recommendedCandidate.email }], // Prefill the guests' email (if applicable)
+                guests: [recommendedCandidate.email], // Prefill the guests' email (if applicable)
               }}
             />
           </div>

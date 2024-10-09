@@ -6,7 +6,9 @@ import { useState, useEffect, useRef } from "react";
 import ButtonCapsule from "./ButtonCapsule";
 import ButtonRounded from "./ButtonRounded";
 import EntityCard from "./EntityCard";
-import { PopupModal } from "react-calendly";
+import { PopupModal, useCalendlyEventListener } from "react-calendly";
+
+
 
 function CandidateHeader({ candidate }) {
   // State to keep track of the selected value
@@ -29,7 +31,31 @@ function CandidateHeader({ candidate }) {
     setIsCandidate(true);
   }, []);
 
+  const getEventDetails = async (eventUri) => {
+    try {
+      const response = await fetch(eventUri, {
+        headers: {
+          Authorization: `Bearer ${process.env.CALENDLY_TOKEN}`, // Replace with your actual API key
+        },
+      });
+      const data = await response.json();
+      console.log("Event Details:", data);
+      // Access the date and time from the response, e.g., data.start_time
+    } catch (error) {
+      console.error("Error fetching event details:", error);
+    }
+  };
+
+  useCalendlyEventListener({
+    onEventScheduled: (e) => {
+      console.log("Fetching event details from:", e.data.payload.event.uri);
+      getEventDetails(e.data.payload.event.uri);
+    },
+  });
+
+
   return (
+    <>
     <div className="flex" id="scheduleCallBtn">
       <EntityCard
         lg
@@ -66,20 +92,7 @@ function CandidateHeader({ candidate }) {
               >
                 Schedule a Call
               </ButtonCapsule>
-              <PopupModal
-                url="https://calendly.com/sanjaybaghtwani/30min?hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=4624e0"
-                rootElement={document.getElementById("scheduleCallBtn")}
-                text="Schedule Call"
-                textColor="#fff"
-                color="#000"
-                height="200px"
-                overflow="hidden"
-                onModalClose={() => setIsOpen(false)}
-                open={isOpen}
-                // styles={{
-                //   height: '10px'
-                // }}
-              />
+              
             </div>
           )}
           <ButtonRounded>
@@ -96,6 +109,21 @@ function CandidateHeader({ candidate }) {
         </div>
       </div>
     </div>
+    <PopupModal
+      url='https://calendly.com/muhammad44aqib/30min'
+      rootElement={document.getElementById("scheduleCallBtn")}
+      text="Schedule Call"
+      textColor="#fff"
+      color="#000"
+      height="200px"
+      overflow="hidden"
+      onModalClose={() => setIsOpen(false)}
+      open={isOpen}
+      // styles={{
+      //   height: '10px'
+      // }}
+    />
+    </>
   );
 }
 
