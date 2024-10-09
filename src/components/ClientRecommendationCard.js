@@ -11,6 +11,7 @@ import ScheduleInterviewModal from "./ScheduleInterviewModal";
 import ButtonCapsule from "./ButtonCapsule";
 import { useState, useRef, useEffect } from "react";
 import { PopupModal, useCalendlyEventListener } from "react-calendly";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 
 function ClientRecommendationCard({
   client = {},
@@ -25,11 +26,21 @@ function ClientRecommendationCard({
     try {
       const response = await fetch(eventUri, {
         headers: {
-          Authorization: `Bearer ${process.env.CALENDLY_TOKEN}`, // Replace with your actual API key
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_CALENDLY_TOKEN}`, // Replace with your actual API key
         },
       });
       const data = await response.json();
       console.log("Event Details:", data);
+      const payload={
+        customer_id: recommendedCandidate?.customer_id,
+        interview_date: data?.resource?.start_time,
+        interview_time: data?.resource?.start_time
+      }
+      console.log(payload)
+      const result= await mvp2ApiHelper(payload);
+      if(result.status===200){
+        console.log('Interview has been scheduled')
+      }
       // Access the date and time from the response, e.g., data.start_time
     } catch (error) {
       console.error("Error fetching event details:", error);

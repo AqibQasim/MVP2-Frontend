@@ -35,7 +35,7 @@ function CandidateHeader({ candidate }) {
     try {
       const response = await fetch(eventUri, {
         headers: {
-          Authorization: `Bearer ${process.env.CALENDLY_TOKEN}`, // Replace with your actual API key
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_CALENDLY_TOKEN}`, // Replace with your actual API key
         },
       });
       const data = await response.json();
