@@ -16,12 +16,13 @@ function ClientHeader({client, client_id}) {
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef(null);
   const router= useRouter();
-
-    const getEventDetails = async (eventUri) => {
+  const [isMounted, setIsMounted] = useState(false);
+  
+  const getEventDetails = async (eventUri) => {
     try {
       const response = await fetch(eventUri, {
         headers: {
-          Authorization: `Bearer ${process.env.CALENDLY_TOKEN}`, // Replace with your actual API key
+          Authorization: `Bearer ${processs.env.NEXT_PUBLIC_CALENDLY_TOKEN}`, // Replace with your actual API key
         },
       });
       const data = await response.json();
@@ -42,6 +43,13 @@ function ClientHeader({client, client_id}) {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+
+  useEffect(() => {
+    setIsMounted(true);
+    console.log("mounted");
+  }, []);
+  if (!isMounted) return null;
 
   return (
     <>
