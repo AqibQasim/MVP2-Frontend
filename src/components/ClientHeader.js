@@ -17,14 +17,26 @@ function ClientHeader({client, client_id}) {
   const buttonRef = useRef(null);
   const router= useRouter();
 
+    const getEventDetails = async (eventUri) => {
+    try {
+      const response = await fetch(eventUri, {
+        headers: {
+          Authorization: `Bearer ${process.env.CALENDLY_TOKEN}`, // Replace with your actual API key
+        },
+      });
+      const data = await response.json();
+      console.log("Event Details:", data);
+      // Access the date and time from the response, e.g., data.start_time
+    } catch (error) {
+      console.error("Error fetching event details:", error);
+    }
+  };
+
   useCalendlyEventListener({
-    onProfilePageViewed: () => {
-      console.log("//////////////////////////")
+    onEventScheduled: (e) => {
+      console.log("Fetching event details from:", e.data.payload.event.uri);
+      getEventDetails(e.data.payload.event.uri);
     },
-    onDateAndTimeSelected: () => console.log("onDateAndTimeSelected"),
-    onEventTypeViewed: () => console.log("onEventTypeViewed"),
-    onEventScheduled: (e) => console.log(e.data),
-    onPageHeightResize: (e) => console.log(e.data.payload.height),
   });
 
   useEffect(() => {
@@ -32,6 +44,7 @@ function ClientHeader({client, client_id}) {
   }, []);
 
   return (
+    <>
     <div className="flex" id="scheduleCallBtn">
       <EntityCard
         lg
@@ -73,8 +86,23 @@ function ClientHeader({client, client_id}) {
               >
                 Schedule a Call
               </ButtonCapsule>
-              <PopupModal
-                url='https://calendly.com/sanjaybaghtwani/co-ventech/30min?name=test&email=test@gmail.com&hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=4624e0'
+              
+            </div>
+          )}
+        </div>
+        <div className="join-date float-right">
+          <p className="capitalize text-grey-primary-shade-10">
+            Joined date:{" "}
+            <span className="font-semibold">
+              {formatDate(new Date("2024-04-27"))}
+            </span>
+          </p>
+        </div>
+      </div>
+      
+    </div>
+    <PopupModal
+                url='https://calendly.com/muhammad44aqib/30min'
                 rootElement={document.getElementById('scheduleCallBtn')}
                 text="Schedule Call"
                 textColor="#fff"
@@ -91,19 +119,7 @@ function ClientHeader({client, client_id}) {
                   email: ['test@gmail.com'],
               }}
               />
-            </div>
-          )}
-        </div>
-        <div className="join-date float-right">
-          <p className="capitalize text-grey-primary-shade-10">
-            Joined date:{" "}
-            <span className="font-semibold">
-              {formatDate(new Date("2024-04-27"))}
-            </span>
-          </p>
-        </div>
-      </div>
-    </div>
+              </>
   );
 }
 
