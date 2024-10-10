@@ -5,12 +5,23 @@ import IconWithBg from "./IconWithBg";
 import SkillIconWithBg from "./SkillIconWithBg";
 import Table from "./Table";
 import SvgIconRequestInterview from "@/svgs/SvgIconRequestInterview";
+import { PopupModal, useCalendlyEventListener } from "react-calendly";
+import { useState, useEffect, useRef } from "react";
 
 function ClientRecommendedRow({ recommended }) {
+  const [isOpen, setIsOpen] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
   console.log(recommended);
   const { customer: candidate, job_postings: job } = recommended;
 
+  useEffect(() => {
+    setIsMounted(true);
+    console.log("mounted");
+  }, []);
+  if (!isMounted) return null;
+
   return (
+    <>
     <Table.Row>
       <EntityCard
         entity={{
@@ -31,12 +42,33 @@ function ClientRecommendedRow({ recommended }) {
       <div className="experience text-center">{candidate.experience}</div>
       <Capsule>{candidate.commitment}</Capsule>
       <Capsule
+      onClick={() => setIsOpen(true)}
         className="ml-auto !bg-primary-tint-100"
         icon={<IconWithBg icon={<SvgIconRequestInterview />} />}
       >
-        Request `Interview
+        Request Interview
       </Capsule>
     </Table.Row>
+
+     <PopupModal
+      url='https://calendly.com/muhammad44aqib/30min'
+      rootElement={document.getElementById('scheduleCallBtn')}
+      text="Schedule Call"
+      textColor="#fff"
+      color="#000"
+      height="200px"
+      overflow="hidden"
+      onModalClose={() => setIsOpen(false)}
+      open={isOpen}
+      // styles={{
+      //   height: '10px'
+      // }}
+      prefill={{
+        guests:[`${candidate.email}`]
+    }}
+              />
+              </>
+    
   );
 }
 
