@@ -52,43 +52,41 @@ function ClientHeader({ client, client_id }) {
 
   return (
     <>
-      <div className="flex" id="scheduleCallBtn">
-        <EntityCard
-          lg
-          entity={{
-            image: "/avatars/avatar-2.png",
-            name: client.name,
-            profession: client.email,
-          }}
-        />
-        <div className="info ml-auto space-y-4">
-          <div className="buttons flex items-start justify-end gap-2">
-            <EntityCard
-              sm
-              entity={{
-                image: "/avatars/avatar-3.svg",
-                name: "Esther Howard",
-                profession: "Account Executive - AE",
-              }}
-            />
-            {/* schedule-call */}
-            {/* <ScheduleCallModal /> */}
-            <ButtonRounded
-              onClick={() => {
-                //open notification screen
-                //console.log("notification pressed")
-                router.push(`/client/${client_id}/notifications`);
-              }}
-            >
-              <SvgIconNotification />
-            </ButtonRounded>
-            <ButtonRounded
-              onClick={() => {
-                router.push(`/client/${client_id}/settings`);
-              }}
-            >
-              <SvgIconSettings />
-            </ButtonRounded>
+    <div className="flex" id="scheduleCallBtn">
+      <EntityCard
+        lg
+        entity={{
+          image: "/avatars/avatar-2.png",
+          name: client.name,
+          profession: client.email,
+        }}
+      />
+      <div className="info ml-auto space-y-4">
+        <div className="buttons flex items-start justify-end gap-2">
+          <EntityCard
+            sm
+            entity={{
+              image: "/avatars/avatar-3.svg",
+              name: "Esther Howard",
+              profession: "Account Executive - AE",
+            }}
+          />
+          {/* schedule-call */}
+          {/* <ScheduleCallModal /> */}
+          <ButtonRounded onClick={()=>{
+            //open notification screen
+            //console.log("notification pressed")
+            router.push(`/client/${client_id}/notifications`)
+          }}>
+            <SvgIconNotification />
+          </ButtonRounded>
+          <ButtonRounded onClick={()=>{
+            //open notification screen
+            //console.log("notification pressed")
+            router.push(`/client/${client_id}/settings`)
+          }}>
+            <SvgIconSettings />
+          </ButtonRounded>
 
             {isClient && (
               <div>

@@ -32,9 +32,13 @@ function ClientRecommendationCard({
       const data = await response.json();
       console.log("Event Details:", data);
       const payload={
-        customer_id: recommendedCandidate?.customer_id,
-        interview_date: data?.resource?.start_time,
-        interview_time: data?.resource?.start_time
+        endpoint: 'scheduling-interview',
+        method: 'POST',
+        body:{
+          customer_id: recommendedCandidate?.customer_id,
+          interview_date: data?.resource?.start_time,
+          interview_time: data?.resource?.start_time
+        }
       }
       console.log(payload)
       const result= await mvp2ApiHelper(payload);
