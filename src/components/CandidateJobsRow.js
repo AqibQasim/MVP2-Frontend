@@ -34,7 +34,7 @@ function CandidateJobsRow({ job }) {
         icon={<IconWithBg icon={<SvgIconJobStatus status={job?.job?.job_status} />} />}
       >
         {" "}
-        {job.status}{" "}
+        {job?.job?.job_status}{" "}
       </Capsule>
       <Capsule
         className="mx-auto w-max !bg-primary-tint-100"
