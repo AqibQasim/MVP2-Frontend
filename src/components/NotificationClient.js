@@ -7,6 +7,10 @@ import { useEffect, useState } from 'react'
 
 function NotificationClient({ client_id }) {
   const [notifications, setNotifications] = useState(null);
+  const [buttonType, setButtonType]= useState({
+    notification_id: null,
+    type: null
+  });
   const fetchClientNotifications = () => {
     const payload = {
       endpoint: `get-client-notification?client_id=${client_id}`,
@@ -23,7 +27,7 @@ function NotificationClient({ client_id }) {
     fetchClientNotifications();
   }, [client_id])
 
-  const handleAcceptClientResponse = (customer_id, job_posting_id) => {
+  const handleAcceptClientResponse = (customer_id, job_posting_id, notification_id) => {
     const payload = {
       endpoint: 'client/client-response',
       method: 'POST',
@@ -38,11 +42,16 @@ function NotificationClient({ client_id }) {
     }
 
     mvp2ApiHelper(payload).then(result => {
-      console.log(result)
+      if(result.status===200){
+        setButtonType({
+          notification_id,
+          type:'accept'
+        })
+      }
     })
   }
 
-  const handleRejectClientResponse = (customer_id, job_posting_id) => {
+  const handleRejectClientResponse = (customer_id, job_posting_id, notification_id) => {
     const payload = {
       endpoint: 'client/client-response',
       method: 'POST',
@@ -57,7 +66,13 @@ function NotificationClient({ client_id }) {
     }
 
     mvp2ApiHelper(payload).then(result => {
-      console.log(result)
+      if(result.status===200){
+        // buttonType= 'reject'
+        setButtonType({
+          notification_id,
+          type:'reject'
+        })
+      }
     })
   }
 
@@ -73,10 +88,10 @@ function NotificationClient({ client_id }) {
       {
         (notifications && notifications?.length > 0) ?
           notifications?.map((notification, index) => (
-            <ClientAlertMessage showResponseMessage={true}//{showResponseMessage}
-              onAccept={() => handleAcceptClientResponse(notification?.customer_id, notification?.job_posting_id)}
-              onReject={() => handleRejectClientResponse()}
-              msgText={"Your Interview with the candidate [candidate name with hyperlink] for job [job name with hyperlink] has ended. Do you want to accept this candidate for trial?"} />)
+            <ClientAlertMessage is_accepted={notification?.is_accepted} notification_id={notification?.notification_id} buttonType={buttonType} showResponseMessage={true}//{showResponseMessage}
+              onAccept={() => handleAcceptClientResponse(notification?.customer_id, notification?.job_posting_id, notification?.notification_id)}
+              onReject={() => handleRejectClientResponse(notification?.customer_id, notification?.job_posting_id, notification?.notification_id)}
+              msgText={notification?.message} />)
           )
           : <div>No notifications yet</div>
       }
