@@ -40,7 +40,7 @@ const ClientAlertMessage = ({ showMessage, msgText, onAccept, onReject, is_accep
                     {
                         (is_accepted===false || (buttonType.type === 'reject'&& buttonType.notification_id===notification_id)) && (
                             <ButtonCapsule className={'bg-slate-100 ml-2 w-[8rem]'}>
-                                <div className="text-black">Decline</div>
+                                <div className="text-black">Declined</div>
                             </ButtonCapsule>
                         )
                     }

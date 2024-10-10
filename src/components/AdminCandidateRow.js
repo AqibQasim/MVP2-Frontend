@@ -72,10 +72,10 @@ function AdminCandidateRow({ candidate, score }) {
       console.log({ Error: error });
       return setError(error);
     }
-    if (message) {
-      console.log("Refer Message: ", message);
-      return setShowForm(false);
-    }
+    // if (message) {
+    //   console.log("Refer Message: ", message);
+    //   return setShowForm(false);
+    // }
   };
 
   return (
