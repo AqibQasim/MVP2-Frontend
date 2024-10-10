@@ -25,10 +25,17 @@ function ClientTalentsTable({ hiredTalents }) {
           <div className="date-hire text-center">Date hire</div>
           <div className="actions text-right">Actions</div>
         </Table.Header>
+
+        {hiredTalents && hiredTalents.length > 0 ? (
         <Table.Body
           data={hiredTalents}
           render={(talent, i) => <ClientTalentsRow talent={talent} key={i} />}
         />
+      ) : (
+        <div >
+          <p>No data to show at the moment</p>
+        </div>
+      )}
       </Table>
     </DashboardSection>
   );
