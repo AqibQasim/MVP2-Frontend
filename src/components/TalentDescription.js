@@ -24,7 +24,10 @@ function TalentDescription({ description, skills }) {
             </Heading>
             <div className="flex items-start gap-1.5">
               {skills.map((skill, i) => (
+                <>
                 <Skill key={i} skill={skill} className="!bg-neutral-white" />
+                  {skill}
+                </>
               ))}
             </div>
           </>
