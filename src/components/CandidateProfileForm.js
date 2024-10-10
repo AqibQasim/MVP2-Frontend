@@ -38,7 +38,7 @@ const CandidateProfileForm = ({ candidate }) => {
         customer_location: streetAddressRef.current.value,
         city: cityRef.current.value,
         province: stateRef.current.value,
-        area_code: areaCodeRef.current.value,
+        area_code: (areaCodeRef.current?.value  != "") ? areaCodeRef.current?.value : null,
         country: countryRef.current.value,
       },
     };
@@ -183,7 +183,7 @@ const CandidateProfileForm = ({ candidate }) => {
                 <input
                   type="text"
                   ref={areaCodeRef}
-                  defaultValue={parsedValue.data.area_code || ""}
+                  defaultValue={parsedValue.data.area_code || null }
                   className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
                 />
               </div>
