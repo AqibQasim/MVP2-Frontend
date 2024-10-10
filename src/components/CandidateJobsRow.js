@@ -21,7 +21,10 @@ function CandidateJobsRow({ job }) {
       />
       <div className="skills flex items-center justify-center gap-1.5 text-center">
         {job?.job?.skills.map((skill, i) => (
+          <>
           <Skill key={i} skill={skill} />
+            {skill}
+          </>
         ))}
       </div>
       <div className="experience text-center">{job?.job?.experience}</div>

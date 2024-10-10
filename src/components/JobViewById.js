@@ -209,7 +209,10 @@ function JobViewById({ job }) {
             </div>
             <div className="skills flex items-center gap-1.5 text-center">
               {job.skills.map((skill, i) => (
+                <>
                 <Skill key={i} skill={skill} />
+                {skill}
+                </>
               ))}
             </div>
           </div>
