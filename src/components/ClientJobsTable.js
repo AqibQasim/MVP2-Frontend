@@ -22,10 +22,18 @@ async function ClientJobsTable({client_id}) {
           <div className="status text-center">Status</div>
           <div className="action text-center">Action</div>
         </Table.Header>
+
+        {clientJobs && clientJobs.length > 0 ? (
         <Table.Body
           data={clientJobs.data.result}
           render={(job, i) => <ClientJobsRow job={job} key={i} />}
         />
+         ) : (
+        <div >
+          <p>No data to show at the moment</p>
+        </div>
+        )}
+
       </Table>
     </DashboardSection>
   );
