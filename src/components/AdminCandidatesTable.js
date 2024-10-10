@@ -22,10 +22,18 @@ function AdminCandidatesTable({ candidates }) {
         <Table.Body
           data={candidates?.data}
           render={(candidate, i) => {
-            const res= (candidate?.result?.softskillRating+candidate?.result?.technicalRating)/2
-            return(
-            <AdminCandidateRow score={res} candidate={candidate?.customer} key={i} />
-          )}}
+            const res =
+              (candidate?.result?.softskillRating +
+                candidate?.result?.technicalRating) /
+              2;
+            return (
+              <AdminCandidateRow
+                score={res}
+                candidate={candidate?.customer}
+                key={i}
+              />
+            );
+          }}
         />
       </Table>
     </DashboardSection>

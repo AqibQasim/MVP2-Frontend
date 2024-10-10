@@ -89,6 +89,7 @@ function AdminCandidateRow({ candidate, score }) {
           }}
         />
         <div className="skills flex items-center justify-center gap-1.5 text-center">
+          {console.log("skilss are :", candidate?.expertise[0]?.skill)}
           {candidate?.expertise?.length > 0 ? (
             candidate.expertise.map((skill, i) => (
               <SkillIconWithBg key={i} icon={skill} />
@@ -103,9 +104,7 @@ function AdminCandidateRow({ candidate, score }) {
         </div>
         <Capsule>{candidate?.commitment || "No job type"}</Capsule>
 
-        <div className="experience text-center">
-          {score}/10
-        </div>
+        <div className="experience text-center">{score}/10</div>
 
         {/* Button to open form */}
         <button onClick={() => setShowForm(true)}>
@@ -118,7 +117,6 @@ function AdminCandidateRow({ candidate, score }) {
         </button>
       </Table.Row>
 
-      {/* Modal for the referral form */}
       <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
         <h3 className="mb-4 text-xl font-semibold">
           Refer {candidate?.role} to Client
@@ -194,7 +192,7 @@ function AdminCandidateRow({ candidate, score }) {
                 }}
                 key={job.job_posting_id}
                 value={job.job_posting_id}
-                 className="cursor-pointer"
+                className="cursor-pointer"
               >
                 {job.position}
               </option>
