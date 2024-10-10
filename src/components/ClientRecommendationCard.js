@@ -12,8 +12,10 @@ import ButtonCapsule from "./ButtonCapsule";
 import { useState, useRef, useEffect } from "react";
 import { PopupModal, useCalendlyEventListener } from "react-calendly";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
+import { useParams } from "next/navigation";
 
 function ClientRecommendationCard({
+  score,
   client = {},
   recommendedCandidate = {},
   recommendedForJob = {},
@@ -21,6 +23,9 @@ function ClientRecommendationCard({
   const [isMounted, setIsMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef(null);
+  const params= useParams();
+
+  console.log(client)
 
   const getEventDetails = async (eventUri) => {
     try {
@@ -32,12 +37,14 @@ function ClientRecommendationCard({
       const data = await response.json();
       console.log("Event Details:", data);
       const payload={
-        endpoint: 'scheduling-interview',
+        endpoint: 'schedule-interview',
         method: 'POST',
         body:{
           customer_id: recommendedCandidate?.customer_id,
           interview_date: data?.resource?.start_time,
-          interview_time: data?.resource?.start_time
+          interview_time: data?.resource?.start_time,
+          job_posting_id: recommendedForJob?.job_posting_id,
+          client_id: params?.clientId
         }
       }
       console.log(payload)
