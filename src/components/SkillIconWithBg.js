@@ -12,7 +12,7 @@ function SkillIconWithBg({ icon, skill = null, score = null, className }) {
           <div className="relative !size-5">
             <Image
               className="object-cover"
-              src={`/tech-icons/${icon}.svg`}
+              src={`/skills/${icon}.svg`}
               alt={`${icon} icon`}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

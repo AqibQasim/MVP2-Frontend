@@ -5,7 +5,7 @@ import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 
 async function ClientJobsTable({client_id}) {
-  const clientJobs = await fetchClientJobs(client_id);
+const clientJobs = await fetchClientJobs(client_id);
 
   return (
     <DashboardSection

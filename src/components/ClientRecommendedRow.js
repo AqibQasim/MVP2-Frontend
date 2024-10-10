@@ -21,7 +21,10 @@ function ClientRecommendedRow({ recommended }) {
       />
       <div className="skills flex items-center justify-center gap-1.5 text-center">
         {job.skills.map((skill, i) => (
+          <>
           <SkillIconWithBg key={i} icon={skill} />
+          {skill}
+          </>
         ))}
       </div>
       <div className="job-title text-center">{job.position}</div>
