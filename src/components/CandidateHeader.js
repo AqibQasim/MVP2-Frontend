@@ -17,6 +17,7 @@ function CandidateHeader({ candidate }) {
   const buttonRef = useRef(null);
 
   const [isCandidate, setIsCandidate] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   // Options for the dropdown
   const options = [{ value: "Un-Available", label: "Un-Available" }];
@@ -53,6 +54,11 @@ function CandidateHeader({ candidate }) {
     },
   });
 
+    useEffect(() => {
+    setIsMounted(true);
+    console.log("mounted");
+  }, []);
+  if (!isMounted) return null;
 
   return (
     <>

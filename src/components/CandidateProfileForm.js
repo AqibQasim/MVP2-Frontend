@@ -1,8 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Heading from "./Heading";
 import ButtonCapsule from "./ButtonCapsule";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import ErrorPopup from "./ErrorPopup";
+// import { useEffect } from "react/cjs/react.production.min";
 
 const CandidateProfileForm = ({ candidate }) => {
   const parsedValue = JSON.parse(candidate.value);
@@ -19,6 +20,12 @@ const CandidateProfileForm = ({ candidate }) => {
   const areaCodeRef = useRef(null);
   const countryRef = useRef(null);
 
+
+
+  useEffect(() => {
+    console.log("the parsed customer id is ", parsedValue.data.customer_id)
+  }, [parsedValue])
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -31,7 +38,7 @@ const CandidateProfileForm = ({ candidate }) => {
         customer_location: streetAddressRef.current.value,
         city: cityRef.current.value,
         province: stateRef.current.value,
-        area_code: areaCodeRef.current.value,
+        area_code: (areaCodeRef.current?.value  != "") ? areaCodeRef.current?.value : null,
         country: countryRef.current.value,
       },
     };
@@ -50,6 +57,7 @@ const CandidateProfileForm = ({ candidate }) => {
       console.error("Error while updating profile:", error);
     }
   };
+
 
   return (
     <div className="">
@@ -175,7 +183,7 @@ const CandidateProfileForm = ({ candidate }) => {
                 <input
                   type="text"
                   ref={areaCodeRef}
-                  defaultValue={parsedValue.data.area_code || ""}
+                  defaultValue={parsedValue.data.area_code || null }
                   className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
                 />
               </div>

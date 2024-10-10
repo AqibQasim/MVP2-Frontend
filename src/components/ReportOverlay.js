@@ -49,11 +49,11 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/coding-results/customer/${selectedCandidate?.customer?.customer_id}`,
         {
-          method: "POST",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(requestBody),
+          // body: JSON.stringify(requestBody),
         },
       );
 

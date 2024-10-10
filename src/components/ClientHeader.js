@@ -81,7 +81,11 @@ function ClientHeader({client, client_id}) {
           }}>
             <SvgIconNotification />
           </ButtonRounded>
-          <ButtonRounded>
+          <ButtonRounded onClick={()=>{
+            //open notification screen
+            //console.log("notification pressed")
+            router.push(`/client/${client_id}/settings`)
+          }}>
             <SvgIconSettings />
           </ButtonRounded>
 
