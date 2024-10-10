@@ -21,7 +21,10 @@ function ClientJobsRow({ job }) {
       />
       <div className="skills flex items-center justify-center gap-1.5 text-center">
         {job.skills.map((skill, i) => (
-          <SkillIconWithBg key={i} icon={skill} />
+          <>
+          <SkillIconWithBg key={i} icon={skill} skill={skill}/>
+          
+          </>
         ))}
       </div>
       <div className="experience text-center">{job.experience}</div>

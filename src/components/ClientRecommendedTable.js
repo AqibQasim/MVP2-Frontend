@@ -87,6 +87,8 @@ function ClientRecommendedTable({ recommendedCandidates }) {
           <div className="job-type text-center">Job type</div>
           <div className="actions text-right">Actions</div>
         </Table.Header>
+      
+        {recommendedCandidates && recommendedCandidates.length > 0 ? (
         <Table.Body
           data={recommendedCandidates}
           //   data={[]}
@@ -94,6 +96,11 @@ function ClientRecommendedTable({ recommendedCandidates }) {
             <ClientRecommendedRow recommended={recommended} key={i} />
           )}
         />
+        ) : (
+        <div >
+          <p>No data to show at the moment</p>
+        </div>
+       )}
       </Table>
     </DashboardSection>
   );

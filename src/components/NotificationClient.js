@@ -56,7 +56,7 @@ function NotificationClient({ client_id }) {
       endpoint: 'client/client-response',
       method: 'POST',
       body: {
-        client_id: params?.clientId,
+        client_id: client_id,
         customer_id: customer_id,
         job_posting_id: job_posting_id,
         job_status: 'open',
@@ -64,6 +64,8 @@ function NotificationClient({ client_id }) {
         response_status: 'decline'
       }
     }
+
+    console.log(payload)
 
     mvp2ApiHelper(payload).then(result => {
       if(result.status===200){

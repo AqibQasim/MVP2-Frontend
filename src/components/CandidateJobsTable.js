@@ -16,9 +16,9 @@ function CandidateJobsTable() {
     const fetchJobs = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/get-job-candidates?job_status=hired-and-trial&candidate_id=${cid}`);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
+        // if (!response.ok) {
+        //   throw new Error("Network response was not ok");
+        // }
         const data = await response.json();
         console.log(data)
         setJobs(data?.data); // assuming the data is in the 'data' field
@@ -55,10 +55,16 @@ function CandidateJobsTable() {
           <div className="status text-center">Status</div>
           <div className="action text-center">Action</div>
         </Table.Header>
+        {jobs && jobs.length > 0 ? (
         <Table.Body
           data={jobs}
           render={(job, i) => <CandidateJobsRow job={job} key={i}    />}
         />
+        ) : (
+         <div >
+          <p>No data to show at the moment</p>
+         </div>
+        )}
       </Table>
     </DashboardSection>
   );

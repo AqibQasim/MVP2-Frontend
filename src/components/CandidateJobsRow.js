@@ -21,7 +21,10 @@ function CandidateJobsRow({ job }) {
       />
       <div className="skills flex items-center justify-center gap-1.5 text-center">
         {job?.job?.skills.map((skill, i) => (
+          <>
           <Skill key={i} skill={skill} />
+            {skill}
+          </>
         ))}
       </div>
       <div className="experience text-center">{job?.job?.experience}</div>
@@ -31,7 +34,7 @@ function CandidateJobsRow({ job }) {
         icon={<IconWithBg icon={<SvgIconJobStatus status={job?.job?.job_status} />} />}
       >
         {" "}
-        {job.status}{" "}
+        {job?.job?.job_status}{" "}
       </Capsule>
       <Capsule
         className="mx-auto w-max !bg-primary-tint-100"
