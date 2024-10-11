@@ -92,7 +92,7 @@ function AdminCandidateRow({ candidate, score }) {
           {console.log("skilss are :", candidate?.expertise[0]?.skill)}
           {candidate?.expertise?.length > 0 ? (
             candidate.expertise.map((skill, i) => (
-              <SkillIconWithBg key={i} icon={skill} />
+              <SkillIconWithBg key={i} icon={skill.skill} skill={skill.skill} />
             ))
           ) : (
             <span>No skills available</span>
