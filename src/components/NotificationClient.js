@@ -12,8 +12,9 @@ function NotificationClient({ client_id }) {
     type: null
   });
   const fetchClientNotifications = () => {
+    const today_date= new Date().toISOString()
     const payload = {
-      endpoint: `get-client-notification?client_id=${client_id}`,
+      endpoint: `get-client-notification?client_id=${client_id}&&today_date=${today_date}`,
       method: 'GET',
     }
 
