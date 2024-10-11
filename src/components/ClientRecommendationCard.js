@@ -22,8 +22,8 @@ function ClientRecommendationCard({
   const [isMounted, setIsMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef(null);
-  const [score, setScore]= useState(null);
-  const params= useParams();
+  const [score, setScore] = useState(null);
+  const params = useParams();
 
   const getCandidateResult = () => {
     const payload = {
@@ -32,18 +32,18 @@ function ClientRecommendationCard({
     };
     mvp2ApiHelper(payload).then((result) => {
       if (result) {
-        let res= result?.data?.data?.result;
-        console.log(result?.data?.data?.result)
-        res= (res.softskillRating+res.technicalRating)/2;
-        setScore(res)
+        let res = result?.data?.data?.result;
+        console.log(result?.data?.data?.result);
+        res = (res?.softskillRating + res?.technicalRating) / 2 || 0;
+        setScore(res);
       }
     });
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     getCandidateResult();
-  },[])
-  
+  }, []);
+
   const getEventDetails = async (eventUri) => {
     try {
       const response = await fetch(eventUri, {
@@ -53,21 +53,21 @@ function ClientRecommendationCard({
       });
       const data = await response.json();
       console.log("Event Details:", data);
-      const payload={
-        endpoint: 'schedule-interview',
-        method: 'POST',
-        body:{
+      const payload = {
+        endpoint: "schedule-interview",
+        method: "POST",
+        body: {
           customer_id: recommendedCandidate?.customer_id,
           interview_date: data?.resource?.start_time,
           interview_time: data?.resource?.start_time,
           job_posting_id: recommendedForJob?.job_posting_id,
-          client_id: params?.clientId
-        }
-      }
-      console.log(payload)
-      const result= await mvp2ApiHelper(payload);
-      if(result.status===200){
-        console.log('Interview has been scheduled')
+          client_id: params?.clientId,
+        },
+      };
+      console.log(payload);
+      const result = await mvp2ApiHelper(payload);
+      if (result.status === 200) {
+        console.log("Interview has been scheduled");
       }
       // Access the date and time from the response, e.g., data.start_time
     } catch (error) {
@@ -75,23 +75,12 @@ function ClientRecommendationCard({
     }
   };
 
-
   useCalendlyEventListener({
     onEventScheduled: (e) => {
       console.log("Fetching event details from:", e.data.payload.event.uri);
       getEventDetails(e.data.payload.event.uri);
     },
   });
-
-  // useCalendlyEventListener({
-  //   onProfilePageViewed: () => {
-  //     console.log("//////////////////////////");
-  //   },
-  //   onDateAndTimeSelected: () => console.log("onDateAndTimeSelected"),
-  //   onEventTypeViewed: () => console.log("onEventTypeViewed"),
-  //   onEventScheduled: (e) => console.log(e.data),
-  //   onPageHeightResize: (e) => console.log(e.data.payload.height),
-  // });
 
   useEffect(() => {
     setIsMounted(true);
@@ -107,7 +96,7 @@ function ClientRecommendationCard({
       {!recommendedCandidate?.name ? (
         <p>No data to show</p>
       ) : (
-        <div className="space-y-4 scheduleCallBtn">
+        <div className="scheduleCallBtn space-y-4">
           <div className="flex items-start justify-between">
             <EntityCard
               entity={{

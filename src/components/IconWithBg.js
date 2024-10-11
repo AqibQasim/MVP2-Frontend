@@ -1,9 +1,8 @@
-function IconWithBg({ className, icon }) {
+function IconWithBg({ className, icon, job }) {
   return (
-    <span
-      className={`${className} flex size-6 items-center justify-center rounded-full bg-neutral-white`}
-    >
-      {icon}
+    <span className={`${className} flex items-center justify-center`}>
+      {/* {icon} */}
+      {job}
     </span>
   );
 }

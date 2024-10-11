@@ -4,6 +4,7 @@ import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 
 function AdminJobsList({ jobs }) {
+  console.log("jobs data", jobs);
   return (
     <DashboardSection
       className="!min-h-full"
