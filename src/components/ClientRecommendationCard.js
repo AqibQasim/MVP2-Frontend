@@ -15,7 +15,6 @@ import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { useParams } from "next/navigation";
 
 function ClientRecommendationCard({
-  score,
   client = {},
   recommendedCandidate = {},
   recommendedForJob = {},
@@ -23,10 +22,28 @@ function ClientRecommendationCard({
   const [isMounted, setIsMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef(null);
+  const [score, setScore]= useState(null);
   const params= useParams();
 
-  console.log(client)
+  const getCandidateResult = () => {
+    const payload = {
+      endpoint: `get-customer-result?customer_id=${recommendedCandidate?.customer_id}`,
+      method: "GET",
+    };
+    mvp2ApiHelper(payload).then((result) => {
+      if (result) {
+        let res= result?.data?.data?.result;
+        console.log(result?.data?.data?.result)
+        res= (res.softskillRating+res.technicalRating)/2;
+        setScore(res)
+      }
+    });
+  };
 
+  useEffect(()=>{
+    getCandidateResult();
+  },[])
+  
   const getEventDetails = async (eventUri) => {
     try {
       const response = await fetch(eventUri, {
@@ -57,6 +74,8 @@ function ClientRecommendationCard({
       console.error("Error fetching event details:", error);
     }
   };
+
+
   useCalendlyEventListener({
     onEventScheduled: (e) => {
       console.log("Fetching event details from:", e.data.payload.event.uri);
@@ -118,7 +137,7 @@ function ClientRecommendationCard({
                 <Skill key={skill} icon={skill} skill={skill} />
               ))}
               <span className="h-[1px] w-2 rounded-full bg-grey-primary-tint-40"></span>
-              <Skill score={8.0} />
+              <Skill score={score} />
             </div>
             {/* ScheduleInterview */}
             {/* <ScheduleInterviewModal /> */}
