@@ -91,7 +91,7 @@ function AdminCandidateRow({ candidate, score }) {
         <div className="skills flex items-center justify-center gap-1.5 text-center">
           {candidate?.expertise?.length > 0 ? (
             candidate.expertise.map((skill, i) => (
-              <SkillIconWithBg key={i} icon={skill} />
+              <SkillIconWithBg key={i} icon={skill.skill} skill={skill.skill} />
             ))
           ) : (
             <span>No skills available</span>
