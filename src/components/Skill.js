@@ -15,6 +15,7 @@ function Skill({ className, icon, skill, score = null }) {
             height={20}
             width={20}
             alt={`${skill} icon`}
+            onError={(e) => { e.target.src = '/icons/singularity.svg'; }}
           />
           {skill}
         </>
@@ -44,3 +45,4 @@ Skill.propTypes = {
 };
 
 export default Skill;
+
