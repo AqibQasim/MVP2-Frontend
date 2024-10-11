@@ -17,7 +17,9 @@ function SkillIconWithBg({ icon, skill = null, score = null, className }) {
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               placehoder="blur"
+              onError={(e) => { e.target.src = '/icons/singularity.svg'; }}
             />
+
           </div>
           {skill && skill}
         </>
