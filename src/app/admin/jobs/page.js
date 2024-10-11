@@ -1,6 +1,5 @@
 import AdminJobsList from "@/components/AdminJobsList";
 import { getJobs } from "@/lib/data-service";
-// import { useEffect } from "react";
 
 export const metadata = {
   title: "Jobs",
@@ -9,15 +8,16 @@ export const metadata = {
 export const revalidate = 60 * 60 * 24; // invalidate every 24 hours
 
 async function Page() {
-  const { data: jobs, error } = await getJobs();
-
-  // useEffect(() => {
-  //   console.log("jobs of data", jobs);
-  // }, []);
+  let jobs = [];
+  try {
+    const { data, error } = await getJobs();
+    if (error) throw new Error(error);
+    jobs = data;
+  } catch (err) {
+    return <div>Failed to load jobs: {err.message}</div>;
+  }
 
   console.log("data of jobs", jobs);
-
-  if (error) throw new Error(error);
 
   return <AdminJobsList jobs={jobs} />;
 }

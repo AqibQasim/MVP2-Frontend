@@ -329,7 +329,6 @@ const QuestionBox = ({
       .getUserMedia({ audio: true })
       .then((stream) => {
         mediaRecorderRef.current = new MediaRecorder(stream);
-
         mediaRecorderRef.current.ondataavailable = (event) => {
           if (event.data.size > 0) {
             recordedChunksRef.current.push(event.data);
