@@ -423,8 +423,9 @@ export async function getAllRecommendedCandidates(
   };
 
   const result = await mvp2ApiHelper(payload);
+  console.log("candidates of clients job: ", result)
   if (result.status !== 200) {
-    console.error(result?.data?.err);
+    console.error(result?.data);
     return { status: result.status, error: result.data.err };
   }
 

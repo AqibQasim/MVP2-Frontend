@@ -1,7 +1,9 @@
 "use client";
+import { getAllRecommendedCandidates } from "@/lib/data-service";
 import ClientEmployeesRow from "./ClientEmployeesRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
+import { useEffect, useState } from "react";
 
 // const employees = [
 //   {
@@ -24,8 +26,25 @@ import Table from "./Table";
 //   },
 // ];
 
-function ClientEmployeesTable({ hiredCandidates }) {
-  console.log("////////////////////////////////", hiredCandidates)
+async function ClientEmployeesTable({ client_id }) {
+
+  const [candidates,setCandidates]= useState(null);
+
+  const fetchCandidatesOfClientsJob= async()=>{
+    const hiredCandidates= await getAllRecommendedCandidates(client_id, "all");
+    if(hiredCandidates.status===200){
+      setCandidates(hiredCandidates?.data)
+    }
+  }
+
+  useEffect(()=>{
+    fetchCandidatesOfClientsJob();
+  },[])
+
+  if(candidates===null){
+    return null;
+  }
+  
   return (
     <DashboardSection paragraph="Employees you’ve" heading="Recently hired">
       <Table columns="grid-cols-[1fr_1fr_0.7fr_0.7fr_0.7fr_0.7fr]">
@@ -39,7 +58,7 @@ function ClientEmployeesTable({ hiredCandidates }) {
         </Table.Header>
 
         <Table.Body
-          data={hiredCandidates}
+          data={candidates}
           render={(hiredCandidate, i) => (
             <ClientEmployeesRow hiredCandidate={hiredCandidate} key={i} />
           )}

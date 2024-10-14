@@ -10,14 +10,15 @@ import {
 
 export default async function Page({ params }) {
   const filter = "accept";
-  const [client, recommendedCandidates, jobs, hiredCandidates] =
+  const [client, recommendedCandidates, jobs] =
     await Promise.all([
       getClientById(params.clientId),
       getRecommendedCandidateOfClient(params.clientId),
       getClientJobs(params.clientId),
-      getAllRecommendedCandidates(params.clientId, filter),
     ]);
-  //const { data: hiredTalents, error } = hiredCandidates;
+
+  // const { data: hiredTalents, error } = hiredCandidates;
+  // console.log(hiredTalents)
 
   return (
     <div className="space-y-2">
@@ -32,8 +33,9 @@ export default async function Page({ params }) {
       />
       <ClientJobsOverviewTable jobs={jobs} />
       {
-        (hiredCandidates?.status === 200 && hiredCandidates?.data?.length > 0) &&
-        <ClientEmployeesTable hiredCandidates={hiredCandidates?.data} />
+        <ClientEmployeesTable client_id={params?.clientId}/>
+        // (hiredCandidates?.status === 200 && hiredCandidates?.data?.length > 0) &&
+        // <ClientEmployeesTable hiredCandidates={hiredCandidates?.data} />
       }
     </div>
   );
