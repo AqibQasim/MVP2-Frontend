@@ -4,8 +4,10 @@ import ClientJobsRow from "./ClientJobsRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 
-async function ClientJobsTable({client_id}) {
-const clientJobs = await fetchClientJobs(client_id);
+async function ClientJobsTable({ client_id }) {
+  const clientJobs = await fetchClientJobs(client_id);
+
+  console.log(clientJobs)
 
   return (
     <DashboardSection
@@ -23,15 +25,15 @@ const clientJobs = await fetchClientJobs(client_id);
           <div className="action text-center">Action</div>
         </Table.Header>
 
-        {clientJobs && clientJobs.length > 0 ? (
-        <Table.Body
-          data={clientJobs.data.result}
-          render={(job, i) => <ClientJobsRow job={job} key={i} />}
-        />
-         ) : (
-        <div >
-          <p>No data to show at the moment</p>
-        </div>
+        {clientJobs.status===200 && clientJobs.data.result.length > 0 ? (
+          <Table.Body
+            data={clientJobs.data.result}
+            render={(job, i) => <ClientJobsRow job={job} key={i} />}
+          />
+        ) : (
+          <div >
+            <p>No data to show at the moment</p>
+          </div>
         )}
 
       </Table>

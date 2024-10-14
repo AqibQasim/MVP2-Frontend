@@ -440,7 +440,10 @@ export async function getAllRecommendedCandidates(
     );
   }
 
-  return { data: candidates };
+  return { 
+    status: result.status,
+    data: candidates 
+  };
 }
 
 export async function fetchCandidatesJobStatus(job_status) {

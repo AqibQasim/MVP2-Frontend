@@ -31,7 +31,10 @@ export default async function Page({ params }) {
         recommendedForJob={recommendedCandidates.job_postings}
       />
       <ClientJobsOverviewTable jobs={jobs} />
-      <ClientEmployeesTable hiredCandidates={hiredTalents} />
+      {
+        (hiredCandidates?.status === 200 && hiredCandidates?.data?.length > 0) &&
+        <ClientEmployeesTable hiredCandidates={hiredTalents} />
+      }
     </div>
   );
 }
