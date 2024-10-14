@@ -136,29 +136,29 @@ function Page() {
     }, [clientCustomerID]); // Empty dep
     
 
-       const handleSubscription = async () => {
-        const customPrice = 10000; 
+    //    const handleSubscription = async () => {
+    //     const customPrice = 10000; 
 
-        try {
-            // Fetch client secret for subscription
-            const subscriptionResponse = await fetch('/api/create-subscription', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ customerId: clientCustomerID, price: customPrice, paymentMethodId: selectedMethodId  }),
-            });
+    //     try {
+    //         // Fetch client secret for subscription
+    //         const subscriptionResponse = await fetch('/api/create-subscription', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({ customerId: clientCustomerID, price: customPrice, paymentMethodId: selectedMethodId  }),
+    //         });
 
-            if (!subscriptionResponse.ok) {
-                throw new Error(`HTTP error! status: ${subscriptionResponse.status}`);
-            }
+    //         if (!subscriptionResponse.ok) {
+    //             throw new Error(`HTTP error! status: ${subscriptionResponse.status}`);
+    //         }
 
-            const { clientSecret } = await subscriptionResponse.json();
-            setClientSecret(clientSecret);
-        } catch (error) {
-            console.error('Error creating subscription:', error);
-        }
-    };
+    //         const { clientSecret } = await subscriptionResponse.json();
+    //         setClientSecret(clientSecret);
+    //     } catch (error) {
+    //         console.error('Error creating subscription:', error);
+    //     }
+    // };
 
     useEffect(() => {
         const initializeStripe = async () => {
@@ -335,7 +335,7 @@ function convertUnixToDate(unixTimestamp) {
                 </div>
                 )
              */}
-             <button onClick={handleSubscription}>Create Subscription</button>
+             {/* <button onClick={handleSubscription}>Create Subscription</button> */}
             <ClientPaymentHistoryTable client_id={client_id} paymentHistory={clientCharges} />
         </div>
     );

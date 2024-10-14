@@ -33,6 +33,7 @@ function AdminCandidatesClientsHiringRow({ candidate, job, client, daysPassed })
     talent_status: null, //'open',
     response_status: null, //'decline'
   });
+  const [stripeClientId, setStripeClientId] = useState(null);
 
   // const filteredClients = clients?.filter((client) =>
   //   client.name.toLowerCase().includes(searchClient.toLowerCase()),
@@ -121,10 +122,70 @@ function AdminCandidatesClientsHiringRow({ candidate, job, client, daysPassed })
     })
   }
 
+  
+const getClientStripe = () =>  {
+  console.log("pASSING TO PAYLOAD ", typeof changeStatus.client_id)
+  const payload = {
+    endpoint: `get-client-stripe-account?client_id=${changeStatus.client_id}`,
+    method: "GET",
+  };
+  
+  mvp2ApiHelper(payload).then(result => {
+      //  console.log("Stripe API result: ", result.status)
+      if (result.status === 200) {
+         console.log("TEST 124", result.data.data.stripe_id)
+         setStripeClientId(result.data.data.stripe_id)
+      }
+      console.error(result?.data?.message);
+      return null; // Return null or handle the error appropriately
+  });
+ 
+
+}
+
+const handleSubscription = async () => {
+        const customPrice = 9898; 
+
+        try {
+            // Fetch client secret for subscription
+            const subscriptionResponse = await fetch('/api/create-subscription', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ customerId: stripeClientId, price: customPrice, paymentMethodId: 'pm_1Q3FZYCtLGKA7fQGahUXrWXT'  }),
+            });
+
+            if (!subscriptionResponse.ok) {
+                throw new Error(`HTTP error! status: ${subscriptionResponse.status}`);
+            }
+
+            const { clientSecret } = await subscriptionResponse.json();
+            setClientSecret(clientSecret);
+        } catch (error) {
+            console.error('Error creating subscription:', error);
+        }
+    };
+
+
   useEffect(() => {
     // console.log(changeStatus)
     handleChangeStatus()
-  }, [changeStatus])
+
+    
+
+    if(changeStatus.job_status === "hired"){
+      console.log("JOB STATUS CHANGED TO ", changeStatus.job_status)
+      getClientStripe()
+
+      if(stripeClientId){
+        handleSubscription()
+      }
+      
+      stripeClientId
+    }
+
+  }, [changeStatus, stripeClientId])
 
   return (
     <>
