@@ -9,7 +9,7 @@ import IconWithBg from "./IconWithBg";
 import SkillIconWithBg from "./SkillIconWithBg";
 import Table from "./Table";
 
-function AdminCandidateRow({ candidate, score }) {
+function AdminCandidateRow({ candidate, score, onClick }) {
   const [showForm, setShowForm] = useState(false);
   const [hourlyRate, setHourlyRate] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
@@ -80,7 +80,7 @@ function AdminCandidateRow({ candidate, score }) {
 
   return (
     <>
-      <Table.Row>
+      <Table.Row onClick={onClick}>
         <EntityCard
           entity={{
             name: candidate?.name,

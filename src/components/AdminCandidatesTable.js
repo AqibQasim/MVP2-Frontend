@@ -3,7 +3,7 @@ import AdminCandidateRow from "./AdminCandidateRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 
-function AdminCandidatesTable({ candidates }) {
+function AdminCandidatesTable({ candidates, setIsReportOverlayOpened, setSelectedCandidateId, isReportOverlayOpened }) {
   return (
     <DashboardSection
       className="!min-h-full"
@@ -28,6 +28,10 @@ function AdminCandidatesTable({ candidates }) {
               2;
             return (
               <AdminCandidateRow
+              onClick={()=>{
+                setSelectedCandidateId(candidate?.customer_id);
+                setIsReportOverlayOpened(!isReportOverlayOpened)
+              }}
                 score={res}
                 candidate={candidate?.customer}
                 key={i}
