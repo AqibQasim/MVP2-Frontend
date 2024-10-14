@@ -17,7 +17,7 @@ export default async function Page({ params }) {
       getClientJobs(params.clientId),
       getAllRecommendedCandidates(params.clientId, filter),
     ]);
-  const { data: hiredTalents, error } = hiredCandidates;
+  //const { data: hiredTalents, error } = hiredCandidates;
 
   return (
     <div className="space-y-2">
@@ -33,7 +33,7 @@ export default async function Page({ params }) {
       <ClientJobsOverviewTable jobs={jobs} />
       {
         (hiredCandidates?.status === 200 && hiredCandidates?.data?.length > 0) &&
-        <ClientEmployeesTable hiredCandidates={hiredTalents} />
+        <ClientEmployeesTable hiredCandidates={hiredCandidates?.data} />
       }
     </div>
   );
