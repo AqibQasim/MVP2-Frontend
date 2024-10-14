@@ -3,7 +3,7 @@ import AdminCandidateRow from "./AdminCandidateRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 
-function AdminCandidatesTable({ candidates }) {
+function AdminCandidatesTable({ candidates, setIsReportOverlayOpened, setSelectedCandidateId, isReportOverlayOpened }) {
   return (
     <DashboardSection
       className="!min-h-full"
@@ -14,6 +14,7 @@ function AdminCandidatesTable({ candidates }) {
         <Table.Header>
           <div className="info">Info</div>
           <div className="skills text-center">Skills</div>
+          <div className="skills text-center">Hourly Rate</div>
           <div className="experience text-center">Experience</div>
           <div className="job-type text-center">Job type</div>
           <div   className= 'text-center' >Score</div>
@@ -28,6 +29,10 @@ function AdminCandidatesTable({ candidates }) {
               2;
             return (
               <AdminCandidateRow
+              onClick={()=>{
+                setSelectedCandidateId(candidate?.customer_id);
+                setIsReportOverlayOpened(!isReportOverlayOpened)
+              }}
                 score={res}
                 candidate={candidate?.customer}
                 key={i}
