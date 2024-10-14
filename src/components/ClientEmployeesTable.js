@@ -25,7 +25,7 @@ import Table from "./Table";
 // ];
 
 function ClientEmployeesTable({ hiredCandidates }) {
-  console.log(hiredCandidates)
+  console.log("////////////////////////////////", hiredCandidates)
   return (
     <DashboardSection paragraph="Employees you’ve" heading="Recently hired">
       <Table columns="grid-cols-[1fr_1fr_0.7fr_0.7fr_0.7fr_0.7fr]">
@@ -37,6 +37,7 @@ function ClientEmployeesTable({ hiredCandidates }) {
           <div className="status text-center">Status</div>
           <div className="action text-center">Action</div>
         </Table.Header>
+
         <Table.Body
           data={hiredCandidates}
           render={(hiredCandidate, i) => (
