@@ -6,26 +6,26 @@ import IconWithBg from "./IconWithBg";
 import Skill from "./Skill";
 import Table from "./Table";
 
-function CandidateJobsRow({ job }) {
+function AdminJobsRow({ job }) {
   console.log("job ka data", job);
   return (
     <Table.Row>
       <EntityCard
         icon={<SvgIconWork className="relative -right-[1.3px]" />}
         entity={{
-          name: job?.job?.position,
-          profession: job?.job?.specialization,
+          name: job?.position,
+          profession: job?.specialization,
         }}
       />
       <div className="skills flex items-center justify-center gap-1.5 text-center">
-        {job?.job?.skills.map((skill, i) => (
+        {job?.skills?.map((skill, i) => (
           <>
             <Skill key={i} skill={skill} />
           </>
         ))}
       </div>
-      <div className="experience text-center">{job?.job?.experience}</div>
-      <div className="commitment text-center">{job?.job?.commitment}</div>
+      <div className="experience text-center">{job?.experience}</div>
+      <div className="commitment text-center">{job?.commitment}</div>
       <Capsule
         className="mr-auto w-max !bg-primary-tint-100"
         icon={
@@ -41,10 +41,10 @@ function CandidateJobsRow({ job }) {
         className="mx-auto w-max !bg-primary-tint-100"
         icon={<IconWithBg icon={<SvgIconJobStatus status="hired" />} />}
       >
-        view details
+        view talent
       </Capsule>
     </Table.Row>
   );
 }
 
-export default CandidateJobsRow;
+export default AdminJobsRow;
