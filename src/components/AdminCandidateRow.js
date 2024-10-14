@@ -100,6 +100,10 @@ function AdminCandidateRow({ candidate, score, onClick }) {
         </div>
 
         <div className="experience text-center">
+          {candidate?.hourly_rate || 0}
+        </div>
+
+        <div className="experience text-center">
           {candidate?.experience || "No experience"}
         </div>
         <Capsule>{candidate?.commitment || "No job type"}</Capsule>
