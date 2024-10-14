@@ -332,6 +332,8 @@ export async function fetchClientJobs(client_id) {
     endpoint: `client/job-posting/${client_id}`,
     method: "GET",
   };
+
+  console.log('fetching candidates.......')
   const result = await mvp2ApiHelper(payload);
   // if (result?.status === 200) {
   //   return result?.data;

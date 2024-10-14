@@ -3,10 +3,42 @@ import { useParams } from "next/navigation";
 import ClientTalentsRow from "./ClientTalentsRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
+import { getAllRecommendedCandidates } from "@/lib/data-service";
+import { useEffect, useState } from "react";
 
 function ClientTalentsTable({ hiredTalents }) {
   const params = useParams();
   const clientId = params?.clientId;
+
+  console.log("params: ", clientId);
+  const filter = "accept";
+  // const { data: hiredTalents, error } = await getAllRecommendedCandidates(
+  //   clientId,
+  //   filter,
+  // );
+  // if (error) console.log("Error: getting Hired Candidates: ", error);
+
+  const [hiredCandidates, setHiredCandidates] = useState(null);
+
+  const fetchHiredCandidates = async () => {
+    const candidates = await getAllRecommendedCandidates(
+      clientId,
+      filter,
+    );
+
+    console.log(candidates)
+
+    if (candidates?.status === 200) {
+      setHiredCandidates(candidates?.data)
+    }
+  }
+  //const clientJobs = await fetchClientJobs(client_id);
+
+  useEffect(() => {
+    fetchHiredCandidates();
+  }, [])
+
+  console.log(hiredCandidates)
 
   return (
     <DashboardSection
@@ -26,9 +58,9 @@ function ClientTalentsTable({ hiredTalents }) {
           <div className="actions text-right">Actions</div>
         </Table.Header>
 
-        {hiredTalents && hiredTalents.length > 0 ? (
+        {hiredCandidates && hiredCandidates.length > 0 ? (
         <Table.Body
-          data={hiredTalents}
+          data={hiredCandidates}
           render={(talent, i) => <ClientTalentsRow talent={talent} key={i} />}
         />
       ) : (
