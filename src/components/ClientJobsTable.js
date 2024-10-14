@@ -3,9 +3,29 @@ import { fetchClientJobs, getClientById, getJobs } from "@/lib/data-service";
 import ClientJobsRow from "./ClientJobsRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
+import { useEffect, useState } from "react";
 
 async function ClientJobsTable({ client_id }) {
-  const clientJobs = await fetchClientJobs(client_id);
+
+  const [jobs, setJobs] = useState(null);
+
+  const fetchJobs = async () => {
+    const clientJobs = await fetchClientJobs(client_id);
+
+    //console.log(candidates)
+
+    if (clientJobs?.status === 200) {
+      setJobs(clientJobs?.data)
+    }
+  }
+  //const clientJobs = await fetchClientJobs(client_id);
+
+  useEffect(() => {
+    fetchJobs();
+  }, [])
+
+  console.log("jobs", jobs)
+  
 
   return (
     <DashboardSection
@@ -23,9 +43,9 @@ async function ClientJobsTable({ client_id }) {
           <div className="action text-center">Action</div>
         </Table.Header>
 
-        {clientJobs && clientJobs.length > 0 ? (
+        {jobs && jobs?.result.length > 0 ? (
         <Table.Body
-          data={clientJobs.data.result}
+          data={jobs?.result}
           render={(job, i) => <ClientJobsRow job={job} key={i} />}
         />
          ) : (
