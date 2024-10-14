@@ -195,7 +195,7 @@ const handleSubscription = async () => {
   }, [changeStatus, stripeClientId])
   
   const rowClassName =
-    job?.job_status === "trial" && daysPassed > 3
+    job?.job_status === "trial" && daysPassed > 14
       ? "bg-red-600 rounded-lg"
       : "";
 
