@@ -1,4 +1,5 @@
 "use client";
+import AdminJobsRow from "./AdminJobsRow";
 import CandidateJobsRow from "./CandidateJobsRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
@@ -22,7 +23,7 @@ function AdminJobsList({ jobs }) {
         </Table.Header>
         <Table.Body
           data={jobs}
-          render={(job, i) => <CandidateJobsRow job={job} key={i} />}
+          render={(job, i) => <AdminJobsRow job={job} key={i} />}
         />
       </Table>
     </DashboardSection>
