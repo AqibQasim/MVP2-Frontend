@@ -22,6 +22,7 @@ function AdminCandidatesClientsHiringTable({candidateJobStatus}) {
           <div className="actions text-center">Actions</div>
         </Table.Header>
         <Table.Body
+        error={candidateJobStatus?.length===0&&'No candidates hired yet'}
           data={candidateJobStatus?.data}
           render={(job, i) => (
             <AdminCandidatesClientsHiringRow daysPassed={job?.days_passed} candidate={job?.customer_info} client={job?.client} job={job?.job} key={i} />

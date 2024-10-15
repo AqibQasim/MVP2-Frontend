@@ -10,19 +10,6 @@ function AdminCandidatesClientsHiringRow({
   client,
   daysPassed,
 }) {
-  const [showForm, setShowForm] = useState(false);
-  const [hourlyRate, setHourlyRate] = useState("");
-  const [selectedClient, setSelectedClient] = useState("");
-  const [clients, setClients] = useState(null);
-  const [searchClient, setSearchClient] = useState("");
-  const [selectedClientId, setSelectedClientId] = useState("");
-  const [searchJob, setSearchJob] = useState("");
-  const [jobs, setFetchedJobs] = useState(null);
-  const [selectedJob, setSelectedJob] = useState("");
-  const [selectedJobId, setSelectedJobId] = useState("");
-  const [error, setError] = useState(null);
-  const [isClientsShow, setIsClientShow] = useState(false);
-  const [isJobsShow, setIsJobsShow] = useState(false);
   const [changeStatus, setChangeStatus] = useState({
     customer_id: null,
     job_posting_id: null,
@@ -32,60 +19,6 @@ function AdminCandidatesClientsHiringRow({
     response_status: null, //'decline'
   });
   const [stripeClientId, setStripeClientId] = useState(null);
-
-  // const filteredClients = clients?.filter((client) =>
-  //   client.name.toLowerCase().includes(searchClient.toLowerCase()),
-  // );
-
-  // const filteredJobs = jobs?.filter((job) =>
-  //   job.position.toLowerCase().includes(searchJob.toLowerCase()),
-  // );
-
-  // const fetchClients = useCallback(async () => {
-  //   const f = await getClients();
-  //   if (f.status === 200) {
-  //     setClients(f.data);
-  //   }
-  // }, []);
-
-  // const fetchJobs = useCallback(async () => {
-  //   if (selectedClientId) {
-  //     const f = await fetchClientJobs(selectedClientId);
-  //     if (f.status === 200) {
-  //       setFetchedJobs(f.data.result);
-  //     }
-  //   }
-  // }, [selectedClientId]);
-
-  // useEffect(() => {
-  //   fetchClients();
-  // }, [showForm]);
-
-  // useEffect(() => {
-  //   fetchJobs();
-  // }, [searchJob]);
-
-  // const handleReferCandidate = async (formData) => {
-  //   // e.preventDefault();
-
-  //   const referClientBody = {
-  //     client_id: selectedClientId,
-  //     customer_id: candidate.customer_id,
-  //     job_posting_id: selectedJobId,
-  //     hourly_rate: hourlyRate,
-  //   };
-
-  //   const { error, message } =
-  //     await referCandidateToClientAction(referClientBody);
-  //   if (error) {
-  //     console.log({ Error: error });
-  //     return setError(error);
-  //   }
-  //   if (message) {
-  //     console.log("Refer Message: ", message);
-  //     return setShowForm(false);
-  //   }
-  // };
 
   let options = null;
 
@@ -111,6 +44,7 @@ function AdminCandidatesClientsHiringRow({
   }
 
   const handleChangeStatus = () => {
+    const {client_id, customer_id, job_posting_id, job_status, talent_status, response_status}= changeStatus;
     const payload = {
       endpoint: "client/client-response",
       method: "POST",
@@ -126,76 +60,80 @@ function AdminCandidatesClientsHiringRow({
 
     console.log(payload)
 
-    mvp2ApiHelper(payload).then(result => {
-      console.log(result)
-    })
+    if(client_id&&customer_id&&job_posting_id&&talent_status&&response_status&&job_status){
+      mvp2ApiHelper(payload).then(result => {
+        console.log(result)
+      })
+    }
   }
 
-  
-const getClientStripe = () =>  {
-  console.log("pASSING TO PAYLOAD ", typeof changeStatus.client_id)
-  const payload = {
-    endpoint: `get-client-stripe-account?client_id=${changeStatus.client_id}`,
-    method: "GET",
-  };
-  
-  mvp2ApiHelper(payload).then(result => {
+
+  const getClientStripe = () => {
+    console.log("pASSING TO PAYLOAD ", typeof changeStatus.client_id)
+    const payload = {
+      endpoint: `get-client-stripe-account?client_id=${changeStatus.client_id}`,
+      method: "GET",
+    };
+
+    mvp2ApiHelper(payload).then(result => {
       //  console.log("Stripe API result: ", result.status)
       if (result.status === 200) {
-         console.log("TEST 124", result.data.data.stripe_id)
-         setStripeClientId(result.data.data.stripe_id)
+        console.log("TEST 124", result.data.data.stripe_id)
+        setStripeClientId(result.data.data.stripe_id)
       }
       console.error(result?.data?.message);
       return null; // Return null or handle the error appropriately
-  });
- 
+    });
 
-}
 
-const handleSubscription = async () => {
-        const customPrice = 9898; 
+  }
 
-        try {
-            // Fetch client secret for subscription
-            const subscriptionResponse = await fetch('/api/create-subscription', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ customerId: stripeClientId, price: customPrice, paymentMethodId: 'pm_1Q3FZYCtLGKA7fQGahUXrWXT'  }),
-            });
+  const handleSubscription = async () => {
+    const customPrice = 9898;
 
-            if (!subscriptionResponse.ok) {
-                throw new Error(`HTTP error! status: ${subscriptionResponse.status}`);
-            }
+    try {
+      // Fetch client secret for subscription
+      const subscriptionResponse = await fetch('/api/create-subscription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ customerId: stripeClientId, price: customPrice, paymentMethodId: 'pm_1Q3FZYCtLGKA7fQGahUXrWXT' }),
+      });
 
-            const { clientSecret } = await subscriptionResponse.json();
-            setClientSecret(clientSecret);
-        } catch (error) {
-            console.error('Error creating subscription:', error);
-        }
-    };
+      if (!subscriptionResponse.ok) {
+        throw new Error(`HTTP error! status: ${subscriptionResponse.status}`);
+      }
+
+      const { clientSecret } = await subscriptionResponse.json();
+      setClientSecret(clientSecret);
+    } catch (error) {
+      console.error('Error creating subscription:', error);
+    }
+  };
+
+  useEffect(()=>{
+    handleChangeStatus();
+  },[changeStatus]);
 
 
   useEffect(() => {
     // console.log(changeStatus)
-    handleChangeStatus()
 
-    
 
-    if(changeStatus.job_status === "hired"){
+    if (changeStatus.job_status === "hired") {
       console.log("JOB STATUS CHANGED TO ", changeStatus.job_status)
       getClientStripe()
 
-      if(stripeClientId){
+      if (stripeClientId) {
         handleSubscription()
       }
-      
+
       stripeClientId
     }
 
   }, [changeStatus, stripeClientId])
-  
+
   const rowClassName =
     job?.job_status === "trial" && daysPassed > 14
       ? "bg-red-600 rounded-lg"
