@@ -124,6 +124,8 @@ function AdminCandidatesClientsHiringRow({
       },
     };
 
+    console.log(payload)
+
     mvp2ApiHelper(payload).then(result => {
       console.log(result)
     })

@@ -48,7 +48,6 @@ const Page = async () => {
     return <div>Failed to load candidates: {err.message}</div>;
   }
 
-  console.log(selected_candidate_id);
 
   return <>
     <AdminCandidatesTable 
