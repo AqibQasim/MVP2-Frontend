@@ -406,9 +406,14 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
                   // onClick={handleDownloadPdf}
                   onClick={() =>
                     generatePDF({
-                      setIsPdfLoading,
-                      contentRef,
+                      setIsPdfLoading: setIsPdfLoading,
                       selectedCandidate,
+                      technicalRating:selectedCandidate?.result?.technicalRating,
+                      technicalSummary: selectedCandidate?.result?.technicalAssessment,
+                      softSkillSummary: selectedCandidate?.result?.softskillAssessment,
+                      softSkillRating: selectedCandidate?.result?.softskillRating,
+                      codingSummary: codingResult?.data?.result?.technicalSummary,
+                      codingRating: codingResult?.data?.result?.technicalRating
                     })
                   }
                   disabled={isPdfLoading}
