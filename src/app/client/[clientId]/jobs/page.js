@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import ClientJobsTable from "@/components/ClientJobsTable";
 import { usePathname } from "next/navigation";
 

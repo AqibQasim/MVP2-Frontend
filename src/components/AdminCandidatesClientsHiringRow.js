@@ -1,8 +1,10 @@
+"use client";
 import { useCallback, useEffect, useState } from "react";
 import SkillIconWithBg from "./SkillIconWithBg";
 import Table from "./Table";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import ChangeStatusDropdown from "./ChangeStatusDropdown";
+import { useSelector } from 'react-redux';
 
 function AdminCandidatesClientsHiringRow({
   candidate,
@@ -32,6 +34,7 @@ function AdminCandidatesClientsHiringRow({
     response_status: null, //'decline'
   });
   const [stripeClientId, setStripeClientId] = useState(null);
+  const selectedMethodId = useSelector((state) => state.paymentReducer.selectedMethodId);
 
   // const filteredClients = clients?.filter((client) =>
   //   client.name.toLowerCase().includes(searchClient.toLowerCase()),
@@ -140,18 +143,15 @@ const getClientStripe = () =>  {
   mvp2ApiHelper(payload).then(result => {
       //  console.log("Stripe API result: ", result.status)
       if (result.status === 200) {
-         console.log("TEST 124", result.data.data.stripe_id)
+         console.log("TEST 124", changeStatus)
          setStripeClientId(result.data.data.stripe_id)
       }
       console.error(result?.data?.message);
       return null; // Return null or handle the error appropriately
   });
- 
-
 }
-
 const handleSubscription = async () => {
-        const customPrice = 9898; 
+        const customPrice = (candidate.hourly_rate * 100) * 40; 
 
         try {
             // Fetch client secret for subscription
@@ -174,12 +174,9 @@ const handleSubscription = async () => {
         }
     };
 
-
   useEffect(() => {
     // console.log(changeStatus)
     handleChangeStatus()
-
-    
 
     if(changeStatus.job_status === "hired"){
       console.log("JOB STATUS CHANGED TO ", changeStatus.job_status)
@@ -217,6 +214,7 @@ const handleSubscription = async () => {
 
           <div className="experience text-center">
             {job?.job_status || "No job status"}
+            {selectedMethodId}
           </div>
           <div className="experience text-center">{daysPassed}</div>
 

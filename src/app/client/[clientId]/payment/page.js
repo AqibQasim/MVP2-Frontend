@@ -7,6 +7,8 @@ import ClientPaymentMethod from "@/components/ClientPaymentMethod";
 import { usePathname } from "next/navigation";
 import ClientSideModal from "@/components/ClientSideModal";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
+import { setSelectedMethodId } from "@/store/paymentSlice";
+import { useDispatch } from "react-redux";
 
 const stripePromise = loadStripe('pk_test_51OfPQBCtLGKA7fQGNEt4t2Nn4S9RxfXQxl4nqi8TK5vWM87A8AZPmdgEZyHHSi3OcpKx8uOGPLnyYSbwbimbSAbF00vZRmnYK1');
 
@@ -64,6 +66,20 @@ function Page() {
     const [clientCustomerID, setclientCustomerID] = useState('');
     const [totalPayments, setTotalPayments] = useState(0);
     const [selectedMethodId, setSelectedMethodId] = useState(''); 
+    
+   
+     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if(selectedMethodId != ''){
+            dispatch(setSelectedMethodId(selectedMethodId))
+        }else{
+            dispatch(setSelectedMethodId(paymentMethods[0].id))
+        }
+        console.log("Id i selected is ", selectedMethodId)
+    }, [selectedMethodId, paymentMethods])
+
+    
     
     
 
