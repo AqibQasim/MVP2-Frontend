@@ -33,8 +33,8 @@ function Row({ children, onClick = () => {} }) {
   );
 }
 
-function Body({ data, render }) {
-  if (!data?.length) return <p>No data to show at the moment</p>;
+function Body({ data, render, error }) {
+  if (!data?.length) return <p>{error || 'No data to show at the moment'}</p>;
 
   return (
     <div className="divide-dashboard-border divide-y-[1px]">

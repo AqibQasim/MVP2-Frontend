@@ -50,7 +50,7 @@ function AdminCandidateRow({ candidate, score, onClick }) {
 
   useEffect(() => {
     fetchClients();
-  }, [showForm]);
+  }, []);
 
   useEffect(() => {
     fetchJobs();
@@ -66,11 +66,15 @@ function AdminCandidateRow({ candidate, score, onClick }) {
       hourly_rate: hourlyRate,
     };
 
+    console.log(referClientBody)
+
     const { error, message } =
       await referCandidateToClientAction(referClientBody);
     if (error) {
       console.log({ Error: error });
       return setError(error);
+    }else{
+      setShowForm(false);
     }
     // if (message) {
     //   console.log("Refer Message: ", message);
@@ -80,14 +84,18 @@ function AdminCandidateRow({ candidate, score, onClick }) {
 
   return (
     <>
-      <Table.Row onClick={onClick}>
+      <Table.Row>
+        <div onClick={onClick} className="cursor-pointer">
+
         <EntityCard
+        
           entity={{
             name: candidate?.name,
             profession: candidate?.specialization,
             image: "/avatars/avatar-1.png",
           }}
         />
+        </div>
         <div className="skills flex items-center justify-center gap-1.5 text-center">
           {console.log("skilss are :", candidate?.expertise[0]?.skill)}
           {candidate?.expertise?.length > 0 ? (
@@ -203,7 +211,7 @@ function AdminCandidateRow({ candidate, score, onClick }) {
             ))}
           {/* </select> */}
           {/* Error Temp */}
-          {error ? <div className="error text-red-500"> {error} </div> : null}
+          {error ? <div className="error text-red-500"> {error?.message} </div> : null}
 
           <div className="mt-4">
             <button

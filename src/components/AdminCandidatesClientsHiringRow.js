@@ -12,19 +12,6 @@ function AdminCandidatesClientsHiringRow({
   client,
   daysPassed,
 }) {
-  const [showForm, setShowForm] = useState(false);
-  const [hourlyRate, setHourlyRate] = useState("");
-  const [selectedClient, setSelectedClient] = useState("");
-  const [clients, setClients] = useState(null);
-  const [searchClient, setSearchClient] = useState("");
-  const [selectedClientId, setSelectedClientId] = useState("");
-  const [searchJob, setSearchJob] = useState("");
-  const [jobs, setFetchedJobs] = useState(null);
-  const [selectedJob, setSelectedJob] = useState("");
-  const [selectedJobId, setSelectedJobId] = useState("");
-  const [error, setError] = useState(null);
-  const [isClientsShow, setIsClientShow] = useState(false);
-  const [isJobsShow, setIsJobsShow] = useState(false);
   const [changeStatus, setChangeStatus] = useState({
     customer_id: null,
     job_posting_id: null,
@@ -114,6 +101,7 @@ function AdminCandidatesClientsHiringRow({
   }
 
   const handleChangeStatus = () => {
+    const {client_id, customer_id, job_posting_id, job_status, talent_status, response_status}= changeStatus;
     const payload = {
       endpoint: "client/client-response",
       method: "POST",
@@ -127,20 +115,24 @@ function AdminCandidatesClientsHiringRow({
       },
     };
 
-    mvp2ApiHelper(payload).then(result => {
-      console.log(result)
-    })
+    console.log(payload)
+
+    if(client_id&&customer_id&&job_posting_id&&talent_status&&response_status&&job_status){
+      mvp2ApiHelper(payload).then(result => {
+        console.log(result)
+      })
+    }
   }
 
-  
-const getClientStripe = () =>  {
-  console.log("pASSING TO PAYLOAD ", typeof changeStatus.client_id)
-  const payload = {
-    endpoint: `get-client-stripe-account?client_id=${changeStatus.client_id}`,
-    method: "GET",
-  };
-  
-  mvp2ApiHelper(payload).then(result => {
+
+  const getClientStripe = () => {
+    console.log("pASSING TO PAYLOAD ", typeof changeStatus.client_id)
+    const payload = {
+      endpoint: `get-client-stripe-account?client_id=${changeStatus.client_id}`,
+      method: "GET",
+    };
+
+    mvp2ApiHelper(payload).then(result => {
       //  console.log("Stripe API result: ", result.status)
       if (result.status === 200) {
          console.log("TEST 124", changeStatus)
@@ -153,26 +145,31 @@ const getClientStripe = () =>  {
 const handleSubscription = async () => {
         const customPrice = (candidate.hourly_rate * 100) * 40; 
 
-        try {
-            // Fetch client secret for subscription
-            const subscriptionResponse = await fetch('/api/create-subscription', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ customerId: stripeClientId, price: customPrice, paymentMethodId: 'pm_1Q3FZYCtLGKA7fQGahUXrWXT'  }),
-            });
+    try {
+      // Fetch client secret for subscription
+      const subscriptionResponse = await fetch('/api/create-subscription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ customerId: stripeClientId, price: customPrice, paymentMethodId: 'pm_1Q3FZYCtLGKA7fQGahUXrWXT' }),
+      });
 
-            if (!subscriptionResponse.ok) {
-                throw new Error(`HTTP error! status: ${subscriptionResponse.status}`);
-            }
+      if (!subscriptionResponse.ok) {
+        throw new Error(`HTTP error! status: ${subscriptionResponse.status}`);
+      }
 
-            const { clientSecret } = await subscriptionResponse.json();
-            setClientSecret(clientSecret);
-        } catch (error) {
-            console.error('Error creating subscription:', error);
-        }
-    };
+      const { clientSecret } = await subscriptionResponse.json();
+      setClientSecret(clientSecret);
+    } catch (error) {
+      console.error('Error creating subscription:', error);
+    }
+  };
+
+  useEffect(()=>{
+    handleChangeStatus();
+  },[changeStatus]);
+
 
   useEffect(() => {
     // console.log(changeStatus)
@@ -182,15 +179,15 @@ const handleSubscription = async () => {
       console.log("JOB STATUS CHANGED TO ", changeStatus.job_status)
       getClientStripe()
 
-      if(stripeClientId){
+      if (stripeClientId) {
         handleSubscription()
       }
-      
+
       stripeClientId
     }
 
   }, [changeStatus, stripeClientId])
-  
+
   const rowClassName =
     job?.job_status === "trial" && daysPassed > 14
       ? "bg-red-600 rounded-lg"
