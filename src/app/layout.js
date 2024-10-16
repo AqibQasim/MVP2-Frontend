@@ -2,7 +2,8 @@
 import { lufga, satoshi } from "@/fonts/font-styles";
 import "@/styles/globals.css";
 import { Provider } from 'react-redux';
-import store from "@/store";
+import store, {persistor} from "@/store";
+import { PersistGate } from 'redux-persist/integration/react';
 
 // export const metadata = {
 //   title: {
@@ -15,6 +16,7 @@ import store from "@/store";
 export default function RootLayout({ children }) {
   return (
     <Provider store={store}>
+     <PersistGate loading={null} persistor={persistor}>
       <html lang="en" className="max-h-[100dvh] overflow-hidden bg-heavy-metal">
         <body
           className={`${satoshi.variable} ${lufga.variable} body-scroll mx-auto h-[100dvh] max-w-[1920px] overflow-x-hidden overflow-y-scroll rounded-[48px] bg-neutral-white p-3 !pr-[calc(0.75rem-12px)] font-satoshi font-normal`}
@@ -24,6 +26,7 @@ export default function RootLayout({ children }) {
           </main>
         </body>
       </html>
+      </PersistGate>
     </Provider>
   );
 }

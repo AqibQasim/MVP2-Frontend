@@ -21,7 +21,16 @@ function AdminCandidatesClientsHiringRow({
     response_status: null, //'decline'
   });
   const [stripeClientId, setStripeClientId] = useState(null);
-  const selectedMethodId = useSelector((state) => state.paymentReducer.selectedMethodId);
+
+
+
+
+
+
+  
+   const selectedMethodId = useSelector((state) => state.payment.selectedMethodId);
+  
+
 
   // const filteredClients = clients?.filter((client) =>
   //   client.name.toLowerCase().includes(searchClient.toLowerCase()),
@@ -145,6 +154,7 @@ function AdminCandidatesClientsHiringRow({
 const handleSubscription = async () => {
         const customPrice = (candidate.hourly_rate * 100) * 40; 
 
+         
     try {
       // Fetch client secret for subscription
       const subscriptionResponse = await fetch('/api/create-subscription', {
@@ -152,7 +162,7 @@ const handleSubscription = async () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ customerId: stripeClientId, price: customPrice, paymentMethodId: 'pm_1Q3FZYCtLGKA7fQGahUXrWXT' }),
+        body: JSON.stringify({ customerId: stripeClientId, price: customPrice, paymentMethodId: selectedMethodId }),
       });
 
       if (!subscriptionResponse.ok) {
@@ -211,7 +221,6 @@ const handleSubscription = async () => {
 
           <div className="experience text-center">
             {job?.job_status || "No job status"}
-            {selectedMethodId}
           </div>
           <div className="experience text-center">{daysPassed}</div>
 

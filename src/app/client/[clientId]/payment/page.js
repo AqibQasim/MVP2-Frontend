@@ -9,6 +9,7 @@ import ClientSideModal from "@/components/ClientSideModal";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { setSelectedMethodId } from "@/store/paymentSlice";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 const stripePromise = loadStripe('pk_test_51OfPQBCtLGKA7fQGNEt4t2Nn4S9RxfXQxl4nqi8TK5vWM87A8AZPmdgEZyHHSi3OcpKx8uOGPLnyYSbwbimbSAbF00vZRmnYK1');
 
@@ -65,29 +66,19 @@ function Page() {
     const [clientCharges, setClientCharges] = useState([]);
     const [clientCustomerID, setclientCustomerID] = useState('');
     const [totalPayments, setTotalPayments] = useState(0);
-    const [selectedMethodId, setSelectedMethodId] = useState(''); 
-    
-   
-     const dispatch = useDispatch();
+    const [selectedMethodId, setSelectedMethodId2] = useState(''); 
 
-    useEffect(() => {
-        if(selectedMethodId != ''){
-            dispatch(setSelectedMethodId(selectedMethodId))
-        }else{
-            dispatch(setSelectedMethodId(paymentMethods[0].id))
-        }
-        console.log("Id i selected is ", selectedMethodId)
-    }, [selectedMethodId, paymentMethods])
-
-    
-    
-    
+    const dispatch = useDispatch();
 
      useEffect(() => {
-    const fetchClientStripe = async () => {
-      const clientCustomerID = await getClientStripe(client_id);
-      setclientCustomerID(clientCustomerID)
-      console.log("RESULT FROM BK API", clientCustomerID);
+        const fetchClientStripe = async () => {
+        const clientCustomerID = await getClientStripe(client_id);
+        setclientCustomerID(clientCustomerID)
+    
+        console.log("RESULT FROM BK API", clientCustomerID);
+    
+    
+    
     };
 
     fetchClientStripe();
@@ -129,6 +120,8 @@ function Page() {
                 const { data } = await paymentMethodsResponse.json();
                 console.log("Payment Data is: ", data[0].id)
                 setPaymentMethods(data); // Assuming `data` contains the payment methods
+                dispatch(setSelectedMethodId(data[0].id))  
+
 
                 // Create payment intent
                 // const paymentIntentResponse = await fetch('/api/create-payment-intent', {
@@ -249,7 +242,6 @@ function Page() {
                 console.error("Expected an array but got:", data);
                 return;
             }
-
             
             // Transform charges data into client_payment_history format
             const transformedCharges = data.map((charge) => ({
@@ -290,6 +282,15 @@ function convertUnixToDate(unixTimestamp) {
 }
 
 
+ useEffect(() => {
+        // if(paymentMethods){
+        //     console.log("testttttt", paymentMethods[0]?.id)
+        // }
+        if(selectedMethodId != ''){
+            dispatch(setSelectedMethodId(selectedMethodId))   
+        }
+
+    }, [ selectedMethodId, dispatch])
     return (
         <div className="max-w-full space-y-2">
               {clientCharges.length > 0 ? (
@@ -340,7 +341,7 @@ function convertUnixToDate(unixTimestamp) {
                 stripe={stripe}
                 elements={elements}
                 clientSecret={clientSecret}
-                onSelect={setSelectedMethodId} 
+                onSelect={setSelectedMethodId2} 
                 />
 
             {/* ) :
