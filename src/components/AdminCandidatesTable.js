@@ -17,7 +17,8 @@ function AdminCandidatesTable({ candidates, setIsReportOverlayOpened, setSelecte
           <div className="skills text-center">Hourly Rate</div>
           <div className="experience text-center">Experience</div>
           <div className="job-type text-center">Job type</div>
-          <div   className= 'text-center' >Score</div>
+          <div className= 'text-center' >Score</div>
+          <div className= 'text-center' >Talent Status</div>
           <div className="actions text-center">Actions</div>
         </Table.Header>
         <Table.Body

@@ -118,6 +118,10 @@ function AdminCandidateRow({ candidate, score, onClick }) {
 
         <div className="experience text-center">{score}/10</div>
 
+        <Capsule className="status mx-auto w-max" status={candidate?.talent_status}>
+        {candidate?.talent_status}
+      </Capsule>
+
         {/* Button to open form */}
         <button onClick={() => setShowForm(true)}>
           <Capsule
