@@ -71,6 +71,8 @@ function ClientRecommendedTable({ recommendedCandidates }) {
   const params = useParams();
   const clientId = params?.clientId;
 
+  console.log(recommendedCandidates)
+
   return (
     <DashboardSection
       className="!min-h-full"

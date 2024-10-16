@@ -31,7 +31,7 @@ async function ClientEmployeesTable({ client_id }) {
   const [candidates,setCandidates]= useState(null);
 
   const fetchCandidatesOfClientsJob= async()=>{
-    const hiredCandidates= await getAllRecommendedCandidates(client_id, "hired-and-trial");
+    const hiredCandidates= await getAllRecommendedCandidates(client_id, "all", "hired-and-trial");
     if(hiredCandidates.status===200){
       setCandidates(hiredCandidates?.data)
     }

@@ -212,11 +212,12 @@ export async function getClients() {
   const result = await mvp2ApiHelper(payload);
   if (result.status !== 200) {
     console.error(result.data.message);
-    return { data: null, error: result.data.message };
+    return { status: result?.status, data: null, error: result.data.message };
   }
   return {
     status: result.status,
     data: result.data,
+    error: null
   };
 }
 
@@ -417,6 +418,7 @@ export async function candidateUpdateProfile(body, candidateId) {
 export async function getAllRecommendedCandidates(
   clientId,
   client_response = "all",
+  job_status = null
 ) {
   const hired = "accept";
   const payload = {
@@ -432,20 +434,26 @@ export async function getAllRecommendedCandidates(
   }
 
   // FILTER
-  let candidates;
+  let candidates = result?.data.data;
 
-  if (client_response === "all") {
-    candidates = result?.data.data;
-  }
-  if (client_response === hired) {
+  // if (client_response === "all") {
+  //   candidates = result?.data.data;
+  // }
+  if (job_status === "hired-and-trial") {
     candidates = result?.data.data?.filter(
-      (candidate) => candidate.client_response === hired,
+      (candidate) => candidate.client_response === hired && (candidate?.customer?.talent_status === "hired" || candidate?.customer?.talent_status === "trial"),
     );
   }
 
-  return { 
+  if (job_status === "interviewing") {
+    candidates = result?.data.data?.filter(
+      (candidate) => candidate.client_response === "pending" && (candidate?.customer?.talent_status === job_status),
+    );
+  }
+
+  return {
     status: result.status,
-    data: candidates 
+    data: candidates
   };
 }
 

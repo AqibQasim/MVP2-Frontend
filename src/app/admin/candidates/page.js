@@ -49,7 +49,7 @@ const Page = async () => {
   }
 
 
-  return <>
+  return <div className="overflow-y-hidden">
     <AdminCandidatesTable 
     isReportOverlayOpened={isReportOverlayOpened}
     setIsReportOverlayOpened={setIsReportOverlayOpened}
@@ -65,7 +65,7 @@ const Page = async () => {
       />
     )}
 
-  </>
+  </div>
 };
 
 export default Page;

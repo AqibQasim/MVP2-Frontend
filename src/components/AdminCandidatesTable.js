@@ -17,36 +17,35 @@ function AdminCandidatesTable({ candidates, setIsReportOverlayOpened, setSelecte
           <div className="skills text-center">Hourly Rate</div>
           <div className="experience text-center">Experience</div>
           <div className="job-type text-center">Job type</div>
-          <div className= 'text-center' >Score</div>
-          <div className= 'text-center' >Talent Status</div>
+          <div className="score text-center">Score</div>
+          <div className="talent-status text-center">Talent Status</div>
           <div className="actions text-center">Actions</div>
         </Table.Header>
-        <Table.Body
-          data={candidates?.data}
-          render={(candidate, i) => {
-            const res =
-              (candidate?.result?.softskillRating +
-                candidate?.result?.technicalRating) /
-              2;
-            return (
-              <AdminCandidateRow
-              onClick={()=>{
-                setSelectedCandidateId(candidate?.customer_id);
-                setIsReportOverlayOpened(!isReportOverlayOpened)
-              }}
-                score={res}
-                candidate={candidate?.customer}
-                key={i}
-              />
-            );
-          }}
-        />
+        {/* Make the body container scrollable */}
+        <div className="overflow-y-auto max-h-[400px]"> {/* Set the height as per your needs */}
+          <Table.Body
+            data={candidates?.data}
+            render={(candidate, i) => {
+              const res =
+                (candidate?.result?.softskillRating +
+                  candidate?.result?.technicalRating) / 2;
+              return (
+                <AdminCandidateRow
+                  onClick={() => {
+                    setSelectedCandidateId(candidate?.customer_id);
+                    setIsReportOverlayOpened(!isReportOverlayOpened);
+                  }}
+                  score={res}
+                  candidate={candidate?.customer}
+                  key={i}
+                />
+              );
+            }}
+          />
+        </div>
       </Table>
     </DashboardSection>
   );
 }
 
 export default AdminCandidatesTable;
-
-
-
