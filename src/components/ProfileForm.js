@@ -39,7 +39,7 @@ const ProfileForm = ({ client }) => {
         client_location: locationRef.current.value,
         city: cityRef.current.value,
         province: provinceRef.current.value,
-        area_code: areaCodeRef.current.value,
+        area_code: (areaCodeRef.current?.value != "") ? areaCodeRef.current?.value : null,
         country: countryRef.current.value,
       },
     };
