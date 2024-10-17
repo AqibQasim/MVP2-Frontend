@@ -28,7 +28,7 @@ async function Page() {
   //   return <div>Failed to load candidate job status: {err.message}</div>;
   // }
 
-  if(dataError || candidateJobStatus){
+  if(dataError || candidateJobStatus?.data?.length===0){
     return <EmptyScreen className={'h-[32.188rem]'}/>
   }
 
