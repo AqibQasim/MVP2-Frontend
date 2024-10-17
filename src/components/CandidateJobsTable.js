@@ -4,6 +4,7 @@ import CandidateJobsRow from "./CandidateJobsRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 import { useParams } from "next/navigation";
+import EmptyScreen from "./EmptyScreen";
 
 function CandidateJobsTable() {
   const [jobs, setJobs] = useState([]);
@@ -38,6 +39,10 @@ function CandidateJobsTable() {
 
   if (error) {
     return <div>Error: {error}</div>; // Handle errors here
+  }
+
+  if(jobs&& jobs.length===0){
+    return <EmptyScreen className={'h-full'}/>
   }
 
   return (

@@ -17,6 +17,7 @@ function CandidateEvaluateYourselfCard({ candidate }) {
   const [level2, setLevel2] = useState("");
   const [level3, setLevel3] = useState("");
   const [level4, setLevel4] = useState("");
+  const [error, setError]= useState(null);
   const router = useRouter();
   const candidate_id = usePathname().split("/")[2];
   // const dispatch = useDispatch();
@@ -32,7 +33,7 @@ function CandidateEvaluateYourselfCard({ candidate }) {
   );
 
   const filledSkills = useMemo(
-    () => skills.filter((skillObj) => skillObj.skill),
+    () => skills.filter((skillObj) => skillObj.skill || skillObj.level),
     [skills],
   );
 
@@ -49,13 +50,23 @@ function CandidateEvaluateYourselfCard({ candidate }) {
   );
 
   const handleStartAssessment = async () => {
-    console.log("clickeddddd");
-    const result = await mvp2ApiHelper(payload);
-    if (result.status === 200) {
-      //router.push(`/candidate/${candidate_id}/test`,{skills:filledSkills})
-      // dispatch(setFilledSkills(filledSkills));
-      router.push(`/candidate/${candidate_id}/test`);
+
+    const hasEmptyFields = filledSkills.some(
+      (skillObj) => !skillObj.skill || !skillObj.level
+    );
+  
+    if (hasEmptyFields) {
+      setError("All skill fields and levels are required.");
+    }else{
+      setError(null);
+      const result = await mvp2ApiHelper(payload);
+      if (result.status === 200) {
+        //router.push(`/candidate/${candidate_id}/test`,{skills:filledSkills})
+        // dispatch(setFilledSkills(filledSkills));
+        router.push(`/candidate/${candidate_id}/test`);
+      }
     }
+    
     // console.log(payload.body)
   };
 
@@ -130,6 +141,7 @@ function CandidateEvaluateYourselfCard({ candidate }) {
             setLevel4={setLevel4}
             onContinue={handleStartAssessment}
             onBack={handleBack}
+            error={error}
             //onBack={}
             //   codingExpertise={codingExpertise}
             //   setCodingExpertise={setCodingExpertise}

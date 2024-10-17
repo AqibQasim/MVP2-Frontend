@@ -33,7 +33,7 @@ async function ClientEmployeesTable({ client_id }) {
   const fetchCandidatesOfClientsJob= async()=>{
     const hiredCandidates= await getAllRecommendedCandidates(client_id, "all", "hired-and-trial");
     if(hiredCandidates.status===200){
-      setCandidates(hiredCandidates?.data)
+      setCandidates(hiredCandidates)
     }
   }
 
@@ -41,7 +41,7 @@ async function ClientEmployeesTable({ client_id }) {
     fetchCandidatesOfClientsJob();
   },[])
 
-  if(candidates===null){
+  if(candidates?.data?.length===0){
     return null;
   }
   
@@ -58,7 +58,7 @@ async function ClientEmployeesTable({ client_id }) {
         </Table.Header>
 
         <Table.Body
-          data={candidates}
+          data={candidates?.data}
           render={(hiredCandidate, i) => (
             <ClientEmployeesRow hiredCandidate={hiredCandidate} key={i} />
           )}

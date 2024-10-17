@@ -1,4 +1,5 @@
 import AdminClientsTable from "@/components/AdminClientsTable";
+import EmptyScreen from "@/components/EmptyScreen";
 import { getClients } from "@/lib/data-service";
 
 export const metadata = {
@@ -14,7 +15,7 @@ export default async function Page() {
     if (error) throw new Error(error);
     clients = data;
   } catch (err) {
-    return <div>Failed to load clients: {err.message}</div>;
+    return <EmptyScreen className={'h-[32.188rem]'}/>
   }
 
   return <AdminClientsTable clients={clients} />;

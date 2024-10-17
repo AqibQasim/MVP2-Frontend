@@ -4,6 +4,7 @@ import ClientJobsRow from "./ClientJobsRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 import { useEffect, useState } from "react";
+import EmptyScreen from "./EmptyScreen";
 
 async function ClientJobsTable({ client_id }) {
 
@@ -25,6 +26,10 @@ async function ClientJobsTable({ client_id }) {
   }, [])
 
   console.log("jobs", jobs)
+
+  if(jobs && jobs?.result?.length === 0){
+    return <EmptyScreen className={'h-full'}/>
+  }
   
 
   return (

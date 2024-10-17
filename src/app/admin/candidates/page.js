@@ -1,5 +1,6 @@
 "use client";
 import AdminCandidatesTable from "@/components/AdminCandidatesTable";
+import EmptyScreen from "@/components/EmptyScreen";
 import ReportOverlay from "@/components/ReportOverlay";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { fetchRecommendedCandidates } from "@/lib/data-service";
@@ -45,9 +46,8 @@ const Page = async () => {
     console.log(data);
     candidates = data;
   } catch (err) {
-    return <div>Failed to load candidates: {err.message}</div>;
+    return <EmptyScreen className={'h-[32.188rem]'}/>
   }
-
 
   return <div className="overflow-y-hidden">
     <AdminCandidatesTable 

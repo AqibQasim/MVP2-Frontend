@@ -1,4 +1,5 @@
 import AdminJobsList from "@/components/AdminJobsList";
+import EmptyScreen from "@/components/EmptyScreen";
 import { getJobs } from "@/lib/data-service";
 
 export const metadata = {
@@ -18,6 +19,10 @@ async function Page() {
   }
 
   console.log("data of jobs", jobs);
+
+  if(jobs){
+    return <EmptyScreen className={'h-[32.188rem]'}/>
+  }
 
   return <AdminJobsList jobs={jobs} />;
 }

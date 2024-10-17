@@ -1,5 +1,6 @@
 "use client";
 import AdminCandidatesClientsHiringTable from "@/components/AdminCandidatesClientsHiringTable";
+import EmptyScreen from "@/components/EmptyScreen";
 import { fetchCandidatesJobStatus } from "@/lib/data-service";
 import React, { useEffect, useState } from "react";
 
@@ -27,8 +28,8 @@ async function Page() {
   //   return <div>Failed to load candidate job status: {err.message}</div>;
   // }
 
-  if(dataError){
-    return <div>Failed to load candidate job status: {dataError}</div>
+  if(dataError || candidateJobStatus){
+    return <EmptyScreen className={'h-[32.188rem]'}/>
   }
 
   

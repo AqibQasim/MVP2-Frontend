@@ -90,7 +90,7 @@ function ClientRecommendationCard({
 
   return (
     <DashboardSection
-      paragraph={`Hey ${client.name}, here's your new`}
+      paragraph={`Hey ${client?.name}, here's your new`}
       heading="Recommendations"
     >
       {!recommendedCandidate?.name ? (
@@ -101,8 +101,8 @@ function ClientRecommendationCard({
             <EntityCard
               entity={{
                 image: "/avatars/avatar-1.png",
-                name: recommendedCandidate.name,
-                profession: recommendedCandidate.specialization,
+                name: recommendedCandidate?.name,
+                profession: recommendedCandidate?.specialization,
               }}
             />
             <div className="capsules inline-flex items-center justify-center gap-[6px]">
@@ -114,15 +114,15 @@ function ClientRecommendationCard({
               </Capsule>
               <Capsule icon={<IconWithBg icon="$" />}>
                 <p className="">
-                  {formatCurrency(recommendedCandidate.hourly_rate)}
+                  {formatCurrency(recommendedCandidate?.hourly_rate)}
                 </p>
               </Capsule>
             </div>
           </div>
-          <Heading xm> {recommendedForJob.position} </Heading>
+          <Heading xm> {recommendedForJob?.position} </Heading>
           <div className="cto flex items-center justify-between">
             <div className="flex items-center justify-start gap-1">
-              {recommendedForJob.skills?.map((skill) => (
+              {recommendedForJob?.skills?.map((skill) => (
                 <Skill key={skill} icon={skill} skill={skill} />
               ))}
               <span className="h-[1px] w-2 rounded-full bg-grey-primary-tint-40"></span>

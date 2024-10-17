@@ -5,6 +5,7 @@ import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 import { getAllRecommendedCandidates } from "@/lib/data-service";
 import { useEffect, useState } from "react";
+import EmptyScreen from "./EmptyScreen";
 
 function ClientTalentsTable({ hiredTalents }) {
   const params = useParams();
@@ -39,6 +40,10 @@ function ClientTalentsTable({ hiredTalents }) {
   }, [])
 
   console.log(hiredCandidates)
+
+  if(hiredCandidates && hiredCandidates.length === 0){
+    return <EmptyScreen className={'h-full'}/>
+  }
 
   return (
     <DashboardSection

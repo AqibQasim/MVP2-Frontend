@@ -86,7 +86,7 @@ const ForgotPasswordModal = ({
   };
   
 
-  const validateUser = async () => {
+  const validateUser = async (e) => {
     let endpoint = null;
 
     if (user_role === "client") {
@@ -115,6 +115,9 @@ const ForgotPasswordModal = ({
         ...prevErrors,
         ["passwordResetError"]: null,
       }));
+      
+        sendOtp(e);
+        setPopupState("otp");
     }
   };
 
@@ -333,22 +336,25 @@ const ForgotPasswordModal = ({
           className="mt-3 w-full justify-between"
           onPress={async (e) => {
             if (popupState === "email" && email) {
-              await validateUser();
-              if (
-                errors?.passwordResetError === null //||
-                //errors?.passwordResetError === undefined
-              ) {
-                sendOtp(e);
-                setPopupState("otp");
-              }
+              await validateUser(e);
             }
-
             if (popupState === "otp") {
               if (enteredOtp) handleOtpVerification(e);
             }
 
             if (popupState === "reset-password") {
-              await handlePasswordReset();
+              if(password===confirmPassword){
+                setErrors((prevErrors) => ({
+                  ...prevErrors,
+                  ["passwordResetError"]: null,
+                }));
+                await handlePasswordReset();
+              }else{
+                setErrors((prevErrors) => ({
+                  ...prevErrors,
+                  ["passwordResetError"]: "Please fill all required fields",
+                }));
+              }
             }
           }}
         >

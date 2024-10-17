@@ -302,7 +302,7 @@ function convertUnixToDate(unixTimestamp) {
           last_payment={`${clientCharges[0].amount} - ${clientCharges[0].date} - 00:00`}
         />
       ) : (
-        <p>Loading payment history...</p>
+        null
       )}
             {/* <div className="w-full gap-4 rounded-[24px] bg-neutral-white p-6">
                 <form onSubmit={handleSubmit}>
