@@ -73,7 +73,7 @@ function AdminCandidateRow({ candidate, score, onClick }) {
     if (error) {
       console.log({ Error: error });
       return setError(error);
-    }else{
+    } else {
       setShowForm(false);
     }
     // if (message) {
@@ -87,16 +87,15 @@ function AdminCandidateRow({ candidate, score, onClick }) {
       <Table.Row>
         <div onClick={onClick} className="cursor-pointer">
 
-        <EntityCard
-        
-          entity={{
-            name: candidate?.name,
-            profession: candidate?.specialization,
-            image: "/avatars/avatar-1.png",
-          }}
-        />
+          <EntityCard
+            entity={{
+              name: candidate?.name,
+              profession: candidate?.specialization,
+              image: "/avatars/avatar-1.png",
+            }}
+          />
         </div>
-        <div className="skills flex items-center justify-center gap-1.5 text-center">
+        <div className={`${candidate?.expertise?.length>1&&'flex-col'} skills flex items-center justify-center gap-1.5 text-center`}>
           {console.log("skilss are :", candidate?.expertise[0]?.skill)}
           {candidate?.expertise?.length > 0 ? (
             candidate.expertise.map((skill, i) => (
@@ -107,7 +106,7 @@ function AdminCandidateRow({ candidate, score, onClick }) {
           )}
         </div>
 
-        <div className="experience text-center">
+        <div className="experience text-center justify-center flex">
           {candidate?.hourly_rate || 0}
         </div>
 
@@ -119,16 +118,20 @@ function AdminCandidateRow({ candidate, score, onClick }) {
         <div className="experience text-center">{score}/10</div>
 
         <Capsule className="status mx-auto w-max" status={candidate?.talent_status}>
-        {candidate?.talent_status}
-      </Capsule>
+          {candidate?.talent_status}
+        </Capsule>
 
         {/* Button to open form */}
-        <button onClick={() => setShowForm(true)}>
+        <button onClick={() => {
+          if (candidate?.talent_status === "open") {
+            setShowForm(true)
+          }
+        }}>
           <Capsule
             className="ml-auto !bg-primary-tint-100"
             icon={<IconWithBg icon={<SvgIconRequestInterview />} />}
           >
-            Refer to Client
+            <div className={(candidate?.talent_status !== "open") ? `text-[grey] cursor-not-allowed` : null}>Refer to Client</div>
           </Capsule>
         </button>
       </Table.Row>

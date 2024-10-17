@@ -15,7 +15,7 @@ const metadata = {
 const Page = async () => {
   let candidates = [];
   const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
-  const [selected_candidate_id, setSelectedCandidateId]= useState(null);
+  const [selected_candidate_id, setSelectedCandidateId] = useState(null);
   const [candidateReport, setCandidateReport] = useState(null);
 
 
@@ -46,16 +46,20 @@ const Page = async () => {
     console.log(data);
     candidates = data;
   } catch (err) {
-    return <EmptyScreen className={'h-[32.188rem]'}/>
+    return <div>{err}</div>
+  }
+
+  if (!candidates) {
+    return <EmptyScreen className={'h-[32.188rem]'} />
   }
 
   return <div className="overflow-y-hidden">
-    <AdminCandidatesTable 
-    isReportOverlayOpened={isReportOverlayOpened}
-    setIsReportOverlayOpened={setIsReportOverlayOpened}
-    setSelectedCandidateId={setSelectedCandidateId} onClick={()=>{
-      setIsReportOverlayOpened(true)
-    }} candidates={candidates} />
+    <AdminCandidatesTable
+      isReportOverlayOpened={isReportOverlayOpened}
+      setIsReportOverlayOpened={setIsReportOverlayOpened}
+      setSelectedCandidateId={setSelectedCandidateId} onClick={() => {
+        setIsReportOverlayOpened(true)
+      }} candidates={candidates} />
 
     {isReportOverlayOpened && (
       <ReportOverlay

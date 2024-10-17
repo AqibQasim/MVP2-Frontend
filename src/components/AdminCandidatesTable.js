@@ -10,7 +10,7 @@ function AdminCandidatesTable({ candidates, setIsReportOverlayOpened, setSelecte
       paragraph="These are all"
       heading="Candidates"
     >
-      <Table columns="grid-cols-[1.7fr_1.7fr_10rem_8rem_8.1rem_9.8rem]">
+      <Table columns="grid-cols-[8rem_5rem_5rem_7rem_7rem_5rem_5rem_5rem]">
         <Table.Header>
           <div className="info">Info</div>
           <div className="skills text-center">Skills</div>
@@ -22,7 +22,7 @@ function AdminCandidatesTable({ candidates, setIsReportOverlayOpened, setSelecte
           <div className="actions text-center">Actions</div>
         </Table.Header>
         {/* Make the body container scrollable */}
-        <div className="overflow-y-auto max-h-[400px]"> {/* Set the height as per your needs */}
+        <div className="overflow-y-hidden h-full"> {/* Set the height as per your needs */}
           <Table.Body
             data={candidates?.data}
             render={(candidate, i) => {
