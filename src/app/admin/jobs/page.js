@@ -20,7 +20,7 @@ async function Page() {
 
   console.log("data of jobs", jobs);
 
-  if(jobs){
+  if(jobs && jobs?.length===0){
     return <EmptyScreen className={'h-[32.188rem]'}/>
   }
 
