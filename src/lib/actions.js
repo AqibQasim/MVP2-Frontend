@@ -21,11 +21,30 @@ export async function signInAction(formData) {
   });
   await signIn("google", {
     redirectTo: `/${path}`,
+    prompt: 'select_account'
   });
 }
 
-export async function signOutAction() {
-  await signOut({ redirectTo: "/" });
+export async function signOutAction(formData) {
+  const user_role = formData.get("user_role");
+  cookies().delete({
+    name:"user_role",
+    value: user_role
+  });
+
+  // cookies().delete({
+  //   name:"authjs.callback-url"
+  // });
+
+  cookies().delete({
+    name:"authjs.csrf-token"
+  });
+
+  cookies().delete({
+    name:"authjs.session-token"
+  });
+
+  await signOut({ redirectTo: "/login" });
 }
 
 export async function createAJobAction(formData) {
