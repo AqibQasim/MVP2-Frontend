@@ -1,4 +1,7 @@
+"use client";
+
 import CustomersList from "@/components/CustomersList";
+import WithAdminAuth from "@/components/withAdminAuth";
 
 async function Page() {
   return (
@@ -8,4 +11,4 @@ async function Page() {
   );
 }
 
-export default Page;
+export default WithAdminAuth(Page);

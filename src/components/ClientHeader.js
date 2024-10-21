@@ -18,6 +18,13 @@ function ClientHeader({ client, client_id }) {
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
 
+  console.log("client information : ", client);
+
+  const formatDate = (isoDateString) => {
+    const date = new Date(isoDateString);
+    return date.toLocaleDateString("en-CA"); // Formats to YYYY-MM-DD
+  };
+
   const getEventDetails = async (eventUri) => {
     try {
       const response = await fetch(eventUri, {
@@ -52,41 +59,45 @@ function ClientHeader({ client, client_id }) {
 
   return (
     <>
-    <div className="flex" id="scheduleCallBtn">
-      <EntityCard
-        lg
-        entity={{
-          image: "/avatars/avatar-2.png",
-          name: client.name,
-          profession: client.email,
-        }}
-      />
-      <div className="info ml-auto space-y-4">
-        <div className="buttons flex items-start justify-end gap-2">
-          <EntityCard
-            sm
-            entity={{
-              image: "/avatars/avatar-3.svg",
-              name: "Esther Howard",
-              profession: "Account Executive - AE",
-            }}
-          />
-          {/* schedule-call */}
-          {/* <ScheduleCallModal /> */}
-          <ButtonRounded onClick={()=>{
-            //open notification screen
-            //console.log("notification pressed")
-            router.push(`/client/${client_id}/notifications`)
-          }}>
-            <SvgIconNotification />
-          </ButtonRounded>
-          <ButtonRounded onClick={()=>{
-            //open notification screen
-            //console.log("notification pressed")
-            router.push(`/client/${client_id}/settings`)
-          }}>
-            <SvgIconSettings />
-          </ButtonRounded>
+      <div className="flex" id="scheduleCallBtn">
+        <EntityCard
+          lg
+          entity={{
+            image: "/avatars/avatar-2.png",
+            name: client.name,
+            profession: client.email,
+          }}
+        />
+        <div className="info ml-auto space-y-4">
+          <div className="buttons flex items-start justify-end gap-2">
+            <EntityCard
+              sm
+              entity={{
+                image: "/avatars/avatar-3.svg",
+                name: "Esther Howard",
+                profession: "Account Executive - AE",
+              }}
+            />
+            {/* schedule-call */}
+            {/* <ScheduleCallModal /> */}
+            <ButtonRounded
+              onClick={() => {
+                //open notification screen
+                //console.log("notification pressed")
+                router.push(`/client/${client_id}/notifications`);
+              }}
+            >
+              <SvgIconNotification />
+            </ButtonRounded>
+            <ButtonRounded
+              onClick={() => {
+                //open notification screen
+                //console.log("notification pressed")
+                router.push(`/client/${client_id}/settings`);
+              }}
+            >
+              <SvgIconSettings />
+            </ButtonRounded>
 
             {isClient && (
               <div>
@@ -104,7 +115,8 @@ function ClientHeader({ client, client_id }) {
             <p className="capitalize text-grey-primary-shade-10">
               Joined date:{" "}
               <span className="font-semibold">
-                {formatDate(new Date("2024-04-27"))}
+                {formatDate(client.createdAt)}
+                {/* {formatDate(new Date("2024-04-27"))} */}
               </span>
             </p>
           </div>

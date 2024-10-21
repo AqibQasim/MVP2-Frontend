@@ -2,6 +2,7 @@
 import AdminCandidatesTable from "@/components/AdminCandidatesTable";
 import EmptyScreen from "@/components/EmptyScreen";
 import ReportOverlay from "@/components/ReportOverlay";
+import WithAdminAuth from "@/components/withAdminAuth";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { fetchRecommendedCandidates } from "@/lib/data-service";
 import { useEffect, useState } from "react";
@@ -17,7 +18,6 @@ const Page = async () => {
   const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
   const [selected_candidate_id, setSelectedCandidateId] = useState(null);
   const [candidateReport, setCandidateReport] = useState(null);
-
 
   const handleCloseOverlay = () => {
     setIsReportOverlayOpened(false);
@@ -39,37 +39,40 @@ const Page = async () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected_candidate_id]);
 
-
   try {
     const { data, error } = await fetchRecommendedCandidates();
     if (error) throw new Error(error);
     console.log(data);
     candidates = data;
   } catch (err) {
-    return <div>{err}</div>
+    return <div>{err}</div>;
   }
 
   if (!candidates) {
-    return <EmptyScreen className={'h-[32.188rem]'} />
+    return <EmptyScreen className={"h-[32.188rem]"} />;
   }
 
-  return <div className="overflow-y-hidden">
-    <AdminCandidatesTable
-      isReportOverlayOpened={isReportOverlayOpened}
-      setIsReportOverlayOpened={setIsReportOverlayOpened}
-      setSelectedCandidateId={setSelectedCandidateId} onClick={() => {
-        setIsReportOverlayOpened(true)
-      }} candidates={candidates} />
-
-    {isReportOverlayOpened && (
-      <ReportOverlay
-        reportOverlay={isReportOverlayOpened}
-        onClose={handleCloseOverlay}
-        selectedCandidate={candidateReport}
+  return (
+    <div className="overflow-y-hidden">
+      <AdminCandidatesTable
+        isReportOverlayOpened={isReportOverlayOpened}
+        setIsReportOverlayOpened={setIsReportOverlayOpened}
+        setSelectedCandidateId={setSelectedCandidateId}
+        onClick={() => {
+          setIsReportOverlayOpened(true);
+        }}
+        candidates={candidates}
       />
-    )}
 
-  </div>
+      {isReportOverlayOpened && (
+        <ReportOverlay
+          reportOverlay={isReportOverlayOpened}
+          onClose={handleCloseOverlay}
+          selectedCandidate={candidateReport}
+        />
+      )}
+    </div>
+  );
 };
 
-export default Page;
+export default WithAdminAuth(Page);

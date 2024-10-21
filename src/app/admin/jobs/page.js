@@ -1,12 +1,15 @@
+"use client";
+
 import AdminJobsList from "@/components/AdminJobsList";
 import EmptyScreen from "@/components/EmptyScreen";
+import WithAdminAuth from "@/components/withAdminAuth";
 import { getJobs } from "@/lib/data-service";
 
-export const metadata = {
+const metadata = {
   title: "Jobs",
 };
 
-export const revalidate = 60 * 60 * 24; // invalidate every 24 hours
+// export const revalidate = 60 * 60 * 24; // invalidate every 24 hours
 
 async function Page() {
   let jobs = [];
@@ -20,11 +23,11 @@ async function Page() {
 
   console.log("data of jobs", jobs);
 
-  if(jobs && jobs?.length===0){
-    return <EmptyScreen className={'h-[32.188rem]'}/>
+  if (jobs && jobs?.length === 0) {
+    return <EmptyScreen className={"h-[32.188rem]"} />;
   }
 
   return <AdminJobsList jobs={jobs} />;
 }
 
-export default Page;
+export default WithAdminAuth(Page);
