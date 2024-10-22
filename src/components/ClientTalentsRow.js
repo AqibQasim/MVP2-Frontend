@@ -35,7 +35,7 @@ function ClientTalentsRow({ talent }) {
       <div className="experience text-center">{candidate.experience}</div>
       <Capsule>{candidate.commitment}</Capsule>
       <div className="date-hired text-nowrap text-center">
-        {formatDate(new Date("2024-09-20"))}
+        {formatDate(talent?.updatedAt)}
       </div>
       {/* <CapsuleLink className="ml-auto" href={`${talent.id}`}> */}
       <CapsuleLink

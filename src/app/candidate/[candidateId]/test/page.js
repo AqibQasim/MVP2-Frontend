@@ -38,14 +38,6 @@ const Page = ({ params }) => {
     [params.candidateId, skills],
   );
 
-  // const codingTestPayload = useMemo(
-  //   () => ({
-  //     endpoint: `get-coding-question?candidate_id=${params.candidateId}`,
-  //     method: "GET",
-  //   }),
-  //   [],
-  // );
-
   useEffect(() => {
     setIsLoading(true);
     fetchCandidateSkills();
@@ -95,11 +87,6 @@ const Page = ({ params }) => {
     "Give your answers in English.",
     "Make sure there’s no background noise while answering the questions.",
   ];
-
-  console.log(
-    "/////////////////////////////////////////////////////",
-    codingQuestion,
-  );
 
   return (
     <html lang="en">

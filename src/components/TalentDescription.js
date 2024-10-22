@@ -26,7 +26,7 @@ function TalentDescription({ description, skills }) {
               {skills.map((skill, i) => (
                 <>
                 <Skill key={i} skill={skill} className="!bg-neutral-white" />
-                  {skill}
+                  
                 </>
               ))}
             </div>

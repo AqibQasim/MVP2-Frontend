@@ -16,6 +16,7 @@ export const authConfig = {
       authorization:{ params: { prompt: 'select_account' } }
     }),
   ],
+  trustHost: true,
   callbacks: {
     async authorized({ auth, request }) {
       const user = auth?.user;

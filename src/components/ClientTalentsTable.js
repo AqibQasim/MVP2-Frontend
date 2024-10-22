@@ -30,7 +30,8 @@ function ClientTalentsTable({ hiredTalents }) {
     console.log(candidates)
 
     if (candidates?.status === 200) {
-      setHiredCandidates(candidates?.data)
+      const hired= candidates?.data?.filter(v=>v.client_response==='accept')
+      setHiredCandidates(hired)
     }
   }
   //const clientJobs = await fetchClientJobs(client_id);
