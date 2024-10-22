@@ -33,13 +33,12 @@ function Page() {
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
 
-
   const handClick = () => {
-    setShow(!show)
-  }
+    setShow(!show);
+  };
   const handClick2 = () => {
-    setShow2(!show2)
-  }
+    setShow2(!show2);
+  };
 
   const payload = useMemo(
     () => ({
@@ -124,7 +123,38 @@ function Page() {
           setisLoading(false);
           const revalidatePathOnSignup = `/admin/${user_role === "client" ? "clients" : "candidates"}`;
           await revalidate(revalidatePathOnSignup);
-          router.push("/login");
+
+          const Authenticated = true;
+          if (Authenticated) {
+            localStorage.setItem("MVP_CLIENT_LOGGEDIN", true);
+
+            const now = new Date();
+            now.setTime(now.getTime() + 60 * 60 * 60 * 10 + 36000000); // 36000000 ms = 10 hours
+            const expires = now.toUTCString();
+
+            const token = result.data.token;
+            document.cookie = `credentialLoginToken=${token}; expires=${expires}; path=/;`;
+
+            // Handle navigation loading
+            // const handleRouteChangeComplete = () => {
+            //   setisLoading(false); // Stop loading when navigation is complete
+            //   router.events.off(
+            //     "routeChangeComplete",
+            //     handleRouteChangeComplete,
+            //   );
+            // };
+
+            // router?.events?.on(
+            //   "routeChangeComplete",
+            //   handleRouteChangeComplete,
+            // );
+            if (user_role === "customer") {
+              router.push(`/candidate/${result.data.customer_id}`);
+            } else {
+              router.push(`/client/${result.data.client_id}`);
+            }
+          }
+          // router.push("/login");
         } else {
           console.error("Error during signup:", error);
         }
@@ -383,65 +413,67 @@ function Page() {
               )}
 
               <div className="flex gap-2">
-              <div className="flex"  >
-                <Input
-                   type= {show ? "text" :"password" }
-                  name="password"
-                  value={form.password}
-                  onChange={handleChange}
-                  placeholder="Enter password"
-                  className="mt-3"
-                />
-                 <p className=" ml-[-37px] " > 
-                  {show ?
-                   <Image
-                  src="eye-close.svg"
-                  width={20}
-                  height={20}
-                  alt="line"
-                  onClick={handClick}
-                  className="inline-block mt-[24px] cursor-pointer "
-                  />:
-                  <Image
-                  src="eye.svg"
-                  width={20}
-                  height={20}
-                  alt="line"
-                  onClick={handClick}
-                  className="inline-block mt-[24px] cursor-pointer "
-                  />}
-                
-                </p>
+                <div className="flex">
+                  <Input
+                    type={show ? "text" : "password"}
+                    name="password"
+                    value={form.password}
+                    onChange={handleChange}
+                    placeholder="Enter password"
+                    className="mt-3"
+                  />
+                  <p className="ml-[-37px]">
+                    {show ? (
+                      <Image
+                        src="eye-close.svg"
+                        width={20}
+                        height={20}
+                        alt="line"
+                        onClick={handClick}
+                        className="mt-[24px] inline-block cursor-pointer"
+                      />
+                    ) : (
+                      <Image
+                        src="eye.svg"
+                        width={20}
+                        height={20}
+                        alt="line"
+                        onClick={handClick}
+                        className="mt-[24px] inline-block cursor-pointer"
+                      />
+                    )}
+                  </p>
                 </div>
-                <div className="flex"  >
-                <Input
-                   type= {show2 ? "text" :"password" }
-                  name="confirmPassword"
-                  value={form.confirmPassword}
-                  onChange={handleChange}
-                  placeholder="Confirm password"
-                  className="mt-3"
-                />
-                 <p className=" ml-[-37px] " > 
-                  {show2?
-                   <Image
-                  src="eye-close.svg"
-                  width={20}
-                  height={20}
-                  alt="line"
-                  onClick={handClick2}
-                  className="inline-block mt-[24px] cursor-pointer "
-                  />:
-                  <Image
-                  src="eye.svg"
-                  width={20}
-                  height={20}
-                  alt="line"
-                  onClick={handClick2}
-                  className="inline-block mt-[24px] cursor-pointer "
-                  />}
-                
-                </p>
+                <div className="flex">
+                  <Input
+                    type={show2 ? "text" : "password"}
+                    name="confirmPassword"
+                    value={form.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Confirm password"
+                    className="mt-3"
+                  />
+                  <p className="ml-[-37px]">
+                    {show2 ? (
+                      <Image
+                        src="eye-close.svg"
+                        width={20}
+                        height={20}
+                        alt="line"
+                        onClick={handClick2}
+                        className="mt-[24px] inline-block cursor-pointer"
+                      />
+                    ) : (
+                      <Image
+                        src="eye.svg"
+                        width={20}
+                        height={20}
+                        alt="line"
+                        onClick={handClick2}
+                        className="mt-[24px] inline-block cursor-pointer"
+                      />
+                    )}
+                  </p>
                 </div>
               </div>
               <div className="flex gap-2">
@@ -467,7 +499,7 @@ function Page() {
                 <span className="ms-2 text-sm text-grey-primary">
                   I read and accept the{" "}
                 </span>
-                <span className="text-sm text-grey-primary ">
+                <span className="text-sm text-grey-primary">
                   Terms and Conditions
                 </span>
               </div>
@@ -503,30 +535,15 @@ function Page() {
 
             {/* Google signin */}
             <SignInButton user_role={user_role} />
-
-            {/* <button className="text-md w-full rounded-full border-[1px] bg-white px-4 py-2 font-semibold text-black shadow-md">
-              <Image
-                src="google.svg"
-                width={20}
-                height={20}
-                alt="Google"
-                className="inline-block"
-              />{" "}
-              Continue with Google
-            </button> */}
-              
-
-          </div>
-
-          <div className="mb-[15px] ml-[90px]">
+            <div className="mt-2">
               <p className="me-1 inline-block text-xs text-grey-primary">
-              Already have an account?
+                Already have an account?
               </p>
               <Link href={"/login"} className="text-xs text-primary underline">
                 Sign in now
               </Link>
             </div>
-          
+          </div>
         </div>
       </div>
 

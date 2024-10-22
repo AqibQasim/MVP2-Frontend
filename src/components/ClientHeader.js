@@ -115,8 +115,7 @@ function ClientHeader({ client, client_id }) {
             <p className="capitalize text-grey-primary-shade-10">
               Joined date:{" "}
               <span className="font-semibold">
-                {formatDate(client.createdAt)}
-                {/* {formatDate(new Date("2024-04-27"))} */}
+                {formatDate(client?.createdAt)}
               </span>
             </p>
           </div>
