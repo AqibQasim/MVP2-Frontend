@@ -1,7 +1,7 @@
 "use client";
 import AdminClientsTable from "@/components/AdminClientsTable";
 import EmptyScreen from "@/components/EmptyScreen";
-import WithAdminAuth from "@/components/withAdminAuth";
+import WithAdminAuth from "@/components/WithAdminAuth";
 import { getClients } from "@/lib/data-service";
 
 // const metadata = {
