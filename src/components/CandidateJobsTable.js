@@ -22,7 +22,12 @@ function CandidateJobsTable() {
         // }
         const data = await response.json();
         console.log(data)
-        setJobs(data?.data); // assuming the data is in the 'data' field
+
+        const filteredData = data?.data.filter(
+          item => item.customer_info.customer_id === cid
+      );
+      
+        setJobs(filteredData); // assuming the data is in the 'data' field
       } catch (err) {
         setError(err.message);
       } finally {
