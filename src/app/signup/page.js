@@ -331,7 +331,7 @@ function Page() {
         </div>
 
         <div className="flex w-[33rem] flex-col items-start justify-start rounded-[36px] bg-white">
-          <div className="flex w-full justify-between space-y-2 p-5">
+          <div className="flex w-full justify-between space-y-1 p-5">
             <Image src="/logo.svg" width={100} height={25} alt="MVP 2 Logo" />
             <div className="flex gap-2">
               <button
@@ -355,7 +355,7 @@ function Page() {
             </div>
           </div>
           <div className="mx-auto mt-1 w-8/12 flex-grow">
-            <h2 className="text-start font-lufga text-xl">
+            <h2 className="text-start font-lufga text-lg">
               A sentence of perks and encouragement for{" "}
               <span className="gradient-text">freelancer.</span>
               <Image
