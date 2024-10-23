@@ -6,8 +6,8 @@ import ErrorPopup from "./ErrorPopup";
 // import { useEffect } from "react/cjs/react.production.min";
 
 const CandidateProfileForm = ({ candidate }) => {
-  const parsedValue = JSON.parse(candidate.value);
-  console.log("candidate values are :", parsedValue);
+  console.log(candidate)
+  
   const [sucess, setsuccess] = useState(false);
   const [error, seterror] = useState(false);
 
@@ -23,14 +23,14 @@ const CandidateProfileForm = ({ candidate }) => {
 
 
   useEffect(() => {
-    console.log("the parsed customer id is ", parsedValue.data.customer_id)
-  }, [parsedValue])
+    console.log("the parsed customer id is ", candidate?.data?.customer_id)
+  }, [candidate])
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const payload = {
-      endpoint: `profile-info-update/${parsedValue.data.customer_id}`,
+      endpoint: `profile-info-update/${candidate?.data?.customer_id}`,
       method: "PUT",
       body: {
         firstName: firstNameRef.current.value,
@@ -77,7 +77,7 @@ const CandidateProfileForm = ({ candidate }) => {
                 <input
                   ref={firstNameRef}
                   type="text"
-                  defaultValue={parsedValue.data.name.split(" ", 2)[0] || ""}
+                  defaultValue={candidate?.data?.name?.split(" ", 2)[0] || ""}
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
               </div>
@@ -89,7 +89,7 @@ const CandidateProfileForm = ({ candidate }) => {
                 <input
                   ref={lastNameRef}
                   type="text"
-                  defaultValue={parsedValue.data.name.split(" ", 2)[1] || ""}
+                  defaultValue={candidate?.data?.name?.split(" ", 2)[1] || ""}
                   className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
                 />
               </div>
@@ -109,7 +109,7 @@ const CandidateProfileForm = ({ candidate }) => {
                 <input
                   disabled
                   type="email"
-                  defaultValue={parsedValue.data.email}
+                  defaultValue={candidate?.data?.email}
                   className="focus:ring-none not-allowed mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
               </div>
@@ -131,7 +131,7 @@ const CandidateProfileForm = ({ candidate }) => {
                 <input
                   ref={streetAddressRef}
                   type="text"
-                  defaultValue={parsedValue.data.customer_location}
+                  defaultValue={candidate?.data?.customer_location}
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
               </div>
@@ -153,7 +153,7 @@ const CandidateProfileForm = ({ candidate }) => {
                 <input
                   ref={cityRef}
                   type="text"
-                  defaultValue={parsedValue.data.city}
+                  defaultValue={candidate?.data?.city}
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
               </div>
@@ -175,7 +175,7 @@ const CandidateProfileForm = ({ candidate }) => {
                 <input
                   ref={stateRef}
                   type="text"
-                  defaultValue={parsedValue.data.province}
+                  defaultValue={candidate?.data?.province}
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
               </div>
@@ -183,7 +183,7 @@ const CandidateProfileForm = ({ candidate }) => {
                 <input
                   type="text"
                   ref={areaCodeRef}
-                  defaultValue={parsedValue.data.area_code || null }
+                  defaultValue={candidate?.data?.area_code || null }
                   className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
                 />
               </div>
@@ -205,7 +205,7 @@ const CandidateProfileForm = ({ candidate }) => {
                 <input
                   ref={countryRef}
                   type="text"
-                  defaultValue={parsedValue.data.country}
+                  defaultValue={candidate?.data?.country}
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
               </div>

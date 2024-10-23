@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 const WithAdminAuth = (WrappedComponent) => {
-  return (props) => {
+  const AuthenticatedComponent = (props) => {
     const router = useRouter();
 
     useEffect(() => {
@@ -12,10 +12,14 @@ const WithAdminAuth = (WrappedComponent) => {
       if (!isAuthenticated) {
         router.push("/admin/login");
       }
-    }, []);
+    }, [router]); // Include router in the dependency array
 
     return <WrappedComponent {...props} />;
   };
+
+  AuthenticatedComponent.displayName = `WithAdminAuth(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`;
+
+  return AuthenticatedComponent;
 };
 
 export default WithAdminAuth;

@@ -22,22 +22,6 @@ import { formatDate } from "@/utils/utility";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 
-const job_questions = [
-  "It is a long established fact that a reader will be distracted by the readable content of a Page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters?",
-  "It is a long established fact that a reader will be distracted by the readable content of a Page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters?",
-];
-
-const job_on_progress = [
-  {
-    job_status: "open",
-    profession: "Software Developer",
-    candidate_name: "R. Feynman",
-    skills: ["Python", "JavaScript", "React"],
-    job_type: "Full-Time",
-    experience: "2Y",
-  },
-];
-
 function JobViewById({ job }) {
   const [isShowMoreEnabled, setIsShowMoreEnabled] = useState(false);
   const [isReadMoreEnabled, setIsReadMoreEnabled] = useState(false);
@@ -163,7 +147,7 @@ function JobViewById({ job }) {
                 <TagCard
                   icon={tag}
                   title={"Specialization"}
-                  answer={"[job specialization]"}
+                  answer={job?.position??"[job specialization]"}
                 />
 
                 <TagCard

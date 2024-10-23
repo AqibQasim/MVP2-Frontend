@@ -2,7 +2,7 @@
 
 import AdminJobsList from "@/components/AdminJobsList";
 import EmptyScreen from "@/components/EmptyScreen";
-import WithAdminAuth from "@/components/withAdminAuth";
+import WithAdminAuth from "@/components/WithAdminAuth";
 import { getJobs } from "@/lib/data-service";
 
 const metadata = {

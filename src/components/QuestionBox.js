@@ -441,16 +441,6 @@ const QuestionBox = ({
       stopMediaStreamTracks();
     };
   }, []);
-  // useEffect(() => {
-  //   const testcomplete = localStorage.getItem("testcompleted");
-  //   if (testcomplete && assessmentId) {
-  //     router.push(`/test-submit-completion/${cid}`);
-  //   }
-  // }, [router]);
-
-  // useEffect(() => {
-  //   console.log("Assessment ID:", assessmentId);
-  // }, [assessmentId]);
 
   const submitTestHandler = async () => {
     console.log("Submit test handler called");
@@ -462,26 +452,14 @@ const QuestionBox = ({
     setIsTestCompleted(true);
 
     console.log("candidate_id in question box in take test method is : ", cid);
-    // const userFlow = localStorage.getItem("activeFlow");
-
-    // if (userFlow === "Candidate_self") {
+    
     const requestBody = {
       candidate_id: cid,
       question_answer: answers,
     };
 
     try {
-      // const response = await fetch(
-      //   `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/take-test`,
-      //   {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify(requestBody),
-      //   }
-      // );
-
+     
       const payload = {
         endpoint: "take-test",
         body: requestBody,
@@ -490,9 +468,7 @@ const QuestionBox = ({
       const response = await mvp2ApiHelper(payload);
       const data = response.data;
       console.log("take-test api response:", data);
-      //console.log("value in test_req state:", test_req);
-      //console.log("test_req state = ", test_req === "true");
-      //console.log("a_ID:", a_id);
+      
 
       if (isTestRequired) {
         router.push(`/candidate/${cid}/test/coding-test`);
@@ -500,58 +476,11 @@ const QuestionBox = ({
         setIsLoading(false);
         window.location.href = `/candidate/${cid}`;
       }
-      // router.back();
-
-      // const rBody = {
-      //   position_id: pid,
-      // };
-
-      // if (test_req === "true" && a_id) {
-      //   if (assessmentId) {
-      //     console.log(
-      //       "Routing to coding exercise with assessment ID:",
-      //       assessmentId
-      //     );
-      //     router.push(
-      //       `/coding-excercise?a_id=${assessmentId}&cid=${cid}`
-      //     );
-      //   } else {
-      //     console.error("Assessment ID is not available.");
-      //   }
-      // } else {
-      //   // const rBody = {
-      //   //   position_id: pid,
-      //   // };
-      //   // try {
-      //   //   // if(response?.ok){
-      //   //   //   const response = await fetch(
-      //   //   //     `${process.env.NEXT_PUBLIC_REMOTE_URL}/set-candidate-count`,
-      //   //   //     {
-      //   //   //       method: "POST",
-      //   //   //       headers: {
-      //   //   //         "Content-Type": "application/json",
-      //   //   //       },
-      //   //   //       body: JSON.stringify(rBody),
-      //   //   //     }
-      //   //   //   );
-      //   //   //   const data = await response.json();
-      //   //   //   console.log("data fetched after setting the candidate count:", data);
-      //   //   // }
-      //   // } catch (err) {
-      //   //   console.log("err:", err);
-      //   // }
-      //   //router.push(`/test-submit-completion/${cid}`);
-      //   setIsLoading(false);
-      //   router.back();
-      // }
+      
     } catch (err) {
       console.error("Failed to submit test:", err);
     }
-    // finally {
-    //   setTimeout(() => {
-    //     setIsLoading(false);
-    //   }, 7000);
-    // }
+  
   };
 
   const toggleComponent = async () => {
@@ -580,7 +509,9 @@ const QuestionBox = ({
           });
           console.log("No recording made, adding silent audio blob as answer.");
           showError("No answer was provided, moving on to next question.");
-          setCurrentQuestion((prevCurrent) => prevCurrent + 1);
+          console.log("previous current before: ", currentQuestion)
+          setCurrentQuestion((prevCurrent) => prevCurrent+1);
+          console.log("previous current after changes: ", currentQuestion)
           setIsRecording(false);
           setRecordingDone(false);
           setCompletedQuestions((prevCompleted) => [
@@ -588,8 +519,10 @@ const QuestionBox = ({
             currentQuestion,
           ]);
           if (currentQuestionIndex < newQuestions.length - 1 && hasStarted) {
+            console.log("previous current index before: ", currentQuestion)
             setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-            speakQuestion(newQuestions[currentQuestionIndex + 1]);
+            console.log("previous current index after changes: ", currentQuestion)
+            speakQuestion(newQuestions[currentQuestionIndex]);
             setIsFirstQues(false);
             setIsLoading(false);
           }
@@ -670,6 +603,7 @@ const QuestionBox = ({
   };
 
   async function sendAudioToServer(base64Data) {
+    console.log("sending audio to server....................................")
     try {
       setIsLoading(true);
       setIsTranscriptionComplete(true);
@@ -730,6 +664,7 @@ const QuestionBox = ({
 
   useEffect(() => {
     if (currentQuestionIndex < newQuestions?.length && hasStarted) {
+      console.log("@@@@@@@@@@@@@@@@@@@@@@@",currentQuestionIndex)
       speakQuestion(newQuestions[currentQuestionIndex]);
     }
   }, [currentQuestionIndex, newQuestions, hasStarted]);

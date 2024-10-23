@@ -2,7 +2,7 @@
 import AdminCandidatesTable from "@/components/AdminCandidatesTable";
 import EmptyScreen from "@/components/EmptyScreen";
 import ReportOverlay from "@/components/ReportOverlay";
-import WithAdminAuth from "@/components/withAdminAuth";
+import WithAdminAuth from "@/components/WithAdminAuth";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { fetchRecommendedCandidates } from "@/lib/data-service";
 import { useEffect, useState } from "react";

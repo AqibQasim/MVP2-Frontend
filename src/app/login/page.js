@@ -32,6 +32,12 @@ function Login() {
     setShow(!show);
   };
 
+  const handleKeyDown = (e) => {
+    if (e.keyCode === 13) {
+      handleLogin(e); // Trigger login on Enter key press
+    }
+  };
+
   const validateField = (name, value) => {
     let errorMsg = "";
 
@@ -192,6 +198,7 @@ function Login() {
                 type={show ? "text" : "password"}
                 name="password"
                 value={form.password}
+                onKeyDown={handleKeyDown} // Trigger login on Enter
                 onChange={handleChange}
                 placeholder="Enter your password"
                 className="mt-3"
@@ -233,9 +240,8 @@ function Login() {
             <OnBoardingButton
               onClick={handleLogin}
               disabled={isFormInvalid}
-              className={`${
-                isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
-              }`}
+              className={`${isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
+                }`}
             >
               {isLoading ? (
                 <div className="flex items-center">
@@ -277,7 +283,7 @@ function Login() {
               </Link>
             </div>
           </div>
-          
+
           <div className="align-end mt-auto px-7 py-5 text-start text-xs text-grey-primary">
             <Image
               src="icons/info_icon.svg"
@@ -310,7 +316,7 @@ function Login() {
             //buttonText={"Verify email"}
             onBoarding={true}
             containsOtp={true}
-            //signupHandler={handleSignup}
+          //signupHandler={handleSignup}
           />
         </Overlay>
       )}

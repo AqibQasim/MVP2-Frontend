@@ -2,7 +2,7 @@
 
 import AdminCandidatesClientsHiringTable from "@/components/AdminCandidatesClientsHiringTable";
 import EmptyScreen from "@/components/EmptyScreen";
-import WithAdminAuth from "@/components/withAdminAuth";
+import WithAdminAuth from "@/components/WithAdminAuth";
 import { fetchCandidatesJobStatus } from "@/lib/data-service";
 import React, { useEffect, useState } from "react";
 
