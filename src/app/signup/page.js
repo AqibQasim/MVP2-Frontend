@@ -354,20 +354,20 @@ function Page() {
               </button>
             </div>
           </div>
-          <div className="mx-auto mt-3 w-8/12 flex-grow">
-            <h2 className="text-start font-lufga text-2xl">
+          <div className="mx-auto mt-1 w-8/12 flex-grow">
+            <h2 className="text-start font-lufga text-xl">
               A sentence of perks and encouragement for{" "}
               <span className="gradient-text">freelancer.</span>
               <Image
                 src="/icons/clients_emoji.png"
-                width={100}
-                height={100}
+                width={60}
+                height={60}
                 alt="Clients Emoji"
                 className="inline-block"
               />
             </h2>
             <form onSubmit={handleOpenOverlay}>
-              <div className="mt-5 flex gap-2">
+              <div className="mt-1 flex gap-1">
                 <Input
                   type="text"
                   name="firstName"
@@ -386,7 +386,7 @@ function Page() {
                 />
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-1">
                 <div>
                   {errors.firstName && (
                     <p className="text-xs text-red-500">{errors.firstName}</p>
@@ -476,7 +476,7 @@ function Page() {
                   </p>
                 </div>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-1">
                 <div>
                   {errors.password && (
                     <p className="text-xs text-red-500">{errors.password}</p>
@@ -490,7 +490,7 @@ function Page() {
                   )}
                 </div>
               </div>
-              <div className="mt-2 w-full text-start">
+              <div className="mt-1 w-full text-start">
                 <input
                   type="checkbox"
                   className="border-none outline-none"
