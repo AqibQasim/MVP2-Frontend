@@ -47,7 +47,7 @@ const ProfileForm = ({ client }) => {
     try {
       const result = await mvp2ApiHelper(payload);
       if (result.status === 200) {
-        console.log("Client info updated successfully", result.data.result);
+        console.log("Client info updated successfully", result.data);
         setsuccess(true);
       } else {
         console.error("Error updating client info", result?.data?.message);
@@ -58,8 +58,8 @@ const ProfileForm = ({ client }) => {
     }
   };
 
-  // const [firstName, lastName] = client.name
-  //   ? client.name.split(" ", 2)
+  // const [firstName, lastName] = client?.name
+  //   ? client?.name.split(" ", 2)
   //   : ["", ""];
   return (
     <div className="">
@@ -82,7 +82,7 @@ const ProfileForm = ({ client }) => {
                 </b>
                 <input
                   ref={firstNameRef}
-                  defaultValue={client.name?.split(" ", 2)[0] || ""}
+                  defaultValue={client?.name?.split(" ", 2)[0] || ""}
                   type="text"
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
@@ -95,7 +95,7 @@ const ProfileForm = ({ client }) => {
                 </b>
                 <input
                   ref={lastNameRef}
-                  defaultValue={client.name?.split(" ", 2)[1] || ""}
+                  defaultValue={client?.name?.split(" ", 2)[1] || ""}
                   type="text"
                   className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
                 />
@@ -119,7 +119,7 @@ const ProfileForm = ({ client }) => {
                 <input
                   disabled
                   ref={emailRef}
-                  defaultValue={client.email || ""}
+                  defaultValue={client?.email || ""}
                   type="email"
                   className="focus:ring-none not-allowed mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
@@ -140,7 +140,7 @@ const ProfileForm = ({ client }) => {
                 <input
                   disabled
                   ref={passwordRef}
-                  defaultValue={client.password || ""}
+                  defaultValue={client?.password || ""}
                   type="password"
                   className="focus:ring-none not-allowed mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
@@ -164,7 +164,7 @@ const ProfileForm = ({ client }) => {
               <div className="flex flex-1 flex-col">
                 <input
                   ref={locationRef}
-                  defaultValue={client.client_location || ""}
+                  defaultValue={client?.client_location || ""}
                   type="text"
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
@@ -189,7 +189,7 @@ const ProfileForm = ({ client }) => {
               <div className="flex flex-1 flex-col">
                 <input
                   ref={cityRef}
-                  defaultValue={client.city || ""}
+                  defaultValue={client?.city || ""}
                   type="text"
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
@@ -211,7 +211,7 @@ const ProfileForm = ({ client }) => {
                 <input
                   type="text"
                   ref={provinceRef}
-                  defaultValue={client.province || ""}
+                  defaultValue={client?.province || ""}
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
               </div>
@@ -220,7 +220,7 @@ const ProfileForm = ({ client }) => {
                 <input
                   type="text"
                   ref={areaCodeRef}
-                  defaultValue={client.area_code || ""}
+                  defaultValue={client?.area_code || ""}
                   className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
                 />
               </div>
@@ -241,7 +241,7 @@ const ProfileForm = ({ client }) => {
                 <input
                   type="text"
                   ref={countryRef}
-                  defaultValue={client.country || ""}
+                  defaultValue={client?.country || ""}
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
               </div>
