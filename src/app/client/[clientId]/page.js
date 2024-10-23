@@ -1,7 +1,9 @@
 "use client";
 import ClientEmployeesTable from "@/components/ClientEmployeesTable";
+import ClientEmptyScreen from "@/components/ClientEmptyScreen";
 import ClientJobsOverviewTable from "@/components/ClientJobsOverviewTable";
 import ClientRecommendationCard from "@/components/ClientRecommendationCard";
+import DashboardSection from "@/components/DashboardSection";
 import EmptyScreen from "@/components/EmptyScreen";
 import {
   getAllRecommendedCandidates,
@@ -28,19 +30,30 @@ export default async function Page({ params }) {
   // console.log(hiredTalents)
 
   useEffect(() => {
-    getClientById(params.clientId).then(v => {
+    getClientById(params.clientId).then((v) => {
       setClient(v);
     });
-    getRecommendedCandidateOfClient(params.clientId).then(v => {
+    getRecommendedCandidateOfClient(params.clientId).then((v) => {
       setRecommendedCandidates(v);
     });
-    getClientJobs(params.clientId).then(v => {
+    getClientJobs(params.clientId).then((v) => {
       setJobs(v);
     });
-  }, [])
+  }, []);
 
-  if(!recommendedCandidates?.customer && !recommendedCandidates?.job_postings && jobs && jobs?.length===0){
-    return <EmptyScreen className={'h-full'}/>
+  if (
+    !recommendedCandidates?.customer &&
+    !recommendedCandidates?.job_postings &&
+    jobs &&
+    jobs?.length === 0
+  ) {
+    // return <EmptyScreen className={'h-full'}/>
+    return (
+      <DashboardSection paragraph="" heading="">
+        {" "}
+        <ClientEmptyScreen />{" "}
+      </DashboardSection>
+    );
   }
 
   return (
@@ -49,17 +62,15 @@ export default async function Page({ params }) {
         <ErrorIndicator showErrorMessage={showResponseMessage} 
         msgText={"Your Interview with the client has ended. Do you want to accept this client for trial?"} />
       )} */}
-      {
-        (recommendedCandidates?.customer && recommendedCandidates?.job_postings) &&
-        <ClientRecommendationCard
-          client={client}
-          recommendedCandidate={recommendedCandidates?.customer}
-          recommendedForJob={recommendedCandidates?.job_postings}
-        />
-      }
-      {
-        jobs&&<ClientJobsOverviewTable jobs={jobs} />
-      }
+      {recommendedCandidates?.customer &&
+        recommendedCandidates?.job_postings && (
+          <ClientRecommendationCard
+            client={client}
+            recommendedCandidate={recommendedCandidates?.customer}
+            recommendedForJob={recommendedCandidates?.job_postings}
+          />
+        )}
+      {jobs && <ClientJobsOverviewTable jobs={jobs} />}
       {
         <ClientEmployeesTable client_id={params?.clientId} />
         // (hiredCandidates?.status === 200 && hiredCandidates?.data?.length > 0) &&

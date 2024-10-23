@@ -148,6 +148,7 @@ function Page() {
             //   "routeChangeComplete",
             //   handleRouteChangeComplete,
             // );
+            
             if (user_role === "customer") {
               router.push(`/candidate/${result.data.customer_id}`);
             } else {
