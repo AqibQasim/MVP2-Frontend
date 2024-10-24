@@ -4,8 +4,8 @@ import Heading from "./Heading";
 const ClientEmptyScreen = () => {
   return (
     <div>
-      <div className="flex flex-row items-center justify-between">
-        <div className="w-1/2">
+      <div className="flex flex-col xl:flex-row items-center justify-between">
+        <div className="w-full xl:w-1/2 ">
           <Heading sm className="text-4xl font-medium text-gray-900">
             Learn About How MVP Works
           </Heading>
@@ -16,7 +16,7 @@ const ClientEmptyScreen = () => {
         </div>
 
         {/* Right Column for Video */}
-        <div className="flex w-1/2 cursor-pointer items-center justify-center">
+        <div className="flex w-full xl:w-1/2 cursor-pointer items-center justify-center">
           <div className="flex h-40 w-40 items-center justify-center rounded-full bg-gray-200">
             {/* Placeholder for the video play icon */}
             <span className="text-4xl">▶️</span>
@@ -32,7 +32,7 @@ const ClientEmptyScreen = () => {
         <Heading sm className="mb-6 text-2xl font-medium">
           How We Make Hiring Easy
         </Heading>
-        <div className="flex justify-between space-x-4">
+        <div className="flex  flex-col xl:flex-row justify-between xl:space-x-4 space-y-4 xl:space-y-0">
           {/* Step 1 */}
           <div className="flex-1 rounded-lg bg-gray-100 p-6 shadow">
             <div className="mb-4 flex items-center">
@@ -54,7 +54,7 @@ const ClientEmptyScreen = () => {
           </div>
 
           {/* Step 2 */}
-          <div className="flex-1 rounded-lg bg-gray-100 p-6 shadow">
+          <div className="flex-1  xl:mt-3 rounded-lg bg-gray-100 p-6 shadow">
             <div className="text-medium flex items-center font-medium">
               <Heading xm>
                 <span className="border-grey-800 mr-2 rounded-full border bg-white px-2 font-medium">
@@ -71,7 +71,7 @@ const ClientEmptyScreen = () => {
           </div>
 
           {/* Step 3 */}
-          <div className="flex-1 rounded-lg bg-gray-100 p-6 shadow">
+          <div className="flex-1 xl:mt-3 rounded-lg bg-gray-100 p-6 shadow">
             <div className="text-medium flex items-center font-medium">
               <Heading xm>
                 <span className="border-grey-800 mr-2 rounded-full border bg-white px-2 font-medium">
