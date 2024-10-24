@@ -61,7 +61,7 @@ const ForgotPasswordModal = ({
 
   const validateField = (name, value) => {
     let errorMsg = "";
-  
+
     switch (name) {
       case "password":
         if (!/^.{8,}$/.test(value)) {
@@ -81,10 +81,9 @@ const ForgotPasswordModal = ({
       default:
         break;
     }
-  
+
     setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMsg }));
   };
-  
 
   const validateUser = async (e) => {
     let endpoint = null;
@@ -115,9 +114,9 @@ const ForgotPasswordModal = ({
         ...prevErrors,
         ["passwordResetError"]: null,
       }));
-      
-        sendOtp(e);
-        setPopupState("otp");
+
+      sendOtp(e);
+      setPopupState("otp");
     }
   };
 
@@ -224,7 +223,6 @@ const ForgotPasswordModal = ({
               text(`Must be at least 8 characters`)}
           </p>
 
-
           {popupState === "email" && (
             <Input
               type="email"
@@ -236,15 +234,14 @@ const ForgotPasswordModal = ({
                 validateField("email", e.target.value);
               }}
             />
-           
           )}
 
-          <div> 
-          {errors.email && (
-             <p className="text-xs text-red-500">{errors.email}</p>
-           )}
+          <div>
+            {errors.email && (
+              <p className="text-xs text-red-500">{errors.email}</p>
+            )}
           </div>
-          
+
           {popupState === "otp" && (
             <div className="flex flex-col items-center justify-center">
               <OTPInput
@@ -279,7 +276,10 @@ const ForgotPasswordModal = ({
               />
               <div className="flex gap-1">
                 Did not get the code?
-                <div onClick={(e) => sendOtp(e)} className="text-primary">
+                <div
+                  onClick={(e) => sendOtp(e)}
+                  className="cursor-pointer text-primary"
+                >
                   Click to resend
                 </div>
               </div>
@@ -343,13 +343,13 @@ const ForgotPasswordModal = ({
             }
 
             if (popupState === "reset-password") {
-              if(password===confirmPassword){
+              if (password === confirmPassword) {
                 setErrors((prevErrors) => ({
                   ...prevErrors,
                   ["passwordResetError"]: null,
                 }));
                 await handlePasswordReset();
-              }else{
+              } else {
                 setErrors((prevErrors) => ({
                   ...prevErrors,
                   ["passwordResetError"]: "Please fill all required fields",

@@ -130,6 +130,10 @@ function CandidateHeader({ candidate }) {
         // styles={{
         //   height: '10px'
         // }}
+        prefill={{
+          name: candidate?.name,
+          email: [candidate?.email],
+        }}
       />
     </>
   );

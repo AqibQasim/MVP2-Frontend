@@ -135,8 +135,8 @@ function ClientHeader({ client, client_id }) {
         //   height: '10px'
         // }}
         prefill={{
-          mame: ["test"],
-          email: ["test@gmail.com"],
+          name: client?.name,
+          email: [client?.email],
         }}
       />
     </>
