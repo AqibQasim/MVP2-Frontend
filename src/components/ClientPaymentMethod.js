@@ -106,7 +106,7 @@ function ClientPaymentMethod({ paymentMethods, stripe, clientSecret, stripePromi
                 {/* Button add */}
                 <div
                     onClick={handleOpenModal}
-                    className="button flex w-full items-center justify-start gap-8 rounded-xl border border-dashed border-primary-tint-80 p-4"
+                    className="button flex w-full items-center justify-start gap-8 rounded-xl border border-dashed border-primary-tint-80 p-4 cursor-pointer "
                 >
                     {/* Entity */}
                     <div className="flex items-center justify-center gap-2">
@@ -155,7 +155,7 @@ function ClientPaymentMethod({ paymentMethods, stripe, clientSecret, stripePromi
 
             {/* Modal */}
             <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-                <div className="w-full gap-4 rounded-[24px] bg-neutral-white p-6">
+                <div className="w-full gap-4 rounded-[24px] bg-neutral-white p-6 ">
                     <form onSubmit={handleSubmit}>
                         <label>
                             Cardholder Name
