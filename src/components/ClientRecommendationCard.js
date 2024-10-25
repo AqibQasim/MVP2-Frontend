@@ -22,6 +22,7 @@ function ClientRecommendationCard({
   const [isMounted, setIsMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef(null);
+  const [isInterviewScheduled, setIsInterviewScheduled] = useState(false);
   const [score, setScore] = useState(null);
   const params = useParams();
 
@@ -39,9 +40,21 @@ function ClientRecommendationCard({
       }
     });
   };
-
+    
+  const checkInterviewStatus = () => {
+    const payload = {
+      endpoint: `check-interview-status?customer_id=${recommendedCandidate?.customer_id}&client_id=${params?.clientId}&job_posting_id=${recommendedForJob?.job_posting_id}`,
+      method: "GET",
+    };
+    mvp2ApiHelper(payload).then((result) => {
+      if (result?.data?.data?.is_scheduled) {
+        setIsInterviewScheduled(true);  // Set as scheduled if API confirms
+      }
+    });
+  };
   useEffect(() => {
     getCandidateResult();
+    checkInterviewStatus();
   }, []);
 
   const getEventDetails = async (eventUri) => {
@@ -130,14 +143,18 @@ function ClientRecommendationCard({
             </div>
             {/* ScheduleInterview */}
             {/* <ScheduleInterviewModal /> */}
-            <ButtonCapsule
-              ref={buttonRef}
-              onPress={() => setIsOpen(true)}
-              id="root"
-            >
-              Schedule Inverview
-            </ButtonCapsule>
-
+            {isInterviewScheduled ? (
+              <div disabled>Interview Scheduled</div>
+            ) : (
+              <ButtonCapsule
+                ref={buttonRef}
+                onPress={() => setIsOpen(true)}
+                id="root"
+              >
+                Schedule Interview
+              </ButtonCapsule>
+            )}
+           
             <PopupModal
               onDateAndTimeSelected={() =>
                 console.log("date and time selected")
