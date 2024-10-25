@@ -144,7 +144,7 @@ function ClientRecommendationCard({
             {/* ScheduleInterview */}
             {/* <ScheduleInterviewModal /> */}
             {isInterviewScheduled ? (
-              <div disabled>Interview Scheduled</div>
+              <Heading xm disabled>Interview Already Scheduled</Heading>
             ) : (
               <ButtonCapsule
                 ref={buttonRef}
