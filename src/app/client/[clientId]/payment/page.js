@@ -288,6 +288,17 @@ function Page() {
       dispatch(setSelectedMethodId(selectedMethodId));
     }
   }, [selectedMethodId, dispatch]);
+
+ function addThirtyDaysToDate(date) {
+  const originalDate = new Date(date);
+  originalDate.setDate(originalDate.getDate() + 30);
+  return originalDate.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+}
+
+   // Calculate next payment date based on last payment date
+  const nextPaymentDate = clientCharges.length > 0 
+    ? addThirtyDaysToDate(clientCharges[0].date)
+    : "No payment history available";
   return (
     <div className="max-w-full space-y-2">
       {clientCharges.length > 0 ? (
@@ -295,7 +306,7 @@ function Page() {
           client_id={client_id}
           total_payment_by_client={`${totalPaymentsByClient}`}
           total_hires={9}
-          next_payment={"15 July 2024 - 0:00"}
+          next_payment={`${nextPaymentDate} - 0:00`}
           last_payment={`${clientCharges[0].amount} - ${clientCharges[0].date} - 00:00`}
         />
       ) : null}
