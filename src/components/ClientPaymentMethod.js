@@ -155,7 +155,7 @@ function ClientPaymentMethod({ paymentMethods, stripe, clientSecret, stripePromi
 
             {/* Modal */}
             <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-                <div className="w-full gap-4 rounded-[24px] bg-neutral-white p-6 ">
+                <div className="w-full gap-4 rounded-[24px] bg-neutral-white p-6  ">
                     <form onSubmit={handleSubmit}>
                         <label>
                             Cardholder Name
@@ -168,7 +168,7 @@ function ClientPaymentMethod({ paymentMethods, stripe, clientSecret, stripePromi
                                 required
                             />
                         </label>
-                        <div id="payment-element" ref={paymentElementRef}></div>
+                        <div id="payment-element" ref={paymentElementRef}  ></div>
                         <button type="submit" className="mt-3 p-3 bg-primary text-white rounded-xl">
                             Save Payment Method
                         </button>
