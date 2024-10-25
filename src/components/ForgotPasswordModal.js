@@ -10,6 +10,8 @@ import OTPInput from "react-otp-input";
 import ButtonCapsule from "./ButtonCapsule";
 import { candidateUpdateProfile } from "@/lib/data-service";
 import { useRouter } from "next/navigation";
+import LoaderIcon from "@/svgs/LoaderIcon";
+
 const ForgotPasswordModal = ({
   imgSrc,
   //mainHeading,
@@ -30,10 +32,14 @@ const ForgotPasswordModal = ({
   const [otp, setotp] = useState(null);
   const [error, setError] = useState(false);
   const [errors, setErrors] = useState({});
+  const [validateLoading, setvalidateLoading] = useState(false);
+  const [loadingOTP, setLoadingOtp] = useState(false);
+  const [loadingPassword, setLoadingPassword] = useState(false);
   const [password, setPassword] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState(null);
 
   const handlePasswordReset = async () => {
+    setLoadingPassword(true);
     const body = {
       new_password: password,
       email,
@@ -50,12 +56,14 @@ const ForgotPasswordModal = ({
     if (response.status === 200) {
       console.log(response.data);
       onClose();
+      setLoadingPassword(false);
     } else {
       console.log(response.data);
       setErrors((prevErrors) => ({
         ...prevErrors,
         ["passwordResetError"]: response.data?.message,
       }));
+      setLoadingPassword(false);
     }
   };
 
@@ -88,6 +96,8 @@ const ForgotPasswordModal = ({
   const validateUser = async (e) => {
     let endpoint = null;
 
+    setvalidateLoading(true);
+
     if (user_role === "client") {
       endpoint = `client-by-email?email=${email}`;
     }
@@ -109,6 +119,7 @@ const ForgotPasswordModal = ({
       }));
       console.log(result?.data?.message);
       //setOverlayVisible(true);
+      setvalidateLoading(false);
     } else {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -116,11 +127,13 @@ const ForgotPasswordModal = ({
       }));
 
       sendOtp(e);
+      setvalidateLoading(false);
       setPopupState("otp");
     }
   };
 
   const handleOtpVerification = () => {
+    setLoadingOtp(true);
     if (enteredOtp.toString() === otp.toString()) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -129,11 +142,13 @@ const ForgotPasswordModal = ({
       console.log("OTP verified successfully");
       setPopupState("reset-password");
       onClose;
+      setLoadingOtp(false);
     } else {
       setErrors((prevErrors) => ({
         ...prevErrors,
         ["passwordResetError"]: "Incorrect OTP",
       }));
+      setLoadingOtp(false);
     }
   };
 
@@ -250,7 +265,7 @@ const ForgotPasswordModal = ({
                   const pastedData = e.clipboardData.getData("text");
                   // Check if the pasted data contains exactly the right number of digits
                   if (pastedData.length === 6) {
-                    setEnteredOtp(pastedData); // Set the OTP value if the length matches
+                    setEnteredOtp(pastedData);
                   }
                 }}
                 onChange={setEnteredOtp}
@@ -358,9 +373,40 @@ const ForgotPasswordModal = ({
             }
           }}
         >
-          {popupState === "email" && buttonText("Send 4-digit code")}
-          {popupState === "otp" && buttonText("Continue")}
-          {popupState === "reset-password" && buttonText("Set password")}
+          {popupState === "email" &&
+            buttonText(
+              validateLoading ? (
+                <div className="flex items-center">
+                  <LoaderIcon />
+                  <span className="ml-2">Sending ...</span>
+                </div>
+              ) : (
+                "Send 4 digit code"
+              ),
+            )}
+
+          {popupState === "otp" &&
+            buttonText(
+              loadingOTP ? (
+                <div className="flex items-center">
+                  <LoaderIcon />
+                  <span className="ml-2">Verifying ...</span>
+                </div>
+              ) : (
+                "Continue"
+              ),
+            )}
+          {popupState === "reset-password" &&
+            buttonText(
+              loadingPassword ? (
+                <div className="flex items-center">
+                  <LoaderIcon />
+                  <span className="ml-2">Setting Password ...</span>
+                </div>
+              ) : (
+                "Set Password"
+              ),
+            )}
         </ButtonCapsule>
         {/* ) : (
           <OnBoardingButton onClick={onClose}>

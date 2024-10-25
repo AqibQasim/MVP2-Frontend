@@ -22,5 +22,4 @@ async function Page() {
 
   return <AdminClientsTable clients={clients} />;
 }
-
 export default WithAdminAuth(Page);

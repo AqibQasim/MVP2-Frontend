@@ -58,10 +58,6 @@ export default async function Page({ params }) {
 
   return (
     <div className="space-y-2">
-      {/* {showResponseMessage && (
-        <ErrorIndicator showErrorMessage={showResponseMessage} 
-        msgText={"Your Interview with the client has ended. Do you want to accept this client for trial?"} />
-      )} */}
       {recommendedCandidates?.customer &&
         recommendedCandidates?.job_postings && (
           <ClientRecommendationCard

@@ -240,8 +240,9 @@ function Login() {
             <OnBoardingButton
               onClick={handleLogin}
               disabled={isFormInvalid}
-              className={`${isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
-                }`}
+              className={`${
+                isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
+              }`}
             >
               {isLoading ? (
                 <div className="flex items-center">
@@ -316,7 +317,7 @@ function Login() {
             //buttonText={"Verify email"}
             onBoarding={true}
             containsOtp={true}
-          //signupHandler={handleSignup}
+            //signupHandler={handleSignup}
           />
         </Overlay>
       )}
