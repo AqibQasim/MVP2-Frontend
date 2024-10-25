@@ -3,7 +3,7 @@ import Heading from "./Heading";
 
 const ClientEmptyScreen = () => {
   return (
-    <div>
+    <div className="h-full w-full gap-8 rounded-4xl bg-neutral-white px-8 py-10">
       <div className="flex flex-col xl:flex-row items-center justify-between">
         <div className="w-full xl:w-1/2 ">
           <Heading sm className="text-4xl font-medium text-gray-900">
