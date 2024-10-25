@@ -10,6 +10,7 @@ function CustomersList() {
   const [clientCharges, setClientCharges] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(""); // New state for search term
   const paymentElementRef = useRef(null); // Assuming this is used for payment processing
 
   useEffect(() => {
@@ -74,6 +75,10 @@ function CustomersList() {
     setClientCharges([]); // Clear the charges data when the modal is closed
   };
 
+  const filteredCustomers = customers.filter((customer) =>
+    customer.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -81,6 +86,14 @@ function CustomersList() {
   return (
     <div className='rounded-3xl  bg-neutral-white p-6 '>
       <Heading>Clients List</Heading>
+       {/* Search Input */}
+      <input
+        type="text"
+        placeholder="Search by email"
+        className="w-full mb-4 p-2 border border-gray-300 rounded"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
       <div className=' h-[90vh] p-5 overflow-y-auto'>
         <ul className='flex flex-col gap-3 '>
         <li className='grid grid-cols-3  text-start '>
@@ -88,11 +101,15 @@ function CustomersList() {
               <div> Name</div>  
               <div >Email</div>
             </li>
-          {customers.map((customer) => (
-            <li className='grid grid-cols-3 text-start cursor-pointer' key={customer.id} onClick={() => handleCustomerClick(customer.id)}>
-              <div >{customer.id}</div>
-              <div> {customer.name}</div>  
-              <div >{customer.email}</div>
+         {filteredCustomers.map((customer) => (
+            <li
+              className='grid grid-cols-3 text-start cursor-pointer'
+              key={customer.id}
+              onClick={() => handleCustomerClick(customer.id)}
+            >
+              <div>{customer.id}</div>
+              <div>{customer.name}</div>  
+              <div>{customer.email}</div>
             </li>
           ))}
         </ul>
