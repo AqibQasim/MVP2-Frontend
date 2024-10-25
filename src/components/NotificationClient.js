@@ -3,9 +3,15 @@ import ClientAlertMessage from "@/components/ClientAlertMessage";
 import Heading from "@/components/Heading";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { useEffect, useState } from "react";
+import { getClientStripe } from "@/app/client/[clientId]/payment/page";
+import { useRouter } from "next/navigation";
 
 function NotificationClient({ client_id }) {
   const [notifications, setNotifications] = useState(null);
+   const [clientSecret, setClientSecret] = useState(null);
+  const [clientCustomerIDs, setclientCustomerID] = useState("");
+   const router = useRouter();
+  const [cardsAvailable, setCardsAvailable] = useState(false)
   const [buttonType, setButtonType] = useState({
     notification_id: null,
     type: null,
@@ -32,6 +38,8 @@ function NotificationClient({ client_id }) {
     job_posting_id,
     notification_id,
   ) => {
+
+    if(cardsAvailable){
     const payload = {
       endpoint: "client/client-response",
       method: "POST",
@@ -53,6 +61,11 @@ function NotificationClient({ client_id }) {
         });
       }
     });
+  }else{
+    alert("Please add a card first");
+     router.push(`/client/${client_id}/payment`);
+  }
+
   };
 
   const handleRejectClientResponse = (
@@ -85,6 +98,79 @@ function NotificationClient({ client_id }) {
       }
     });
   };
+
+
+
+
+    useEffect(() => {
+    const fetchClientStripe = async () => {
+      const clientCustomerID = await getClientStripe(client_id);
+      setclientCustomerID(clientCustomerID);
+
+      if(clientCustomerIDs){
+
+        console.log("RESULT FROM BK API", clientCustomerIDs);
+      }
+    };
+
+    fetchClientStripe();
+  }, [client_id]);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (clientCustomerIDs) {
+        try {
+
+          // Fetch payment methods
+          const paymentMethodsResponse = await fetch("/api/payment-methods", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ customer_id: clientCustomerIDs }), // Replace with actual customer ID
+          });
+
+          if (!paymentMethodsResponse.ok) {
+            throw new Error(
+              `HTTP error! status: ${paymentMethodsResponse.status}`,
+            );
+          }
+
+          const { data } = await paymentMethodsResponse.json();
+          console.log("Payment Data is: ", data.length);
+
+
+          if(data.length > 0){
+            setCardsAvailable(true)
+          }
+          
+          setPaymentMethods(data); // Assuming `data` contains the payment methods
+          // dispatch(setSelectedMethodId(data[0].id));
+
+          // Create payment intent
+          // const paymentIntentResponse = await fetch('/api/create-payment-intent', {
+          //     method: 'POST',
+          //     headers: {
+          //         'Content-Type': 'application/json',
+          //     },
+          //     body: JSON.stringify({ amount: 100, customer: clientCustomerID }), // Replace with actual amount
+          // });
+
+          // if (!paymentIntentResponse.ok) {
+          //     throw new Error(`HTTP error! status: ${paymentIntentResponse.status}`);
+          
+          // }
+
+
+          // console.log("len is ", data)
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+    };
+    fetchData();
+  }, [clientCustomerIDs]); // Empty dep
 
   return (
     <div className="h-full w-full bg-white">
