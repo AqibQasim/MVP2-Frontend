@@ -23,9 +23,14 @@ function CandidateJobsTable() {
         const data = await response.json();
         console.log(data)
 
-        const filteredData = data?.data.filter(
-          item => item.customer_info.customer_id === cid
-      );
+        let filteredData= null;
+
+        if(data?.status===200){
+          filteredData = data?.data?.filter(
+            item => item.customer_info.customer_id === cid
+          );
+        }
+
       
         setJobs(filteredData); // assuming the data is in the 'data' field
       } catch (err) {
@@ -46,7 +51,7 @@ function CandidateJobsTable() {
     return <div>Error: {error}</div>; // Handle errors here
   }
 
-  if(jobs&& jobs.length===0){
+  if(jobs===null || jobs.length===0){
     return <EmptyScreen className={'h-full'}/>
   }
 

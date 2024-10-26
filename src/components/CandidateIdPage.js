@@ -6,6 +6,7 @@ import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { useEffect, useState } from "react";
 
 export default function CandidateIdPage({ candidate, candidateId }) {
+
   const [candidateReport, setCandidateReport] = useState(null);
   const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
 
@@ -39,7 +40,7 @@ export default function CandidateIdPage({ candidate, candidateId }) {
   return (
     <>
       {!candidateReport ? (
-        <CandidateEvaluateYourselfCard />
+        <CandidateEvaluateYourselfCard candidate={candidate}/>
       ) : (
         <div>
           <CandidateReportCard

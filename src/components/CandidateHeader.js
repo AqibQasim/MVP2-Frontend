@@ -9,6 +9,7 @@ import EntityCard from "./EntityCard";
 import { PopupModal, useCalendlyEventListener } from "react-calendly";
 
 function CandidateHeader({ candidate }) {
+  console.log('candidate.................', candidate)
   // State to keep track of the selected value
   const [selectedValue, setSelectedValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);

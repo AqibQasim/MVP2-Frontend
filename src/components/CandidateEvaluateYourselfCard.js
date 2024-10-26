@@ -96,7 +96,7 @@ function CandidateEvaluateYourselfCard({ candidate }) {
           {/* Welcome Message */}
           <div className="text-center">
             <Heading sm className="font-medium" style={{ fontSize: "34px" }}>
-              Welcome, {candidate?.name || "Richard Feynman"}
+              Welcome, {candidate?.data?.name}
             </Heading>
             <p className="text-grey-primary-shade-30">
               Are you ready to tackle the AI Assessment to stand out amongst

@@ -7,11 +7,14 @@ import Heading from "./Heading";
 import Hr from "./Hr";
 import Input from "./Input";
 import SubmitButton from "./SubmitButton";
+import { getCandidate } from "@/lib/data-service";
 
-function CandidateProfileInfoForm() {
+async function CandidateProfileInfoForm() {
   const [error, setError] = useState(null);
   const params = useParams();
   const candidateId = params.candidateId;
+  const { data: candidate } = await getCandidate(candidateId);
+  
   async function handleProfileUpdate(formData) {
     const { error, message } = await updateCandidateProfileAction(formData);
     if (error) {
@@ -28,8 +31,8 @@ function CandidateProfileInfoForm() {
       <EntityCard
         entity={{
           image: "/avatars/avatar-1.png",
-          name: "Richard Feynman",
-          profession: "richardfeynman@gmail.com",
+          name: candidate?.name || "Richard Feynman",
+          profession: candidate?.email || "richardfeynman@gmail.com",
         }}
       ></EntityCard>
       <form action={handleProfileUpdate} className="mt-6 space-y-4.5">
