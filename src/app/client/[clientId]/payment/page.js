@@ -119,7 +119,7 @@ function Page() {
           }
 
           const { data } = await paymentMethodsResponse.json();
-          console.log("Payment Data is: ", data[0].id);
+          console.log("Payment Data is: ", data);
           setPaymentMethods(data); // Assuming `data` contains the payment methods
           dispatch(setSelectedMethodId(data[0].id));
 

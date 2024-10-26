@@ -159,7 +159,7 @@ function ClientRecommendationCard({
               onDateAndTimeSelected={() =>
                 console.log("date and time selected")
               }
-              url={"https://calendly.com/muhammad44aqib/30min"}
+              url={"https://calendly.com/co-ventech01/30min"}
               rootElement={document.getElementById("scheduleCallBtn")}
               text="Schedule Call"
               textColor="#fff"
