@@ -36,17 +36,21 @@ function AdminJobsRow({ job }) {
       <div className="experience text-center">{job?.experience}</div>
       <div className="commitment text-center">{job?.commitment}</div>
       <Capsule
-        className="mr-auto w-max !bg-primary-tint-100 "
+        className="!mx-auto mr-auto w-max !bg-primary-tint-100 "
         icon={
           <IconWithBg
             job={job?.job_status}
-            
+           className=" pl-4" 
           />
         }
       >
         {" "}
         {job?.job?.job_status}{" "}
       </Capsule>
+     
+   
+
+
       <Capsule
         className="mx-auto w-max !bg-primary-tint-100"
         icon={<IconWithBg icon={<SvgIconJobStatus status="hired" />} />}
