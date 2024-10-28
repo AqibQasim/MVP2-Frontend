@@ -32,9 +32,9 @@ const ClientEmptyScreen = () => {
         <Heading sm className="mb-6 text-2xl font-medium">
           How We Make Hiring Easy
         </Heading>
-        <div className="flex  flex-col xl:flex-row justify-between xl:space-x-4 space-y-4 xl:space-y-0">
+        <div className="flex flex-col   xl:flex-row 2xl:flex-row justify-between xl:space-x-4 space-y-4 xl:space-y-0 ">
           {/* Step 1 */}
-          <div className="flex-1 rounded-lg bg-gray-100 p-6 shadow">
+          <div className="flex-1 rounded-lg bg-gray-100 p-6 shadow flex-wrap ">
             <div className="mb-4 flex justify-between items-center">
               <div className="text-medium flex items-center font-medium">
                 <Heading xm>
@@ -46,8 +46,8 @@ const ClientEmptyScreen = () => {
               </div>
              
               <div className="ml-auto text-purple-600 font-medium flex items-center">
-              <span className="uppercase tracking-wider text-xs ">You Are Here -----</span>
-              <div className="w-3 h-3 bg-purple-600 rounded-full"></div>
+              <span className="uppercase tracking-wider text-xs ">You Are Here----</span>
+              <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
               </div>
             
             </div>

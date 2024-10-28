@@ -18,19 +18,29 @@ function AdminJobsRow({ job }) {
         }}
       />
       <div className="skills flex items-center justify-center gap-1.5 text-center">
-        {job?.skills?.map((skill, i) => (
+        {job?.skills?.length > 1 ? (
           <>
-            <Skill key={i} skill={skill} />
+            <Skill  skill={job.skills[0]} />
+            <div className="text-sm text-gray-500">
+            +{job.skills.length - 1}  
+           </div>
           </>
-        ))}
-      </div>
+           ) : (
+           <Skill  skill={job.skills[0]} />
+          
+           )}
+         </div>
+      
+
+
       <div className="experience text-center">{job?.experience}</div>
       <div className="commitment text-center">{job?.commitment}</div>
       <Capsule
-        className="mr-auto w-max !bg-primary-tint-100"
+        className="mr-auto w-max !bg-primary-tint-100 "
         icon={
           <IconWithBg
             job={job?.job_status}
+            
           />
         }
       >
