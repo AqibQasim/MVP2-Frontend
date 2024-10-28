@@ -148,7 +148,7 @@ function Page() {
             //   "routeChangeComplete",
             //   handleRouteChangeComplete,
             // );
-            
+
             if (user_role === "customer") {
               router.push(`/candidate/${result.data.customer_id}`);
             } else {
@@ -280,6 +280,13 @@ function Page() {
       case "password":
         if (!/^.{8,}$/.test(value)) {
           errorMsg = "Password must be at least 8 characters";
+        } else if (form.confirmPassword && value !== form.confirmPassword) {
+          setErrors((prev) => ({
+            ...prev,
+            confirmPassword: "Passwords do not match",
+          }));
+        } else {
+          setErrors((prev) => ({ ...prev, confirmPassword: "" }));
         }
         break;
       case "confirmPassword":

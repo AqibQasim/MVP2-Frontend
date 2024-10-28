@@ -74,6 +74,13 @@ const ForgotPasswordModal = ({
       case "password":
         if (!/^.{8,}$/.test(value)) {
           errorMsg = "Password must be at least 8 characters";
+        } else if (confirmPassword && value !== confirmPassword) {
+          setErrors((prev) => ({
+            ...prev,
+            confirmPassword: "Passwords do not match",
+          }));
+        } else {
+          setErrors((prev) => ({ ...prev, confirmPassword: "" }));
         }
         break;
       case "email":
@@ -151,7 +158,6 @@ const ForgotPasswordModal = ({
       setLoadingOtp(false);
     }
   };
-
   const sendOtp = useCallback(
     async (event) => {
       event.preventDefault();
@@ -217,6 +223,12 @@ const ForgotPasswordModal = ({
 
   return (
     <div className="pt flex h-[100%] w-[100%] flex-col items-center justify-around font-lufga">
+      <button
+        onClick={onClose}
+        className="absolute right-4 top-2 text-2xl text-gray-500 hover:text-gray-700"
+      >
+        &times;
+      </button>
       <div className="flex flex-col items-center">
         <Image
           className="mb-[1rem]"
@@ -406,6 +418,9 @@ const ForgotPasswordModal = ({
               ) : (
                 "Set Password"
               ),
+              {
+                disabled: errors || loadingPassword, // disable if there are errors or loading
+              },
             )}
         </ButtonCapsule>
         {/* ) : (

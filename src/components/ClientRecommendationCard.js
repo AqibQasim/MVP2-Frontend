@@ -40,7 +40,7 @@ function ClientRecommendationCard({
       }
     });
   };
-    
+
   const checkInterviewStatus = () => {
     const payload = {
       endpoint: `check-interview-status?customer_id=${recommendedCandidate?.customer_id}&client_id=${params?.clientId}&job_posting_id=${recommendedForJob?.job_posting_id}`,
@@ -48,7 +48,7 @@ function ClientRecommendationCard({
     };
     mvp2ApiHelper(payload).then((result) => {
       if (result?.data?.data?.is_scheduled) {
-        setIsInterviewScheduled(true);  // Set as scheduled if API confirms
+        setIsInterviewScheduled(true); // Set as scheduled if API confirms
       }
     });
   };
@@ -144,7 +144,9 @@ function ClientRecommendationCard({
             {/* ScheduleInterview */}
             {/* <ScheduleInterviewModal /> */}
             {isInterviewScheduled ? (
-              <Heading xm disabled>Interview Already Scheduled</Heading>
+              <Heading xm disabled>
+                Interview Already Scheduled
+              </Heading>
             ) : (
               <ButtonCapsule
                 ref={buttonRef}
@@ -154,7 +156,7 @@ function ClientRecommendationCard({
                 Schedule Interview
               </ButtonCapsule>
             )}
-           
+
             <PopupModal
               onDateAndTimeSelected={() =>
                 console.log("date and time selected")
