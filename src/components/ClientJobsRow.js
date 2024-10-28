@@ -19,8 +19,7 @@ function ClientJobsRow({ job }) {
           profession: job?.specialization || 'No specialization'
         }}
       />
-    
-
+      
       <div className="skills flex  items-center justify-center gap-1.5 text-center">
          {job.skills.length > 1 ? (
          <>
