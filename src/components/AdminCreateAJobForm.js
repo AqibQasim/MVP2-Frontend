@@ -1,12 +1,19 @@
 "use client";
 import { createAJobAction } from "@/lib/actions";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import SubmitButton from "./SubmitButton";
 
 function AdminCreateAJobForm({ clientId, closeModal }) {
   const [skills, setSkills] = useState([""]);
   const [applicationQuestions, setApplicationQuestions] = useState([""]);
   const [error, setError] = useState(null);
+  const [fieldError, setFieldError] = useState(null)
+
+  const minDate = useMemo(() => {
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0];
+    return formattedDate
+  }, [])
 
   const handleSkillChange = (index, event) => {
     const newSkills = [...skills];
@@ -124,7 +131,7 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
             id="project_length"
             name="project_length"
             className="w-full rounded-full border p-2"
-            type="number"
+            type="text"
             placeholder="e.g. 1"
             required
           />
@@ -155,6 +162,7 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
             className="w-full rounded-full border p-2"
             type="date"
             required
+            min={minDate}
           />
         </div>
 
@@ -193,13 +201,13 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
             id="workday_overlap"
             name="workday_overlap"
             className="w-full rounded-full border p-2"
-            type="number"
+            type="text"
             placeholder="e.g. 5"
             required
           />
         </div>
 
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label htmlFor="is_test_required" className="block text-gray-700">
             Is Test Required
           </label>
@@ -212,7 +220,7 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
             <option value="true">Yes</option>
             <option value="false">No</option>
           </select>
-        </div>
+        </div> */}
 
         <div className="mb-4">
           <label htmlFor="skills" className="block text-gray-700">
@@ -250,7 +258,7 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
           </button>
         </div>
 
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label
             htmlFor="application_questions"
             className="block text-gray-700"
@@ -287,7 +295,7 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
           >
             Add more
           </button>
-        </div>
+        </div> */}
 
         {error ? (
           <div className="error">
@@ -295,8 +303,14 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
           </div>
         ) : null}
 
+        {/* {fieldError ? (
+          <div className="error">
+            <p className="text-red-500"> {fieldError} </p>
+          </div>
+        ) : null} */}
+
         <div className="flex justify-end">
-          <SubmitButton pendingLabel="Creating...">Create Job</SubmitButton>
+          <SubmitButton isDisabled={fieldError?true:false} pendingLabel="Creating...">Create Job</SubmitButton>
         </div>
       </form>
     </>

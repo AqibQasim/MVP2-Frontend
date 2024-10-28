@@ -19,14 +19,22 @@ function ClientJobsRow({ job }) {
           profession: job?.specialization || 'No specialization'
         }}
       />
-      <div className="skills flex items-center justify-center gap-1.5 text-center">
-        {job.skills.map((skill, i) => (
-          <>
-          <SkillIconWithBg key={i} icon={skill} skill={skill}/>
-          
-          </>
-        ))}
-      </div>
+      
+      <div className="skills flex  items-center justify-center gap-1.5 text-center">
+         {job.skills.length > 1 ? (
+         <>
+         <SkillIconWithBg icon={job.skills[0]} skill={job.skills[0]} />
+         <div className="text-sm text-gray-500">
+          +{job.skills.length - 1}  
+         </div>
+         </>
+         ) : (
+      
+        <SkillIconWithBg icon={job.skills[0]} skill={job.skills[0]} />
+         )}
+        </div>
+      
+
       <div className="experience text-center">{job.experience}</div>
       <div className="commitment text-center">{job.commitment}</div>
       <Capsule

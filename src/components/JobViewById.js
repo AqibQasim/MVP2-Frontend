@@ -173,7 +173,7 @@ function JobViewById({ job }) {
 
           <Hr />
 
-          <div className="my-3">
+          {/* <div className="my-3">
             <Heading sm>Application Questions</Heading>
           </div>
 
@@ -192,7 +192,7 @@ function JobViewById({ job }) {
                 <Image alt="dropdown" src={dropdown} />
               </button>
             </div>
-          )}
+          )} */}
         </div>
       </div>
       <div className="w-[23.375rem] items-center justify-center rounded-[36px] bg-white p-3">

@@ -66,7 +66,7 @@ const SuccessModal = ({
           <p className="mt-[0.5rem] w-[100%] text-center text-sm">{text}</p>
           {onBoarding && containsOtp && (
             <Input
-              type="number"
+              //type="number"
               placeholder="000000"
               className="mt-5 py-3 text-center"
               onChange={handleOtpChange}

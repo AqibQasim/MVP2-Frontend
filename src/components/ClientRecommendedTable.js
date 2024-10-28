@@ -92,7 +92,7 @@ function ClientRecommendedTable({ recommendedCandidates }) {
       
         {recommendedCandidates && recommendedCandidates.length > 0 ? (
         <Table.Body
-          data={recommendedCandidates}
+          data={recommendedCandidates.filter(v => (v.customer.talent_status === "interviewing"))}
           //   data={[]}
           render={(recommended, i) => (
             <ClientRecommendedRow recommended={recommended} key={i} />
