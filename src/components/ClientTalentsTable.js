@@ -30,7 +30,7 @@ function ClientTalentsTable({ hiredTalents }) {
     console.log(candidates)
 
     if (candidates?.status === 200) {
-      const hired= candidates?.data?.filter(v=>v.client_response==='accept')
+      const hired= candidates?.data?.filter(v=>v.customer.talent_status==='hired' || v.customer.talent_status==='trial')
       setHiredCandidates(hired)
     }
   }

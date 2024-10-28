@@ -20,8 +20,8 @@ async function ClientDashboardSideNav({ clientId }) {
       <Logo />
       <ClientDashboardNavLinks
         numJobs={jobs.length}
-        numRecommended={recommendedCandidates.data.length}
-        numHired={hiredTalents.length}
+        numRecommended={recommendedCandidates.data?.filter(v=>v.customer.talent_status==='interviewing')?.length}
+        numHired={hiredTalents?.filter(v=>v.customer.talent_status==='hired' || v.customer.talent_status==='trial')?.length}
       >
         <Logout />
       </ClientDashboardNavLinks>
