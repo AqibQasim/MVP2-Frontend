@@ -46,7 +46,7 @@ const ClientEmptyScreen = () => {
               </div>
              
               <div className="ml-auto text-purple-600 font-medium flex items-center">
-              <span className="uppercase tracking-wider text-xs ">You Are Here -------</span>
+              <span className="uppercase tracking-wider text-xs ">You Are Here -----</span>
               <div className="w-3 h-3 bg-purple-600 rounded-full"></div>
               </div>
             
