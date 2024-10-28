@@ -117,10 +117,11 @@ function NotificationClient({ client_id }) {
               )
             }
             msgText={notification?.message}
+            className="p-5"
           />
         ))
       ) : (
-        <div>No notifications yet</div>
+        <div className="p-5" >No notifications yet</div>
       )}
     </div>
   );
