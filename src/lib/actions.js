@@ -64,7 +64,7 @@ export async function createAJobAction(formData) {
   const is_test_required = formData.get("is_test_required") === "true";
   const applied_customers_count = 0; // default to 0
   const status = "active"; // default to active
-  const application_questions = formData.getAll("application_questions");
+  //const application_questions = formData.getAll("application_questions");
 
   // Validate required fields
   if (!client_id || client_id.trim() === "") {
@@ -106,12 +106,12 @@ export async function createAJobAction(formData) {
   if (skills.length === 0 || skills.some((skill) => skill.trim() === "")) {
     return { error: "At least one valid skill is required." };
   }
-  if (
-    application_questions.length === 0 ||
-    application_questions.some((q) => q.trim() === "")
-  ) {
-    return { error: "At least one valid application question is required." };
-  }
+  // if (
+  //   application_questions.length === 0 ||
+  //   application_questions.some((q) => q.trim() === "")
+  // ) {
+  //   return { error: "At least one valid application question is required." };
+  // }
 
   // Prepare job data
   const createJobData = {
@@ -123,7 +123,7 @@ export async function createAJobAction(formData) {
     commitment,
     status,
     applied_customers_count,
-    application_questions,
+    //application_questions,
     start_date,
     location: `${city}, ${country}`,
     project_length: `${project_length} Month`,
