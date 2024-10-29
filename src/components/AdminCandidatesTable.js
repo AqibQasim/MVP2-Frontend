@@ -10,9 +10,9 @@ function AdminCandidatesTable({ candidates, setIsReportOverlayOpened, setSelecte
       paragraph="These are all"
       heading="Candidates"
     >
-      <Table columns="grid-cols-[1fr_0.7fr_6rem_7rem_7rem_5.1rem_7.8rem_7.8rem]">
+      <Table columns="grid-cols-[7rem_5.7rem_4rem_6rem_4.5rem_4.1rem_7.4rem_7.8rem]">
         <Table.Header>
-          <div className="info">Info</div>
+          <div className="info text-center">Info</div>
           <div className="skills text-center">Skills</div>
           <div className="skills text-center">Hourly Rate</div>
           <div className="experience text-center">Experience</div>
