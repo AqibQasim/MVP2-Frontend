@@ -36,7 +36,7 @@ function JobViewById({ job }) {
     mvp2ApiHelper(payload).then(value => {
       //console.log(value)
       if (value.status === 200) {
-        setInterviewingCandidates(value?.data?.data?.customer)
+        setInterviewingCandidates(value?.data?.data)
       }
     })
   }
