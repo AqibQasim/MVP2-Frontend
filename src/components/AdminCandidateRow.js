@@ -85,7 +85,7 @@ function AdminCandidateRow({ candidate, score, onClick }) {
   return (
     <>
       <Table.Row>
-        <div onClick={onClick} className="cursor-pointer">
+        <div onClick={onClick} className="cursor-pointer text-start">
 
           <EntityCard
             entity={{
@@ -96,7 +96,7 @@ function AdminCandidateRow({ candidate, score, onClick }) {
           />
         </div>
         <div className={`${candidate?.expertise?.length>1&&'flex-col'} skills flex items-center justify-center gap-1.5 text-center`}>
-          {console.log("skilss are :", candidate?.expertise[0]?.skill)}
+          
           {candidate?.expertise?.length > 0 ? (
             candidate.expertise.map((skill, i) => (
               <SkillIconWithBg key={i} icon={skill.skill} skill={skill.skill} />
@@ -105,7 +105,7 @@ function AdminCandidateRow({ candidate, score, onClick }) {
             <span>No skills available</span>
           )}
         </div>
-
+        
         <div className="experience text-center justify-center flex">
           {candidate?.hourly_rate || 0}
         </div>
@@ -121,8 +121,16 @@ function AdminCandidateRow({ candidate, score, onClick }) {
           {candidate?.talent_status}
         </Capsule>
 
+       <Capsule
+        className="mx-auto w-max !bg-primary-tint-100"
+        // icon={<IconWithBg icon={<SvgIconJobStatus status="hired" />} />}
+      >
+        view talent
+      </Capsule> 
+
+
         {/* Button to open form */}
-        <button onClick={() => {
+        {/* <button onClick={() => {
           if (candidate?.talent_status === "open") {
             setShowForm(true)
           }
@@ -133,10 +141,10 @@ function AdminCandidateRow({ candidate, score, onClick }) {
           >
             <div className={(candidate?.talent_status !== "open") ? `text-[grey] cursor-not-allowed` : null}>Refer to Client</div>
           </Capsule>
-        </button>
+        </button> */}
       </Table.Row>
 
-      <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
+      {/* <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
         <h3 className="mb-4 text-xl font-semibold">
           Refer {candidate?.role} to Client
         </h3>
@@ -150,9 +158,9 @@ function AdminCandidateRow({ candidate, score, onClick }) {
             onChange={(e) => setHourlyRate(e.target.value)}
             required
             className="mt-2 block w-full border px-2 py-1"
-          />
+          /> */}
 
-          <label className="mt-4 block">Assign to Client</label>
+          {/* <label className="mt-4 block">Assign to Client</label>
           <input
             type="text"
             value={searchClient}
@@ -162,7 +170,7 @@ function AdminCandidateRow({ candidate, score, onClick }) {
             }}
             placeholder="Search client by name"
             className="mb-2 block w-full border px-2 py-1"
-          />
+          /> */}
 
           {/* <select
             value={selectedClient}
@@ -171,7 +179,7 @@ function AdminCandidateRow({ candidate, score, onClick }) {
             className="mt-2 block w-full border px-2 py-1"
           > */}
           {/* <option value="">Select a client</option> */}
-          {isClientsShow &&
+          {/* {isClientsShow &&
             filteredClients?.map((client) => (
               <option
                 onClick={() => {
@@ -215,10 +223,10 @@ function AdminCandidateRow({ candidate, score, onClick }) {
               >
                 {job.position}
               </option>
-            ))}
+            ))} */}
           {/* </select> */}
           {/* Error Temp */}
-          {error ? <div className="error text-red-500"> {error?.message} </div> : null}
+          {/* {error ? <div className="error text-red-500"> {error?.message} </div> : null}
 
           <div className="mt-4">
             <button
@@ -236,7 +244,7 @@ function AdminCandidateRow({ candidate, score, onClick }) {
             </button>
           </div>
         </form>
-      </Modal>
+      </Modal> */}
     </>
   );
 }
