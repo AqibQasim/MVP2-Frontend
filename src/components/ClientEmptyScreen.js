@@ -3,7 +3,7 @@ import Heading from "./Heading";
 
 const ClientEmptyScreen = () => {
   return (
-    <div className="h-full w-full gap-8 rounded-4xl bg-neutral-white px-8 py-10">
+    <div className="min-h-full w-full gap-8 rounded-4xl bg-neutral-white px-8 py-10">
       <div className="flex flex-col xl:flex-row items-center justify-between">
         <div className="w-full xl:w-1/2 ">
           <Heading sm className="text-4xl font-medium text-gray-900">
@@ -38,7 +38,7 @@ const ClientEmptyScreen = () => {
             <div className="mb-4 flex justify-between items-center">
               <div className="text-medium flex items-center font-medium">
                 <Heading xm>
-                  <span className="border-grey-800 mr-2 rounded-full border bg-white px-2 font-medium">
+                  <span className="border-grey-800 mr-1 rounded-full border bg-white px-2 font-medium">
                     1
                   </span>{" "}
                   Sign up
