@@ -11,9 +11,11 @@ import {
   getClientJobs,
   getRecommendedCandidateOfClient,
 } from "@/lib/data-service";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default async function Page({ params }) {
+  const router = useRouter();
   const filter = "accept";
   const [client, setClient] = useState(null);
   const [recommendedCandidates, setRecommendedCandidates] = useState(null);
@@ -28,6 +30,16 @@ export default async function Page({ params }) {
 
   // const { data: hiredTalents, error } = hiredCandidates;
   // console.log(hiredTalents)
+
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("MVP_CLIENT_LOGGEDIN") === "true";
+
+    if (!isLoggedIn && router.pathname !== "/login") {
+      router.replace("/login");
+    } else if (isLoggedIn && router.pathname === "/login") {
+      router.replace(`/client/${params.clientId}`);
+    }
+  }, [router]);
 
   useEffect(() => {
     getClientById(params.clientId).then((v) => {
@@ -67,11 +79,7 @@ export default async function Page({ params }) {
           />
         )}
       {jobs && <ClientJobsOverviewTable jobs={jobs} />}
-      {
-        <ClientEmployeesTable client_id={params?.clientId} />
-        // (hiredCandidates?.status === 200 && hiredCandidates?.data?.length > 0) &&
-        // <ClientEmployeesTable hiredCandidates={hiredCandidates?.data} />
-      }
+      {<ClientEmployeesTable client_id={params?.clientId} />}
     </div>
   );
 }

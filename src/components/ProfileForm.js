@@ -7,6 +7,7 @@ import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { usePathname } from "next/navigation";
 import ErrorPopup from "./ErrorPopup";
 import ButtonBack from "./ButtonBack";
+import "../styles/Setting.css";
 
 const ProfileForm = ({ client }) => {
   const pathname = usePathname();
@@ -39,7 +40,8 @@ const ProfileForm = ({ client }) => {
         client_location: locationRef.current.value,
         city: cityRef.current.value,
         province: provinceRef.current.value,
-        area_code: (areaCodeRef.current?.value != "") ? areaCodeRef.current?.value : null,
+        area_code:
+          areaCodeRef.current?.value != "" ? areaCodeRef.current?.value : null,
         country: countryRef.current.value,
       },
     };
@@ -84,6 +86,7 @@ const ProfileForm = ({ client }) => {
                   ref={firstNameRef}
                   defaultValue={client?.name?.split(" ", 2)[0] || ""}
                   type="text"
+                  placeholder="First Name"
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
               </div>
@@ -97,6 +100,7 @@ const ProfileForm = ({ client }) => {
                   ref={lastNameRef}
                   defaultValue={client?.name?.split(" ", 2)[1] || ""}
                   type="text"
+                  placeholder="Last Name"
                   className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
                 />
               </div>
@@ -121,7 +125,8 @@ const ProfileForm = ({ client }) => {
                   ref={emailRef}
                   defaultValue={client?.email || ""}
                   type="email"
-                  className="focus:ring-none not-allowed mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
+                  placeholder="Email"
+                  className="focus:ring-none mt-1 cursor-not-allowed rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
               </div>
             </div>
@@ -142,7 +147,8 @@ const ProfileForm = ({ client }) => {
                   ref={passwordRef}
                   defaultValue={client?.password || ""}
                   type="password"
-                  className="focus:ring-none not-allowed mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
+                  placeholder="Password"
+                  className="focus:ring-none mt-1 cursor-not-allowed rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
               </div>
             </div>
@@ -166,6 +172,7 @@ const ProfileForm = ({ client }) => {
                   ref={locationRef}
                   defaultValue={client?.client_location || ""}
                   type="text"
+                  placeholder="Street Address"
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
               </div>
@@ -191,6 +198,7 @@ const ProfileForm = ({ client }) => {
                   ref={cityRef}
                   defaultValue={client?.city || ""}
                   type="text"
+                  placeholder="City"
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
               </div>
@@ -211,6 +219,7 @@ const ProfileForm = ({ client }) => {
                 <input
                   type="text"
                   ref={provinceRef}
+                  placeholder="Province"
                   defaultValue={client?.province || ""}
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
@@ -218,10 +227,11 @@ const ProfileForm = ({ client }) => {
 
               <div className="flex flex-1 flex-col">
                 <input
-                  type="text"
+                  type="number"
                   ref={areaCodeRef}
+                  placeholder="Zip Code"
                   defaultValue={client?.area_code || ""}
-                  className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
+                  className="no-arrows mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
                 />
               </div>
             </div>
@@ -240,6 +250,7 @@ const ProfileForm = ({ client }) => {
               <div className="flex flex-1 flex-col">
                 <input
                   type="text"
+                  placeholder="Country"
                   ref={countryRef}
                   defaultValue={client?.country || ""}
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
@@ -249,34 +260,25 @@ const ProfileForm = ({ client }) => {
           </div>
         </div>
 
-
         <div className="mb-4 mt-8 grid grid-cols-4 items-start gap-3">
           {/* Section Heading */}
-          <Heading xm className="col-span-1">
-          </Heading>
+          <Heading xm className="col-span-1"></Heading>
 
           <div className="col-span-2">
             <div className="flex flex-col sm:flex-row sm:space-x-4">
               {/* First Name */}
-              <div className="flex flex-1  flex-col" style={{ flex: '0 0 27%' }}>  
-                
-                 <ButtonBack className="py-[7px] ">
-                    back
-                 </ButtonBack>
-
+              <div className="flex flex-1 flex-col" style={{ flex: "0 0 27%" }}>
+                <ButtonBack className="py-[7px]">back</ButtonBack>
               </div>
 
-              <div className="flex   flex-col" style={{ flex: '0 0 70%' }}>
+              <div className="flex flex-col" style={{ flex: "0 0 70%" }}>
                 <ButtonCapsule className="" type="submit">
-                   Update Info
-              </ButtonCapsule>
+                  Update Info
+                </ButtonCapsule>
               </div>
             </div>
           </div>
         </div>
-
-
-      
 
         {/* Buttons */}
         {/* <div className="mt-6 flex justify-between">
