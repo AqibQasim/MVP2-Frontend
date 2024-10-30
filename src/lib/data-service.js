@@ -361,6 +361,22 @@ export async function fetchClientJob(client_id, job_posting_id) {
   console.log("result success: ", result);
   return { status: result.status, data: result.data.result, error: null };
 }
+export async function fetchAdminJob(client_id, job_posting_id) {
+  const payload = {
+    endpoint: `client/job-posting-by-client?job_posting_id=${job_posting_id}&client_id=${client_id}`,
+    method: "GET",
+  };
+
+  const result = await mvp2ApiHelper(payload);
+  console.log("result no condition: ", result);
+  if (result.status !== 200) {
+    console.log("result failed: ", result);
+    console.error(result?.data?.message);
+    return { status: result.status, data: null, error: result.data };
+  }
+  console.log("result success: ", result);
+  return { status: result.status, data: result.data.result, error: null };
+}
 
 export async function referCandidate(params) {
   const payload = {
