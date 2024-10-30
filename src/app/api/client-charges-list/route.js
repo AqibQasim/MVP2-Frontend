@@ -9,7 +9,7 @@ export async function POST(req) {
     const { customer_id } = await req.json();
     const charges = await stripe.charges.list({
       customer: customer_id,
-      // limit: 1
+      limit: 100
     });
 
     return NextResponse.json({ data: charges.data }, { status: 200 });
