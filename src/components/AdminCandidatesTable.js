@@ -1,9 +1,12 @@
 "use client";
+import { useEffect } from "react";
 import AdminCandidateRow from "./AdminCandidateRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 
 function AdminCandidatesTable({ candidates, setIsReportOverlayOpened, setSelectedCandidateId, isReportOverlayOpened }) {
+
+  useEffect(()=>console.log("//////////////////////",candidates),[])
   return (
     <DashboardSection
       className="!min-h-full"
@@ -24,7 +27,7 @@ function AdminCandidatesTable({ candidates, setIsReportOverlayOpened, setSelecte
         {/* Make the body container scrollable */}
         <div className="overflow-y-hidden h-full"> {/* Set the height as per your needs */}
           <Table.Body
-            data={candidates?.data}
+            data={candidates}
             render={(candidate, i) => {
               const res =
                 (candidate?.result?.softskillRating +
