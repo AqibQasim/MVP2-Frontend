@@ -5,11 +5,13 @@ import EntityCard from "./EntityCard";
 import IconWithBg from "./IconWithBg";
 import Skill from "./Skill";
 import Table from "./Table";
+import CapsuleLink from "./CapsuleLink";
 
 function AdminJobsRow({ job }) {
   console.log("job ka data", job);
   return (
     <Table.Row>
+       <div className="text-center w-max">0</div>
       <EntityCard
         icon={<SvgIconWork className="relative -right-[1.3px]" />}
         entity={{
@@ -50,13 +52,19 @@ function AdminJobsRow({ job }) {
      
    
 
-
-      <Capsule
+      <CapsuleLink
+        className="ml-auto"
+        //  href={`/client/${clientId}/jobs/${job.job_posting_id}`}
+      >
+        {" "}
+        view details{" "}
+      </CapsuleLink>
+      {/* <Capsule
         className="mx-auto w-max !bg-primary-tint-100"
         icon={<IconWithBg icon={<SvgIconJobStatus status="hired" />} />}
       >
         view talent
-      </Capsule>
+      </Capsule> */}
     </Table.Row>
   );
 }
