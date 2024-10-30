@@ -4,8 +4,8 @@
 import AdminCandidatesClientsHiringTable from "@/components/AdminCandidatesClientsHiringTable";
 import EmptyScreen from "@/components/EmptyScreen";
 import WithAdminAuth from "@/components/WithAdminAuth";
-import { fetchCandidatesJobStatus, getJobs,  getClients, fetchRecommendedCandidates } from "@/lib/data-service";
-import React, { useEffect, useState } from "react";
+import { fetchCandidatesJobStatus, getJobs, getClients, fetchRecommendedCandidates } from "@/lib/data-service";
+import React, { useEffect, useMemo, useState } from "react";
 import AdminJobsList from "@/components/AdminJobsList";
 import AdminClientsTable from "@/components/AdminClientsTable";
 import AdminCandidatesTable from "@/components/AdminCandidatesTable";
@@ -21,8 +21,11 @@ async function Page() {
   const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
   const [selected_candidate_id, setSelectedCandidateId] = useState(null);
   const [candidateReport, setCandidateReport] = useState(null);
+  const [candidateLength, setCandidateLength] = useState(null);
+  const [clientLength, setClientLength] = useState(null);
+  const [jobsLength, setJobsLength] = useState(null);
+  const [clientCandidateHiringLength, setClientCandidateHiringLength] = useState(null)
 
-  
   const handleCloseOverlay = () => {
     setIsReportOverlayOpened(false);
     //setSuccessAcknowledge(false);
@@ -44,6 +47,7 @@ async function Page() {
       if (error) throw new Error(error);
 
       // Filter only 'open' jobs and take the first three
+      setJobsLength(data?.length)
       const openJobs = data?.filter(job => job.job_status === "open").slice(0, 3);
       setJobs(openJobs);
     } catch (err) {
@@ -52,9 +56,10 @@ async function Page() {
   };
   const fetchClients = async () => {
     try {
-      const { data, error } = await  getClients ();
+      const { data, error } = await getClients();
       if (error) throw new Error(error);
 
+      setClientLength(data?.length)
       // Filter only 'open' jobs and take the first three
       const showClients = data?.slice(0, 3);
       setClients(showClients);
@@ -69,6 +74,7 @@ async function Page() {
         console.error("API error:", error); // Check if the error originates here
         throw new Error(error);
       }
+      setCandidateLength(data?.data?.length);
       console.log("Data from API:", data);
       const showCandidates = data?.data?.slice(0, 3);
       console.log("Filtered candidates:", showCandidates);
@@ -78,8 +84,8 @@ async function Page() {
       setDataError(`Failed to load candidates: ${err.message}`);
     }
   };
-  
-  
+
+
   const getCandidateResult = () => {
     const payload = {
       endpoint: `get-customer-result?customer_id=${selected_candidate_id}`,
@@ -94,11 +100,6 @@ async function Page() {
     getCandidateResult();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected_candidate_id]);
-  
-  useEffect(()=>console.log("///cannnnnn",candidates),[candidates])
- 
-  
- 
 
   useEffect(() => {
     async function loadData() {
@@ -109,9 +110,10 @@ async function Page() {
     }
     loadData();
   }, []);
-  
 
- 
+  console.log(candidates)
+
+
   // Error or empty data case
   // if (dataError || (candidateJobStatus?.data?.length === 0 && jobs.length === 0 && clients.length === 0)) {
   //   return <EmptyScreen className={"h-[32.188rem]"} />;
@@ -119,29 +121,32 @@ async function Page() {
 
   return (
     <div className='h-fit space-y-3' >
-      <AdminJobsList jobs={jobs} />
-      <AdminClientsTable clients={clients} />
+      <AdminJobsList jobs={jobs} totalJobs={jobsLength} />
+      <AdminClientsTable clients={clients} totalClients={clientLength} />
       <div className="overflow-y-hidden">
-      <AdminCandidatesTable
-        isReportOverlayOpened={isReportOverlayOpened}
-        setIsReportOverlayOpened={setIsReportOverlayOpened}
-        setSelectedCandidateId={setSelectedCandidateId}
-        onClick={() => {
-          setIsReportOverlayOpened(true);
-        }}
-        candidates={candidates}
-      />
-
-      {isReportOverlayOpened && (
-        <ReportOverlay
-          reportOverlay={isReportOverlayOpened}
-          onClose={handleCloseOverlay}
-          selectedCandidate={candidateReport}
+        <AdminCandidatesTable
+          totalCandidates={candidateLength}
+          isReportOverlayOpened={isReportOverlayOpened}
+          setIsReportOverlayOpened={setIsReportOverlayOpened}
+          setSelectedCandidateId={setSelectedCandidateId}
+          onClick={() => {
+            setIsReportOverlayOpened(true);
+          }}
+          candidates={candidates?.filter(c => c?.customer?.talent_status === "open")}
         />
-      )}
-    </div>
-      <AdminCandidatesClientsHiringTable candidateJobStatus={candidateJobStatus}  />
-    
+
+        {isReportOverlayOpened && (
+          <ReportOverlay
+            reportOverlay={isReportOverlayOpened}
+            onClose={handleCloseOverlay}
+            selectedCandidate={candidateReport}
+          />
+        )}
+      </div>
+      <AdminCandidatesClientsHiringTable
+      totalHirings={clientCandidateHiringLength}
+      candidateJobStatus={candidateJobStatus} />
+
     </div>
   );
 }

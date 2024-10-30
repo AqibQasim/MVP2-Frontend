@@ -56,6 +56,7 @@ const Page = async () => {
   return (
     <div className="overflow-y-hidden">
       <AdminCandidatesTable
+      totalCandidates={candidates?.length}
         isReportOverlayOpened={isReportOverlayOpened}
         setIsReportOverlayOpened={setIsReportOverlayOpened}
         setSelectedCandidateId={setSelectedCandidateId}

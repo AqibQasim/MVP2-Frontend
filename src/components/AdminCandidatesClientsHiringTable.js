@@ -5,12 +5,17 @@ import Table from './Table'
 import AdminCandidateRow from './AdminCandidateRow'
 import AdminCandidatesClientsHiringRow from './AdminCandidatesClientsHiringRow';
 
-function AdminCandidatesClientsHiringTable({candidateJobStatus}) {
+function AdminCandidatesClientsHiringTable({totalHirings, candidateJobStatus}) {
+  const path= window.location.href;
+
   return (
     <DashboardSection
       className="!min-h-full"
       paragraph="These are all"
       heading="Hirings of Candidates with Clients"
+      href={!path.includes('/admin/candidates')? `/admin/candidates`:null}
+      info={`Total Hirings: ${totalHirings || 0}`}
+
     >
       <Table columns="grid-cols-[1fr_1fr_7.5rem_6rem_7rem_10.5rem]  ">
         <Table.Header>

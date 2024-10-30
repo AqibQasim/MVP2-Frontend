@@ -4,13 +4,17 @@ import CandidateJobsRow from "./CandidateJobsRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 
-function AdminJobsList({ jobs }) {
-  console.log("jobs data", jobs);
+function AdminJobsList({ jobs, totalJobs }) {
+  
+  const path= window.location.href;
   return (
     <DashboardSection
       className="!min-h-full"
       paragraph="This is the list of all"
       heading="jobs"
+      href={!path.includes('/admin/jobs')? `/admin/jobs`:null}
+      info={`Total Jobs: ${totalJobs || 0}`}
+
     >
       <Table columns="grid-cols-[1fr_1.7fr_6.5rem_6rem_5rem_7.1rem_8.1rem]">
         <Table.Header>

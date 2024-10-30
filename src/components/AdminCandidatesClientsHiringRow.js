@@ -27,9 +27,9 @@ function AdminCandidatesClientsHiringRow({
 
 
 
-  
-   const selectedMethodId = useSelector((state) => state.payment.selectedMethodId);
-  
+
+  const selectedMethodId = useSelector((state) => state.payment.selectedMethodId);
+
 
 
   // const filteredClients = clients?.filter((client) =>
@@ -92,6 +92,7 @@ function AdminCandidatesClientsHiringRow({
     options = [
       { value: "open", label: "Open" },
       { value: "hired", label: "Hired" },
+      { value: "close", label: "Close" },
     ];
   }
 
@@ -99,6 +100,7 @@ function AdminCandidatesClientsHiringRow({
     options = [
       { value: "hired", label: "Hired" },
       { value: "trial", label: "Trial" },
+      { value: "close", label: "Close" },
     ];
   }
 
@@ -106,11 +108,12 @@ function AdminCandidatesClientsHiringRow({
     options = [
       { value: "open", label: "Open" },
       { value: "trial", label: "Trial" },
+      { value: "close", label: "Close" },
     ];
   }
 
   const handleChangeStatus = () => {
-    const {client_id, customer_id, job_posting_id, job_status, talent_status, response_status}= changeStatus;
+    const { client_id, customer_id, job_posting_id, job_status, talent_status, response_status } = changeStatus;
     const payload = {
       endpoint: "client/client-response",
       method: "POST",
@@ -126,7 +129,7 @@ function AdminCandidatesClientsHiringRow({
 
     console.log(payload)
 
-    if(client_id&&customer_id&&job_posting_id&&talent_status&&response_status&&job_status){
+    if (client_id && customer_id && job_posting_id && talent_status && response_status && job_status) {
       mvp2ApiHelper(payload).then(result => {
         console.log(result)
       })
@@ -144,17 +147,17 @@ function AdminCandidatesClientsHiringRow({
     mvp2ApiHelper(payload).then(result => {
       //  console.log("Stripe API result: ", result.status)
       if (result.status === 200) {
-         console.log("TEST 124", changeStatus)
-         setStripeClientId(result.data.data.stripe_id)
+        console.log("TEST 124", changeStatus)
+        setStripeClientId(result.data.data.stripe_id)
       }
       console.error(result?.data?.message);
       return null; // Return null or handle the error appropriately
-  });
-}
-const handleSubscription = async () => {
-        const customPrice = (candidate.hourly_rate * 100) * 40; 
+    });
+  }
+  const handleSubscription = async () => {
+    const customPrice = (candidate.hourly_rate * 100) * 40;
 
-         
+
     try {
       // Fetch client secret for subscription
       const subscriptionResponse = await fetch('/api/create-subscription', {
@@ -176,16 +179,16 @@ const handleSubscription = async () => {
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     handleChangeStatus();
-  },[changeStatus]);
+  }, [changeStatus]);
 
 
   useEffect(() => {
     // console.log(changeStatus)
     handleChangeStatus()
 
-    if(changeStatus.job_status === "hired"){
+    if (changeStatus.job_status === "hired") {
       console.log("JOB STATUS CHANGED TO ", changeStatus.job_status)
       getClientStripe()
 
@@ -234,8 +237,13 @@ const handleSubscription = async () => {
 
               if (selected_status === "open") {
                 response_status = "decline";
-              } else {
+              }
+              if (selected_status === "trial" || selected_status === "hired") {
                 response_status = "accept";
+              }
+
+              if (selected_status === "close") {
+                response_status = "close"
               }
               setChangeStatus({
                 customer_id: candidate?.customer_id,

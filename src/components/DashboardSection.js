@@ -11,6 +11,7 @@ function DashboardSection({
   children,
   className = "",
   href = null,
+  info=null
 }) {
   return (
     <div className={`${className} rounded-3xl  bg-neutral-white p-6`}>
@@ -21,7 +22,19 @@ function DashboardSection({
           </p>
           <Heading sm>{heading}</Heading>
         </div>
-        {href ? (
+
+        {info && (
+          <div className="ml-auto mt-auto">
+            <div
+              href={href}
+              className="font-s text-sms font-medium text-grey-primary-shade-40"
+            >
+              {info}
+            </div>{" "}
+          </div>
+        )}
+
+        {href && (
           <div className="ml-auto mt-auto">
             <Link
               href={href}
@@ -30,7 +43,7 @@ function DashboardSection({
               View all
             </Link>{" "}
           </div>
-        ) : null}
+        )}
       </div>
       <Hr />
       <div className="body  "> {children} </div>

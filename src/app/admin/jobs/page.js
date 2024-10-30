@@ -27,7 +27,7 @@ async function Page() {
     return <EmptyScreen className={"h-[32.188rem]"} />;
   }
 
-  return <AdminJobsList jobs={jobs} />;
+  return <AdminJobsList totalJobs={jobs?.length} jobs={jobs} />;
 }
 
 export default WithAdminAuth(Page);

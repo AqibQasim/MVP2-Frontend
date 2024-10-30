@@ -4,14 +4,18 @@ import AdminCandidateRow from "./AdminCandidateRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 
-function AdminCandidatesTable({ candidates, setIsReportOverlayOpened, setSelectedCandidateId, isReportOverlayOpened }) {
+function AdminCandidatesTable({ totalCandidates, candidates, setIsReportOverlayOpened, setSelectedCandidateId, isReportOverlayOpened }) {
 
-  useEffect(()=>console.log("//////////////////////",candidates),[])
+  const path= window.location.href;
+  
   return (
     <DashboardSection
       className="!min-h-full"
       paragraph="These are all"
       heading="Candidates"
+      href={!path.includes('/admin/candidates')? `/admin/candidates`:null}
+      info={`Total Candidates: ${totalCandidates}`}
+
     >
       <Table columns="grid-cols-[7rem_5.7rem_4rem_6rem_4.5rem_4.1rem_7.4rem_7.8rem]">
         <Table.Header>

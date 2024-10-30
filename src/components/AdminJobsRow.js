@@ -11,7 +11,7 @@ function AdminJobsRow({ job }) {
   console.log("job ka data", job);
   return (
     <Table.Row>
-       <div className="text-center w-max">0</div>
+       <div className="text-center w-max">{job?.client?.name}</div>
       <EntityCard
         icon={<SvgIconWork className="relative -right-[1.3px]" />}
         entity={{
