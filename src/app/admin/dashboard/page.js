@@ -9,7 +9,8 @@ import React, { useEffect, useState } from "react";
 import AdminJobsList from "@/components/AdminJobsList";
 import AdminClientsTable from "@/components/AdminClientsTable";
 import AdminCandidatesTable from "@/components/AdminCandidatesTable";
-
+import ReportOverlay from "@/components/ReportOverlay";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 
 async function Page() {
   const [candidateJobStatus, setCandidateJobStatus] = useState(null);
@@ -17,6 +18,15 @@ async function Page() {
   const [jobs, setJobs] = useState([]);
   const [clients, setClients] = useState([]);
   const [candidates, setCandidates] = useState([]);
+  const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
+  const [selected_candidate_id, setSelectedCandidateId] = useState(null);
+  const [candidateReport, setCandidateReport] = useState(null);
+
+  
+  const handleCloseOverlay = () => {
+    setIsReportOverlayOpened(false);
+    //setSuccessAcknowledge(false);
+  };
 
   // Fetching candidate job status
   const fetchStatus = async () => {
@@ -52,26 +62,56 @@ async function Page() {
       setDataError(`Failed to load jobs: ${err.message}`);
     }
   };
-  
   const fetchCandidates = async () => {
     try {
       const { data, error } = await fetchRecommendedCandidates();
-      if (error) throw new Error(error);
-      const showCandidates = data?.slice(0, 3); // Ensure this is the intended logic
+      if (error) {
+        console.error("API error:", error); // Check if the error originates here
+        throw new Error(error);
+      }
+      console.log("Data from API:", data);
+      const showCandidates = data?.data?.slice(0, 3);
+      console.log("Filtered candidates:", showCandidates);
       setCandidates(showCandidates);
     } catch (err) {
+      console.error("Failed to load candidates:", err);
       setDataError(`Failed to load candidates: ${err.message}`);
     }
   };
-
+  
+  
+  const getCandidateResult = () => {
+    const payload = {
+      endpoint: `get-customer-result?customer_id=${selected_candidate_id}`,
+      method: "GET",
+    };
+    mvp2ApiHelper(payload).then((result) => {
+      if (result) setCandidateReport(result?.data?.data);
+    });
+  };
 
   useEffect(() => {
-    fetchStatus();
-    fetchJobs();
-    fetchClients();
-    fetchCandidates();
-  }, []);
+    getCandidateResult();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected_candidate_id]);
+  
+  useEffect(()=>console.log("///cannnnnn",candidates),[candidates])
+ 
+  
+ 
 
+  useEffect(() => {
+    async function loadData() {
+      await fetchStatus();
+      await fetchJobs();
+      await fetchClients();
+      await fetchCandidates();
+    }
+    loadData();
+  }, []);
+  
+
+ 
   // Error or empty data case
   // if (dataError || (candidateJobStatus?.data?.length === 0 && jobs.length === 0 && clients.length === 0)) {
   //   return <EmptyScreen className={"h-[32.188rem]"} />;
@@ -81,7 +121,25 @@ async function Page() {
     <div className='h-fit space-y-3' >
       <AdminJobsList jobs={jobs} />
       <AdminClientsTable clients={clients} />
-      <AdminCandidatesTable candidates={candidates} />
+      <div className="overflow-y-hidden">
+      <AdminCandidatesTable
+        isReportOverlayOpened={isReportOverlayOpened}
+        setIsReportOverlayOpened={setIsReportOverlayOpened}
+        setSelectedCandidateId={setSelectedCandidateId}
+        onClick={() => {
+          setIsReportOverlayOpened(true);
+        }}
+        candidates={candidates}
+      />
+
+      {isReportOverlayOpened && (
+        <ReportOverlay
+          reportOverlay={isReportOverlayOpened}
+          onClose={handleCloseOverlay}
+          selectedCandidate={candidateReport}
+        />
+      )}
+    </div>
       <AdminCandidatesClientsHiringTable candidateJobStatus={candidateJobStatus}  />
     
     </div>
