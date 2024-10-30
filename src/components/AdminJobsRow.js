@@ -6,12 +6,14 @@ import IconWithBg from "./IconWithBg";
 import Skill from "./Skill";
 import Table from "./Table";
 import CapsuleLink from "./CapsuleLink";
+import { useParams } from "next/navigation";
 
 function AdminJobsRow({ job }) {
   console.log("job ka data", job);
+
   return (
     <Table.Row>
-       <div className="text-center w-max">0</div>
+       <div className="text-center w-max">{job?.client?.name}</div>
       <EntityCard
         icon={<SvgIconWork className="relative -right-[1.3px]" />}
         entity={{
@@ -22,39 +24,29 @@ function AdminJobsRow({ job }) {
       <div className="skills flex items-center justify-center gap-1.5 text-center">
         {job?.skills?.length > 1 ? (
           <>
-            <Skill  skill={job.skills[0]} />
+            <Skill skill={job.skills[0]} />
             <div className="text-sm text-gray-500">
-            +{job.skills.length - 1}  
-           </div>
+              +{job.skills.length - 1}
+            </div>
           </>
-           ) : (
-           <Skill  skill={job.skills[0]} />
-          
-           )}
-         </div>
-      
-
+        ) : (
+          <Skill skill={job.skills[0]} />
+        )}
+      </div>
 
       <div className="experience text-center">{job?.experience}</div>
       <div className="commitment text-center">{job?.commitment}</div>
       <Capsule
-        className="!mx-auto mr-auto w-max !bg-primary-tint-100 "
-        icon={
-          <IconWithBg
-            job={job?.job_status}
-           className=" pl-4" 
-          />
-        }
-      >
-        {" "}
-        {job?.job?.job_status}{" "}
-      </Capsule>
-     
-   
+        className="!mx-auto mr-auto w-max !bg-primary-tint-100"
+        icon={<IconWithBg job={job?.job_status} className="pl-4" />}
+      ></Capsule>
 
       <CapsuleLink
         className="ml-auto"
-        //  href={`/client/${clientId}/jobs/${job.job_posting_id}`}
+        href={
+          window.location.href +
+          `/${job?.job_posting_id}?client_id=${job?.client?.client_id}`
+        }
       >
         {" "}
         view details{" "}

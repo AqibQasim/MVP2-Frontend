@@ -4,10 +4,11 @@ import ButtonCapsule from "./ButtonCapsule";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import ErrorPopup from "./ErrorPopup";
 // import { useEffect } from "react/cjs/react.production.min";
+import "../styles/Setting.css";
 
 const CandidateProfileForm = ({ candidate }) => {
-  console.log(candidate)
-  
+  console.log(candidate);
+
   const [sucess, setsuccess] = useState(false);
   const [error, seterror] = useState(false);
 
@@ -20,11 +21,9 @@ const CandidateProfileForm = ({ candidate }) => {
   const areaCodeRef = useRef(null);
   const countryRef = useRef(null);
 
-
-
   useEffect(() => {
-    console.log("the parsed customer id is ", candidate?.data?.customer_id)
-  }, [candidate])
+    console.log("the parsed customer id is ", candidate?.data?.customer_id);
+  }, [candidate]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -38,7 +37,8 @@ const CandidateProfileForm = ({ candidate }) => {
         customer_location: streetAddressRef.current.value,
         city: cityRef.current.value,
         province: stateRef.current.value,
-        area_code: (areaCodeRef.current?.value  != "") ? areaCodeRef.current?.value : null,
+        area_code:
+          areaCodeRef.current?.value != "" ? areaCodeRef.current?.value : null,
         country: countryRef.current.value,
       },
     };
@@ -58,7 +58,6 @@ const CandidateProfileForm = ({ candidate }) => {
     }
   };
 
-
   return (
     <div className="">
       <form onSubmit={handleSubmit}>
@@ -77,6 +76,7 @@ const CandidateProfileForm = ({ candidate }) => {
                 <input
                   ref={firstNameRef}
                   type="text"
+                  placeholder="First Name"
                   defaultValue={candidate?.data?.name?.split(" ", 2)[0] || ""}
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
@@ -89,6 +89,7 @@ const CandidateProfileForm = ({ candidate }) => {
                 <input
                   ref={lastNameRef}
                   type="text"
+                  placeholder="Last Name"
                   defaultValue={candidate?.data?.name?.split(" ", 2)[1] || ""}
                   className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
                 />
@@ -110,7 +111,7 @@ const CandidateProfileForm = ({ candidate }) => {
                   disabled
                   type="email"
                   defaultValue={candidate?.data?.email}
-                  className="focus:ring-none not-allowed mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
+                  className="focus:ring-none mt-1 cursor-not-allowed rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
               </div>
             </div>
@@ -131,6 +132,7 @@ const CandidateProfileForm = ({ candidate }) => {
                 <input
                   ref={streetAddressRef}
                   type="text"
+                  placeholder="Street Adress"
                   defaultValue={candidate?.data?.customer_location}
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
@@ -153,6 +155,7 @@ const CandidateProfileForm = ({ candidate }) => {
                 <input
                   ref={cityRef}
                   type="text"
+                  placeholder="City"
                   defaultValue={candidate?.data?.city}
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
@@ -176,15 +179,17 @@ const CandidateProfileForm = ({ candidate }) => {
                   ref={stateRef}
                   type="text"
                   defaultValue={candidate?.data?.province}
+                  placeholder="State"
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
               </div>
               <div className="flex flex-1 flex-col">
                 <input
-                  type="text"
+                  type="number"
                   ref={areaCodeRef}
-                  defaultValue={candidate?.data?.area_code || null }
-                  className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
+                  placeholder="Zip Code"
+                  defaultValue={candidate?.area_code || ""}
+                  className="no-arrows mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
                 />
               </div>
             </div>
@@ -205,6 +210,7 @@ const CandidateProfileForm = ({ candidate }) => {
                 <input
                   ref={countryRef}
                   type="text"
+                  placeholder="Country"
                   defaultValue={candidate?.data?.country}
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
