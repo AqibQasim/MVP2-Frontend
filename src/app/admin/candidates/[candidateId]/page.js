@@ -42,7 +42,7 @@ function Page({ params }) {
   );
 
   const filteredJobs = jobs?.filter((job) =>
-    job.position.toLowerCase().includes(searchJob.toLowerCase()) && job?.job_status === 'open',
+    job.position.toLowerCase().includes(searchJob.toLowerCase()) && job?.job_status !== 'open',
   );
 
   const fetchClients = useCallback(async () => {
@@ -327,6 +327,7 @@ function Page({ params }) {
                   setIsClientShow(false);
                   setSearchClient(client.name);
                   setSelectedClient(client.name);
+                  //console.log(client.client_id)
                   setSelectedClientId(client.client_id);
                 }}
                 key={client.client_id}
