@@ -109,8 +109,8 @@ function Page({ params }) {
       >
         <div className="top flex items-center justify-start gap-3">
           {/* <ButtonBack /> */}
-          <ButtonCapsuleWhite />
           <Heading sm>Profile Overview</Heading>
+          <ButtonCapsuleWhite className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">Refer to Client</ButtonCapsuleWhite>
           <Capsule className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
             {talent?.talent_status} {formatDate(talent?.updatedAt)} -{" "}
             {newEndTrialDate}

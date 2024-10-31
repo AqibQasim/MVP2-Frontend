@@ -216,7 +216,7 @@ export async function getClients() {
   }
   return {
     status: result.status,
-    data: result.data,
+    data: result.data.data,
     error: null
   };
 }
