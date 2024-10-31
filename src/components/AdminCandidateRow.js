@@ -127,7 +127,8 @@ function AdminCandidateRow({ candidate, score, onClick }) {
 
         <CapsuleLink
           className="ml-auto"
-          href={window.location.href + `/${candidate?.customer_id}`}
+          href={`/admin/candidates/${candidate?.customer_id}`}
+          // href={window.location.href + `/${candidate?.customer_id}`}
         >
           {" "}
           view talent{" "}

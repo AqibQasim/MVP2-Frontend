@@ -39,7 +39,8 @@ function AdminClientsTable({ clients, totalClients }) {
                 </div>
                 <CapsuleLink
                   className="ml-auto"
-                  href={window.location.href + `/${client?.client_id}`}
+                  href={`/admin/clients/${client?.client_id}`}
+                  // href={window.location.href + `/${client?.client_id}`}
                 >
                   {" "}
                   view details{" "}
