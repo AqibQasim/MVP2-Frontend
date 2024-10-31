@@ -13,7 +13,7 @@ function AdminJobsRow({ job }) {
 
   return (
     <Table.Row>
-       <div className="text-center w-max">{job?.client?.name}</div>
+      <div className="w-max text-center">{job?.client?.name}</div>
       <EntityCard
         icon={<SvgIconWork className="relative -right-[1.3px]" />}
         entity={{

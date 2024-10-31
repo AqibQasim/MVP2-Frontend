@@ -7,13 +7,12 @@ import { useRouter } from "next/navigation";
 
 async function Page({ params }) {
   const router = useRouter();
+
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("MVP_CLIENT_LOGGEDIN") === "true";
 
     if (!isLoggedIn && router.pathname !== "/login") {
       router.replace("/login");
-    } else if (isLoggedIn && router.pathname === "/login") {
-      router.replace(`/client/${params.candidateId}`);
     }
   }, [router]);
   //const candidates = await getCandidates();

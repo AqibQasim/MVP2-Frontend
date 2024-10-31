@@ -10,6 +10,7 @@ import {
 } from "./data-service";
 
 export async function signInAction(formData) {
+  // localStorage.setItem("MVP_CLIENT_LOGGEDIN", true);
   const user_role = formData.get("user_role");
   const path = user_role === "client" ? "client" : "candidate";
   cookies().set({
@@ -19,17 +20,18 @@ export async function signInAction(formData) {
     path: "/",
     httpOnly: true,
   });
+
   await signIn("google", {
     redirectTo: `/${path}`,
-    prompt: 'select_account'
+    prompt: "select_account",
   });
 }
 
 export async function signOutAction(formData) {
   const user_role = formData.get("user_role");
   cookies().delete({
-    name:"user_role",
-    value: user_role
+    name: "user_role",
+    value: user_role,
   });
 
   // cookies().delete({
@@ -37,11 +39,11 @@ export async function signOutAction(formData) {
   // });
 
   cookies().delete({
-    name:"authjs.csrf-token"
+    name: "authjs.csrf-token",
   });
 
   cookies().delete({
-    name:"authjs.session-token"
+    name: "authjs.session-token",
   });
 
   await signOut({ redirectTo: "/login" });

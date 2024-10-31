@@ -110,7 +110,9 @@ function Page({ params }) {
         <div className="top flex items-center justify-start gap-3">
           {/* <ButtonBack /> */}
           <Heading sm>Profile Overview</Heading>
-          <ButtonCapsuleWhite className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">Refer to Client</ButtonCapsuleWhite>
+          <ButtonCapsuleWhite className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
+            Refer to Client
+          </ButtonCapsuleWhite>
           <Capsule className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
             {talent?.talent_status} {formatDate(talent?.updatedAt)} -{" "}
             {newEndTrialDate}
@@ -129,11 +131,6 @@ function Page({ params }) {
             ${talent?.hourly_rate}hr
           </Capsule>
         </div>
-
-        {/* <TalentDescription
-          description={talent?.job_postings?.description}
-          skills={talent?.job_postings?.skills}
-        /> */}
 
         <div className="flex flex-row justify-center">
           <div className="flex flex-1 flex-col justify-start">
