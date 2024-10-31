@@ -1,10 +1,14 @@
-
 "use client";
 
 import AdminCandidatesClientsHiringTable from "@/components/AdminCandidatesClientsHiringTable";
 import EmptyScreen from "@/components/EmptyScreen";
 import WithAdminAuth from "@/components/WithAdminAuth";
-import { fetchCandidatesJobStatus, getJobs, getClients, fetchRecommendedCandidates } from "@/lib/data-service";
+import {
+  fetchCandidatesJobStatus,
+  getJobs,
+  getClients,
+  fetchRecommendedCandidates,
+} from "@/lib/data-service";
 import React, { useEffect, useMemo, useState } from "react";
 import AdminJobsList from "@/components/AdminJobsList";
 import AdminClientsTable from "@/components/AdminClientsTable";
@@ -24,7 +28,8 @@ async function Page() {
   const [candidateLength, setCandidateLength] = useState(null);
   const [clientLength, setClientLength] = useState(null);
   const [jobsLength, setJobsLength] = useState(null);
-  const [clientCandidateHiringLength, setClientCandidateHiringLength] = useState(null)
+  const [clientCandidateHiringLength, setClientCandidateHiringLength] =
+    useState(null);
 
   const handleCloseOverlay = () => {
     setIsReportOverlayOpened(false);
@@ -47,8 +52,10 @@ async function Page() {
       if (error) throw new Error(error);
 
       // Filter only 'open' jobs and take the first three
-      setJobsLength(data?.length)
-      const openJobs = data?.filter(job => job.job_status === "open").slice(0, 3);
+      setJobsLength(data?.length);
+      const openJobs = data
+        ?.filter((job) => job.job_status === "open")
+        .slice(0, 3);
       setJobs(openJobs);
     } catch (err) {
       setDataError(`Failed to load jobs: ${err.message}`);
@@ -59,7 +66,7 @@ async function Page() {
       const { data, error } = await getClients();
       if (error) throw new Error(error);
 
-      setClientLength(data?.length)
+      setClientLength(data?.length);
       // Filter only 'open' jobs and take the first three
       const showClients = data?.slice(0, 3);
       setClients(showClients);
@@ -84,7 +91,6 @@ async function Page() {
       setDataError(`Failed to load candidates: ${err.message}`);
     }
   };
-
 
   const getCandidateResult = () => {
     const payload = {
@@ -111,8 +117,7 @@ async function Page() {
     loadData();
   }, []);
 
-  console.log(candidates)
-
+  console.log(candidates);
 
   // Error or empty data case
   // if (dataError || (candidateJobStatus?.data?.length === 0 && jobs.length === 0 && clients.length === 0)) {
@@ -120,7 +125,7 @@ async function Page() {
   // }
 
   return (
-    <div className='h-fit space-y-3' >
+    <div className="h-fit space-y-3">
       <AdminJobsList jobs={jobs} totalJobs={jobsLength} />
       <AdminClientsTable clients={clients} totalClients={clientLength} />
       <div className="overflow-y-hidden">
@@ -132,7 +137,9 @@ async function Page() {
           onClick={() => {
             setIsReportOverlayOpened(true);
           }}
-          candidates={candidates?.filter(c => c?.customer?.talent_status === "open")}
+          candidates={candidates?.filter(
+            (c) => c?.customer?.talent_status === "open",
+          )}
         />
 
         {isReportOverlayOpened && (
@@ -144,9 +151,9 @@ async function Page() {
         )}
       </div>
       <AdminCandidatesClientsHiringTable
-      totalHirings={clientCandidateHiringLength}
-      candidateJobStatus={candidateJobStatus} />
-
+        totalHirings={clientCandidateHiringLength}
+        candidateJobStatus={candidateJobStatus}
+      />
     </div>
   );
 }

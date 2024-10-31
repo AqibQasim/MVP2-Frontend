@@ -220,7 +220,6 @@ function JobViewById({ job }) {
               {interviewingCandidates?.expertise?.map((skill, i) => (
                 <>
                   <Skill key={i} skill={skill?.skill} />
-
                 </>
               ))}
             </div>

@@ -209,11 +209,6 @@ function Page({ params }) {
           </Capsule>
         </div>
 
-        {/* <TalentDescription
-          description={talent?.job_postings?.description}
-          skills={talent?.job_postings?.skills}
-        /> */}
-
         <div className="flex flex-row justify-center">
           <div className="flex flex-1 flex-col justify-start">
             <Heading xm>About</Heading>

@@ -18,6 +18,7 @@ import ButtonCapsuleWhite from "@/components/ButtonCapsuleWhite";
 import Image from "next/image";
 import Skill from "@/components/Skill";
 import AdminJobsList from "@/components/AdminJobsList";
+import AdminCreateAJobModal from "@/components/AdminCreateAJobModal";
 
 function Page({ params }) {
   const [client, setClient] = useState(null);
@@ -112,14 +113,21 @@ function Page({ params }) {
       <div
         className={`"min-h-auto mb-2" : "min-h-full"} space-y-4 rounded-3xl bg-neutral-white p-6`}
       >
-        <div className="top flex items-center justify-start gap-3">
+        <div className="top flex items-center justify-between gap-3">
           {/* <ButtonBack /> */}
-          <ButtonCapsuleWhite />
-          <Heading sm>Profile Overview</Heading>
+          <div>
+            <ButtonCapsuleWhite />
+            <Heading sm>Profile Overview</Heading>
+          </div>
           {/* <Capsule className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
             {talent?.talent_status} {formatDate(talent?.updatedAt)} -{" "}
             {newEndTrialDate}
           </Capsule> */}
+          <div>
+            <Capsule>
+              <AdminCreateAJobModal clientId={client.client_id} />
+            </Capsule>
+          </div>
         </div>
         <Hr />
         <div className="mini-profile flex items-center justify-start">
@@ -152,7 +160,7 @@ function Page({ params }) {
           <div className="">
             <Heading xm>Address</Heading>
             <div className="flex items-start gap-1.5">
-              <div>
+              <div className="space-y-3">
                 <DetailTag
                   icon="/icons/address.svg"
                   name="Address: "
@@ -219,7 +227,7 @@ function Page({ params }) {
             {client.job_postings && (
               <div
                 //key={job.job_posting_id}
-                className="job-posting-card rounded-lg border border-gray-300 p-4"
+                className="job-posting-card h-fit rounded-lg border border-gray-300 p-4"
               >
                 <AdminJobsList
                   jobs={client.job_postings}
