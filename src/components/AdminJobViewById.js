@@ -30,17 +30,19 @@ function AdminJobViewById({ job }) {
   const [assignedCandidates, setassignedCandidates] = useState(null);
 
   const fetchAssignedCustomerForJob = useCallback(async () => {
-    const payload = {
-      endpoint: `customers?customer_id=${job?.assigned_customer[0].customer_id}`,
-      method: "GET",
-    };
-    mvp2ApiHelper(payload).then((value) => {
-      //console.log(value)
-      if (value.status === 200) {
-        setassignedCandidates(value?.data?.data);
-      }
-    });
-  }, [job?.assigned_customer[0].customer_id]);
+    if (job?.assigned_customer && Array.isArray(job?.assigned_customer)) {
+      const payload = {
+        endpoint: `customers?customer_id=${job?.assigned_customer[0].customer_id}`,
+        method: "GET",
+      };
+      mvp2ApiHelper(payload).then((value) => {
+        //console.log(value)
+        if (value.status === 200) {
+          setassignedCandidates(value?.data?.data);
+        }
+      });
+    }
+  }, [job?.assigned_customer]);
 
   //   const fetchJob = () => {
   //     const payload = {
