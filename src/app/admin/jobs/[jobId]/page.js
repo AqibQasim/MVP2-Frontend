@@ -1,4 +1,5 @@
 "use client";
+import AdminJobViewById from "@/components/AdminJobViewById";
 import JobViewById from "@/components/JobViewById";
 import { fetchAdminJob, fetchClientJob } from "@/lib/data-service";
 import { cityTimezoneOffset } from "@/utils/cityTimezoneOffset";
@@ -15,7 +16,7 @@ async function Page({ params }) {
 
   return (
     <div>
-      <JobViewById job={job} />
+      <AdminJobViewById job={job} />
     </div>
   );
 }
