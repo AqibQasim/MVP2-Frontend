@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 //import ButtonBack from "./ButtonBack";
 import Capsule from "@/components/Capsule";
 import ClientPaymentHistoryTable from "@/components/ClientPaymentHistoryTable";
@@ -17,9 +17,58 @@ import { formatDate } from "@/utils/utility";
 import ButtonCapsuleWhite from "@/components/ButtonCapsuleWhite";
 import Image from "next/image";
 import Skill from "@/components/Skill";
+import Modal from "@/components/AdminJobsFormModal";
+import { referCandidateToClientAction } from "@/lib/actions";
+import { fetchClientJobs, getClients } from "@/lib/data-service";
 
 function Page({ params }) {
   const [talent, setTalent] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [hourlyRate, setHourlyRate] = useState("");
+  const [clients, setClients] = useState(null);
+  const [searchClient, setSearchClient] = useState("");
+  const [selectedClientId, setSelectedClientId] = useState("");
+  const [searchJob, setSearchJob] = useState("");
+  const [jobs, setFetchedJobs] = useState(null);
+  const [selectedJob, setSelectedJob] = useState("");
+  const [selectedClient, setSelectedClient] = useState("");
+  const [selectedJobId, setSelectedJobId] = useState("");
+  const [error, setError] = useState(null);
+  const [isClientsShow, setIsClientShow] = useState(false);
+  const [isJobsShow, setIsJobsShow] = useState(false);
+
+  const filteredClients = clients?.filter((client) =>
+    client.name.toLowerCase().includes(searchClient.toLowerCase()),
+  );
+
+  const filteredJobs = jobs?.filter((job) =>
+    job.position.toLowerCase().includes(searchJob.toLowerCase()) && job?.job_status === 'open',
+  );
+
+  const fetchClients = useCallback(async () => {
+    const f = await getClients();
+    if (f.status === 200) {
+      setClients(f.data);
+    }
+  }, []);
+
+  const fetchJobs = useCallback(async () => {
+    if (selectedClientId) {
+      const f = await fetchClientJobs(selectedClientId);
+      if (f.status === 200) {
+        setFetchedJobs(f.data.result);
+      }
+    }
+  }, [selectedClientId]);
+
+  useEffect(() => {
+    fetchClients();
+  }, []);
+
+  useEffect(() => {
+    fetchJobs();
+  }, [searchJob]);
+
   const customer_id = params?.candidateId;
 
   useEffect(() => {
@@ -102,6 +151,32 @@ function Page({ params }) {
     year: "numeric",
   });
 
+  const handleReferCandidate = async () => {
+    // e.preventDefault();
+
+    const referClientBody = {
+      client_id: selectedClientId,
+      customer_id: talent.customer_id,
+      job_posting_id: selectedJobId,
+      hourly_rate: hourlyRate,
+    };
+
+    console.log(referClientBody);
+
+    const { error, message } =
+      await referCandidateToClientAction(referClientBody);
+    if (error) {
+      console.log({ Error: error });
+      return setError(error);
+    } else {
+      setShowForm(false);
+    }
+    if (message) {
+      console.log("Refer Message: ", message);
+      return setShowForm(false);
+    }
+  };
+
   return (
     <>
       <div
@@ -110,9 +185,11 @@ function Page({ params }) {
         <div className="top flex items-center justify-start gap-3">
           {/* <ButtonBack /> */}
           <Heading sm>Profile Overview</Heading>
-          <ButtonCapsuleWhite className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
-            Refer to Client
-          </ButtonCapsuleWhite>
+          {
+            (talent?.talent_status === 'open') &&
+            <Capsule onClick={() => setShowForm(true)} className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
+              Refer To Client</Capsule>
+          }
           <Capsule className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
             {talent?.talent_status} {formatDate(talent?.updatedAt)} -{" "}
             {newEndTrialDate}
@@ -201,6 +278,109 @@ function Page({ params }) {
         // clientId={client_id}
         />
       )}
+
+      <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
+        <h3 className="mb-4 text-xl font-semibold">
+          Refer {talent?.role} to Client
+        </h3>
+        <form action={handleReferCandidate}>
+          <label className="block">Hourly Rate</label>
+          <input
+            type="number"
+            name="hourlyRate"
+            id="hourlyRate"
+            value={hourlyRate}
+            onChange={(e) => setHourlyRate(e.target.value)}
+            required
+            className="mt-2 block w-full border px-2 py-1"
+          />
+
+          <label className="mt-4 block">Assign to Client</label>
+          <input
+            type="text"
+            value={searchClient}
+            onChange={(e) => {
+              setIsClientShow(true);
+              setSearchClient(e.target.value);
+            }}
+            placeholder="Search client by name"
+            className="mb-2 block w-full border px-2 py-1"
+          />
+
+          {/* <select
+            value={selectedClient}
+            onChange={(e) => setSelectedClient(e.target.value)}
+            required
+            className="mt-2 block w-full border px-2 py-1"
+          > */}
+          {/* <option value="">Select a client</option> */}
+          {
+            isClientsShow &&
+            filteredClients?.map((client) => (
+              <option
+                onClick={() => {
+                  setIsClientShow(false);
+                  setSearchClient(client.name);
+                  setSelectedClient(client.name);
+                  setSelectedClientId(client.client_id);
+                }}
+                key={client.client_id}
+                value={client.client_id}
+                className="cursor-pointer"
+              >
+                {client.name}
+              </option>
+            ))}
+
+          <label className="mt-4 block">Select Job</label>
+          <input
+            type="text"
+            value={searchJob}
+            onChange={(e) => {
+              setIsJobsShow(true);
+              setSearchJob(e.target.value);
+            }}
+            placeholder="Search Job"
+            className="mb-2 block w-full border px-2 py-1"
+          />
+
+          {isJobsShow &&
+            filteredJobs?.map((job) => (
+              <option
+                onClick={() => {
+                  setIsJobsShow(false);
+                  setSearchJob(job.position);
+                  setSelectedJob(job.position);
+                  setSelectedJobId(job.job_posting_id);
+                }}
+                key={job.job_posting_id}
+                value={job.job_posting_id}
+                className="cursor-pointer"
+              >
+                {job.position}
+              </option>
+            ))}
+          {/* </select> */}
+          {/* Error Temp */}
+          {error ? <div className="error text-red-500"> {error?.message} </div> : null}
+
+          <div className="mt-4">
+            <button
+              type="submit"
+              className="mr-2 bg-blue-500 px-4 py-2 text-white"
+            >
+              Confirm Referral
+            </button>
+            <button
+              type="submit"
+              onClick={() => setShowForm(false)}
+              className="bg-gray-300 px-4 py-2"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </Modal>
     </>
   );
 }
