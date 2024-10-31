@@ -14,9 +14,15 @@ function AdminJobsList({ jobs, totalJobs }) {
       href={!path.includes("/admin/jobs") ? `/admin/jobs` : null}
       info={`Total Jobs: ${totalJobs || 0}`}
     >
-      <Table columns="grid-cols-[1fr_1.7fr_6.5rem_6rem_5rem_7.1rem_8.1rem]">
+      <Table
+        columns={
+          jobs[0]?.client
+            ? "grid-cols-[1fr_1.7fr_6.5rem_6rem_5rem_7.1rem_8.1rem]"
+            : "grid-cols-[1fr_6.5rem_6rem_5rem_7.1rem_8.1rem]"
+        }
+      >
         <Table.Header>
-          <div className="name">Clients</div>
+          {jobs[0]?.client && <div className="name">Clients</div>}
           <div className="name text-center">Info</div>
           <div className="email text-center">Skills</div>
           <div className="experience text-center">Experience</div>

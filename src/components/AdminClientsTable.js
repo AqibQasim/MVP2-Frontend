@@ -5,8 +5,7 @@ import AdminCreateAJobModal from "./AdminCreateAJobModal";
 import CapsuleLink from "./CapsuleLink";
 
 function AdminClientsTable({ clients, totalClients }) {
-
-  const path= window.location.href;
+  const path = window.location.href;
 
   return (
     <>
@@ -14,9 +13,8 @@ function AdminClientsTable({ clients, totalClients }) {
         className="!min-h-full"
         paragraph="These are all"
         heading="Clients"
-        href={!path.includes('/admin/clients')? `/admin/clients`:null}
+        href={!path.includes("/admin/clients") ? `/admin/clients` : null}
         info={`Total Clients: ${totalClients || 0}`}
-
       >
         <Table columns="grid-cols-[12rem_12rem_10rem_8rem_8rem]">
           <Table.Header>
@@ -33,11 +31,15 @@ function AdminClientsTable({ clients, totalClients }) {
                 {/* <div>{client.client_id}</div> */}
                 <div>{client.name}</div>
                 <div>{client.email}</div>
-                <div className="text-center">{client?.job_postings?.length}</div>
-                <div className="text-center">{client?.assigned_customers?.length ?? 0}</div>
+                <div className="text-center">
+                  {client?.job_postings?.length}
+                </div>
+                <div className="text-center">
+                  {client?.assigned_customers?.length ?? 0}
+                </div>
                 <CapsuleLink
                   className="ml-auto"
-                //  href={`/client/${clientId}/jobs/${job.job_posting_id}`}
+                  href={window.location.href + `/${client?.client_id}`}
                 >
                   {" "}
                   view details{" "}
