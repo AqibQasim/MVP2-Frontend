@@ -8,6 +8,7 @@ import EntityCard from "./EntityCard";
 import IconWithBg from "./IconWithBg";
 import SkillIconWithBg from "./SkillIconWithBg";
 import Table from "./Table";
+import CapsuleLink from "./CapsuleLink";
 
 function AdminCandidateRow({ candidate, score, onClick }) {
   const [showForm, setShowForm] = useState(false);
@@ -66,7 +67,7 @@ function AdminCandidateRow({ candidate, score, onClick }) {
       hourly_rate: hourlyRate,
     };
 
-    console.log(referClientBody)
+    console.log(referClientBody);
 
     const { error, message } =
       await referCandidateToClientAction(referClientBody);
@@ -86,7 +87,6 @@ function AdminCandidateRow({ candidate, score, onClick }) {
     <>
       <Table.Row>
         <div onClick={onClick} className="cursor-pointer text-start">
-
           <EntityCard
             entity={{
               name: candidate?.name,
@@ -95,8 +95,9 @@ function AdminCandidateRow({ candidate, score, onClick }) {
             }}
           />
         </div>
-        <div className={`${candidate?.expertise?.length>1&&'flex-col'} skills flex items-center justify-center gap-1.5 text-center`}>
-          
+        <div
+          className={`${candidate?.expertise?.length > 1 && "flex-col"} skills flex items-center justify-center gap-1.5 text-center`}
+        >
           {candidate?.expertise?.length > 0 ? (
             candidate.expertise.map((skill, i) => (
               <SkillIconWithBg key={i} icon={skill.skill} skill={skill.skill} />
@@ -105,8 +106,8 @@ function AdminCandidateRow({ candidate, score, onClick }) {
             <span>No skills available</span>
           )}
         </div>
-        
-        <div className="experience text-center justify-center flex">
+
+        <div className="experience flex justify-center text-center">
           {candidate?.hourly_rate || 0}
         </div>
 
@@ -117,18 +118,20 @@ function AdminCandidateRow({ candidate, score, onClick }) {
 
         <div className="experience text-center">{score}/10</div>
 
-        <Capsule className="status mx-auto w-max" status={candidate?.talent_status}>
+        <Capsule
+          className="status mx-auto w-max"
+          status={candidate?.talent_status}
+        >
           {candidate?.talent_status}
         </Capsule>
 
-       <Capsule
-        className="mx-auto w-max !bg-primary-tint-100"
-        // icon={<IconWithBg icon={<SvgIconJobStatus status="hired" />} />}
-      >
-        view talent
-      </Capsule> 
-
-
+        <CapsuleLink
+          className="ml-auto"
+          href={window.location.href + `/${candidate?.customer_id}`}
+        >
+          {" "}
+          view talent{" "}
+        </CapsuleLink>
         {/* Button to open form */}
         {/* <button onClick={() => {
           if (candidate?.talent_status === "open") {
@@ -160,7 +163,7 @@ function AdminCandidateRow({ candidate, score, onClick }) {
             className="mt-2 block w-full border px-2 py-1"
           /> */}
 
-          {/* <label className="mt-4 block">Assign to Client</label>
+      {/* <label className="mt-4 block">Assign to Client</label>
           <input
             type="text"
             value={searchClient}
@@ -172,14 +175,14 @@ function AdminCandidateRow({ candidate, score, onClick }) {
             className="mb-2 block w-full border px-2 py-1"
           /> */}
 
-          {/* <select
+      {/* <select
             value={selectedClient}
             onChange={(e) => setSelectedClient(e.target.value)}
             required
             className="mt-2 block w-full border px-2 py-1"
           > */}
-          {/* <option value="">Select a client</option> */}
-          {/* {isClientsShow &&
+      {/* <option value="">Select a client</option> */}
+      {/* {isClientsShow &&
             filteredClients?.map((client) => (
               <option
                 onClick={() => {
@@ -224,9 +227,9 @@ function AdminCandidateRow({ candidate, score, onClick }) {
                 {job.position}
               </option>
             ))} */}
-          {/* </select> */}
-          {/* Error Temp */}
-          {/* {error ? <div className="error text-red-500"> {error?.message} </div> : null}
+      {/* </select> */}
+      {/* Error Temp */}
+      {/* {error ? <div className="error text-red-500"> {error?.message} </div> : null}
 
           <div className="mt-4">
             <button
