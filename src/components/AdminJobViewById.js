@@ -241,6 +241,8 @@ function AdminJobViewById({ job }) {
             </div>
             <CapsuleLink
               className="ml-auto"
+              href={`/admin/candidates/${assignedCandidates?.customer_id}`}
+              // href={`/client/${clientId}/jobs/${job.job_posting_id}`}
               //  href={`/client/${clientId}/jobs/${job.job_posting_id}`}
             >
               {" "}
