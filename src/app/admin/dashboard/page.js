@@ -15,6 +15,7 @@ import AdminClientsTable from "@/components/AdminClientsTable";
 import AdminCandidatesTable from "@/components/AdminCandidatesTable";
 import ReportOverlay from "@/components/ReportOverlay";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
+import AdminStates from "@/components/AdminStates";
 
 async function Page() {
   const [candidateJobStatus, setCandidateJobStatus] = useState(null);
@@ -126,6 +127,7 @@ async function Page() {
 
   return (
     <div className="h-fit space-y-3">
+      <AdminStates />
       <AdminJobsList jobs={jobs} totalJobs={jobsLength} />
       <AdminClientsTable clients={clients} totalClients={clientLength} />
       <div className="overflow-y-hidden">
