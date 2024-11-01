@@ -20,6 +20,8 @@ import Skill from "@/components/Skill";
 import Modal from "@/components/AdminJobsFormModal";
 import { referCandidateToClientAction } from "@/lib/actions";
 import { fetchClientJobs, getClients } from "@/lib/data-service";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
+import AdminCandidateJobHistory from "@/components/AdminCandidateJobHistory";
 
 function Page({ params }) {
   const [talent, setTalent] = useState(null);
@@ -36,13 +38,16 @@ function Page({ params }) {
   const [error, setError] = useState(null);
   const [isClientsShow, setIsClientShow] = useState(false);
   const [isJobsShow, setIsJobsShow] = useState(false);
+  const [jobHistory, setJobHistory] = useState(null);
 
   const filteredClients = clients?.filter((client) =>
     client.name.toLowerCase().includes(searchClient.toLowerCase()),
   );
 
-  const filteredJobs = jobs?.filter((job) =>
-    job.position.toLowerCase().includes(searchJob.toLowerCase()) && job?.job_status !== 'open',
+  const filteredJobs = jobs?.filter(
+    (job) =>
+      job.position.toLowerCase().includes(searchJob.toLowerCase()) &&
+      job?.job_status === "open",
   );
 
   const fetchClients = useCallback(async () => {
@@ -65,11 +70,26 @@ function Page({ params }) {
     fetchClients();
   }, []);
 
+  const customer_id = params?.candidateId;
+
+  const fetchJobHistory = useCallback(async () => {
+    const payload = {
+      endpoint: `get-job-history-of-candidate?customer_id=${customer_id}`,
+      method: "GET",
+    };
+    const response = await mvp2ApiHelper(payload);
+    console.log(response?.data?.data);
+    setJobHistory(response?.data?.data);
+    //console.log(jobHistory)
+  }, []);
+
+  useEffect(() => {
+    fetchJobHistory();
+  }, [customer_id]);
+
   useEffect(() => {
     fetchJobs();
   }, [searchJob]);
-
-  const customer_id = params?.candidateId;
 
   useEffect(() => {
     let isMounted = true;
@@ -185,11 +205,16 @@ function Page({ params }) {
         <div className="top flex items-center justify-start gap-3">
           {/* <ButtonBack /> */}
           <Heading sm>Profile Overview</Heading>
-          {
-            (talent?.talent_status === 'open') &&
-            <Capsule onClick={() => setShowForm(true)} className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
-              Refer To Client</Capsule>
-          }
+
+          <Capsule
+            onClick={
+              talent?.talent_status === "open" ? () => setShowForm(true) : null
+            }
+            className={`ml-auto !bg-grey-primary-tint-90 ${talent?.talent_status === "open" ? "!text-primary-tint-10" : "!text-gray-500"}`}
+          >
+            Refer To Client
+          </Capsule>
+
           <Capsule className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
             {talent?.talent_status} {formatDate(talent?.updatedAt)} -{" "}
             {newEndTrialDate}
@@ -271,6 +296,7 @@ function Page({ params }) {
             </div>
           </div>
         </div>
+        {jobHistory && <AdminCandidateJobHistory job_history={jobHistory} total_job_history={jobHistory?.length}/>}
       </div>
       {showPaymentHistory && (
         <ClientPaymentHistoryTable
@@ -314,8 +340,7 @@ function Page({ params }) {
             className="mt-2 block w-full border px-2 py-1"
           > */}
           {/* <option value="">Select a client</option> */}
-          {
-            isClientsShow &&
+          {isClientsShow &&
             filteredClients?.map((client) => (
               <option
                 onClick={() => {
@@ -363,7 +388,9 @@ function Page({ params }) {
             ))}
           {/* </select> */}
           {/* Error Temp */}
-          {error ? <div className="error text-red-500"> {error?.message} </div> : null}
+          {error ? (
+            <div className="error text-red-500"> {error?.message} </div>
+          ) : null}
 
           <div className="mt-4">
             <button
