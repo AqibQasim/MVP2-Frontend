@@ -210,7 +210,7 @@ function Page({ params }) {
             onClick={
               talent?.talent_status === "open" ? () => setShowForm(true) : null
             }
-            className={`ml-auto !bg-grey-primary-tint-90 ${talent?.talent_status === "open" ? "!text-primary-tint-10" : "!text-gray-500"}`}
+            className={`ml-auto cursor-not-allowed !bg-grey-primary-tint-90 ${talent?.talent_status === "open" ? "!text-primary-tint-10" : "!text-gray-500"}`}
           >
             Refer To Client
           </Capsule>
@@ -296,7 +296,12 @@ function Page({ params }) {
             </div>
           </div>
         </div>
-        {jobHistory && <AdminCandidateJobHistory job_history={jobHistory} total_job_history={jobHistory?.length}/>}
+        {jobHistory && (
+          <AdminCandidateJobHistory
+            job_history={jobHistory}
+            total_job_history={jobHistory?.length}
+          />
+        )}
       </div>
       {showPaymentHistory && (
         <ClientPaymentHistoryTable
