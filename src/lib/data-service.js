@@ -217,7 +217,7 @@ export async function getClients() {
   return {
     status: result.status,
     data: result.data.data,
-    error: null
+    error: null,
   };
 }
 
@@ -334,7 +334,7 @@ export async function fetchClientJobs(client_id) {
     method: "GET",
   };
 
-  console.log('fetching candidates.......')
+  console.log("fetching candidates.......");
   const result = await mvp2ApiHelper(payload);
   // if (result?.status === 200) {
   //   return result?.data;
@@ -434,7 +434,7 @@ export async function candidateUpdateProfile(body, candidateId) {
 export async function getAllRecommendedCandidates(
   clientId,
   client_response = "all",
-  job_status = null
+  job_status = null,
 ) {
   const hired = "accept";
   const payload = {
@@ -443,7 +443,7 @@ export async function getAllRecommendedCandidates(
   };
 
   const result = await mvp2ApiHelper(payload);
-  console.log("candidates of clients job: ", result)
+  console.log("candidates of clients job: ", result);
   if (result.status !== 200) {
     console.error(result?.data);
     return { status: result.status, error: result.data.err };
@@ -457,19 +457,24 @@ export async function getAllRecommendedCandidates(
   // }
   if (job_status === "hired-and-trial") {
     candidates = result?.data.data?.filter(
-      (candidate) => candidate.client_response === hired && (candidate?.customer?.talent_status === "hired" || candidate?.customer?.talent_status === "trial"),
+      (candidate) =>
+        candidate.client_response === hired &&
+        (candidate?.customer?.talent_status === "hired" ||
+          candidate?.customer?.talent_status === "trial"),
     );
   }
 
   if (job_status === "interviewing") {
     candidates = result?.data.data?.filter(
-      (candidate) => candidate.client_response === "pending" && (candidate?.customer?.talent_status === job_status),
+      (candidate) =>
+        candidate.client_response === "pending" &&
+        candidate?.customer?.talent_status === job_status,
     );
   }
 
   return {
     status: result.status,
-    data: candidates
+    data: candidates,
   };
 }
 

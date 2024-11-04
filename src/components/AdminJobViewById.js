@@ -19,6 +19,7 @@ import TalentDescription from "@/components/TalentDescription";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { cityTimezoneOffset } from "@/utils/cityTimezoneOffset";
 import { formatDate } from "@/utils/utility";
+import { getClientById } from "@/lib/data-service";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import CapsuleLink from "./CapsuleLink";
@@ -28,6 +29,18 @@ function AdminJobViewById({ job }) {
   const [isReadMoreEnabled, setIsReadMoreEnabled] = useState(false);
   const [jobQuestionLength, setJobQuestionLength] = useState(1);
   const [assignedCandidates, setassignedCandidates] = useState(null);
+  const [client, setClient] = useState(null);
+
+  useEffect(() => {
+    // Fetch client details only if we have a client_id
+    if (job?.client_id) {
+      getClientById(job.client_id)
+        .then((data) => setClient(data))
+        .catch((error) =>
+          console.error("Error fetching client details:", error),
+        );
+    }
+  }, [job?.client_id]);
 
   const fetchAssignedCustomerForJob = useCallback(async () => {
     if (job?.assigned_customer && Array.isArray(job?.assigned_customer)) {
@@ -110,10 +123,22 @@ function AdminJobViewById({ job }) {
           <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-3">
               <ButtonCapsuleWhite />
-              <Heading sm>{job.position}</Heading>
+              <Heading sm>{job?.position}</Heading>
             </div>
+            <Heading toxm>Job Status : {job?.job_status}</Heading>
           </div>
           <Hr />
+          <Heading className="font-semibold !text-[#8992A3]" toxm>
+            Client : {client ? client.name : "Loading..."}
+          </Heading>
+          <CapsuleLink
+            className="ml-auto"
+            href={`/admin/clients/${job?.client_id}`}
+            // href={window.location.href + `/${client?.client_id}`}
+          >
+            {" "}
+            view details{" "}
+          </CapsuleLink>
           <TalentDescription
             description={job.description}
             isShowMoreEnabled={isShowMoreEnabled}
@@ -151,7 +176,6 @@ function AdminJobViewById({ job }) {
                   title={"Job Type"}
                   answer={job.job_type}
                 />
-
                 <TagCard
                   icon={copy_success}
                   title={"Workday Overlap"}
