@@ -9,7 +9,7 @@ const ClientEmptyScreen = () => {
         <div className="flex flex-wrap justify-between">
           {/* Step 1 */}
 
-          <div className="flex-wrap rounded-lg bg-gray-100 p-6 shadow">
+          <div className="w-[20rem] flex-wrap rounded-lg bg-gray-100 p-6 shadow">
             <div className="mb-4 items-center">
               <div className="text-medium flex justify-between font-medium">
                 <Heading xm>Total Jobs:</Heading>
@@ -36,7 +36,7 @@ const ClientEmptyScreen = () => {
               </div>
             </div>
           </div>
-          <div className="flex-wrap rounded-lg bg-gray-100 p-6 shadow">
+          <div className="w-[20rem] flex-wrap rounded-lg bg-gray-100 p-6 shadow">
             <div className="mb-4 items-center">
               <div className="text-medium flex justify-between font-medium">
                 <Heading xm>Total Candidates:</Heading>
@@ -63,7 +63,7 @@ const ClientEmptyScreen = () => {
               </div>
             </div>
           </div>
-          <div className="flex-wrap rounded-lg bg-gray-100 p-6 shadow">
+          <div className="w-[20rem] flex-wrap rounded-lg bg-gray-100 p-6 shadow">
             <div className="mb-4 items-center">
               <div className="text-medium flex justify-between font-medium">
                 <Heading xm>Total Clients:</Heading>
