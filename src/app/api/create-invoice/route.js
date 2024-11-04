@@ -1,4 +1,3 @@
-// /src/app/api/create-invoice/route.js
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
@@ -8,13 +7,6 @@ export async function POST(request) {
   try {
     const { customerId, amount, description } = await request.json();
 
-    // Step 1: Create an Invoice Item with the specified amount
-    await stripe.invoiceItems.create({
-      customer: customerId,
-      amount: Math.round(parseFloat(amount) * 100), // Convert dollar amount to cents
-      currency: 'usd',
-      description: description,
-    });
 
     // Step 2: Create the Invoice with `auto_advance: false` for manual finalization and sending
     const invoice = await stripe.invoices.create({
@@ -24,11 +16,28 @@ export async function POST(request) {
       days_until_due: 30,       // Optional: Set a due date
     });
 
+
+    // Step 1: Create an Invoice Item with the specified amount
+    const invoiceItem = await stripe.invoiceItems.create({
+      customer: customerId,
+      amount: Math.round(parseFloat(amount) * 100), // Convert dollar amount to cents
+      currency: 'usd',
+      description: description,
+      invoice: invoice.id
+    });
+
+    // console.log("Invoice item created:", invoiceItem);
+
+    
+    // console.log("Invoice created:", invoice);
+
     // Step 3: Finalize the Invoice
-    const finalizedInvoice = await stripe.invoices.finalizeInvoice(invoice.id);
+    // const finalizedInvoice = await stripe.invoices.finalizeInvoice(invoice.id);
+
+    // console.log("Invoice finalized:", finalizedInvoice);
 
     // Step 4: Manually send the invoice email
-    const sentInvoice = await stripe.invoices.sendInvoice(finalizedInvoice.id);
+    const sentInvoice = await stripe.invoices.sendInvoice(invoice.id);
 
     return NextResponse.json(sentInvoice, { status: 200 });
   } catch (error) {
