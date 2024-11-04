@@ -146,33 +146,33 @@ function CustomersList() {
   };
 
   const handleCreateInvoice = async () => {
-    if (!selectedCustomer) return;
+  if (!selectedCustomer) return;
 
-    try {
-      const response = await fetch("/api/create-invoice", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          customerId: selectedCustomer.id,
-          amount: invoiceDetails.amount * 100,
-          description: invoiceDetails.description,
-        }),
-      });
+  try {
+    const response = await fetch("/api/create-invoice", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        customerId: selectedCustomer.id,
+        amount: invoiceDetails.amount,
+        description: invoiceDetails.description,
+      }),
+    });
 
-      const data = await response.json();
-      if (!response.ok) {
-        setError(data.error || "Failed to create invoice");
-      }
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setIsInvoiceModalOpen(false);
-      setInvoiceDetails({ amount: "", description: "" });
-      setSelectedCustomer(null);
+    const data = await response.json();
+    if (!response.ok) {
+      setError(data.error || "Failed to create invoice");
     }
-  };
+  } catch (error) {
+    setError(error.message);
+  } finally {
+    setIsInvoiceModalOpen(false);
+    setInvoiceDetails({ amount: "", description: "" });
+    setSelectedCustomer(null);
+  }
+};
 
   const openInvoiceModal = (customer) => {
     setSelectedCustomer(customer);
@@ -296,7 +296,6 @@ function CustomersList() {
                 <div>Status</div>
                 <div>Invoice id</div>
                 <div>Created</div>
-                <div>Invoice</div>
                 <div>Receipt</div>
               </li>
               {clientCharges.length > 0 ? (
