@@ -3,13 +3,13 @@ import Heading from "./Heading";
 
 const ClientEmptyScreen = () => {
   return (
-    <div className="min-h-full w-full gap-8 rounded-4xl bg-neutral-white px-8 py-10">
+    <div className="min-h-full w-auto gap-8 rounded-4xl bg-neutral-white px-8 py-10">
       {/* Steps Section */}
       <div>
         <div className="flex flex-wrap justify-between">
           {/* Step 1 */}
 
-          <div className="w-[20rem] flex-wrap rounded-lg bg-gray-100 p-6 shadow">
+          <div className="flex-wrap rounded-lg bg-gray-100 p-6 shadow lg:w-[15rem] xl:w-[20rem]">
             <div className="mb-4 items-center">
               <div className="text-medium flex justify-between font-medium">
                 <Heading xm>Total Jobs:</Heading>
@@ -36,7 +36,7 @@ const ClientEmptyScreen = () => {
               </div>
             </div>
           </div>
-          <div className="w-[20rem] flex-wrap rounded-lg bg-gray-100 p-6 shadow">
+          <div className="flex-wrap rounded-lg bg-gray-100 p-6 shadow lg:w-[15rem] xl:w-[20rem]">
             <div className="mb-4 items-center">
               <div className="text-medium flex justify-between font-medium">
                 <Heading xm>Total Candidates:</Heading>
@@ -63,21 +63,16 @@ const ClientEmptyScreen = () => {
               </div>
             </div>
           </div>
-          <div className="w-[20rem] flex-wrap rounded-lg bg-gray-100 p-6 shadow">
+          <div className="flex-wrap rounded-lg bg-gray-100 p-6 shadow lg:w-[15rem] xl:w-[20rem]">
             <div className="mb-4 items-center">
               <div className="text-medium flex justify-between font-medium">
                 <Heading xm>Total Clients:</Heading>
 
                 <div className="px-4">1</div>
               </div>
-              <div className="text-medium flex justify-between font-medium">
-                <div className="text-xl">Interviewing:</div>
-
-                <div className="px-4">1</div>
-              </div>
 
               <div className="text-medium flex justify-between font-medium">
-                <div className="text-xl">NO.Jobs:</div>
+                <div className="text-xl">NO Jobs:</div>
                 <div className="px-4">1</div>
               </div>
               <div className="text-medium flex justify-between font-medium">
