@@ -32,14 +32,18 @@ function AdminJobViewById({ job }) {
   const [client, setClient] = useState(null);
 
   useEffect(() => {
-    // Fetch client details only if we have a client_id
-    if (job?.client_id) {
-      getClientById(job.client_id)
-        .then((data) => setClient(data))
-        .catch((error) =>
-          console.error("Error fetching client details:", error),
-        );
-    }
+    if (!job?.client_id) return;
+
+    let isMounted = true;
+    getClientById(job.client_id)
+      .then((data) => {
+        if (isMounted) setClient(data);
+      })
+      .catch((error) => console.error("Error fetching client details:", error));
+
+    return () => {
+      isMounted = false;
+    };
   }, [job?.client_id]);
 
   const fetchAssignedCustomerForJob = useCallback(async () => {
