@@ -15,7 +15,7 @@ const metadata = {
 //export const revalidate = 60 * 60 * 24; // invalidate every 24 hours
 
 const Page = async () => {
-  let candidates = []; 
+  let candidates = [];
   const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
   const [selected_candidate_id, setSelectedCandidateId] = useState(null);
   const [candidateReport, setCandidateReport] = useState(null);
@@ -56,7 +56,7 @@ const Page = async () => {
   return (
     <div className="overflow-y-hidden">
       <AdminCandidatesTable
-      totalCandidates={candidates?.length}
+        totalCandidates={candidates?.length}
         isReportOverlayOpened={isReportOverlayOpened}
         setIsReportOverlayOpened={setIsReportOverlayOpened}
         setSelectedCandidateId={setSelectedCandidateId}

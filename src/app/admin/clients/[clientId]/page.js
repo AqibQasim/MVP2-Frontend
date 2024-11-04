@@ -19,6 +19,7 @@ import Image from "next/image";
 import Skill from "@/components/Skill";
 import AdminJobsList from "@/components/AdminJobsList";
 import AdminCreateAJobModal from "@/components/AdminCreateAJobModal";
+import AdminCandidatesTable from "@/components/AdminCandidatesTable";
 
 function Page({ params }) {
   const [client, setClient] = useState(null);
@@ -264,6 +265,11 @@ function Page({ params }) {
                 </div> */}
               </div>
             )}
+          </div>
+          <div className="space-y-4">
+            <div className="job-posting-card mt-4 h-fit rounded-lg border border-gray-300 p-4">
+              <AdminCandidatesTable />
+            </div>
           </div>
         </div>
       </div>
