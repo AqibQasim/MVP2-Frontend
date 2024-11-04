@@ -188,27 +188,6 @@ function AdminJobViewById({ job }) {
           </div>
 
           <Hr />
-
-          {/* <div className="my-3">
-            <Heading sm>Application Questions</Heading>
-          </div>
-
-          {createApplicationQuestions({
-            job_questions: job?.application_questions,
-            length: job?.application_questions?.length,
-          }).map((q) => q)}
-
-          {job?.application_questions?.length > 1 && (
-            <div className="flex flex-row gap-1">
-              <button
-                className="weigh flex w-36 flex-row items-center justify-around rounded-3xl px-4 py-3 text-[14px] font-semibold text-grey-primary-shade-60"
-                onClick={handleReadMore}
-              >
-                <p>{isReadMoreEnabled ? "Read More" : "Read Less"}</p>
-                <Image alt="dropdown" src={dropdown} />
-              </button>
-            </div>
-          )} */}
         </div>
       </div>
       <div className="w-[23.375rem] items-center justify-center rounded-[36px] bg-white p-3">
@@ -248,6 +227,7 @@ function AdminJobViewById({ job }) {
               {" "}
               view details{" "}
             </CapsuleLink>
+            <div>Status : {assignedCandidates?.talent_status}</div>
           </div>
         )}
       </div>
