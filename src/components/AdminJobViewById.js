@@ -128,17 +128,19 @@ function AdminJobViewById({ job }) {
             <Heading toxm>Job Status : {job?.job_status}</Heading>
           </div>
           <Hr />
-          <Heading className="font-semibold !text-[#8992A3]" toxm>
-            Client : {client ? client.name : "Loading..."}
-          </Heading>
-          <CapsuleLink
-            className="ml-auto"
-            href={`/admin/clients/${job?.client_id}`}
-            // href={window.location.href + `/${client?.client_id}`}
-          >
-            {" "}
-            view details{" "}
-          </CapsuleLink>
+          <div className="mb-5 flex justify-between">
+            <Heading className="font-semibold !text-[#8992A3]" toxm>
+              Client : {client ? client.name : "Loading..."}
+            </Heading>
+            <CapsuleLink
+              className="ml-auto"
+              href={`/admin/clients/${job?.client_id}`}
+              // href={window.location.href + `/${client?.client_id}`}
+            >
+              {" "}
+              view details{" "}
+            </CapsuleLink>
+          </div>
           <TalentDescription
             description={job.description}
             isShowMoreEnabled={isShowMoreEnabled}
