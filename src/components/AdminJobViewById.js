@@ -132,7 +132,7 @@ function AdminJobViewById({ job }) {
             <Heading toxm>Job Status : {job?.job_status}</Heading>
           </div>
           <Hr />
-          <div className="mb-5 flex justify-between">
+          <div className="mx-5 mb-6 flex justify-between">
             <Heading className="font-semibold !text-[#8992A3]" toxm>
               Client : {client ? client.name : "Loading..."}
             </Heading>
@@ -249,7 +249,7 @@ function AdminJobViewById({ job }) {
               </div>
             </div>
             <CapsuleLink
-              className="ml-auto"
+              className="mx-3 mt-5"
               href={`/admin/candidates/${assignedCandidates?.customer_id}`}
               // href={`/client/${clientId}/jobs/${job.job_posting_id}`}
               //  href={`/client/${clientId}/jobs/${job.job_posting_id}`}
@@ -257,7 +257,9 @@ function AdminJobViewById({ job }) {
               {" "}
               view details{" "}
             </CapsuleLink>
-            <div>Status : {assignedCandidates?.talent_status}</div>
+            <div className="mx-3 mt-5">
+              Status : {assignedCandidates?.talent_status}
+            </div>
           </div>
         )}
       </div>
