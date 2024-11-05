@@ -3,9 +3,19 @@ import AdminJobsRow from "./AdminJobsRow";
 import CandidateJobsRow from "./CandidateJobsRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
+import { useEffect, useState } from "react";
 
 function AdminJobsList({ jobs, totalJobs }) {
   const path = window.location.href;
+  const [jobStatus, setJobStatus] = useState("");
+
+  const handleJobStatusChange = (event) => {
+    setJobStatus(event.target.value);
+  };
+  const filteredJobs = jobStatus
+    ? jobs.filter((job) => job.job_status === jobStatus)
+    : jobs;
+
   return (
     <DashboardSection
       className="!min-h-full"
@@ -14,6 +24,24 @@ function AdminJobsList({ jobs, totalJobs }) {
       href={!path.includes("/admin/jobs") ? `/admin/jobs` : null}
       info={`Total Jobs: ${totalJobs || 0}`}
     >
+      <div className="mb-4 flex justify-end">
+        <label htmlFor="options" className="mr-2 mt-2">
+          Choose an option:
+        </label>
+        <select
+          id="options"
+          value={jobStatus}
+          onChange={handleJobStatusChange}
+          className="rounded border border-gray-300 p-2"
+        >
+          <option value="">Select an job status</option>
+          <option value="open">open</option>
+          <option value="closed">Closed</option>
+          <option value="Interviewing">Interviewing</option>
+          <option value="hired">Hired</option>
+        </select>
+      </div>
+
       <Table
         columns={
           jobs[0]?.client
@@ -31,7 +59,7 @@ function AdminJobsList({ jobs, totalJobs }) {
           <div className="action text-center">Action</div>
         </Table.Header>
         <Table.Body
-          data={jobs}
+          data={filteredJobs}
           render={(job, i) => <AdminJobsRow job={job} key={i} />}
         />
       </Table>

@@ -6,7 +6,7 @@ import WithAdminAuth from "@/components/WithAdminAuth";
 async function Page() {
   return (
     <>
-      <CustomersList />
+        <CustomersList />
     </>
   );
 }

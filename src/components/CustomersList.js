@@ -14,11 +14,13 @@ function CustomersList() {
     }
   };
 
+  const [loadingMore, setLoadingMore] = useState(false);
   const [customers, setCustomers] = useState([]);
   const [error, setError] = useState(null);
   const [clientCharges, setClientCharges] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+   const [isDetailsModalOpen, setDetailsIsModalOpen] = useState(false);
   const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
   const [invoiceDetails, setInvoiceDetails] = useState({
     amount: "",
@@ -28,50 +30,128 @@ function CustomersList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [balance, setBalance] = useState({ available: [], pending: [] });
   const [lastCustomerId, setLastCustomerId] = useState(null);
-  const [hasMore, setHasMore] = useState(false);
-  const paymentElementRef = useRef(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [showPrevBtn, setShowPrevButton] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const[totalPaymentsDue, setTotalPaymentsDue] = useState(0);
+  const [customerDetails, setCustomerDetails] = useState(null);
+  const observer = useRef();
 
-  useEffect(() => {
-    if (currentPage == 1) {
-      setShowPrevButton(false);
-    } else {
-      setShowPrevButton(true);
-    }
-  }, [currentPage]);
   useEffect(() => {
     fetchCustomers();
     fetchBalance();
   }, []);
 
-  const fetchCustomers = async (startingAfter = null) => {
-    try {
-      const baseUrl = "/api/customers-list";
-      const url = new URL(baseUrl, window.location.origin);
-      url.searchParams.append("limit", 100);
+  
 
-      if (startingAfter) {
-        url.searchParams.append("starting_after", startingAfter);
-      }
+  const handleObserver = (entries) => {
+  const target = entries[0];
+  if (target.isIntersecting && hasMore && !loadingMore) {
+    setLoadingMore(true); // Set loading state when fetching more data
+    fetchCustomers(lastCustomerId);
+  }
+};
 
-      const response = await fetch(url.toString());
-      const data = await response.json();
-
-      if (response.ok) {
-        setCustomers(data.data);
-        setHasMore(data.has_more);
-        setLastCustomerId(
-          data.data.length > 0 ? data.data[data.data.length - 1].id : null,
+  const calculateTotalPaymentsDue = () => {
+    const total = customers.reduce((acc, customer) => {
+      if (customer.subscriptions && customer.subscriptions.length > 0) {
+        return (
+          acc + customer.subscriptions[0].items.data[0].plan.amount / 100
         );
-      } else {
-        setError(data.error);
       }
-    } catch (error) {
-      setError(error.message);
-    }
+      return acc;
+    }, 0);
+    setTotalPaymentsDue(total);
   };
 
+// Adjust the IntersectionObserver useEffect
+useEffect(() => {
+  const options = {
+    root: null,
+    rootMargin: "0px",
+    threshold: 1.0,
+  };
+
+  const observerInstance = new IntersectionObserver(handleObserver, options);
+  if (observer.current) observer.current = observerInstance;
+
+  const loadMoreElement = document.querySelector("#load-more");
+  if (loadMoreElement) observerInstance.observe(loadMoreElement);
+
+  return () => {
+    if (observerInstance && observerInstance.disconnect) {
+      observerInstance.disconnect();
+    }
+  };
+}, [hasMore, loadingMore]); // Adjust dependencies to avoid reinitializing observer
+
+
+  const fetchCustomers = async (startingAfter = null) => {
+  try {
+    const baseUrl = "/api/customers-list";
+    const url = new URL(baseUrl, window.location.origin);
+    url.searchParams.append("limit", 100);
+
+    if (startingAfter) {
+      url.searchParams.append("starting_after", startingAfter);
+    }
+
+    const response = await fetch(url.toString());
+    const data = await response.json();
+
+    if (response.ok) {
+      const filteredCustomers = await Promise.all(
+          data.data.map(async (customer) => {
+            const chargesResponse = await fetch("/api/client-charges-list", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ customer_id: customer.id }),
+            });
+            const chargesData = await chargesResponse.json();
+
+            if (chargesData.data.length > 0) {
+              // Fetch subscriptions if charges exist
+              const subscriptionResponse = await fetch(
+                `/api/client-subscriptions-list`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ customer_id: customer.id }),
+                }
+              );
+
+              const subscriptionData = await subscriptionResponse.json();
+
+              // You can use subscriptionData as needed, for example:
+              customer.subscriptions = subscriptionData.data;
+              return customer;
+            } else {
+              return null;
+            }
+          })
+        );
+
+
+      setCustomers((prevCustomers) => [
+        ...prevCustomers,
+        ...filteredCustomers.filter((customer) => customer !== null),
+      ]);
+      setHasMore(data.has_more);
+      setLastCustomerId(
+        data.data.length > 0 ? data.data[data.data.length - 1].id : null
+      );
+      console.log("Last Cus id ", data.data[data.data.length - 1].id)
+    } else {
+      setError(data.error);
+    }
+  } catch (error) {
+    setError(error.message);
+  } finally {
+    setLoadingMore(false); // Reset loading state
+  }
+};
   const fetchBalance = async () => {
     try {
       const response = await fetch("/api/get-balance");
@@ -84,19 +164,6 @@ function CustomersList() {
     } catch (error) {
       setError(error.message);
     }
-  };
-
-  const handleNextPage = () => {
-    if (hasMore) {
-      fetchCustomers(lastCustomerId);
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const handlePrevPage = () => {
-    // For simplicity, refresh the data or maintain a list of previous page results if needed
-    fetchCustomers();
-    setCurrentPage(currentPage - 1);
   };
 
   const handleCustomerClick = async (customer_id) => {
@@ -145,34 +212,74 @@ function CustomersList() {
     setClientCharges([]);
   };
 
-  const handleCreateInvoice = async () => {
-  if (!selectedCustomer) return;
 
-  try {
-    const response = await fetch("/api/create-invoice", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        customerId: selectedCustomer.id,
-        amount: invoiceDetails.amount,
-        description: invoiceDetails.description,
-      }),
-    });
 
-    const data = await response.json();
-    if (!response.ok) {
-      setError(data.error || "Failed to create invoice");
+  const handleCustomerDetailsClick = async (customer_id) => {
+   setLoading(true);
+    try {
+      const response = await fetch("/api/client-subscriptions-list", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ customer_id }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const { data } = await response.json();
+      console.log("Subscription Data is: ", data);
+
+      setCustomerDetails(data);
+      setDetailsIsModalOpen(true); // Open the modal
+    } catch (error) {
+      console.error("Error fetching subscription details:", error);
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    setError(error.message);
-  } finally {
-    setIsInvoiceModalOpen(false);
-    setInvoiceDetails({ amount: "", description: "" });
-    setSelectedCustomer(null);
-  }
-};
+    
+  };
+
+
+  const handleDetailsCloseModal = () => {
+    setDetailsIsModalOpen(false);
+    setCustomerDetails(null);
+  };
+
+  const handleCreateInvoice = async () => {
+    if (!selectedCustomer) return;
+
+    try {
+      const response = await fetch("/api/create-invoice", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          customerId: selectedCustomer.id,
+          amount: invoiceDetails.amount,
+          description: invoiceDetails.description,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        setError(data.error || "Failed to create invoice");
+      }
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setIsInvoiceModalOpen(false);
+      setInvoiceDetails({ amount: "", description: "" });
+      setSelectedCustomer(null);
+    }
+  };
+
+  useEffect(() => {
+    calculateTotalPaymentsDue();
+  }, [customers]);
 
   const openInvoiceModal = (customer) => {
     setSelectedCustomer(customer);
@@ -186,12 +293,14 @@ function CustomersList() {
   };
 
   const filteredCustomers = customers.filter((customer) =>
-    customer.email.toLowerCase().includes(searchTerm.toLowerCase()),
+    customer.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (error) {
     return <div>Error: {error}</div>;
   }
+   
+  
 
   return (
     <div className="rounded-3xl bg-neutral-white p-6">
@@ -227,23 +336,31 @@ function CustomersList() {
       />
       <div className="h-[90vh] overflow-y-auto p-5">
         <ul className="flex flex-col flex-wrap gap-3">
-          <li className="grid grid-cols-5 text-start">
-            <div>ID</div>
+          <li className="grid grid-cols-8 text-start">
+            {/* <div>ID</div> */}
             <div>Name</div>
             <div>Email</div>
+            <div>Last Payment</div>
+            <div>Amount</div>
+            <div>Next Date</div>
             <div>Invoice</div>
             <div>Payment History</div>
+            <div>Details</div>
+            
           </li>
           <hr></hr>
           {filteredCustomers.map((customer) => (
             <>
               <li
-                className="grid grid-cols-5 text-wrap text-start"
+                className="grid grid-cols-8 text-wrap text-start"
                 key={customer.id}
               >
-                <div className="break-words">{customer.id}</div>
+                {/* <div className="break-words">{customer.id}</div> */}
                 <div className="break-words">{customer.name}</div>
-                <div className="break-words">{customer.email}</div>
+                <div className="break-words w-24">{customer.email}</div>
+                <div>{new Date(customer.subscriptions[0].current_period_start * 1000).toLocaleDateString()}</div>
+                <div>{(customer.subscriptions[0].items.data[0].plan.amount) / 100}$</div>
+                <div>{new Date(customer.subscriptions[0].current_period_end * 1000).toLocaleDateString()}</div>
                 <button
                   onClick={() => openInvoiceModal(customer)}
                   className="btn-primary"
@@ -256,30 +373,24 @@ function CustomersList() {
                 >
                   View History
                 </Capsule>
+                <Capsule
+                  onClick={() => handleCustomerDetailsClick(customer.id)}
+                  className="mx-auto w-max cursor-pointer !bg-primary-tint-100"
+                >
+                  View Details
+                </Capsule>
               </li>
+              
               <hr></hr>
             </>
+
+            
           ))}
+           <li>{loadingMore && <p>Loading clients...</p>}</li>
         </ul>
-        <div className="mt-4 flex justify-between">
-          {showPrevBtn && (
-            <button
-              onClick={handlePrevPage}
-              disabled={!lastCustomerId}
-              className="btn-primary"
-            >
-              Previous
-            </button>
-          )}
-          <div>Current Page: {currentPage}</div>
-          <button
-            onClick={handleNextPage}
-            disabled={!hasMore}
-            className="btn-primary"
-          >
-            Next
-          </button>
-        </div>
+        <div>Total Amount: {totalPaymentsDue}$</div>
+        {loading && <p>Loading...</p>}
+        <div id="load-more"></div>
       </div>
 
       {/* Modal for Client Payment History */}
@@ -291,10 +402,10 @@ function CustomersList() {
           ) : (
             <ul className="flex flex-col gap-3">
               <li className="grid grid-cols-6 text-start">
-                <div>Name</div>
+                <div>Card Name</div>
                 <div>Amount</div>
                 <div>Status</div>
-                <div>Invoice id</div>
+                {/* <div>Invoice id</div> */}
                 <div>Created</div>
                 <div>Receipt</div>
               </li>
@@ -304,7 +415,7 @@ function CustomersList() {
                     <div>{charge.name}</div>
                     <div>{charge.amount}</div>
                     <div>{charge.status}</div>
-                    <div>{charge.invoice}</div>
+                    {/* <div>{charge.invoice}</div> */}
                     <div>{charge.created}</div>
                     <Capsule
                       className="ml-auto cursor-pointer !bg-primary-tint-100"
@@ -322,23 +433,28 @@ function CustomersList() {
           )}
         </div>
       </Modal>
-
-      <Modal isOpen={isInvoiceModalOpen} onClose={handleCloseInvoiceModal}>
+      {/* Modal for creating invoice */}
+      {selectedCustomer && (
+         <Modal isOpen={isInvoiceModalOpen} onClose={handleCloseInvoiceModal}>
         <div className="p-6">
+          <form onSubmit={handleCreateInvoice}>
           <h2>Create Invoice for {selectedCustomer?.name}</h2>
           <input
             type="number"
             placeholder="Amount (in dollars)"
             value={invoiceDetails.amount}
+            required
             onChange={(e) =>
               setInvoiceDetails({ ...invoiceDetails, amount: e.target.value })
             }
+            
             className="mb-4 w-full rounded border border-gray-300 p-2"
           />
           <input
             type="text"
             placeholder="Description"
             value={invoiceDetails.description}
+            required
             onChange={(e) =>
               setInvoiceDetails({
                 ...invoiceDetails,
@@ -347,11 +463,41 @@ function CustomersList() {
             }
             className="mb-4 w-full rounded border border-gray-300 p-2"
           />
-          <button onClick={handleCreateInvoice} className="btn-primary">
+          <button className="btn-primary">
             Send
           </button>
+          </form>
         </div>
       </Modal>
+      )}
+
+
+       {/* Modal for Client details */}
+      <Modal isOpen={isDetailsModalOpen} onClose={handleDetailsCloseModal}>
+      <div className="w-96">
+        <h2 className="text-xl font-semibold mb-4">Client Payment Details</h2>
+        {customerDetails ? (
+          <div>
+            <p><strong>Customer ID:</strong> {customerDetails[0].customer}</p>
+            <p><strong>First Payment:</strong> {new Date(customerDetails[0].created * 1000).toLocaleDateString()} </p>
+            <p><strong>Currency:</strong> {customerDetails[0].currency}</p>
+            <p><strong>Payment Amount:</strong>   {(customerDetails[0].items.data[0].plan.amount) / 100}</p>
+            <p><strong>Previous Payment:</strong> {new Date(customerDetails[0].current_period_start * 1000).toLocaleDateString()}</p>
+            <p><strong>Next Payment:</strong> {new Date(customerDetails[0].current_period_end * 1000).toLocaleDateString()}</p> 
+            <p><strong>Payment Interval:</strong> {customerDetails[0].items.data[0].plan.interval}</p>
+            <p><strong>Number of payments:</strong> {customerDetails[0].items.data[0].plan.interval_count}</p>
+          
+            {/* <p>Plan: {customerDetails[0].items.data[0].plan.nickname}</p>
+            <p>Amount: ${customerDetails[0].items.data[0].plan.amount / 100}</p>
+            <p>Status: {customerDetails[0].status}</p>*/}
+          </div>
+        ) : (
+          <div>Loading...</div>
+        )}
+        </div>
+      </Modal>
+
+      
     </div>
   );
 }
