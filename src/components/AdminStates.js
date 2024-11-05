@@ -8,7 +8,7 @@ const ClientEmptyScreen = () => {
   useEffect(() => {
     async function fetchAdminStats() {
       try {
-        let res = await fetch(`http://localhost:3001/v1/get-stats`);
+        let res = await fetch(`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/get-stats`);
         const result = await res.json();
         console.log(result);
 
