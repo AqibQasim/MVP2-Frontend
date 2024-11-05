@@ -317,7 +317,7 @@ function Page({ params }) {
         <form action={handleReferCandidate}>
           <label className="block">Hourly Rate</label>
           <input
-            type="number"
+            //type="number"
             name="hourlyRate"
             id="hourlyRate"
             value={hourlyRate}
@@ -394,7 +394,7 @@ function Page({ params }) {
           {/* </select> */}
           {/* Error Temp */}
           {error ? (
-            <div className="error text-red-500"> {error?.message} </div>
+            <div className="error text-red-500"> {error || error?.message} </div>
           ) : null}
 
           <div className="mt-4">
