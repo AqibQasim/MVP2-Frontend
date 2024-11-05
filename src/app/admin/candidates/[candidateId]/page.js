@@ -216,8 +216,14 @@ function Page({ params }) {
           </Capsule>
 
           <Capsule className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
-            {talent?.talent_status} {formatDate(talent?.updatedAt)} -{" "}
-            {newEndTrialDate}
+            {talent?.talent_status}
+            {talent?.talent_status !== "open" &&
+              talent?.talent_status !== "interviewing" && (
+                <>
+                  {" "}
+                  {formatDate(talent?.updatedAt)} - {newEndTrialDate}
+                </>
+              )}
           </Capsule>
         </div>
         <Hr />
