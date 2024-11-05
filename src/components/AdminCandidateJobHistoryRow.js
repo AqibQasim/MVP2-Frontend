@@ -23,24 +23,16 @@ function AdminCandidateJobHistoryRow({ job }) {
           profession: job?.job_posting?.specialization,
         }}
       />
-      <div className="skills flex items-center justify-center gap-1.5 text-center">
-        {job?.job_posting?.skills?.length > 1 ? (
-          <>
-            <Skill skill={job?.job_posting?.skills[0]} />
-            <div className="text-sm text-gray-500">
-              +{job?.job_posting?.skills.length - 1}
-            </div>
-          </>
-        ) : (
-          <Skill skill={job?.job_posting?.skills[0]} />
-        )}
-      </div>
 
-      <div className="experience text-center">{job?.job_posting?.experience}</div>
-      <div className="commitment text-center">{job?.job_posting?.commitment}</div>
+      <div className="experience text-center">
+        {job?.job_posting?.start_date}
+      </div>
+      <div className="experience text-center">{job?.job_posting?.end_date}</div>
       <Capsule
         className="!mx-auto mr-auto w-max !bg-primary-tint-100"
-        icon={<IconWithBg job={job?.job_posting?.job_status} className="pl-4" />}
+        icon={
+          <IconWithBg job={job?.job_posting?.job_status} className="pl-4" />
+        }
       ></Capsule>
 
       <CapsuleLink

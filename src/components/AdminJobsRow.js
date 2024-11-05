@@ -45,7 +45,7 @@ function AdminJobsRow({ job }) {
 
       <CapsuleLink
         className="ml-auto"
-        href={`/admin/jobs/${job?.job_posting_id}?client_id=${job?.client?.client_id}`}
+        href={`/admin/jobs/${job?.job_posting_id}?client_id=${job?.client_id}`}
       >
         {" "}
         view details{" "}

@@ -19,6 +19,7 @@ import TalentDescription from "@/components/TalentDescription";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { cityTimezoneOffset } from "@/utils/cityTimezoneOffset";
 import { formatDate } from "@/utils/utility";
+import { getClientById } from "@/lib/data-service";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import CapsuleLink from "./CapsuleLink";
@@ -28,6 +29,22 @@ function AdminJobViewById({ job }) {
   const [isReadMoreEnabled, setIsReadMoreEnabled] = useState(false);
   const [jobQuestionLength, setJobQuestionLength] = useState(1);
   const [assignedCandidates, setassignedCandidates] = useState(null);
+  const [client, setClient] = useState(null);
+
+  useEffect(() => {
+    if (!job?.client_id) return;
+
+    let isMounted = true;
+    getClientById(job.client_id)
+      .then((data) => {
+        if (isMounted) setClient(data);
+      })
+      .catch((error) => console.error("Error fetching client details:", error));
+
+    return () => {
+      isMounted = false;
+    };
+  }, [job?.client_id]);
 
   const fetchAssignedCustomerForJob = useCallback(async () => {
     if (job?.assigned_customer && Array.isArray(job?.assigned_customer)) {
@@ -110,10 +127,24 @@ function AdminJobViewById({ job }) {
           <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-3">
               <ButtonCapsuleWhite />
-              <Heading sm>{job.position}</Heading>
+              <Heading sm>{job?.position}</Heading>
             </div>
+            <Heading toxm>Job Status : {job?.job_status}</Heading>
           </div>
           <Hr />
+          <div className="mx-5 mb-6 flex justify-between">
+            <Heading className="font-semibold !text-[#8992A3]" toxm>
+              Client : {client ? client.name : "Loading..."}
+            </Heading>
+            <CapsuleLink
+              className="ml-auto"
+              href={`/admin/clients/${job?.client_id}`}
+              // href={window.location.href + `/${client?.client_id}`}
+            >
+              {" "}
+              view details{" "}
+            </CapsuleLink>
+          </div>
           <TalentDescription
             description={job.description}
             isShowMoreEnabled={isShowMoreEnabled}
@@ -151,7 +182,6 @@ function AdminJobViewById({ job }) {
                   title={"Job Type"}
                   answer={job.job_type}
                 />
-
                 <TagCard
                   icon={copy_success}
                   title={"Workday Overlap"}
@@ -219,7 +249,7 @@ function AdminJobViewById({ job }) {
               </div>
             </div>
             <CapsuleLink
-              className="ml-auto"
+              className="mx-3 mt-5"
               href={`/admin/candidates/${assignedCandidates?.customer_id}`}
               // href={`/client/${clientId}/jobs/${job.job_posting_id}`}
               //  href={`/client/${clientId}/jobs/${job.job_posting_id}`}
@@ -227,7 +257,9 @@ function AdminJobViewById({ job }) {
               {" "}
               view details{" "}
             </CapsuleLink>
-            <div>Status : {assignedCandidates?.talent_status}</div>
+            <div className="mx-3 mt-5">
+              Status : {assignedCandidates?.talent_status}
+            </div>
           </div>
         )}
       </div>
