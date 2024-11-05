@@ -179,6 +179,56 @@ function AdminCandidatesClientsHiringRow({
     }
   };
 
+   const handleCancelSubscription = async () => {
+    try {
+        const subscriptionResponse = await fetch(
+            `/api/client-subscriptions-list`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ customer_id: stripeClientId }),
+            }
+          );
+
+          const subscriptionData = await subscriptionResponse.json();
+
+          // // You can use subscriptionData as needed, for example:
+          // customer.subscriptions = subscriptionData.data;      
+
+          console.log("Subscription Daata is", subscriptionData.data)
+
+      if (!subscriptionResponse.ok) {
+        throw new Error(`HTTP error! status: ${subscriptionResponse.status}`);
+      }
+
+      if (subscriptionData?.data?.length > 0) {
+            const subscriptionId = subscriptionData.data[0].id;
+
+            // Call delete subscription API
+            const deleteResponse = await fetch(`/api/delete-subscription`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ subscriptionId }),
+            });
+
+            if (!deleteResponse.ok) {
+                throw new Error(`HTTP error! status: ${deleteResponse.status}`);
+            }
+
+            const deleteResult = await deleteResponse.json();
+            console.log("Subscription deleted successfully:", deleteResult);
+        } else {
+            console.log("No subscriptions found to delete");
+        }
+    } catch (error) {
+      console.error('Error creating subscription:', error);
+    }
+  };
+
   useEffect(() => {
     handleChangeStatus();
   }, [changeStatus]);
@@ -187,16 +237,21 @@ function AdminCandidatesClientsHiringRow({
   useEffect(() => {
     // console.log(changeStatus)
     handleChangeStatus()
+    getClientStripe()
 
     if (changeStatus.job_status === "hired") {
       console.log("JOB STATUS CHANGED TO ", changeStatus.job_status)
-      getClientStripe()
+      
 
       if (stripeClientId) {
         handleSubscription()
       }
 
       stripeClientId
+    }else if(changeStatus.job_status === "open" || changeStatus.job_status === "trial" || changeStatus.job_status === "close"){
+        if (stripeClientId) {
+            handleCancelSubscription()
+         }
     }
 
   }, [changeStatus, stripeClientId])
