@@ -16,41 +16,37 @@ function AdminDashboardNavLinks() {
       icon: (
         <SvgIconDashboard
           className="size-6"
-          secondColor={
-            pathname === `/admin/dashboard`
-          }
+          secondColor={pathname === `/admin/dashboard`}
         />
       ),
     },
     {
       name: "Clients",
       href: `/admin/clients`,
-      amount: 0,
+
       icon: (
         <SvgIconDashboard
           className="size-6"
-          secondColor={
-            pathname === "/admin/clients"
-          }
+          secondColor={pathname === "/admin/clients"}
         />
       ),
     },
     {
       name: "Jobs",
       href: `/admin/jobs`,
-      amount: 0,
+
       icon: <SvgIconJob className="size-6" />,
     },
     {
       name: "Candidates",
       href: `/admin/candidates`,
-      amount: 0,
+
       icon: <SvgIconPayment className="size-6" />,
     },
     {
       name: "Payments",
       href: `/admin/payments`,
-      amount: 0,
+
       icon: <SvgIconPayment className="size-6" />,
     },
   ];

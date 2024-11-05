@@ -52,6 +52,7 @@ function ClientRecommendationCard({
       }
     });
   };
+  
   useEffect(() => {
     getCandidateResult();
     checkInterviewStatus();
@@ -171,6 +172,8 @@ function ClientRecommendationCard({
               onModalClose={() => setIsOpen(false)}
               open={isOpen}
               prefill={{
+                name: client?.name,
+                email: [client?.email],
                 guests: [recommendedCandidate.email], // Prefill the guests' email (if applicable)
               }}
             />

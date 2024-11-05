@@ -22,7 +22,7 @@ function ClientHeader({ client, client_id }) {
 
   const formatDate = (isoDateString) => {
     const date = new Date(isoDateString);
-    return date.toLocaleDateString("en-CA"); // Formats to YYYY-MM-DD
+    return date.toLocaleDateString("en-CA");
   };
 
   const getEventDetails = async (eventUri) => {

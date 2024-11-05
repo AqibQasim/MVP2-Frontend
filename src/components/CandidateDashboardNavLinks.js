@@ -25,7 +25,7 @@ function CandidateDashboardNavLinks({ candidateId }) {
     {
       name: "Jobs",
       href: `/candidate/${candidateId}/jobs`,
-      amount: 0,
+
       icon: <SvgIconJob className="size-6" />,
     },
     // {
