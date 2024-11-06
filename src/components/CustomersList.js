@@ -30,7 +30,7 @@ function CustomersList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [balance, setBalance] = useState({ available: [], pending: [] });
   const [lastCustomerId, setLastCustomerId] = useState(null);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
   const[totalPaymentsDue, setTotalPaymentsDue] = useState(0);
   const [customerDetails, setCustomerDetails] = useState(null);
   const observer = useRef();
