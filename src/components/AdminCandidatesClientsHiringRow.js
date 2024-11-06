@@ -156,8 +156,6 @@ function AdminCandidatesClientsHiringRow({
   }
   const handleSubscription = async () => {
     const customPrice = (candidate.hourly_rate * 100) * 40;
-
-
     try {
       // Fetch client secret for subscription
       const subscriptionResponse = await fetch('/api/create-subscription', {
@@ -247,7 +245,7 @@ function AdminCandidatesClientsHiringRow({
         handleSubscription()
       }
 
-      stripeClientId
+      // stripeClientI
     }else if(changeStatus.job_status === "open" || changeStatus.job_status === "trial" || changeStatus.job_status === "close"){
         if (stripeClientId) {
             handleCancelSubscription()
