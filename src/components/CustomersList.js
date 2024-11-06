@@ -86,6 +86,7 @@ useEffect(() => {
 
   const fetchCustomers = async (startingAfter = null) => {
   try {
+    setLoadingMore(true);
     const baseUrl = "/api/customers-list";
     const url = new URL(baseUrl, window.location.origin);
     url.searchParams.append("limit", 100);
@@ -361,29 +362,27 @@ useEffect(() => {
                 <div>{new Date(customer.subscriptions[0].current_period_start * 1000).toLocaleDateString()}</div>
                 <div>{(customer.subscriptions[0].items.data[0].plan.amount) / 100}$</div>
                 <div>{new Date(customer.subscriptions[0].current_period_end * 1000).toLocaleDateString()}</div>
-                <button
+                <Capsule
                   onClick={() => openInvoiceModal(customer)}
-                  className="btn-primary"
+                  className="mx-auto w-max cursor-pointer !bg-primary-tint-100 h-8 text-xs"
                 >
                   Create Invoice
-                </button>
+                </Capsule>
                 <Capsule
                   onClick={() => handleCustomerClick(customer.id)}
-                  className="mx-auto w-max cursor-pointer !bg-primary-tint-100"
+                  className="mx-auto w-max cursor-pointer !bg-primary-tint-100 h-8 text-xs"
                 >
                   View History
                 </Capsule>
                 <Capsule
                   onClick={() => handleCustomerDetailsClick(customer.id)}
-                  className="mx-auto w-max cursor-pointer !bg-primary-tint-100"
+                  className="mx-auto w-max cursor-pointer !bg-primary-tint-100 h-8 text-xs"
                 >
                   View Details
                 </Capsule>
               </li>
-              
               <hr></hr>
             </>
-
             
           ))}
            <li>{loadingMore && <p>Loading clients...</p>}</li>
@@ -437,7 +436,7 @@ useEffect(() => {
       {selectedCustomer && (
          <Modal isOpen={isInvoiceModalOpen} onClose={handleCloseInvoiceModal}>
         <div className="p-6">
-          <form onSubmit={handleCreateInvoice}>
+          
           <h2>Create Invoice for {selectedCustomer?.name}</h2>
           <input
             type="number"
@@ -463,10 +462,9 @@ useEffect(() => {
             }
             className="mb-4 w-full rounded border border-gray-300 p-2"
           />
-          <button className="btn-primary">
+          <button onClick={handleCreateInvoice} className="btn-primary">
             Send
           </button>
-          </form>
         </div>
       </Modal>
       )}
@@ -474,7 +472,7 @@ useEffect(() => {
 
        {/* Modal for Client details */}
       <Modal isOpen={isDetailsModalOpen} onClose={handleDetailsCloseModal}>
-      <div className="w-96">
+      <div className="w-96 p-10">
         <h2 className="text-xl font-semibold mb-4">Client Payment Details</h2>
         {customerDetails ? (
           <div>
@@ -486,6 +484,7 @@ useEffect(() => {
             <p><strong>Next Payment:</strong> {new Date(customerDetails[0].current_period_end * 1000).toLocaleDateString()}</p> 
             <p><strong>Payment Interval:</strong> {customerDetails[0].items.data[0].plan.interval}</p>
             <p><strong>Number of payments:</strong> {customerDetails[0].items.data[0].plan.interval_count}</p>
+            <p><strong>Total payment amount:</strong> {(customerDetails[0].items.data[0].plan.interval_count * ((customerDetails[0].items.data[0].plan.amount) / 100))}</p>
           
             {/* <p>Plan: {customerDetails[0].items.data[0].plan.nickname}</p>
             <p>Amount: ${customerDetails[0].items.data[0].plan.amount / 100}</p>
