@@ -72,6 +72,9 @@ function ClientRecommendedTable({ recommendedCandidates }) {
   const clientId = params?.clientId;
 
   console.log(recommendedCandidates)
+ 
+
+
 
   return (
     <DashboardSection
