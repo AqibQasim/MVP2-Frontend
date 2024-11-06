@@ -95,17 +95,23 @@ function AdminCandidateRow({ candidate, score, onClick }) {
             }}
           />
         </div>
+       
+          
         <div
-          className={`${candidate?.expertise?.length > 1 && "flex-col"} skills flex items-center justify-center gap-1.5 text-center`}
-        >
-          {candidate?.expertise?.length > 0 ? (
-            candidate.expertise.map((skill, i) => (
-              <SkillIconWithBg key={i} icon={skill.skill} skill={skill.skill} />
-            ))
-          ) : (
-            <span>No skills available</span>
-          )}
-        </div>
+         className= "flex-col  skills flex items-center justify-center gap-1 text-center">
+            {candidate?.expertise?.length > 1 ? (
+              <>
+             <SkillIconWithBg icon={candidate.expertise[0].skill} skill={candidate.expertise[0].skill} />
+             <div className="text-sm text-gray-500">
+              +{candidate.expertise.length - 1}
+              </div>
+              </>
+            )
+          : (
+          <span> <SkillIconWithBg icon={candidate.expertise[0].skill} skill={candidate.expertise[0].skill}/></span>
+        )}
+       </div>
+
 
         <div className="experience flex justify-center text-center">
           {candidate?.hourly_rate || 0}

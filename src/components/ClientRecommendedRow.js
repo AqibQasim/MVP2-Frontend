@@ -1,3 +1,5 @@
+"use client";
+
 import SvgIconJobStatus from "@/svgs/SvgIconJobStatus";
 import Capsule from "./Capsule";
 import EntityCard from "./EntityCard";
@@ -7,39 +9,54 @@ import Table from "./Table";
 import SvgIconRequestInterview from "@/svgs/SvgIconRequestInterview";
 import { PopupModal, useCalendlyEventListener } from "react-calendly";
 import { useState, useEffect, useRef } from "react";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
+import { useParams } from "next/navigation";
 
 function ClientRecommendedRow({ recommended }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  console.log(recommended);
+  const [isInterviewScheduled, setIsInterviewScheduled] = useState(false);
+  const buttonRef = useRef(null);
+  const params = useParams();
+
   const { customer: candidate, job_postings: job } = recommended;
+
+  const checkInterviewStatus = () => {
+    const payload = {
+      endpoint: `check-interview-status?customer_id=${candidate?.customer_id}&client_id=${params?.clientId}&job_posting_id=${job?.job_posting_id}`,
+      method: "GET",
+    };
+    mvp2ApiHelper(payload).then((result) => {
+      if (result?.data?.data?.is_scheduled) {
+        setIsInterviewScheduled(true);
+      }
+    });
+  };
 
   const getEventDetails = async (eventUri) => {
     try {
       const response = await fetch(eventUri, {
         headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_CALENDLY_TOKEN}`, // Replace with your actual API key
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_CALENDLY_TOKEN}`,
         },
       });
       const data = await response.json();
-      console.log("Event Details:", data);
       const payload = {
         endpoint: "schedule-interview",
         method: "POST",
         body: {
-          customer_id: recommendedCandidate?.customer_id,
+          customer_id: candidate?.customer_id,
           interview_date: data?.resource?.start_time,
           interview_time: data?.resource?.start_time,
-          job_posting_id: recommendedForJob?.job_posting_id,
+          job_posting_id: job?.job_posting_id,
           client_id: params?.clientId,
         },
       };
-      console.log(payload);
       const result = await mvp2ApiHelper(payload);
       if (result.status === 200) {
         console.log("Interview has been scheduled");
+        setIsInterviewScheduled(true);
       }
-      // Access the date and time from the response, e.g., data.start_time
     } catch (error) {
       console.error("Error fetching event details:", error);
     }
@@ -47,15 +64,15 @@ function ClientRecommendedRow({ recommended }) {
 
   useCalendlyEventListener({
     onEventScheduled: (e) => {
-      console.log("Fetching event details from:", e.data.payload.event.uri);
       getEventDetails(e.data.payload.event.uri);
     },
   });
 
   useEffect(() => {
+    checkInterviewStatus();
     setIsMounted(true);
-    console.log("mounted");
   }, []);
+
   if (!isMounted) return null;
 
   return (
@@ -68,32 +85,35 @@ function ClientRecommendedRow({ recommended }) {
             image: "/avatars/avatar-1.png",
           }}
         />
-       
-      
-        <div className="skills flex  items-center justify-center gap-1.5 text-center">
-         {job.skills.length > 1 ? (
-         <>
-         <SkillIconWithBg icon={job.skills[0]} skill={job.skills[0]} />
-         <div className="text-sm text-gray-500">
-          +{job.skills.length - 1}  
-         </div>
-         </>
-         ) : (
-      
-        <SkillIconWithBg icon={job.skills[0]} skill={job.skills[0]} />
-         )}
+        <div className="skills flex items-center justify-center gap-1.5 text-center">
+          {job.skills.length > 1 ? (
+            <>
+              <SkillIconWithBg icon={job.skills[0]} skill={job.skills[0]} />
+              <div className="text-sm text-gray-500">+{job.skills.length - 1}</div>
+            </>
+          ) : (
+            <SkillIconWithBg icon={job.skills[0]} skill={job.skills[0]} />
+          )}
         </div>
-
         <div className="job-title text-center">{job.position}</div>
         <div className="experience text-center">{candidate.experience}</div>
         <Capsule>{candidate.commitment}</Capsule>
-        <Capsule
-          onClick={() => setIsOpen(true)}
-          className="ml-auto !bg-primary-tint-100"
-          icon={<IconWithBg icon={<SvgIconRequestInterview />} />}
-        >
-          Request Interview
-        </Capsule>
+        {isInterviewScheduled ? (
+          <Capsule
+            className="ml-auto !bg-primary-tint-100 cursor-not-allowed"
+            icon={<IconWithBg icon={<SvgIconRequestInterview />} />}
+          >
+            Schedule Interview
+          </Capsule>
+        ) : (
+          <Capsule
+            onClick={() => setIsOpen(true)}
+            className="ml-auto !bg-primary-tint-100"
+            icon={<IconWithBg icon={<SvgIconRequestInterview />} />}
+          >
+            Schedule Interview
+          </Capsule>
+        )}
       </Table.Row>
 
       <PopupModal
@@ -106,9 +126,6 @@ function ClientRecommendedRow({ recommended }) {
         overflow="hidden"
         onModalClose={() => setIsOpen(false)}
         open={isOpen}
-        // styles={{
-        //   height: '10px'
-        // }}
         prefill={{
           guests: [`${candidate.email}`],
         }}

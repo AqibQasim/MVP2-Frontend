@@ -1,5 +1,5 @@
 "use client";
-import { useEffec, useState } from "react";
+import { useEffect, useState } from "react";
 import AdminCandidateRow from "./AdminCandidateRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
