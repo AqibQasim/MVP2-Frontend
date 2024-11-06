@@ -103,7 +103,8 @@ function ClientRecommendedRow({ recommended }) {
             className="ml-auto !bg-primary-tint-100 cursor-not-allowed"
             icon={<IconWithBg icon={<SvgIconRequestInterview />} />}
           >
-            Interview Already Scheduled
+            
+            Schedule Interview
           </Capsule>
         ) : (
           <Capsule
