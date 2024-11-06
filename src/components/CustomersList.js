@@ -127,6 +127,12 @@ useEffect(() => {
 
               // You can use subscriptionData as needed, for example:
               customer.subscriptions = subscriptionData.data;
+
+              customer.latestInvoiceId = customer.subscriptions[0]?.latest_invoice;
+
+              customer.last_invoice_det = await fetchInvoiceDetails(customer.subscriptions[0]?.latest_invoice)
+              
+
               return customer;
             } else {
               return null;
@@ -153,6 +159,26 @@ useEffect(() => {
     setLoadingMore(false); // Reset loading state
   }
 };
+
+
+const fetchInvoiceDetails = async (invoiceId) => {
+  try {
+      const response = await fetch("/api/stripe-invoice", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ invoiceId }),
+    });
+    const data = await response.json();
+    return data; // Return invoice data to be used
+  } catch (error) {
+    console.error("Error fetching invoice details:", error);
+    setError(error.message);
+  }
+};
+
+
   const fetchBalance = async () => {
     try {
       const response = await fetch("/api/get-balance");
@@ -335,13 +361,14 @@ useEffect(() => {
       />
       <div className="h-[90vh] overflow-y-auto p-5">
         <ul className="flex flex-col flex-wrap gap-3">
-          <li className="grid grid-cols-8 text-start">
+          <li className="grid grid-cols-9 text-start">
             {/* <div>ID</div> */}
             <div>Name</div>
             <div>Email</div>
             <div>Last Payment</div>
             <div>Amount</div>
             <div>Next Date</div>
+            <div>Last Invoice Status</div>
             <div>Invoice</div>
             <div>Payment History</div>
             <div>Details</div>
@@ -351,7 +378,7 @@ useEffect(() => {
           {filteredCustomers.map((customer) => (
             <>
               <li
-                className="grid grid-cols-8 text-wrap text-start"
+                className="grid grid-cols-9 text-wrap text-start"
                 key={customer.id}
               >
                 {/* <div className="break-words">{customer.id}</div> */}
@@ -360,6 +387,7 @@ useEffect(() => {
                 <div>{new Date(customer.subscriptions[0].current_period_start * 1000).toLocaleDateString()}</div>
                 <div>{(customer.subscriptions[0].items.data[0].plan.amount) / 100}$</div>
                 <div>{new Date(customer.subscriptions[0].current_period_end * 1000).toLocaleDateString()}</div>
+                <div>{customer.last_invoice_det.status}</div>
                 <Capsule
                   onClick={() => openInvoiceModal(customer)}
                   className="mx-auto w-max cursor-pointer !bg-primary-tint-100 h-8 text-xs"
