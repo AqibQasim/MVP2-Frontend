@@ -7,10 +7,35 @@ import Table from "./Table";
 import SvgIconRequestInterview from "@/svgs/SvgIconRequestInterview";
 import { PopupModal, useCalendlyEventListener } from "react-calendly";
 import { useState, useEffect, useRef } from "react";
+import { useParams } from "next/navigation";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 
-function ClientRecommendedRow({ recommended }) {
+function ClientRecommendedRow({
+  recommended,
+  recommendedCandidate = {},
+  recommendedForJob = {},
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [isInterviewScheduled, setIsInterviewScheduled] = useState(false);
+  const params = useParams();
+
+  const checkInterviewStatus = () => {
+    const payload = {
+      endpoint: `check-interview-status?customer_id=${recommendedCandidate?.customer_id}&client_id=${params?.clientId}&job_posting_id=${recommendedForJob?.job_posting_id}`,
+      method: "GET",
+    };
+    mvp2ApiHelper(payload).then((result) => {
+      if (result?.data?.data?.is_scheduled) {
+        setIsInterviewScheduled(true); // Set as scheduled if API confirms
+      }
+    });
+  };
+
+  useEffect(() => {
+    checkInterviewStatus();
+  }, []);
+
   console.log(recommended);
   const { customer: candidate, job_postings: job } = recommended;
 
@@ -68,32 +93,32 @@ function ClientRecommendedRow({ recommended }) {
             image: "/avatars/avatar-1.png",
           }}
         />
-       
-      
-        <div className="skills flex  items-center justify-center gap-1.5 text-center">
-         {job.skills.length > 1 ? (
-         <>
-         <SkillIconWithBg icon={job.skills[0]} skill={job.skills[0]} />
-         <div className="text-sm text-gray-500">
-          +{job.skills.length - 1}  
-         </div>
-         </>
-         ) : (
-      
-        <SkillIconWithBg icon={job.skills[0]} skill={job.skills[0]} />
-         )}
+
+        <div className="skills flex items-center justify-center gap-1.5 text-center">
+          {job.skills.length > 1 ? (
+            <>
+              <SkillIconWithBg icon={job.skills[0]} skill={job.skills[0]} />
+              <div className="text-sm text-gray-500">
+                +{job.skills.length - 1}
+              </div>
+            </>
+          ) : (
+            <SkillIconWithBg icon={job.skills[0]} skill={job.skills[0]} />
+          )}
         </div>
 
         <div className="job-title text-center">{job.position}</div>
         <div className="experience text-center">{candidate.experience}</div>
         <Capsule>{candidate.commitment}</Capsule>
-        <Capsule
-          onClick={() => setIsOpen(true)}
-          className="ml-auto !bg-primary-tint-100"
-          icon={<IconWithBg icon={<SvgIconRequestInterview />} />}
-        >
-          Request Interview
-        </Capsule>
+        {isInterviewScheduled && (
+          <Capsule
+            onClick={() => setIsOpen(true)}
+            className="ml-auto !bg-primary-tint-100"
+            icon={<IconWithBg icon={<SvgIconRequestInterview />} />}
+          >
+            Request Interview
+          </Capsule>
+        )}
       </Table.Row>
 
       <PopupModal

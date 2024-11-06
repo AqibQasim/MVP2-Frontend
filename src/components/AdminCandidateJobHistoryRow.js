@@ -9,7 +9,11 @@ import CapsuleLink from "./CapsuleLink";
 import { useParams } from "next/navigation";
 
 function AdminCandidateJobHistoryRow({ job }) {
-  console.log("job ka data", job);
+  const formatDate = (isoDateString) => {
+    const date = new Date(isoDateString);
+    return date.toLocaleDateString("en-CA"); // Formats to YYYY-MM-DD
+  };
+  //console.log("job ka data", job);
 
   return (
     <Table.Row>
@@ -25,9 +29,13 @@ function AdminCandidateJobHistoryRow({ job }) {
       />
 
       <div className="experience text-center">
-        {job?.job_posting?.start_date}
+        {formatDate(job?.start_date)}
       </div>
-      <div className="experience text-center">{job?.job_posting?.end_date}</div>
+      <div className="experience text-center">
+        {job?.end_date === null
+          ? "Present"
+          : formatDate(job?.end_date)}
+      </div>
       <Capsule
         className="!mx-auto mr-auto w-max !bg-primary-tint-100"
         icon={

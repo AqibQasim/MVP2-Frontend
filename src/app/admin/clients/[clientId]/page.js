@@ -27,7 +27,7 @@ import AdminClientCandidatesTable from "@/components/AdminClientCandidatesTable"
 function Page({ params }) {
   const [client, setClient] = useState(null);
   const client_id = params?.clientId;
-  const [candidates,setCandidates]= useState(null);
+  const [candidates, setCandidates] = useState(null);
   const [dataError, setDataError] = useState(null);
 
   //const [assignedCandidates, setAssignedCandidates]= useState(null);
@@ -43,9 +43,9 @@ function Page({ params }) {
     }
   };
 
-  useEffect(()=>{
-    console.log(candidates)
-  },[candidates])
+  useEffect(() => {
+    console.log(candidates);
+  }, [candidates]);
 
   useEffect(() => {
     let isMounted = true;
@@ -172,7 +172,7 @@ function Page({ params }) {
           </div>
           <div className="space-y-4">
             <div className="job-posting-card mt-4 h-fit rounded-lg border border-gray-300 p-4">
-              <AdminClientCandidatesTable candidates={candidates?.data}/>
+              <AdminClientCandidatesTable candidates={candidates?.data} />
             </div>
           </div>
         </div>

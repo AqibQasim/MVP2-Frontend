@@ -8,11 +8,13 @@ import AdminCandidatesClientsHiringRow from './AdminCandidatesClientsHiringRow';
 function AdminCandidatesClientsHiringTable({totalHirings, candidateJobStatus}) {
   const path= window.location.href;
 
+  //console.log(candidateJobStatus)
+
   return (
     <DashboardSection
       className="!min-h-full"
       paragraph="These are all"
-      heading="Hirings of Candidates with Clients"
+      heading="Matchings of Candidates with Clients"
       href={!path.includes('/admin/candidates')? `/admin/candidates`:null}
       info={`Total Hirings: ${totalHirings || 0}`}
 
@@ -27,7 +29,7 @@ function AdminCandidatesClientsHiringTable({totalHirings, candidateJobStatus}) {
           <div className="actions text-center">Actions</div>
         </Table.Header>
         <Table.Body
-        error={candidateJobStatus?.length===0&&'No candidates hired yet'}
+        error={candidateJobStatus?.data?.length===0&&'No candidates hired yet'}
           data={candidateJobStatus?.data}
           render={(job, i) => (
             <AdminCandidatesClientsHiringRow daysPassed={job?.days_passed} candidate={job?.customer_info} client={job?.client} job={job?.job} key={i} />

@@ -39,10 +39,12 @@ async function Page() {
 
   // Fetching candidate job status
   const fetchStatus = async () => {
-    const { data, error } = await fetchCandidatesJobStatus("hired-and-trial");
+    const { data, error } = await fetchCandidatesJobStatus("hired-trial-interviewing");
+
     if (error) {
       setDataError(error.message);
     }
+    console.log(data)
     setCandidateJobStatus(data);
   };
 

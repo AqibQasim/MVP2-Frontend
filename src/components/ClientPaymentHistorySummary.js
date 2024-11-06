@@ -23,12 +23,12 @@ function ClientPaymentHistorySummary({
           <Heading sm>${total_payment_by_client} USD</Heading>
         </div>
 
-        <Capsule
+        {/* <Capsule
           className="ml-auto h-auto !bg-primary-tint-100"
           icon={<IconWithBg icon={<SvgIconClipboard />} />}
         >
           View Monthly Report
-        </Capsule>
+        </Capsule> */}
       </div>
       <Hr/>
 
