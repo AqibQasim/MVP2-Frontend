@@ -213,8 +213,6 @@ useEffect(() => {
     setClientCharges([]);
   };
 
-
-
   const handleCustomerDetailsClick = async (customer_id) => {
    setLoading(true);
     try {
