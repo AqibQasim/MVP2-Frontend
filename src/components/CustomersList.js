@@ -472,7 +472,7 @@ useEffect(() => {
 
        {/* Modal for Client details */}
       <Modal isOpen={isDetailsModalOpen} onClose={handleDetailsCloseModal}>
-      <div className="w-96 p-10">
+      <div className="w-96 p-4">
         <h2 className="text-xl font-semibold mb-4">Client Payment Details</h2>
         {customerDetails ? (
           <div>
