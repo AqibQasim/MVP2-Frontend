@@ -11,7 +11,7 @@ async function Page({ params }) {
 
   return (
     <div>
-      <JobViewById job={job} />
+      <JobViewById user_role={'client'} job={job} />
     </div>
   );
 }

@@ -22,7 +22,7 @@ import { formatDate } from "@/utils/utility";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 
-function JobViewById({ job }) {
+function JobViewById({ job, user_role }) {
   const [isShowMoreEnabled, setIsShowMoreEnabled] = useState(false);
   const [isReadMoreEnabled, setIsReadMoreEnabled] = useState(false);
   const [jobQuestionLength, setJobQuestionLength] = useState(1);
@@ -31,23 +31,25 @@ function JobViewById({ job }) {
   const fetchJob = () => {
     const payload = {
       endpoint: `get-jobs?job_posting_id=${job?.job_posting_id}&talent_status=interviewing`,
-      method: 'GET'
-    }
-    mvp2ApiHelper(payload).then(value => {
+      method: "GET",
+    };
+    mvp2ApiHelper(payload).then((value) => {
       //console.log(value)
       if (value.status === 200) {
-        setInterviewingCandidates(value?.data?.data)
+        setInterviewingCandidates(value?.data?.data);
       }
-    })
-  }
+    });
+  };
 
   useEffect(() => {
-    fetchJob();
-  }, [])
+    if (user_role === "client") {
+      fetchJob();
+    }
+  }, []);
 
   useEffect(() => {
-    console.log(interviewingCandidates)
-  }, [interviewingCandidates])
+    console.log(interviewingCandidates);
+  }, [interviewingCandidates]);
 
   const handleShowMore = () => {
     setIsShowMoreEnabled((value) => !value);
@@ -147,7 +149,7 @@ function JobViewById({ job }) {
                 <TagCard
                   icon={tag}
                   title={"Specialization"}
-                  answer={job?.position??"[job specialization]"}
+                  answer={job?.position ?? "[job specialization]"}
                 />
 
                 <TagCard
@@ -195,6 +197,9 @@ function JobViewById({ job }) {
           )} */}
         </div>
       </div>
+      {
+        user_role==='client'&&
+      
       <div className="w-[23.375rem] items-center justify-center rounded-[36px] bg-white p-3">
         <div className="flex h-auto w-auto flex-row items-center justify-between">
           <Heading className="text-[24px]">Status</Heading>
@@ -203,9 +208,7 @@ function JobViewById({ job }) {
           </Capsule>
         </div>
         <Hr />
-        {
-          interviewingCandidates &&
-
+        {interviewingCandidates && (
           <div className="mb-3 w-full gap-3 rounded-xl">
             <div className="flex flex-1 flex-row items-center justify-between border-[1px] border-[#F9F8FC]">
               <EntityCard
@@ -224,8 +227,9 @@ function JobViewById({ job }) {
               ))}
             </div>
           </div>
-        }
+        )}
       </div>
+      }
     </div>
   );
 }
