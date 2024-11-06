@@ -74,7 +74,7 @@ function ClientHeader({ client, client_id }) {
               sm
               entity={{
                 image: "/avatars/avatar-3.svg",
-                name: "Esther Howard",
+                name: "Taha Khan",
                 profession: "Account Executive - AE",
               }}
             />
