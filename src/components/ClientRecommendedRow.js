@@ -1,4 +1,4 @@
-yui"use client";
+"use client";
 
 import SvgIconJobStatus from "@/svgs/SvgIconJobStatus";
 import Capsule from "./Capsule";
