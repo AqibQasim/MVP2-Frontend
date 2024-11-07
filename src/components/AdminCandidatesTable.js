@@ -14,18 +14,25 @@ function AdminCandidatesTable({
   const path = window.location.href;
 
   const [talentStatus, setTalentStatus] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleTalentStatusChange = (event) => {
     setTalentStatus(event.target.value);
   };
 
   console.log("Candidates:", candidates);
-  const filteredCandidates = talentStatus
-    ? candidates.filter(
-        (candidate) => candidate.customer?.talent_status === talentStatus,
-      )
-    : candidates;
 
+ 
+    
+
+     const filteredCandidates = candidates
+     .filter(candidate =>
+       !talentStatus || candidate.customer?.talent_status === talentStatus
+     )
+     .filter(candidate =>
+       !searchTerm || (typeof candidate.customer?.name === 'string' && candidate.customer?.name.toLowerCase().includes(searchTerm.toLowerCase()))
+     );
+   
   return (
     <DashboardSection
       className="!min-h-full"
@@ -34,7 +41,20 @@ function AdminCandidatesTable({
       href={!path.includes("/admin/candidates") ? `/admin/candidates` : null}
       info={`Total Candidates: ${totalCandidates}`}
     >
-      <div className="mb-4 flex justify-end">
+      <div className="mb-4 flex justify-between ">
+
+      <div>
+        <input
+        type="text"
+        placeholder="Search by name"
+        className="mb-4 w-full cursor-pointer rounded border border-gray-300 p-2"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+        </div>
+
+        <div>
+          
         <label htmlFor="options" className="mr-2 mt-2">
           Choose an option:
         </label>
@@ -50,6 +70,10 @@ function AdminCandidatesTable({
           <option value="interviewing">Interviewing</option>
           <option value="hired">Hired</option>
         </select>
+        </div>
+      
+
+
       </div>
 
       <Table columns="grid-cols-[7rem_5.7rem_4rem_6rem_4.5rem_4.1rem_7.4rem_7.8rem]">
@@ -68,7 +92,7 @@ function AdminCandidatesTable({
           {" "}
           {/* Set the height as per your needs */}
           <Table.Body
-            data={filteredCandidates}
+            data={filteredCandidates }
             render={(candidate, i) => {
               const res =
                 (candidate?.result?.softskillRating +

@@ -9,18 +9,26 @@ function AdminClientsTable({ clients, totalClients }) {
   const path = window.location.href;
 
   const [jobStatus, setJobStatus] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleJobStatusChange = (event) => {
     setJobStatus(event.target.value);
   };
 
-  const filteredClients = jobStatus
-    ? clients.filter((client) =>
+  const filteredClients = clients
+      .filter((client) => !jobStatus ||
         jobStatus === "jobs"
           ? client.job_postings.length >= 1
           : client.job_postings.length === 0,
       )
-    : clients;
+      .filter(client =>
+        !searchTerm || (typeof client?.name === 'string' && client?.name.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+    
+      
+
+    
+    
 
   return (
     <>
@@ -31,8 +39,18 @@ function AdminClientsTable({ clients, totalClients }) {
         href={!path.includes("/admin/clients") ? `/admin/clients` : null}
         info={`Total Clients: ${totalClients || 0}`}
       >
-        <div className="mb-4 flex justify-end">
-          <label htmlFor="options" className="mr-2 mt-2">
+        <div className="mb-4 flex justify-between">
+        <div className="flex-1" > 
+         <input
+         type="text"
+         placeholder="Search by name"
+         className="mb-4  cursor-pointer rounded border border-gray-300 p-2"
+         value={searchTerm}
+         onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        </div>
+        <div  >
+        <label htmlFor="options" className="mr-2 mt-2">
             Choose an option:
           </label>
           <select
@@ -45,6 +63,8 @@ function AdminClientsTable({ clients, totalClients }) {
             <option value="nojobs">No Jobs</option>
             <option value="jobs">Jobs</option>
           </select>
+        </div>
+        
         </div>
 
         <Table columns="grid-cols-[12rem_12rem_10rem_8rem_8rem]">
