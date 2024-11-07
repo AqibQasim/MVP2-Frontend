@@ -88,7 +88,7 @@ function CandidateHeader({ candidate }) {
               sm
               entity={{
                 image: "/avatars/avatar-3.svg",
-                name: "Esther Howard",
+                name: "Taha Khan",
                 profession: "Account Executive - AE",
               }}
             />
