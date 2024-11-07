@@ -8,13 +8,16 @@ import { useEffect, useState } from "react";
 function AdminJobsList({ jobs, totalJobs }) {
   const path = window.location.href;
   const [jobStatus, setJobStatus] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleJobStatusChange = (event) => {
     setJobStatus(event.target.value);
   };
-  const filteredJobs = jobStatus
-    ? jobs.filter((job) => job.job_status === jobStatus)
-    : jobs;
+  const filteredJobs =   jobs
+    .filter((job) => !jobStatus ||  job.job_status === jobStatus)
+    .filter(job =>
+      !searchTerm || (typeof job.client?.name === 'string' && job.client?.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
 
   return (
     <DashboardSection
@@ -24,7 +27,17 @@ function AdminJobsList({ jobs, totalJobs }) {
       href={!path.includes("/admin/jobs") ? `/admin/jobs` : null}
       info={`Total Jobs: ${totalJobs || 0}`}
     >
-      <div className="mb-4 flex justify-end">
+      <div className="mb-4 flex justify-between">
+      <div>
+        <input
+        type="text"
+        placeholder="Search by name"
+        className="mb-4 w-full cursor-pointer rounded border border-gray-300 p-2"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+        </div>
+        <div>
         <label htmlFor="options" className="mr-2 mt-2">
           Choose an option:
         </label>
@@ -37,9 +50,11 @@ function AdminJobsList({ jobs, totalJobs }) {
           <option value="">Select an job status</option>
           <option value="open">open</option>
           <option value="closed">Closed</option>
-          <option value="Interviewing">Interviewing</option>
+          <option value="interviewing">Interviewing</option>
           <option value="hired">Hired</option>
         </select>
+        </div>
+       
       </div>
 
       <Table
