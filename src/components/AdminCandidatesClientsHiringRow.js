@@ -15,6 +15,8 @@ function AdminCandidatesClientsHiringRow({
 
   console.log("renderrrrrr");
 
+  const [subscriptionId, setSubcriptionId] = useState("");
+
   //console.log(first)
   const [changeStatus, setChangeStatus] = useState({
     customer_id: null,
@@ -205,6 +207,37 @@ function AdminCandidatesClientsHiringRow({
         throw new Error(`HTTP error! status: ${subscriptionResponse.status}`);
       }
 
+      const { subscriptionId } = await subscriptionResponse.json();
+      setSubcriptionId(subscriptionId);
+    } catch (error) {
+      console.error("Error creating subscription:", error);
+    }
+  };
+
+  const handleHiring = async () => {
+    const customPrice = candidate.hourly_rate * 100 * 40;
+
+    try {
+      // Fetch client secret for subscription
+      const subscriptionResponse = await fetch(`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-hiring`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          client_id: changeStatus.client_id,
+          subscription_id: subscriptionId,
+          stripe_client_id: stripeClientId,
+          job_posting_id:changeStatus.job_posting_id,
+          customer_id:changeStatus.customer_id,
+          amount: customPrice
+        }),
+      });
+
+      if (!subscriptionResponse.ok) {
+        throw new Error(`HTTP error! status: ${subscriptionResponse.status}`);
+      }
+
       const { clientSecret } = await subscriptionResponse.json();
       //setClientSecret(clientSecret);
     } catch (error) {
@@ -333,8 +366,11 @@ function AdminCandidatesClientsHiringRow({
 
       if (stripeClientId) {
         handleSubscription();
-      }
 
+
+         
+        
+      }
       //stripeClientId
     }else if(changeStatus.job_status === "open" || changeStatus.job_status === "trial" || changeStatus.job_status === "close"){
         if (stripeClientId) {
@@ -342,6 +378,13 @@ function AdminCandidatesClientsHiringRow({
          }
     }
   }, [changeStatus, stripeClientId]);
+
+
+  useEffect(()=>{
+    if(subscriptionId){
+          handleHiring()
+      }
+  }, [subscriptionId, changeStatus])
 
   const rowClassName =
     job?.job_status === "trial" && daysPassed > 14
