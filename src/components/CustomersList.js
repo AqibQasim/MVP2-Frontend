@@ -20,7 +20,9 @@ function CustomersList() {
   const [clientCharges, setClientCharges] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-   const [isDetailsModalOpen, setDetailsIsModalOpen] = useState(false);
+  const [isDetailsModalOpen, setDetailsIsModalOpen] = useState(false);
+  const [isHiringDetailsModalOpen, setIsHiringDetailsModalOpen] = useState(false);
+  
   const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
   const [invoiceDetails, setInvoiceDetails] = useState({
     amount: "",
@@ -33,6 +35,7 @@ function CustomersList() {
   const [hasMore, setHasMore] = useState(false);
   const[totalPaymentsDue, setTotalPaymentsDue] = useState(0);
   const [customerDetails, setCustomerDetails] = useState(null);
+  const [customerHiringDetails, setCustomerHiringDetails] = useState(null);
   const observer = useRef();
 
   useEffect(() => {
@@ -239,6 +242,34 @@ const fetchInvoiceDetails = async (invoiceId) => {
     setClientCharges([]);
   };
 
+  const handleCustomerHiringClick = async (customer_id) => {
+   setLoading(true);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/get-hiring-payments?stripe_client_id=${customer_id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const { data } = await response.json();
+      console.log("Subscription Data is: ", data);
+
+      setCustomerHiringDetails(data);
+      setIsHiringDetailsModalOpen(true); // Open the modal
+    } catch (error) {
+      console.error("Error fetching subscription details:", error);
+    } finally {
+      setLoading(false);
+    }
+    
+  };
+
+
   const handleCustomerDetailsClick = async (customer_id) => {
    setLoading(true);
     try {
@@ -271,6 +302,11 @@ const fetchInvoiceDetails = async (invoiceId) => {
   const handleDetailsCloseModal = () => {
     setDetailsIsModalOpen(false);
     setCustomerDetails(null);
+  };
+
+  const handleHiringDetailsCloseModal = () => {
+    setIsHiringDetailsModalOpen(false);
+    setCustomerHiringDetails(null);
   };
 
   const handleCreateInvoice = async () => {
@@ -328,7 +364,7 @@ const fetchInvoiceDetails = async (invoiceId) => {
   
 
   return (
-    <div className="rounded-3xl bg-neutral-white p-6">
+    <div className="rounded-3xl bg-neutral-white p-6 text-sm">
       <div className="flex justify-between">
         <Heading>Clients List</Heading>
         <div>
@@ -361,50 +397,57 @@ const fetchInvoiceDetails = async (invoiceId) => {
       />
       <div className="h-[90vh] overflow-y-auto p-5">
         <ul className="flex flex-col flex-wrap gap-3">
-          <li className="grid grid-cols-9 text-start">
+          <li className="grid grid-cols-10 text-start">
             {/* <div>ID</div> */}
             <div>Name</div>
             <div>Email</div>
-            <div>Last Payment</div>
+            <div>Last Payment Date</div>
             <div>Amount</div>
-            <div>Next Date</div>
+            <div>Next Payment Date</div>
             <div>Last Invoice Status</div>
             <div>Invoice</div>
             <div>Payment History</div>
             <div>Details</div>
+            <div>Hiring Details</div>
             
           </li>
           <hr></hr>
           {filteredCustomers.map((customer) => (
             <>
               <li
-                className="grid grid-cols-9 text-wrap text-start"
+                className="grid grid-cols-10 text-wrap text-start"
                 key={customer.id}
               >
                 {/* <div className="break-words">{customer.id}</div> */}
                 <div className="break-words">{customer.name}</div>
-                <div className="break-words w-24">{customer.email}</div>
+                <div className="break-words">{customer.email}</div>
                 <div>{new Date(customer.subscriptions[0].current_period_start * 1000).toLocaleDateString()}</div>
                 <div>{(customer.subscriptions[0].items.data[0].plan.amount) / 100}$</div>
                 <div>{new Date(customer.subscriptions[0].current_period_end * 1000).toLocaleDateString()}</div>
                 <div>{customer.last_invoice_det.status}</div>
                 <Capsule
                   onClick={() => openInvoiceModal(customer)}
-                  className="mx-auto w-max cursor-pointer !bg-primary-tint-100 h-8 text-xs"
+                  className="mx-auto w-auto cursor-pointer !bg-primary-tint-100 h-auto text-xs"
                 >
                   Create Invoice
                 </Capsule>
                 <Capsule
                   onClick={() => handleCustomerClick(customer.id)}
-                  className="mx-auto w-max cursor-pointer !bg-primary-tint-100 h-8 text-xs"
+                  className="mx-auto w-auto cursor-pointer !bg-primary-tint-100 h-auto text-xs"
                 >
                   View History
                 </Capsule>
                 <Capsule
                   onClick={() => handleCustomerDetailsClick(customer.id)}
-                  className="mx-auto w-max cursor-pointer !bg-primary-tint-100 h-8 text-xs"
+                  className="mx-auto w-auto cursor-pointer !bg-primary-tint-100 h-auto text-xs"
                 >
                   View Details
+                </Capsule>
+                <Capsule
+                  onClick={() => handleCustomerHiringClick(customer.id)}
+                  className="mx-auto w-auto cursor-pointer !bg-primary-tint-100 h-auto text-xs"
+                >
+                  View Hiring Details
                 </Capsule>
               </li>
               <hr></hr>
@@ -516,6 +559,47 @@ const fetchInvoiceDetails = async (invoiceId) => {
             <p>Amount: ${customerDetails[0].items.data[0].plan.amount / 100}</p>
             <p>Status: {customerDetails[0].status}</p>*/}
           </div>
+        ) : (
+          <div>Loading...</div>
+        )}
+        </div>
+      </Modal>
+
+      {/* Modal for Client details */}
+      <Modal  isOpen={isHiringDetailsModalOpen} onClose={handleHiringDetailsCloseModal}>
+      <div className="p-4">
+        <h2 className="text-xl font-semibold mb-4">Client Hiring Details</h2>
+        {customerHiringDetails ? (
+
+          customerHiringDetails.length > 0 ? (
+          
+          <ul className="flex flex-col gap-3">
+              <li className="grid grid-cols-8 text-start">
+                <div className="font-bold">Client Name</div>
+                <div className="font-bold">Client Email</div>
+                <div className="font-bold">Customer Name</div>
+                <div className="font-bold">Customer Email</div>
+                <div className="font-bold">Customer Hourly Rate</div>
+                <div className="font-bold">Job</div>
+                <div className="font-bold">Job Hourly Rate</div>
+                <div className="font-bold">Amount</div>
+                
+              </li>
+             {customerHiringDetails.map((detail, index) => (
+            <li key={index} className="grid grid-cols-8 text-start">
+              <div>{detail?.client?.name}</div>
+              <div className="break-words">{detail?.client?.email}</div>
+              <div>{detail?.customer?.name}</div>
+              <div className="break-words">{detail?.customer?.email}</div>
+              <div>{detail?.customer?.hourly_rate}</div>
+              <div>{detail?.job_posting?.position}</div>
+              <div>{detail?.job_posting?.hourly_rate}</div>
+              <div>{detail.amount / 100}</div>
+            </li>
+          ))}
+          </ul>
+          
+          ) : (<div>No data Found...</div>)
         ) : (
           <div>Loading...</div>
         )}
