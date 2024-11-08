@@ -420,12 +420,13 @@ const fetchInvoiceDetails = async (invoiceId) => {
 
       {/* Modal for Client Payment History */}
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-        <div className="w-full gap-4 rounded-[24px] bg-neutral-white p-6">
+        
+        <div className="w-full gap-4 rounded-[24px] max-h-[80vh] overflow-y-auto bg-neutral-white p-6">
           {/* <h2>Client Payment History</h2> */}
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <ul className="flex flex-col gap-3">
+            <ul className="flex flex-col   gap-3">
               <li className="grid grid-cols-6 text-start">
                 <div>Card Name</div>
                 <div>Amount</div>
@@ -436,7 +437,7 @@ const fetchInvoiceDetails = async (invoiceId) => {
               </li>
               {clientCharges.length > 0 ? (
                 clientCharges.map((charge, index) => (
-                  <li key={index} className="grid grid-cols-6 text-start">
+                  <li key={index} className="grid grid-cols-6 text-start ">
                     <div>{charge.name}</div>
                     <div>{charge.amount}</div>
                     <div>{charge.status}</div>

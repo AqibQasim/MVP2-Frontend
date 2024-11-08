@@ -25,10 +25,6 @@ function AdminClientsTable({ clients, totalClients }) {
         !searchTerm || (typeof client?.name === 'string' && client?.name.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     
-      
-
-    
-    
 
   return (
     <>
