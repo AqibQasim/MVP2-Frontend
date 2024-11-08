@@ -28,11 +28,11 @@ function CandidateDashboardNavLinks({ candidateId }) {
 
       icon: <SvgIconJob className="size-6" />,
     },
-    // {
-    //   name: "Payment",
-    //   href: `/candidate/${candidateId}/payment`,
-    //   icon: <SvgIconPayment className="size-6" />,
-    // },
+       {
+         name: "Payout",
+         href: `/candidate/${candidateId}/payment`,
+         icon: <SvgIconPayment className="size-6" />,
+       },
     {
       name: "Settings",
       href: `/candidate/${candidateId}/settings`,
