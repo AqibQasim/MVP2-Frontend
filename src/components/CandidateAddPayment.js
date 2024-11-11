@@ -15,6 +15,12 @@ function CandidateEvaluateYourselfCard({ candidate }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMethodId, setSelectedMethodId] = useState(null);
   const [cardholderName, setCardholderName] = useState('');
+  const [accountNumber, setAccountNumber] = useState('');
+  const [ibanNumber, setIbanNumber] = useState('');
+  const [bankName, setBankName] = useState('');
+  const [city, setCity] = useState('');
+  const [country, setCountry] = useState('');
+  const [state, setState] = useState('');
   const paymentElementRef = useRef(null);
 
   
@@ -31,7 +37,10 @@ const handleCloseModal = () => {
    
 };
 
-
+const handleSubmit = (event) => {
+  event.preventDefault();
+  // Handle form submission here, e.g., send data to an API
+};
 
 
   
@@ -83,7 +92,104 @@ const handleCloseModal = () => {
              {/* Modal */}
              <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
                 <div className="w-fit gap-1 rounded-[24px] bg-neutral-white p-2  ">
-                    <form >
+
+                <form onSubmit={handleSubmit}>
+      <div className="text-4xl mb-5">Billing Info</div>
+
+      <div className="flex flex-col space-y-3">
+        <div>
+          <label>Account Title</label>
+          <input
+            type="text"
+            value={cardholderName}
+            onChange={(e) => setCardholderName(e.target.value)}
+            className="p-2 rounded-5xl w-full border-2 ms-2"
+            placeholder="John Doe"
+            required
+          />
+        </div>
+
+        <div>
+          <label>Account No.</label>
+          <input
+            type="number"
+            value={accountNumber}
+            onChange={(e) => setAccountNumber(e.target.value)}
+            className="p-2 rounded-5xl w-full border-2 ms-2"
+            placeholder="123456789"
+            required
+          />
+        </div>
+
+        <div>
+          <label>IBAN No.</label>
+          <input
+            type="text"
+            value={ibanNumber}
+            onChange={(e) => setIbanNumber(e.target.value)}
+            className="p-2 rounded-5xl w-full border-2 ms-2"
+            placeholder="IBAN123456789"
+            required
+          />
+        </div>
+
+        <div>
+          <label>Bank Name</label>
+          <input
+            type="text"
+            value={bankName}
+            onChange={(e) => setBankName(e.target.value)}
+            className="p-2 rounded-5xl w-full border-2 ms-2"
+            placeholder="Bank Name"
+            required
+          />
+        </div>
+      </div>
+
+      <div className="flex mt-4 space-x-2">
+        <input
+          type="text"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          className="p-2 rounded-5xl w-36 border-2 ms-2"
+          placeholder="City"
+          required
+        />
+
+        <input
+          type="text"
+          value={country}
+          onChange={(e) => setCountry(e.target.value)}
+          className="p-2 rounded-5xl w-36 border-2 ms-2"
+          placeholder="Country"
+          required
+        />
+
+        <input
+          type="text"
+          value={state}
+          onChange={(e) => setState(e.target.value)}
+          className="p-2 rounded-5xl w-36 border-2 ms-2"
+          placeholder="State"
+          required
+        />
+      </div>
+
+      <div className="flex w-full space-x-2 mt-4">
+        <div className="flex-1">
+          <ButtonBack2 onClick={handleCloseModal} className="min-w-full">
+            Close
+          </ButtonBack2>
+        </div>
+        <div className="flex-1">
+          <ButtonCapsule className="flex-1 min-w-full p-3" type="submit">
+            Add Account
+          </ButtonCapsule>
+        </div>
+      </div>
+    </form>
+
+                    {/* <form >
                        
                     <div className="text-4xl  mb-5" >
                            Billing Info
@@ -97,10 +203,8 @@ const handleCloseModal = () => {
                           <p>Account Tittle.</p>
                          <input
                                 type="text"
-                                value={cardholderName}
                                 onChange={(e) => setCardholderName(e.target.value)}
                                 className="p-2 rounded-5xl w-full border-2 ms-2"
-                                placeholder="John Doe"
                                 required
                             />
                            
@@ -109,11 +213,9 @@ const handleCloseModal = () => {
                          <div>
                           <p>Account No.</p>
                          <input
-                                type="Number"
-                                value={cardholderName}
+                                type="text"
                                 onChange={(e) => setCardholderName(e.target.value)}
                                 className="p-2 rounded-5xl w-full border-2 ms-2"
-                                placeholder="John Doe"
                                 required
                             />
                            
@@ -121,11 +223,9 @@ const handleCloseModal = () => {
                          <div>
                           <p>IBAN No.</p>
                          <input
-                                type="Number"
-                                value={cardholderName}
+                                type="text"
                                 onChange={(e) => setCardholderName(e.target.value)}
                                 className="p-2 rounded-5xl w-full border-2 ms-2"
-                                placeholder="John Doe"
                                 required
                             />
                            
@@ -134,10 +234,8 @@ const handleCloseModal = () => {
                           <p>Bank Name</p>
                          <input
                                 type="text"
-                                value={cardholderName}
                                 onChange={(e) => setCardholderName(e.target.value)}
                                 className="p-2 rounded-5xl w-full border-2 ms-2"
-                                placeholder="John Doe"
                                 required
                             />
                            
@@ -147,8 +245,6 @@ const handleCloseModal = () => {
                             <div className="flex mt-4" >
                                 <div> 
                                  <input
-                                type="text"
-                                value={cardholderName}
                                 onChange={(e) => setCardholderName(e.target.value)}
                                 className="p-2 rounded-5xl w-36  border-2 ms-2"
                                 placeholder="City"
@@ -158,7 +254,6 @@ const handleCloseModal = () => {
                                 <div>
                                 <input
                                 type="text"
-                                value={cardholderName}
                                 onChange={(e) => setCardholderName(e.target.value)}
                                 className="p-2 rounded-5xl w-36  border-2 ms-2"
                                 placeholder="Country"
@@ -168,7 +263,6 @@ const handleCloseModal = () => {
                              <div>
                              <input
                                 type="text"
-                                value={cardholderName}
                                 onChange={(e) => setCardholderName(e.target.value)}
                                 className="p-2 w-36  rounded-5xl border-2 ms-2"
                                 placeholder="State"
@@ -194,7 +288,7 @@ const handleCloseModal = () => {
                            </div>
                           
                       
-                    </form>
+                    </form> */}
                 </div>
             </Modal>
 
