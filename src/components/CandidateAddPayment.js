@@ -43,7 +43,7 @@ const handleSubmit = (event) => {
 };
 
 const addPaymentDetails = (async () => {
-         await fetch(`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/add-candidate-bank-account`,  {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/add-candidate-bank-account`,  {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -59,7 +59,9 @@ const addPaymentDetails = (async () => {
               country: country
             }),
           })
-          handleCloseModal();
+          if(response.status == 200){
+            handleCloseModal();
+          }
 })
   
   return (
