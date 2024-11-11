@@ -377,6 +377,7 @@ import CandidateReportCard from "@/components/CandidateReportCard";
 import ReportOverlay from "@/components/ReportOverlay";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { useEffect, useState } from "react";
+import CandidatePaymentHistoryTable from "@/components/CandidatePaymentHistoryTable"
 
 export default function CandidateIdPage({ candidate, candidateId }) {
 
@@ -416,19 +417,48 @@ export default function CandidateIdPage({ candidate, candidateId }) {
         <CandidateAddPayment candidate={candidate}/>
       ) : (
         <div>
-          <CandidateReportCard
-            candidateReport={candidateReport}
-            handleOpenOverlay={handleOpenOverlay} 
-          />
-          {isReportOverlayOpened && (
-            <ReportOverlay
-              reportOverlay={isReportOverlayOpened}
-              onClose={handleCloseOverlay} 
-              selectedCandidate={candidateReport}
-            />
-          )}
+           <div className="bg-neutral-white min-h-full w-auto gap-8 rounded-4xl px-8 py-10">
+     
+      
+     <div className="flex-wrap space-x-4">
+       {/* Step 1 */}
+
+           <div>Total Payments Success</div>
+           <div> $36000 </div>
+           <div>$1600 USD</div> 
+         
+
+        <div className="my-5" >
+         <p>Next Payment</p>
+        </div>
+        <hr/>
+        <div className="my-5" >
+         <p>Pending Payment </p>
+        </div>
+        <div>
+         <hr/>
+         <div>
+         <p  > Transaction Details </p>
+         <p> To change which method is preferred, edit your transaction method </p>
+         </div>
+        
+         
+        </div>
+      
+    </div>
+
+    </div>
+     
+    
+    < CandidatePaymentHistoryTable />
         </div>
       )}
+
+          
+      
+   
+       
+
     </>
   );
 }

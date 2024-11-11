@@ -1,79 +1,40 @@
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import AddSkillForm from "./AddSkillForm";
+import { useMemo, useState, useRef } from "react";
 import CandidateProfileInfo from "./CandidateProfileInfo";
 import Heading from "./Heading";
-import Overlay from "./Overlay";
+import Modal from "./AdminJobsFormModal";
+import ButtonCapsule from "./ButtonCapsule";
+import ButtonBack2 from "./ButtonBack2";
+
+
 
 function CandidateEvaluateYourselfCard({ candidate }) {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
-  const [skill1, setSkill1] = useState("");
-  const [skill2, setSkill2] = useState("");
-  const [skill3, setSkill3] = useState("");
-  const [skill4, setSkill4] = useState("");
-  const [level1, setLevel1] = useState("");
-  const [level2, setLevel2] = useState("");
-  const [level3, setLevel3] = useState("");
-  const [level4, setLevel4] = useState("");
-  const [error, setError]= useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedMethodId, setSelectedMethodId] = useState(null);
+  const [cardholderName, setCardholderName] = useState('');
+  const paymentElementRef = useRef(null);
+
+  
   const router = useRouter();
   const candidate_id = usePathname().split("/")[2];
   // const dispatch = useDispatch();
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+};
 
-  const skills = useMemo(
-    () => [
-      { skill: skill1, level: level1 },
-      { skill: skill2, level: level2 },
-      { skill: skill3, level: level3 },
-      { skill: skill4, level: level4 },
-    ],
-    [level1, level2, level3, level4, skill1, skill2, skill3, skill4],
-  );
+const handleCloseModal = () => {
+    setIsModalOpen(false);
+    // Clean up the payment element when modal closes
+   
+};
 
-  const filledSkills = useMemo(
-    () => skills.filter((skillObj) => skillObj.skill || skillObj.level),
-    [skills],
-  );
 
-  const payload = useMemo(
-    () => ({
-      endpoint: "set-expertise",
-      method: "PUT",
-      body: {
-        customer_id: candidate_id,
-        expertise: filledSkills,
-      },
-    }),
-    [candidate_id, filledSkills],
-  );
 
-  const handleStartAssessment = async () => {
 
-    const hasEmptyFields = filledSkills.some(
-      (skillObj) => !skillObj.skill || !skillObj.level
-    );
   
-    if (hasEmptyFields) {
-      setError("All skill fields and levels are required.");
-    }else{
-      setError(null);
-      const result = await mvp2ApiHelper(payload);
-      if (result.status === 200) {
-        //router.push(`/candidate/${candidate_id}/test`,{skills:filledSkills})
-        // dispatch(setFilledSkills(filledSkills));
-        router.push(`/candidate/${candidate_id}/test`);
-      }
-    }
-    
-    // console.log(payload.body)
-  };
-
-  const handleBack = async () => {
-    setOverlayVisible(false);
-  };
-
   return (
     <div className="size-full flex-grow gap-8 rounded-4xl bg-neutral-white px-8 py-10">
       
@@ -100,10 +61,11 @@ function CandidateEvaluateYourselfCard({ candidate }) {
             Look like you haven’t saved any credit card yet, click on the button to add the first one.
             </p>
           </div>
+          
 
           <div>
             <button
-              onClick={() => setOverlayVisible(true)}
+              onClick={handleOpenModal}
               className="flex flex-row items-center justify-between gap-2 rounded-full bg-primary px-5 py-2 text-sm font-bold capitalize text-neutral-white"
             >
               Add Payment Method
@@ -117,38 +79,126 @@ function CandidateEvaluateYourselfCard({ candidate }) {
           </div>
         </div>
       </div>
-      {isOverlayVisible && (
-        <Overlay width={"70.75rem"} height={"83%"} isVisible={isOverlayVisible}>
-          <AddSkillForm
-            skill1={skill1}
-            setSkill1={setSkill1}
-            skill2={skill2}
-            setSkill2={setSkill2}
-            skill3={skill3}
-            setSkill3={setSkill3}
-            skill4={skill4}
-            setSkill4={setSkill4}
-            level1={level1}
-            setLevel1={setLevel1}
-            level2={level2}
-            setLevel2={setLevel2}
-            level3={level3}
-            setLevel3={setLevel3}
-            level4={level4}
-            setLevel4={setLevel4}
-            onContinue={handleStartAssessment}
-            onBack={handleBack}
-            error={error}
-            //onBack={}
-            //   codingExpertise={codingExpertise}
-            //   setCodingExpertise={setCodingExpertise}
-            //   isTestRequired={isTestRequired}
-            //   setIsTestRequired={setIsTestRequired}
-            //   expertiseRef={expertiseRef}
-            //   setTechStack={setTechStack}
-          />
-        </Overlay>
-      )}
+
+             {/* Modal */}
+             <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+                <div className="w-fit gap-1 rounded-[24px] bg-neutral-white p-2  ">
+                    <form >
+                       
+                    <div className="text-4xl  mb-5" >
+                           Billing Info
+                         </div  >
+
+
+                          
+                       <div className="flex  flex-col space-y-3">
+
+                       <div>
+                          <p>Account Tittle.</p>
+                         <input
+                                type="text"
+                                value={cardholderName}
+                                onChange={(e) => setCardholderName(e.target.value)}
+                                className="p-2 rounded-5xl w-full border-2 ms-2"
+                                placeholder="John Doe"
+                                required
+                            />
+                           
+                         </div>
+                        
+                         <div>
+                          <p>Account No.</p>
+                         <input
+                                type="Number"
+                                value={cardholderName}
+                                onChange={(e) => setCardholderName(e.target.value)}
+                                className="p-2 rounded-5xl w-full border-2 ms-2"
+                                placeholder="John Doe"
+                                required
+                            />
+                           
+                         </div>
+                         <div>
+                          <p>IBAN No.</p>
+                         <input
+                                type="Number"
+                                value={cardholderName}
+                                onChange={(e) => setCardholderName(e.target.value)}
+                                className="p-2 rounded-5xl w-full border-2 ms-2"
+                                placeholder="John Doe"
+                                required
+                            />
+                           
+                         </div>
+                         <div>
+                          <p>Bank Name</p>
+                         <input
+                                type="text"
+                                value={cardholderName}
+                                onChange={(e) => setCardholderName(e.target.value)}
+                                className="p-2 rounded-5xl w-full border-2 ms-2"
+                                placeholder="John Doe"
+                                required
+                            />
+                           
+                         </div>
+                         </div>
+                          
+                            <div className="flex mt-4" >
+                                <div> 
+                                 <input
+                                type="text"
+                                value={cardholderName}
+                                onChange={(e) => setCardholderName(e.target.value)}
+                                className="p-2 rounded-5xl w-36  border-2 ms-2"
+                                placeholder="City"
+                                required
+                            />
+                            </div>
+                                <div>
+                                <input
+                                type="text"
+                                value={cardholderName}
+                                onChange={(e) => setCardholderName(e.target.value)}
+                                className="p-2 rounded-5xl w-36  border-2 ms-2"
+                                placeholder="Country"
+                                required
+                            />
+                            </div>
+                             <div>
+                             <input
+                                type="text"
+                                value={cardholderName}
+                                onChange={(e) => setCardholderName(e.target.value)}
+                                className="p-2 w-36  rounded-5xl border-2 ms-2"
+                                placeholder="State"
+                                required
+                            />
+                           </div>
+                        
+                        
+                            </div>
+                            <div className="flex w-full space-x-2 mt-4" >
+                              <div className="flex-1" >
+                              <ButtonBack2 onClose={handleCloseModal} className=" min-w-full p- " >
+                               Close
+                              </ButtonBack2   >
+                              </div>
+                            <div className="flex-1" >
+                            <ButtonCapsule  className="flex-1 min-w-full p-3"  >
+                              Add Account
+                              </ButtonCapsule>
+                            </div>
+                         
+
+                           </div>
+                          
+                      
+                    </form>
+                </div>
+            </Modal>
+
+    
     </div>
   );
 }
