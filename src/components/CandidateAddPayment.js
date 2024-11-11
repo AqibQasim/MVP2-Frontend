@@ -42,7 +42,24 @@ const handleSubmit = (event) => {
   // Handle form submission here, e.g., send data to an API
 };
 
-
+const addPaymentDetails = (async () => {
+         await fetch(`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/add-candidate-bank-account`,  {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              customer_id: candidate_id, 
+              account_title:cardholderName, 
+              account_no: accountNumber, 
+              iban_no: ibanNumber, 
+              bank_name:bankName , 
+              city: city , 
+              state: state , 
+              country: country
+            }),
+          })
+})
   
   return (
     <div className="size-full flex-grow gap-8 rounded-4xl bg-neutral-white px-8 py-10">
@@ -112,7 +129,7 @@ const handleSubmit = (event) => {
         <div>
           <label>Account No.</label>
           <input
-            type="number"
+            type="text"
             value={accountNumber}
             onChange={(e) => setAccountNumber(e.target.value)}
             className="p-2 rounded-5xl w-full border-2 ms-2"
@@ -182,7 +199,7 @@ const handleSubmit = (event) => {
           </ButtonBack2>
         </div>
         <div className="flex-1">
-          <ButtonCapsule className="flex-1 min-w-full p-3" type="submit">
+          <ButtonCapsule onPress={addPaymentDetails} className="flex-1 min-w-full p-3" type="submit">
             Add Account
           </ButtonCapsule>
         </div>
