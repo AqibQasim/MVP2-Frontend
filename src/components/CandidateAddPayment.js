@@ -59,6 +59,7 @@ const addPaymentDetails = (async () => {
               country: country
             }),
           })
+          handleCloseModal();
 })
   
   return (
@@ -105,7 +106,6 @@ const addPaymentDetails = (async () => {
           </div>
         </div>
       </div>
-
              {/* Modal */}
              <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
                 <div className="w-fit gap-1 rounded-[24px] bg-neutral-white p-2  ">
