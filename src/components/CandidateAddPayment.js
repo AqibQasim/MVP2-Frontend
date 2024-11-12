@@ -10,7 +10,7 @@ import ButtonBack2 from "./ButtonBack2";
 
 
 
-function CandidateEvaluateYourselfCard() {
+function CandidateEvaluateYourselfCard({ candidate }) {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMethodId, setSelectedMethodId] = useState(null);
@@ -194,17 +194,11 @@ const addPaymentDetails = (async () => {
         />
       </div>
 
-      <div className="flex w-full space-x-2 mt-4">
-        <div className="flex-1">
-          <ButtonBack2 onClick={handleCloseModal} className="min-w-full">
-            Close
-          </ButtonBack2>
-        </div>
-        <div className="flex-1">
+      <div className="flex w-full  mt-4">
           <ButtonCapsule onPress={addPaymentDetails} className="flex-1 min-w-full p-3" type="submit">
             Add Account
           </ButtonCapsule>
-        </div>
+     
       </div>
     </form>
 

@@ -32,14 +32,14 @@ function CandidatePaymentHistoryRow({payment}) {
         <p>paid</p>
       </Capsule>
       <div className="amount text-center">{payment.amount}</div>
-      <div className="amount text-center">paid</div>
-      <Capsule
+      
+      {/* <Capsule
         className="ml-auto !bg-primary-tint-100 cursor-pointer"
         icon={<IconWithBg icon={<SvgIconDownload />} />}
         // onClick={() => handleReceiptClick(payment.receipt_url)}
       >
         view
-      </Capsule>
+      </Capsule> */}
     </Table.Row>
   );
 }
