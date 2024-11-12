@@ -21,7 +21,7 @@ function CandidatePaymentHistoryRow({payment}) {
           />
         }
         entity={{
-          name:  payment?.customer?.name
+          name:  payment?.client?.name
         }}
       />
       {/* <Capsule>{payment.jobType}</Capsule> */}

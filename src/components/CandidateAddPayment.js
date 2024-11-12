@@ -6,7 +6,7 @@ import CandidateProfileInfo from "./CandidateProfileInfo";
 import Heading from "./Heading";
 import Modal from "./AdminJobsFormModal";
 import ButtonCapsule from "./ButtonCapsule";
-import ButtonBack2 from "./ButtonBack2";
+
 
 
 
