@@ -1,56 +1,86 @@
 
 "use client";
 import CandidateAddPayment from "@/components/CandidateAddPayment";
-import CandidateReportCard from "@/components/CandidateReportCard";
-import ReportOverlay from "@/components/ReportOverlay";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import CandidatePaymentHistorySummary from "@/components/ClientPaymentHistorySummary";
 import { useEffect, useState } from "react";
 import CandidatePaymentHistoryTable from "@/components/CandidatePaymentHistoryTable";
-import ClientPaymentMethod from "@/components/ClientPaymentMethod";
 import Heading from "@/components/Heading";
-import SvgIconPayment from "@/svgs/SvgIconPayment";
 import PaymentMethodBank from "@/components/PaymentMethodBank";
 
-export default function CandidateIdPage({ candidate, candidateId }) {
+export default function CandidateIdPaymentPage({ params }) {
 
-  const [candidateReport, setCandidateReport] = useState(null);
-  const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
+  console.log("Candidate ID:", params?.candidateId);
+ 
+  const nextPaymentDate = "20-0:00"; 
+  const candidateCharges = "20-00:00";
+  const [paymentDetails, setPaymentDetails] = useState(null);
+  const [paymentHistory, setPaymentHistory] = useState(null);
+ 
 
-  console.log("overlayyyyy: ", isReportOverlayOpened);
 
-  const getCandidateResult = () => {
+  const getPaymentDetails = () => {
     const payload = {
-      endpoint: `get-customer-result?customer_id=${candidateId}`,
+      endpoint: `get-candidate-bank-account?customer_id=${params?.candidateId}`,
       method: "GET",
     };
-    mvp2ApiHelper(payload).then((result) => {
-      if (result) setCandidateReport(result?.data?.data);
-    });
+    mvp2ApiHelper(payload)
+      .then((result) => {
+        if (result) {
+          setPaymentDetails(result?.data?.data);
+         const data = result?.data?.data
+          console.log("Payment Details fetched:", result?.data?.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching payment details:", error);
+      });
+  };
+  
+
+  
+
+  
+  const getPaymentHistory = () => {
+    const payload = {
+      endpoint: `get-hiring-payments?customer_id=${params?.candidateId}`,
+      method: "GET",
+    };
+    mvp2ApiHelper(payload)
+      .then((result) => {
+        if (result) {
+          console.log("Payment History fetched:", result?.data?.data || []);
+          setPaymentHistory(result?.data?.data || []);
+          
+       
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching payment details:", error);
+      });
   };
 
   useEffect(() => {
-    getCandidateResult();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [candidate?.customer_id]);
+    getPaymentDetails();
+    getPaymentHistory();
+  }, [params?.candidateId]);
+  
 
-  // Function to handle opening the overlay
-  const handleOpenOverlay = () => {
-    setIsReportOverlayOpened(true);
-  };
+  
 
-  // Function to handle closing the overlay
-  const handleCloseOverlay = () => {
-    setIsReportOverlayOpened(false);
-  };
-  const nextPaymentDate = 20
-  const candidateCharges =20
+  useEffect(() => {
+    console.log(`///////////${paymentDetails}`)
+    console.log(`///////////${paymentHistory}`)
+  }, [paymentDetails, paymentHistory]);
+
+  
+ 
 
   return (
     <>
-    
-        <CandidateAddPayment candidate={candidate}/>
-      
+    { !paymentDetails  ? (
+        <CandidateAddPayment/>
+      ) : 
         <div className="space-y-2" >
   
         <CandidatePaymentHistorySummary
@@ -67,31 +97,32 @@ export default function CandidateIdPage({ candidate, candidateId }) {
           <p className=" text-grey-primary-shade-30" > To change which method is preferred, edit your transaction method </p>
        
         
-          <div className="payment-method-wrapper grid w-full my-5 justify-items-start gap-x-1.5 gap-y-2">
-                {/* {paymentMethods.map((method) => ( */}
-                    <PaymentMethodBank
-                        // key={method.id}
-                        // last4={method.card.last4}
-                        // name={method.billing_details.name}
-                        // date={`${method.card.exp_month}/${method.card.exp_year}`}
-                        // selected={method.id === selectedMethodId}
-                        //  onSelect={() => {
-                        // handleSelectMethod(method.id);
-                        // onSelect(method.id); // Call onSelect to update the state in the parent
-                    // }}
-                    />
-                {/* ))} */}
-       </div>
+         
+       <div className="payment-method-wrapper grid w-full my-5 justify-items-start gap-x-1.5 gap-y-2">
+              <PaymentMethodBank
+                last4={paymentDetails.account_no}
+                bankName={paymentDetails.bank_name}
+                selected={true} // Set selected status if applicable
+                onSelect={() => console.log("Selected Payment Method")}
+              />
+            </div>
 
          </div>
        
 
     
-          < CandidatePaymentHistoryTable />
+          < CandidatePaymentHistoryTable 
+           
+           paymentHistory={paymentHistory}
+         
+           
+          
+          />
+        
         </div>
-      {/* )} */}
+    
 
-
+      }
 
    
        
@@ -99,4 +130,3 @@ export default function CandidateIdPage({ candidate, candidateId }) {
     </>
   );
 }
-

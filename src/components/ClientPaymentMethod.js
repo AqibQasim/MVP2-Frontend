@@ -180,3 +180,4 @@ function ClientPaymentMethod({ paymentMethods, stripe, clientSecret, stripePromi
 }
 
 export default ClientPaymentMethod;
+

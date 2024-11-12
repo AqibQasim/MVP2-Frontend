@@ -10,7 +10,7 @@ import ButtonBack2 from "./ButtonBack2";
 
 
 
-function CandidateEvaluateYourselfCard({ candidate }) {
+function CandidateEvaluateYourselfCard() {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMethodId, setSelectedMethodId] = useState(null);

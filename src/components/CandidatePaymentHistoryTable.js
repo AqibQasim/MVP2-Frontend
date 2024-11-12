@@ -3,7 +3,7 @@ import CandidatePaymentHistoryRow from "./CandidatePaymentHistoryRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 
-function CandidatePaymentHistoryTable() {
+function CandidatePaymentHistoryTable({paymentHistory}) {
 
  
   
@@ -22,11 +22,19 @@ function CandidatePaymentHistoryTable() {
           <div className="invoice text-center">Invoice</div>
           <div className="actions text-right">Action</div>
         </Table.Header>
-        <Table.Body>
-           <CandidatePaymentHistoryRow />
-        </Table.Body>
+
+        {paymentHistory && paymentHistory.length > 0 ? (
+        <Table.Body
+          data={paymentHistory}
+          render={(payment, i) => <CandidatePaymentHistoryRow  payment={payment} />}
+        />
+      ) : (
+        <div >
+          <p>No data to show at the moment</p>
+        </div>
+      )}
           
-      
+    
       </Table>
     </DashboardSection>
   );

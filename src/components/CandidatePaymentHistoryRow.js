@@ -6,7 +6,7 @@ import EntityCard from "./EntityCard";
 import IconWithBg from "./IconWithBg";
 import Table from "./Table";
 
-function CandidatePaymentHistoryRow() {
+function CandidatePaymentHistoryRow({payment}) {
  
   return (
     <Table.Row>
@@ -21,18 +21,18 @@ function CandidatePaymentHistoryRow() {
           />
         }
         entity={{
-          name: "Test"
+          name:  payment?.customer?.name
         }}
       />
       {/* <Capsule>{payment.jobType}</Capsule> */}
       <div className="date text-nowrap text-center">
-        12-02-2025
+        {payment.createdAt}
       </div>
       <Capsule  className="status !text-center">
-        <p>done</p>
+        <p>paid</p>
       </Capsule>
-      <div className="amount text-center">100000</div>
-      <div className="amount text-center">well</div>
+      <div className="amount text-center">{payment.amount}</div>
+      <div className="amount text-center">paid</div>
       <Capsule
         className="ml-auto !bg-primary-tint-100 cursor-pointer"
         icon={<IconWithBg icon={<SvgIconDownload />} />}
