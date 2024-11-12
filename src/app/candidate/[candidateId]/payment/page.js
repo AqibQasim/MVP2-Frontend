@@ -48,9 +48,9 @@ export default function CandidateIdPage({ candidate, candidateId }) {
 
   return (
     <>
-      {/* {!candidateReport ? (
+    
         <CandidateAddPayment candidate={candidate}/>
-      ) : ( */}
+      
         <div className="space-y-2" >
   
         <CandidatePaymentHistorySummary
@@ -91,8 +91,8 @@ export default function CandidateIdPage({ candidate, candidateId }) {
         </div>
       {/* )} */}
 
-          
-      
+
+
    
        
 
