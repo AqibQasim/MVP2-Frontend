@@ -31,7 +31,7 @@ function CandidatePaymentHistoryRow({payment}) {
       <Capsule  className="status !text-center">
         <p>paid</p>
       </Capsule>
-      <div className="amount text-center">{payment.amount}</div>
+      <div className="amount text-center">{payment.amount/100}</div>
       
       {/* <Capsule
         className="ml-auto !bg-primary-tint-100 cursor-pointer"

@@ -15,9 +15,6 @@ function PaymentMethodBank({
         </div>
         <div className="details">
           <div className="flex items-center justify-start gap-1 font-lufga text-[15px] font-medium">
-            <span className="flex items-center justify-center gap-1">
-             Account No.
-            </span>
             {last4}
           </div>
           <p className="text-[14px] text-sm font-medium text-grey-primary-shade-30">
