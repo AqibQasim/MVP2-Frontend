@@ -15,6 +15,7 @@ import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { useParams } from "next/navigation";
 
 function ClientRecommendationCard({
+  admin_hourly_rate,
   client = {},
   recommendedCandidate = {},
   recommendedForJob = {},
@@ -128,7 +129,7 @@ function ClientRecommendationCard({
               </Capsule>
               <Capsule icon={<IconWithBg icon="$" />}>
                 <p className="">
-                  {formatCurrency(recommendedCandidate?.hourly_rate)}
+                  {formatCurrency(admin_hourly_rate)}
                 </p>
               </Capsule>
             </div>

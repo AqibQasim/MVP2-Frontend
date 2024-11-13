@@ -76,7 +76,7 @@ async function CandidateProfileInfoForm() {
           <Input
             name="hourly_rate"
             id="hourly_rate"
-            type="number"
+            type="text"
             placeholder="8"
           />
         </div>

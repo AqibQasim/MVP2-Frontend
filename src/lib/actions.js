@@ -194,7 +194,7 @@ export async function updateCandidateProfileAction(formData) {
   if (!commitment || !["full-time", "part-time"].includes(commitment.trim())) {
     return { error: "Valid commitment is required." };
   }
-  if (!hourly_rate) return { error: "Valid hourly rate is required." };
+  if (!hourly_rate || isNaN(hourly_rate)) return { error: "Valid hourly rate is required and it should be a number." };
   if (!specialization)
     return { error: "Valid specialization rate is required." };
   if (!candidateId) return { error: "Valid candidate id is required." };
