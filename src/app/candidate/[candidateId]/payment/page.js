@@ -82,7 +82,7 @@ export default function CandidateIdPaymentPage({ params }) {
 
             <div className="payment-method-wrapper my-5 grid w-full justify-items-start gap-x-1.5 gap-y-2">
               <PaymentMethodBank
-                last4={paymentDetails.account_no?.slice(-4)}
+                last4={paymentDetails.account_no}
                 bankName={paymentDetails.bank_name}
                 selected={true} // Set selected status if applicable
                 onSelect={() => console.log("Selected Payment Method")}
