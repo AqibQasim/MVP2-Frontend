@@ -5,13 +5,12 @@ import SvgIconClipboard from "@/svgs/SvgIconClipboard";
 import Capsule from "./Capsule";
 import Hr from "./Hr";
 
+const nextPaymentDate = "20-0:00";
 function CandidatePaymentHistorySummary({
-//   client_id,
-//   client_name,
   total_hires,
-  total_payment_by_client,
-  next_payment,
-  last_payment
+  total_payment_by_candidate,
+  last_payment,
+  next_payment
 }) {
   return (
     <div className="w-full gap-4 rounded-[24px] bg-neutral-white p-6">
@@ -37,6 +36,7 @@ function CandidatePaymentHistorySummary({
           <p className="text-sm font-medium text-grey-primary-shade-30">
             Next Payment
           </p>
+         
         </div>
 
         <Capsule
@@ -66,3 +66,4 @@ function CandidatePaymentHistorySummary({
 }
 
 export default CandidatePaymentHistorySummary;
+
