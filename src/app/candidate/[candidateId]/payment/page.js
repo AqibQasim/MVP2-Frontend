@@ -44,10 +44,12 @@ export default function CandidateIdPaymentPage({ params }) {
     getPaymentHistory();
   }, [params?.candidateId]);
 
-  // Process payment history to calculate totals and dates
-  const totalPaymentsByCandidate = paymentHistory
-    ? paymentHistory.reduce((acc, paymentHistory) => (acc + (paymentHistory.amount || 0) )/ 100, 0)
+    
+ 
+    const totalPaymentsByCandidate = paymentHistory
+    ? paymentHistory.reduce((acc, payment) => acc + (payment.amount || 0), 0) / 100
     : 0;
+
 
   const uniqueJobPostings = paymentHistory
     ? new Set(paymentHistory.map((payment) => payment.job_posting_id)).size
