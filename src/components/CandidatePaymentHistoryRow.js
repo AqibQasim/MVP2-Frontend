@@ -6,6 +6,7 @@ import EntityCard from "./EntityCard";
 import IconWithBg from "./IconWithBg";
 import Table from "./Table";
 
+
 function CandidatePaymentHistoryRow({payment}) {
  
   return (
@@ -26,7 +27,7 @@ function CandidatePaymentHistoryRow({payment}) {
       />
       {/* <Capsule>{payment.jobType}</Capsule> */}
       <div className="date text-nowrap text-center">
-        {payment.createdAt}
+           { formatDate(payment.createdAt)}
       </div>
       <Capsule  className="status !text-center">
         <p>paid</p>
