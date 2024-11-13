@@ -155,7 +155,7 @@ function ClientPaymentMethod({ paymentMethods, stripe, clientSecret, stripePromi
 
             {/* Modal */}
             <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-                <div className="w-full h-[92vh] gap-4 rounded-[24px] bg-neutral-white p-6  ">
+                <div className="w-full   max-h-[92vh] overflow-hidden gap-4 rounded-[24px] bg-neutral-white p-6  ">
                     <form onSubmit={handleSubmit}>
                         <label>
                             Cardholder Name
