@@ -121,11 +121,11 @@ function Page({ params }) {
   const showPaymentHistory = talent?.client_response === "accept";
 
   const talentDetails = [
-    {
-      icon: "/icons/note-add.svg",
-      name: "Est. length",
-      content: talent?.job_postings?.project_length,
-    },
+    // {
+    //   icon: "/icons/note-add.svg",
+    //   name: "Est. length",
+    //   content: talent?.job_postings?.project_length,
+    // },
     {
       icon: "/icons/tag-user.svg",
       name: "Specialization",
@@ -142,11 +142,11 @@ function Page({ params }) {
       name: "Time zone",
       content: cityTimezoneOffset(talent?.city || "No city set"),
     },
-    {
-      icon: "/icons/briefcase-tick.svg",
-      name: "Job type",
-      content: talent?.job_postings?.job_type,
-    },
+    // {
+    //   icon: "/icons/briefcase-tick.svg",
+    //   name: "Job type",
+    //   content: talent?.job_type,
+    // },
   ];
 
   function parseDateString(dateString) {

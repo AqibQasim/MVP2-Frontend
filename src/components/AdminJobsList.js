@@ -16,7 +16,7 @@ function AdminJobsList({ jobs, totalJobs }) {
   const filteredJobs =   jobs
     .filter((job) => !jobStatus ||  job.job_status === jobStatus)
     .filter(job =>
-      !searchTerm || (typeof job.client?.name === 'string' && job.client?.name.toLowerCase().includes(searchTerm.toLowerCase()))
+      !searchTerm || (typeof job?.position === 'string' && job?.position.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
   return (
@@ -31,7 +31,7 @@ function AdminJobsList({ jobs, totalJobs }) {
       <div>
         <input
         type="text"
-        placeholder="Search by name"
+        placeholder="Search by Job title"
         className="mb-4 w-full cursor-pointer rounded border border-gray-300 p-2"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}

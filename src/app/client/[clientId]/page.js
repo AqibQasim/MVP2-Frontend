@@ -73,6 +73,7 @@ export default async function Page({ params }) {
       {recommendedCandidates?.customer &&
         recommendedCandidates?.job_postings && (
           <ClientRecommendationCard
+            admin_hourly_rate={recommendedCandidates?.hourly_rate}
             client={client}
             recommendedCandidate={recommendedCandidates?.customer}
             recommendedForJob={recommendedCandidates?.job_postings}
