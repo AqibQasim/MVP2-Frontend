@@ -88,7 +88,7 @@ function AdminCandidatesTable({
           <div className="actions text-center">Actions</div>
         </Table.Header>
         {/* Make the body container scrollable */}
-        <div className="h-full overflow-y-hidden">
+        <div className="h-full overflow-y-hidden overflow-x-hidden">
           {" "}
           {/* Set the height as per your needs */}
           <Table.Body

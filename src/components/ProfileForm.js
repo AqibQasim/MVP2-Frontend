@@ -126,14 +126,14 @@ const ProfileForm = ({ client }) => {
                   defaultValue={client?.email || ""}
                   type="email"
                   placeholder="Email"
-                  className="focus:ring-none mt-1 cursor-not-allowed rounded-full border bg-gray-100 p-2 focus:outline-none"
+                  className="focus:ring-none mt-1 cursor-not-allowed rounded-full border text-gray-400 bg-gray-100 p-2 focus:outline-none"
                 />
               </div>
             </div>
           </div>
         </div>
 
-        <div className="mb-4 grid grid-cols-4 items-start gap-4">
+        {/* <div className="mb-4 grid grid-cols-4 items-start gap-4">
           <Heading xm className="col-span-1"></Heading>
 
           <div className="col-span-2">
@@ -153,7 +153,7 @@ const ProfileForm = ({ client }) => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
         <hr />
 
         <div className="mb-4 mt-4 grid grid-cols-4 items-start gap-4">

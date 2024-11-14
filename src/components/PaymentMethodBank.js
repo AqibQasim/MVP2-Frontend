@@ -1,0 +1,44 @@
+import Image from "next/image";
+import Dot from "./Dot";
+
+function PaymentMethodBank({
+  last4,
+  bankName,
+  selected,
+  onSelect
+}) {
+  return (
+    <div className="relative flex w-full items-center justify-start gap-8 rounded-xl bg-grey-primary-tint-90 p-4">
+      <div className="flex items-center justify-center gap-2">
+        <div className="image overflow-hidden rounded-xl bg-neutral-white p-2">
+          <Image src="/icons/visa.svg" height={32} width={32} alt="Card icon" />
+        </div>
+        <div className="details">
+          <div className="flex items-center justify-start gap-1 font-lufga text-[15px] font-medium">
+            {last4}
+          </div>
+          <p className="text-[14px] text-sm font-medium text-grey-primary-shade-30">
+            {bankName}
+          </p>
+        </div>
+      </div>
+      <div className="settings? ml-auto mr-0.5">
+        <div
+          className={`dot block h-4 w-4 rounded-full border-4 cursor-pointer ${
+            selected ? "border-primary-tint-80 bg-primary" : "border-primary-tint-80 bg-gray-600"
+          }`}
+          onClick={onSelect}
+        ></div>
+      </div>
+      <div className="settings absolute right-4 top-4 flex items-center justify-center gap-[2px]">
+        {Array(3)
+          .fill()
+          .map((_, index) => (
+            <Dot key={index} className="" />
+          ))}
+      </div>
+    </div>
+  );
+}
+
+export default PaymentMethodBank;
