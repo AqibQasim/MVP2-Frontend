@@ -14,17 +14,26 @@ function AdminClientsTable({ clients, totalClients }) {
   const handleJobStatusChange = (event) => {
     setJobStatus(event.target.value);
   };
+  console.log(clients);
+  console.log(totalClients);
 
   const filteredClients = clients
-      .filter((client) => !jobStatus ||
-        jobStatus === "jobs"
-          ? client.job_postings.length >= 1
-          : client.job_postings.length === 0,
-      )
+  .filter((client) => {
+    if (jobStatus === "" || jobStatus === "All Jobs") {
+      return true;
+    } else if (jobStatus === "jobs") {
+      return client.job_postings.length > 0;
+    } else if (jobStatus === "nojobs") {
+      return client.job_postings.length === 0;
+    }
+    return true;
+  })
+ 
       .filter(client =>
         !searchTerm || (typeof client?.name === 'string' && client?.name.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     
+
 
   return (
     <>
@@ -55,7 +64,7 @@ function AdminClientsTable({ clients, totalClients }) {
             onChange={handleJobStatusChange}
             className="rounded border border-gray-300 p-2"
           >
-            <option value="">Select an job status</option>
+            <option value="">All Jobs</option>
             <option value="nojobs">No Jobs</option>
             <option value="jobs">Jobs</option>
           </select>
