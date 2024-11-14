@@ -57,7 +57,7 @@ function CustomersList() {
     const total = customers.reduce((acc, customer) => {
       if (customer.subscriptions && customer.subscriptions.length > 0) {
         return (
-          acc + customer.subscriptions[0].items.data[0].plan.amount / 100
+          acc + customer?.subscriptions[0]?.items.data[0]?.plan.amount / 100
         );
       }
       return acc;
@@ -419,12 +419,12 @@ const fetchInvoiceDetails = async (invoiceId) => {
                 key={customer.id}
               >
                 {/* <div className="break-words">{customer.id}</div> */}
-                <div className="break-words">{customer.name}</div>
-                <div className="break-words">{customer.email}</div>
-                <div>{new Date(customer.subscriptions[0].current_period_start * 1000).toLocaleDateString()}</div>
-                <div>{(customer.subscriptions[0].items.data[0].plan.amount) / 100}$</div>
-                <div>{new Date(customer.subscriptions[0].current_period_end * 1000).toLocaleDateString()}</div>
-                <div>{customer.last_invoice_det.status}</div>
+                <div className="break-words">{customer?.name}</div>
+                <div className="break-words">{customer?.email}</div>
+                <div>{new Date(customer?.subscriptions[0]?.current_period_start * 1000).toLocaleDateString()}</div>
+                <div>{(customer.subscriptions[0]?.items?.data[0].plan.amount) / 100}$</div>
+                <div>{new Date(customer?.subscriptions[0]?.current_period_end * 1000).toLocaleDateString()}</div>
+                <div>{customer?.last_invoice_det?.status}</div>
                 <Capsule
                   onClick={() => openInvoiceModal(customer)}
                   className="mx-auto w-auto cursor-pointer !bg-primary-tint-100 h-auto text-xs"
@@ -481,9 +481,9 @@ const fetchInvoiceDetails = async (invoiceId) => {
               {clientCharges.length > 0 ? (
                 clientCharges.map((charge, index) => (
                   <li key={index} className="grid grid-cols-6 text-start ">
-                    <div>{charge.name}</div>
-                    <div>{charge.amount}</div>
-                    <div>{charge.status}</div>
+                    <div>{charge?.name}</div>
+                    <div>{charge?.amount}</div>
+                    <div>{charge?.status}</div>
                     {/* <div>{charge.invoice}</div> */}
                     <div>{charge.created}</div>
                     <Capsule
@@ -546,15 +546,15 @@ const fetchInvoiceDetails = async (invoiceId) => {
         <h2 className="text-xl font-semibold mb-4">Client Payment Details</h2>
         {customerDetails ? (
           <div>
-            <p><strong>Customer ID:</strong> {customerDetails[0].customer}</p>
-            <p><strong>First Payment:</strong> {new Date(customerDetails[0].created * 1000).toLocaleDateString()} </p>
-            <p><strong>Currency:</strong> {customerDetails[0].currency}</p>
-            <p><strong>Payment Amount:</strong>   {(customerDetails[0].items.data[0].plan.amount) / 100}</p>
-            <p><strong>Previous Payment:</strong> {new Date(customerDetails[0].current_period_start * 1000).toLocaleDateString()}</p>
-            <p><strong>Next Payment:</strong> {new Date(customerDetails[0].current_period_end * 1000).toLocaleDateString()}</p> 
-            <p><strong>Payment Interval:</strong> {customerDetails[0].items.data[0].plan.interval}</p>
-            <p><strong>Number of payments:</strong> {customerDetails[0].items.data[0].plan.interval_count}</p>
-            <p><strong>Total payment amount:</strong> {(customerDetails[0].items.data[0].plan.interval_count * ((customerDetails[0].items.data[0].plan.amount) / 100))}</p>
+            <p><strong>Customer ID:</strong> {customerDetails[0]?.customer}</p>
+            <p><strong>First Payment:</strong> {new Date(customerDetails[0]?.created * 1000).toLocaleDateString()} </p>
+            <p><strong>Currency:</strong> {customerDetails[0]?.currency}</p>
+            <p><strong>Payment Amount:</strong>   {(customerDetails[0]?.items?.data[0]?.plan.amount) / 100}</p>
+            <p><strong>Previous Payment:</strong> {new Date(customerDetails[0]?.current_period_start * 1000).toLocaleDateString()}</p>
+            <p><strong>Next Payment:</strong> {new Date(customerDetails[0]?.current_period_end * 1000).toLocaleDateString()}</p> 
+            <p><strong>Payment Interval:</strong> {customerDetails[0]?.items?.data[0]?.plan?.interval}</p>
+            <p><strong>Number of payments:</strong> {customerDetails[0]?.items?.data[0]?.plan?.interval_count}</p>
+            <p><strong>Total payment amount:</strong> {(customerDetails[0]?.items?.data[0]?.plan?.interval_count * ((customerDetails[0]?.items?.data[0]?.plan?.amount) / 100))}</p>
           
             {/* <p>Plan: {customerDetails[0].items.data[0].plan.nickname}</p>
             <p>Amount: ${customerDetails[0].items.data[0].plan.amount / 100}</p>
@@ -595,7 +595,7 @@ const fetchInvoiceDetails = async (invoiceId) => {
               <div>{detail?.customer?.hourly_rate}</div>
               <div>{detail?.job_posting?.position}</div>
               <div>{detail?.job_posting?.hourly_rate}</div>
-              <div>{detail.amount / 100}</div>
+              <div>{detail?.amount / 100}</div>
             </li>
           ))}
           </ul>
@@ -605,9 +605,7 @@ const fetchInvoiceDetails = async (invoiceId) => {
           <div>Loading...</div>
         )}
         </div>
-      </Modal>
-
-      
+      </Modal>      
     </div>
   );
 }
