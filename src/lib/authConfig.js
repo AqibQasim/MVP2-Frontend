@@ -31,7 +31,7 @@ export const authConfig = {
       const loginPage = pathname === "/login";
       const signupPage = pathname === "/signup";
       const googleUserRedirectPath = user
-        ? `/${user.user_role=== "client" ? credentialUser.user_role : "candidate"}/${user[`${user.user_role}_id`]}`
+        ? `/${user.user_role=== "client" ? "client/"+user[`client_id`] : "candidate/"+user[`customer_id`]}`
         : null;
 
       const credentialUserRedirectPath = credentialUser?.id
