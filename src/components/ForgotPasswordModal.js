@@ -393,7 +393,7 @@ const ForgotPasswordModal = ({
                   <span className="ml-2">Sending ...</span>
                 </div>
               ) : (
-                "Send 4 digit code"
+                "Send 6 digit code"
               ),
             )}
 

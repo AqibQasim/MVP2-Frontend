@@ -71,7 +71,7 @@ async function Page() {
 
       setClientLength(data?.length);
       // Filter only 'open' jobs and take the first three
-      const showClients = data?.slice(0, 3);
+      const showClients = data?.slice(0, 3);;
       setClients(showClients);
     } catch (err) {
       setDataError(`Failed to load jobs: ${err.message}`);
@@ -86,7 +86,9 @@ async function Page() {
       }
       setCandidateLength(data?.data?.length);
       console.log("Data from API:", data);
-      const showCandidates = data?.data?.slice(0, 3);
+      const showCandidates = data?.data?.filter(
+        (c) => c?.customer?.talent_status === "open",
+      ).slice(0, 3);
       console.log("Filtered candidates:", showCandidates);
       setCandidates(showCandidates);
     } catch (err) {
@@ -141,9 +143,7 @@ async function Page() {
           onClick={() => {
             setIsReportOverlayOpened(true);
           }}
-          candidates={candidates?.filter(
-            (c) => c?.customer?.talent_status === "open",
-          )}
+          candidates={candidates}
         />
 
         {isReportOverlayOpened && (

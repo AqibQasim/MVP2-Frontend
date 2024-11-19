@@ -72,7 +72,7 @@ function AdminClientsTable({ clients, totalClients }) {
         
         </div>
 
-        <Table columns="grid-cols-[12rem_12rem_10rem_8rem_8rem]">
+        <Table columns="grid-cols-[12rem_1fr_10rem_8rem_8rem]">
           <Table.Header>
             <div className="info">Name</div>
             <div className="info text-center">Email</div>
@@ -86,7 +86,7 @@ function AdminClientsTable({ clients, totalClients }) {
               <Table.Row key={client.client_id}>
                 {/* <div>{client.client_id}</div> */}
                 <div>{client.name}</div>
-                <div>{client.email}</div>
+                <div className="break-words text-center">{client.email}</div>
                 <div className="text-center">
                   {client?.job_postings?.length}
                 </div>

@@ -19,7 +19,6 @@ import Image from "next/image";
 import Skill from "@/components/Skill";
 import AdminJobsList from "@/components/AdminJobsList";
 import AdminCreateAJobModal from "@/components/AdminCreateAJobModal";
-import AdminCandidatesTable from "@/components/AdminCandidatesTable";
 import { fetchCandidatesJobStatus } from "@/lib/data-service";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import AdminClientCandidatesTable from "@/components/AdminClientCandidatesTable";

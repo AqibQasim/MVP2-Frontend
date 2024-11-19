@@ -155,7 +155,7 @@ export async function referCandidateToClientAction(params) {
   const { client_id, customer_id, job_posting_id, hourly_rate } = params;
   if (!client_id) return { error: "Client id is required" };
   if (!customer_id) return { error: "Candidate id is required" };
-  if (!job_posting_id) return { error: "Job id is required" };
+  if (!job_posting_id) return { error: "Job is required" };
   //if (!hourly_rate) return { error: "Hourly rate is required" };
   if (!hourly_rate || isNaN(hourly_rate) || hourly_rate <= 0) {
     return { error: "Hourly rate is required and must be a valid number." };

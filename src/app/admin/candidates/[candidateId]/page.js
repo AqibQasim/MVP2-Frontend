@@ -321,7 +321,7 @@ function Page({ params }) {
           Refer {talent?.role} to Client
         </h3>
         <form action={handleReferCandidate}>
-          <label className="block">Hourly Rate</label>
+          <label className="flex">Hourly Rate  <div className="text-red-600" >*</div></label>
           <input
             //type="number"
             name="hourlyRate"
@@ -332,7 +332,7 @@ function Page({ params }) {
             className="mt-2 block w-full border px-2 py-1"
           />
 
-          <label className="mt-4 block">Assign to Client</label>
+          <label className="mt-4 flex">Assign to Client   <div className="text-red-600" >*</div> </label>
           <input
             type="text"
             value={searchClient}
@@ -369,7 +369,7 @@ function Page({ params }) {
               </option>
             ))}
 
-          <label className="mt-4 block">Select Job</label>
+          <label className="mt-4 flex">Select Job   <div className="text-red-600" >*</div> </label>
           <input
             type="text"
             value={searchJob}

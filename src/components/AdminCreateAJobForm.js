@@ -7,7 +7,8 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
   const [skills, setSkills] = useState([""]);
   const [applicationQuestions, setApplicationQuestions] = useState([""]);
   const [error, setError] = useState(null);
-  const [fieldError, setFieldError] = useState(null)
+  const [fieldError, setFieldError] = useState(null);
+  const [jobType, setJobType] = useState("");
 
   const minDate = useMemo(() => {
     const today = new Date();
@@ -19,6 +20,10 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
     const newSkills = [...skills];
     newSkills[index] = event.target.value;
     setSkills(newSkills);
+  };
+
+  const handleJobTypeChange = (event) => {
+    setJobType(event.target.value);
   };
 
   const handleQuestionChange = (index, event) => {
@@ -136,7 +141,6 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
             required
           />
         </div>
-
         <div className="mb-4">
           <label htmlFor="job_type" className="block text-gray-700">
             Job Type
@@ -145,12 +149,18 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
             id="job_type"
             name="job_type"
             className="w-full rounded-full border p-2"
+            value={jobType}
+            onChange={handleJobTypeChange}
             required
           >
+            <option value="">Select Job Type</option>
             <option value="remote">Remote</option>
+            <option value="hybrid">Hybrid</option>
             <option value="on-site">On Site</option>
           </select>
         </div>
+
+       
 
         <div className="mb-4">
           <label htmlFor="start_date" className="block text-gray-700">
@@ -165,33 +175,39 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
             min={minDate}
           />
         </div>
+            
+        {jobType === "hybrid" || jobType === "on-site" ? (
+          <>
+            <div className="mb-4">
+              <label htmlFor="city" className="block text-gray-700">
+                City
+              </label>
+              <input
+                id="city"
+                name="city"
+                placeholder="Enter City"
+                className="w-full rounded-full border p-2"
+                type="text"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="country" className="block text-gray-700">
+                Country
+              </label>
+              <input
+                id="country"
+                name="country"
+                placeholder="Enter Country"
+                className="w-full rounded-full border p-2"
+                type="text"
+                required
+              />
+            </div>
+          </>
+        ) : null}
 
-        <div className="mb-4">
-          <label htmlFor="city" className="block text-gray-700">
-            City
-          </label>
-          <input
-            id="city"
-            name="city"
-            placeholder="Karachi"
-            className="w-full rounded-full border p-2"
-            type="text"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="country" className="block text-gray-700">
-            Country
-          </label>
-          <input
-            id="country"
-            name="country"
-            placeholder="Pakistan"
-            className="w-full rounded-full border p-2"
-            type="text"
-            required
-          />
-        </div>
+      
 
         <div className="mb-4">
           <label htmlFor="workday_overlap" className="block text-gray-700">
@@ -318,3 +334,5 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
 }
 
 export default AdminCreateAJobForm;
+
+
