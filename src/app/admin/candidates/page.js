@@ -64,6 +64,7 @@ const Page = async () => {
           setIsReportOverlayOpened(true);
         }}
         candidates={candidates}
+        role="admin"
       />
 
       {isReportOverlayOpened && (

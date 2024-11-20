@@ -7,6 +7,7 @@ import Table from "./Table";
 function AdminCandidatesTable({
   totalCandidates,
   candidates,
+  role,
   setIsReportOverlayOpened,
   setSelectedCandidateId,
   isReportOverlayOpened,
@@ -41,6 +42,8 @@ function AdminCandidatesTable({
       href={!path.includes("/admin/candidates") ? `/admin/candidates` : null}
       info={`Total Candidates: ${totalCandidates}`}
     >
+
+{role !== "dashboard" && (
       <div className="mb-4 flex justify-between ">
 
       <div>
@@ -71,10 +74,10 @@ function AdminCandidatesTable({
           <option value="hired">Hired</option>
         </select>
         </div>
-      
+        
 
-
-      </div>
+      </div>  
+     )}
 
       <Table columns="grid-cols-[7rem_5.7rem_4rem_6rem_4.5rem_4.1rem_7.4rem_7.8rem]">
         <Table.Header>

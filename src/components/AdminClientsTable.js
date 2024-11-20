@@ -5,7 +5,7 @@ import AdminCreateAJobModal from "./AdminCreateAJobModal";
 import CapsuleLink from "./CapsuleLink";
 import { useEffect, useState } from "react";
 
-function AdminClientsTable({ clients, totalClients }) {
+function AdminClientsTable({ clients, totalClients,role }) {
   const path = window.location.href;
 
   const [jobStatus, setJobStatus] = useState("");
@@ -44,6 +44,7 @@ function AdminClientsTable({ clients, totalClients }) {
         href={!path.includes("/admin/clients") ? `/admin/clients` : null}
         info={`Total Clients: ${totalClients || 0}`}
       >
+        {role !== "dashboard" && (
         <div className="mb-4 flex justify-between">
         <div className="flex-1" > 
          <input
@@ -71,6 +72,7 @@ function AdminClientsTable({ clients, totalClients }) {
         </div>
         
         </div>
+        )}
 
         <Table columns="grid-cols-[12rem_1fr_10rem_8rem_8rem]">
           <Table.Header>
