@@ -5,7 +5,7 @@ import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 import { useEffect, useState } from "react";
 
-function AdminJobsList({ jobs, totalJobs }) {
+function AdminJobsList({ jobs, totalJobs, role }) {
   const path = window.location.href;
   const [jobStatus, setJobStatus] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,6 +27,8 @@ function AdminJobsList({ jobs, totalJobs }) {
       href={!path.includes("/admin/jobs") ? `/admin/jobs` : null}
       info={`Total Jobs: ${totalJobs || 0}`}
     >
+
+{role !== "dashboard" && (
       <div className="mb-4 flex justify-between">
       <div>
         <input
@@ -56,6 +58,7 @@ function AdminJobsList({ jobs, totalJobs }) {
         </div>
        
       </div>
+    )}
 
       <Table
         columns={

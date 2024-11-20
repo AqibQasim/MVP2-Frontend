@@ -20,6 +20,6 @@ async function Page() {
     return <EmptyScreen className={"h-[32.188rem]"} />;
   }
 
-  return <AdminClientsTable totalClients={clients?.length} clients={clients} />;
+  return <AdminClientsTable totalClients={clients?.length} clients={clients} role="admin" />;
 }
 export default WithAdminAuth(Page);

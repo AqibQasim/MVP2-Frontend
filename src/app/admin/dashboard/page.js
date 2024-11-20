@@ -132,8 +132,8 @@ async function Page() {
   return (
     <div className="h-fit space-y-3">
       <AdminStates />
-      <AdminJobsList jobs={jobs} totalJobs={jobsLength} />
-      <AdminClientsTable clients={clients} totalClients={clientLength} />
+      <AdminJobsList jobs={jobs} totalJobs={jobsLength} role="dashboard" />
+      <AdminClientsTable clients={clients} totalClients={clientLength} role="dashboard"/>
       <div className="overflow-y-hidden">
         <AdminCandidatesTable
           totalCandidates={candidateLength}
@@ -144,6 +144,7 @@ async function Page() {
             setIsReportOverlayOpened(true);
           }}
           candidates={candidates}
+          role="dashboard"
         />
 
         {isReportOverlayOpened && (
