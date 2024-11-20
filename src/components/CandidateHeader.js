@@ -7,6 +7,7 @@ import ButtonCapsule from "./ButtonCapsule";
 import ButtonRounded from "./ButtonRounded";
 import EntityCard from "./EntityCard";
 import { PopupModal, useCalendlyEventListener } from "react-calendly";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 
 function CandidateHeader({ candidate }) {
   console.log('candidate.................', candidate)
@@ -14,23 +15,56 @@ function CandidateHeader({ candidate }) {
   const [selectedValue, setSelectedValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef(null);
-
   const [isCandidate, setIsCandidate] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
   // Options for the dropdown
-  const options = [{ value: "Un-Available", label: "Un-Available" }];
+  const options = [{ value: candidate?.status == "active" ? "in-active" : "active", label: candidate?.status == "active" ? "Un-Available" : "Available"}];
 
   const formatDate = (isoDateString) => {
     const date = new Date(isoDateString);
     return date.toLocaleDateString("en-CA"); // Formats to YYYY-MM-DD
   };
 
-  // Handle change event
-  const handleChange = (event) => {
-    setSelectedValue(event.target.value);
-    console.log("Selected value:", event.target.value);
-  };
+  
+
+
+  const changeStatus = async (value) => {
+  try {
+    const payload = {
+      method: "PUT",
+      endpoint: "status",
+      body: {
+        customer_id: candidate?.customer_id,
+        status: value,
+      },
+    };
+    console.log("Payload:", payload);
+
+    const res = await mvp2ApiHelper(payload);
+    console.log("API Response:", res);
+    return res;
+  } catch (error) {
+    console.error("Error in changeStatus:", error);
+    return { status: 500, message: "Internal Server Error" };
+  }
+};
+
+  const handleChange = async (event) => {
+    const value = event?.target?.value;
+
+   
+    setSelectedValue(value);
+    console.log("Selected value:", value);
+
+    const res = await changeStatus(value); // Use the current value directly
+
+    if (res.status === 200) {
+      console.log("Success!");
+    } else {
+      console.error("Status change failed:", res);
+    }
+};
 
   useEffect(() => {
     setIsCandidate(true);
@@ -79,8 +113,8 @@ function CandidateHeader({ candidate }) {
           <div className="buttons flex items-start justify-end gap-2">
             <AvailabilityDropdown
               options={options}
-              placeholder="Available"
-              value={selectedValue}
+              placeholder={candidate?.status == "active" ? "Available" : "Un-Available"}
+              value={candidate?.status}
               onChange={handleChange}
               className="text-sm font-bold"
             />
