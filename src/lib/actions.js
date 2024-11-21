@@ -99,11 +99,11 @@ export async function createAJobAction(formData) {
   if (!workday_overlap || isNaN(workday_overlap) || workday_overlap <= 0) {
     return { error: "Workday overlap is required and must be a valid number." };
   }
-  if (!city || city.trim() === "") {
-    return { error: "City is required." };
+  if ((job_type === "hybrid" || job_type === "on-site") && (!city || city.trim() === "")) {
+    return { error: "City is required for hybrid and on-site jobs." };
   }
-  if (!country || country.trim() === "") {
-    return { error: "Country is required." };
+  if ((job_type === "hybrid" || job_type === "on-site") && (!country || country.trim() === "")) {
+    return { error: "Country is required for hybrid and on-site jobs." };
   }
   if (skills.length === 0 || skills.some((skill) => skill.trim() === "")) {
     return { error: "At least one valid skill is required." };
@@ -127,7 +127,7 @@ export async function createAJobAction(formData) {
     applied_customers_count,
     //application_questions,
     start_date,
-    location: `${city}, ${country}`,
+    ...(job_type === "hybrid" || job_type === "on-site" ? { location: `${city}, ${country}` } : {}),
     project_length: `${project_length} Month`,
     is_test_required,
     experience,
@@ -150,6 +150,8 @@ export async function createAJobAction(formData) {
 
   // redirect("/admin/clients");
 }
+
+
 
 export async function referCandidateToClientAction(params) {
   const { client_id, customer_id, job_posting_id, hourly_rate } = params;
