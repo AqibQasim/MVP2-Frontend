@@ -63,38 +63,40 @@ export default function CandidateIdPaymentPage({ params }) {
       ).toLocaleDateString("en-GB")
     : "N/A";
 
-  return (
-    <>
-      {!paymentDetails ? (
-        <CandidateAddPayment />
-      ) : (
-        <div className="space-y-2">
-          <CandidatePaymentHistorySummary
-            total_payment_by_candidate={totalPaymentsByCandidate}
-            total_hires={uniqueJobPostings}
-            last_payment={lastPaymentDate}
-            next_payment={`${nextPaymentDate} - 0:00`}
-          />
-
-          <div className="flex-grow gap-8 rounded-4xl bg-neutral-white px-8 py-10">
-            <Heading sm>Transaction Details</Heading>
-            <p className="text-grey-primary-shade-30">
-              To change which method is preferred, edit your transaction method.
-            </p>
-
-            <div className="payment-method-wrapper my-5 grid w-full justify-items-start gap-x-1.5 gap-y-2">
-              <PaymentMethodBank
-                last4={paymentDetails.account_no}
-                bankName={paymentDetails.bank_name}
-                selected={true} // Set selected status if applicable
-                onSelect={() => console.log("Selected Payment Method")}
-              />
+    return (
+      <>
+        {(!paymentDetails || Object.keys(paymentDetails).length === 0) ? (
+          <CandidateAddPayment />
+        ) : (
+          <div className="space-y-2">
+            <CandidatePaymentHistorySummary
+              total_payment_by_candidate={totalPaymentsByCandidate}
+              total_hires={uniqueJobPostings}
+              last_payment={lastPaymentDate}
+              next_payment={`${nextPaymentDate} - 0:00`}
+            />
+    
+            <div className="flex-grow gap-8 rounded-4xl bg-neutral-white px-8 py-10">
+              <Heading sm>Transaction Details</Heading>
+              <p className="text-grey-primary-shade-30">
+                To change which method is preferred, edit your transaction method.
+              </p>
+    
+              <div className="payment-method-wrapper my-5 grid w-full justify-items-start gap-x-1.5 gap-y-2">
+                <PaymentMethodBank
+                  last4={paymentDetails.account_no}
+                  bankName={paymentDetails.bank_name}
+                  selected={true} // Set selected status if applicable
+                  onSelect={() => console.log("Selected Payment Method")}
+                />
+              </div>
             </div>
+    
+            <CandidatePaymentHistoryTable paymentHistory={paymentHistory} />
           </div>
+        )}
+      </>
+    );
+  }
 
-          <CandidatePaymentHistoryTable paymentHistory={paymentHistory} />
-        </div>
-      )}
-    </>
-  );
-}
+  
