@@ -9,7 +9,7 @@ import ScheduleCallModal from "./ScheduleCallModal";
 import { PopupModal, useCalendlyEventListener } from "react-calendly";
 import Modal from "./AdminJobsFormModal";
 import ButtonCapsule from "./ButtonCapsule";
-import { useRouter } from "next/navigation";
+import { useRouter  } from "next/navigation";
 
 function ClientHeader({ client, client_id }) {
   const [isClient, setIsClient] = useState(false);
@@ -88,6 +88,12 @@ function ClientHeader({ client, client_id }) {
               }}
             >
               <SvgIconNotification />
+              <span
+                  className={`absolute top-5 left-4 inline-flex  px-4 py-3  h-[1.6rem] w-[1.95rem] items-center justify-center rounded-5xl  bg-grey-primary-tint-80 transition-colors duration-200 group-hover:bg-neutral-white `}
+                >
+                  {/* {link.amount > 9 ? "9+" : link.amount} */}
+                  0
+                </span>
             </ButtonRounded>
             <ButtonRounded
               onClick={() => {
