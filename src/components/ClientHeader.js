@@ -17,6 +17,9 @@ function ClientHeader({ client, client_id }) {
   const buttonRef = useRef(null);
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
+  const [notificationCount, setNotificationCount] = useState('0');
+  const [isLoading, setIsLoading] = useState(false);
+
 
   console.log("client information : ", client);
 
@@ -24,6 +27,35 @@ function ClientHeader({ client, client_id }) {
     const date = new Date(isoDateString);
     return date.toLocaleDateString("en-CA");
   };
+
+  useEffect(() => {
+    const fetchNotificationCount = async () => {
+        setIsLoading(true); // Optional: Show a loading state if desired
+        try {
+            const payload = {
+                endpoint: `count-notification?client_id=${client_id}`,
+                method: "GET",
+            };
+            const result = await mvp2ApiHelper(payload); 
+            if (result?.count !== undefined) {
+                setNotificationCount(result.count);
+            } else {
+                console.warn("Unexpected response format:", result);
+            }
+        } catch (error) {
+            console.error("Error fetching notification count:", error);
+        } finally {
+            setIsLoading(false); // Optional: Hide the loading state
+        }
+    };
+
+    fetchNotificationCount();
+}, [client_id]);
+
+        
+ 
+
+
 
   const getEventDetails = async (eventUri) => {
     try {
@@ -89,10 +121,10 @@ function ClientHeader({ client, client_id }) {
             >
               <SvgIconNotification />
               <span
-                  className={`absolute top-5 left-4 inline-flex  px-4 py-3  h-[1.6rem] w-[1.95rem] items-center justify-center rounded-5xl  bg-grey-primary-tint-80 transition-colors duration-200 group-hover:bg-neutral-white `}
+                  className={`absolute top-5 left-4 inline-flex  px-4 py-3  h-[1.2rem] w-[1.2rem] items-center justify-center rounded-5xl  bg-grey-primary-tint-80 transition-colors duration-200 group-hover:bg-neutral-white `}
                 >
-                  {/* {link.amount > 9 ? "9+" : link.amount} */}
-                  0
+                   {notificationCount > 9 ? "9+" : notificationCount} 
+                  
                 </span>
             </ButtonRounded>
             <ButtonRounded
