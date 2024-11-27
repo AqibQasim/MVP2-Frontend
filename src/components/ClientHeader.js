@@ -27,30 +27,56 @@ function ClientHeader({ client, client_id }) {
     const date = new Date(isoDateString);
     return date.toLocaleDateString("en-CA");
   };
-
   useEffect(() => {
     const fetchNotificationCount = async () => {
-        setIsLoading(true); // Optional: Show a loading state if desired
-        try {
-            const payload = {
-                endpoint: `count-notification?client_id=${client_id}`,
-                method: "GET",
-            };
-            const result = await mvp2ApiHelper(payload); 
-            if (result?.count !== undefined) {
-                setNotificationCount(result.count);
-            } else {
-                console.warn("Unexpected response format:", result);
-            }
-        } catch (error) {
-            console.error("Error fetching notification count:", error);
-        } finally {
-            setIsLoading(false); // Optional: Hide the loading state
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/count-notification?client_id=${client_id}`);
+        // if (!response.ok) {
+        //   throw new Error("Network response was not ok");
+        // }
+        const data = await response.json();
+        console.log(data)
+         let countData = null;
+
+        if(data?.status===200){
+          countData = data?.count;
+          console.log(countData);
         }
+
+      
+        setNotificationCount(countData); 
+      } catch (err) {
+        console.error("Error fetching notification count:", err);
+      } 
     };
 
-    fetchNotificationCount();
-}, [client_id]);
+     fetchNotificationCount();
+  }, [client_id]);
+ 
+
+//   useEffect(() => {
+//     const fetchNotificationCount = async () => {
+//         setIsLoading(true); // Optional: Show a loading state if desired
+//         try {
+//             const payload = {
+//                 endpoint: `count-notification?client_id=${client_id}`,
+//                 method: "GET",
+//             };
+//             const result = await mvp2ApiHelper(payload); 
+//             if (result?.count !== undefined) {
+//                 setNotificationCount(result.count);
+//             } else {
+//                 console.warn("Unexpected response format:", result);
+//             }
+//         } catch (error) {
+//             console.error("Error fetching notification count:", error);
+//         } finally {
+//             setIsLoading(false); // Optional: Hide the loading state
+//         }
+//     };
+
+//     fetchNotificationCount();
+// }, [client_id]);
 
         
  
