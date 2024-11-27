@@ -22,6 +22,7 @@ function ClientHeader({ client, client_id }) {
 
 
   console.log("client information : ", client);
+  console.log("client information : ", client_id);
 
   const formatDate = (isoDateString) => {
     const date = new Date(isoDateString);
@@ -30,21 +31,21 @@ function ClientHeader({ client, client_id }) {
   useEffect(() => {
     const fetchNotificationCount = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/count-notification?client_id=${client_id}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/count-notification?client_id=${client_id}`,{
+          method:'GET'
+        });
         // if (!response.ok) {
         //   throw new Error("Network response was not ok");
-        // }
+        // } 
+        
         const data = await response.json();
         console.log(data)
+        console.log(data?.count)
          let countData = null;
-
-        if(data?.status===200){
           countData = data?.count;
-          console.log(countData);
-        }
-
-      
+       
         setNotificationCount(countData); 
+       
       } catch (err) {
         console.error("Error fetching notification count:", err);
       } 
@@ -107,6 +108,7 @@ function ClientHeader({ client, client_id }) {
 
   useEffect(() => {
     setIsClient(true);
+   
   }, []);
 
   useEffect(() => {
@@ -145,13 +147,15 @@ function ClientHeader({ client, client_id }) {
                 router.push(`/client/${client_id}/notifications`);
               }}
             >
-              <SvgIconNotification />
-              <span
-                  className={`absolute top-5 left-4 inline-flex  px-4 py-3  h-[1.2rem] w-[1.2rem] items-center justify-center rounded-5xl  bg-grey-primary-tint-80 transition-colors duration-200 group-hover:bg-neutral-white `}
-                >
+              <SvgIconNotification className="h-[1.4rem] w-[1.4rem] "  />
+            if ({notificationCount>0})
+               <span
+                   className={`absolute top-6 left-5 inline-flex  px-3 py-3  h-[1.2rem] w-[1.2rem] text-sm items-center justify-center rounded-5xl bg-red-500 text-white  `}
+                 >
                    {notificationCount > 9 ? "9+" : notificationCount} 
                   
-                </span>
+                 </span>
+              
             </ButtonRounded>
             <ButtonRounded
               onClick={() => {
