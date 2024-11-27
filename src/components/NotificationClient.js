@@ -173,7 +173,7 @@ function NotificationClient({ client_id }) {
   }, [clientCustomerIDs]); // Empty dep
 
   return (
-    <div className="h-full w-full bg-white">
+    <div className="h-auto w-full bg-white">
       <div className="space-y-2">
         <p className="pl-4 pt-10 text-sm font-medium text-grey-primary-shade-30">
           These are your

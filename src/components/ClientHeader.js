@@ -148,15 +148,20 @@ function ClientHeader({ client, client_id }) {
               }}
             >
               <SvgIconNotification className="h-[1.4rem] w-[1.4rem] "  />
-            if ({notificationCount>0})
-               <span
-                   className={`absolute top-6 left-5 inline-flex  px-3 py-3  h-[1.2rem] w-[1.2rem] text-sm items-center justify-center rounded-5xl bg-red-500 text-white  `}
+               
+              
+            </ButtonRounded>
+            {notificationCount > 0 ?  <div className="relative z-10 top-6 right-7 w-0" >
+              <span 
+                   className={` inline-flex  px-3 py-3  h-[1.2rem] w-[1.2rem] text-sm items-center justify-center rounded-5xl bg-red-500 text-white  `}
                  >
                    {notificationCount > 9 ? "9+" : notificationCount} 
                   
                  </span>
-              
-            </ButtonRounded>
+              </div>  : null}
+             
+            
+             
             <ButtonRounded
               onClick={() => {
                 //open notification screen
