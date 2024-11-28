@@ -100,12 +100,12 @@ function AdminCandidateRow({ candidate, score, onClick }) {
         <div
          className= "flex-col  skills flex items-center justify-center gap-1 text-center">
             {candidate?.expertise?.length > 1 ? (
-              <>
+              <div className="flex" >
              <SkillIconWithBg icon={candidate.expertise[0].skill} skill={candidate.expertise[0].skill} />
-             <div className="text-sm text-gray-500">
+             <div className="text-sm text-gray-500 mt-2">
               +{candidate.expertise.length - 1}
               </div>
-              </>
+              </div>
             )
           : (
           <span> <SkillIconWithBg icon={candidate.expertise[0].skill} skill={candidate.expertise[0].skill}/></span>
