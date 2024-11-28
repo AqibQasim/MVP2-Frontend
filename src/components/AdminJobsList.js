@@ -54,6 +54,7 @@ function AdminJobsList({ jobs, totalJobs, role }) {
           <option value="closed">Closed</option>
           <option value="interviewing">Interviewing</option>
           <option value="hired">Hired</option>
+          <option value="trial">Trial</option>
         </select>
         </div>
        

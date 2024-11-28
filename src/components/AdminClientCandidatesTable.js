@@ -22,7 +22,7 @@ function AdminClientCandidatesTable({
       href={!path.includes("/admin/candidates") ? `/admin/candidates` : null}
       info={`Total Candidates: ${totalCandidates}`}
     >
-      <Table columns="grid-cols-[9rem_9rem_7rem_8rem_10rem]">
+      <Table columns="grid-cols-[1fr_9rem_1fr_8rem_10rem]">
         <Table.Header>
           <div className="info text-center">Candidate</div>
           <div className="skills text-center">Job Title</div>

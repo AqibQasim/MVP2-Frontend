@@ -9,7 +9,7 @@ import ScheduleCallModal from "./ScheduleCallModal";
 import { PopupModal, useCalendlyEventListener } from "react-calendly";
 import Modal from "./AdminJobsFormModal";
 import ButtonCapsule from "./ButtonCapsule";
-import { useRouter } from "next/navigation";
+import { useRouter  } from "next/navigation";
 
 function ClientHeader({ client, client_id }) {
   const [isClient, setIsClient] = useState(false);
@@ -17,13 +17,72 @@ function ClientHeader({ client, client_id }) {
   const buttonRef = useRef(null);
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
+  const [notificationCount, setNotificationCount] = useState('0');
+  const [isLoading, setIsLoading] = useState(false);
+
 
   console.log("client information : ", client);
+  console.log("client information : ", client_id);
 
   const formatDate = (isoDateString) => {
     const date = new Date(isoDateString);
     return date.toLocaleDateString("en-CA");
   };
+  useEffect(() => {
+    const fetchNotificationCount = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/count-notification?client_id=${client_id}`,{
+          method:'GET'
+        });
+        // if (!response.ok) {
+        //   throw new Error("Network response was not ok");
+        // } 
+        
+        const data = await response.json();
+        console.log(data)
+        console.log(data?.count)
+         let countData = null;
+          countData = data?.count;
+       
+        setNotificationCount(countData); 
+       
+      } catch (err) {
+        console.error("Error fetching notification count:", err);
+      } 
+    };
+
+     fetchNotificationCount();
+  }, [client_id]);
+ 
+
+//   useEffect(() => {
+//     const fetchNotificationCount = async () => {
+//         setIsLoading(true); // Optional: Show a loading state if desired
+//         try {
+//             const payload = {
+//                 endpoint: `count-notification?client_id=${client_id}`,
+//                 method: "GET",
+//             };
+//             const result = await mvp2ApiHelper(payload); 
+//             if (result?.count !== undefined) {
+//                 setNotificationCount(result.count);
+//             } else {
+//                 console.warn("Unexpected response format:", result);
+//             }
+//         } catch (error) {
+//             console.error("Error fetching notification count:", error);
+//         } finally {
+//             setIsLoading(false); // Optional: Hide the loading state
+//         }
+//     };
+
+//     fetchNotificationCount();
+// }, [client_id]);
+
+        
+ 
+
+
 
   const getEventDetails = async (eventUri) => {
     try {
@@ -49,6 +108,7 @@ function ClientHeader({ client, client_id }) {
 
   useEffect(() => {
     setIsClient(true);
+   
   }, []);
 
   useEffect(() => {
@@ -87,8 +147,22 @@ function ClientHeader({ client, client_id }) {
                 router.push(`/client/${client_id}/notifications`);
               }}
             >
-              <SvgIconNotification />
+              <SvgIconNotification className="h-[1.4rem] w-[1.4rem] "  />
+               
+              
             </ButtonRounded>
+            
+            {notificationCount > 0 ?  <div className="relative z-10 top-6 right-7 w-0" >
+              <span 
+                   className={` inline-flex  px-3 py-3  h-[1.2rem] w-[1.2rem] text-sm items-center justify-center rounded-5xl bg-red-500 text-white  `}
+                 >
+                   {notificationCount > 9 ? "9+" : notificationCount} 
+                  
+                 </span>
+              </div>  : null}
+             
+            
+             
             <ButtonRounded
               onClick={() => {
                 //open notification screen

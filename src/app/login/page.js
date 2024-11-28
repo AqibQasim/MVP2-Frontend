@@ -9,7 +9,6 @@ import SignInButton from "@/components/SignInButton";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import LoaderIcon from "@/svgs/LoaderIcon";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
-import urlBase64ToUint8Array from "@/utils/urlBase64ToUint8Array";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -24,6 +23,9 @@ function Login() {
   const [user_role, setUserRole] = useState("client");
   const [isForgotPasswordOpened, setIsForgotPasswordOpened] = useState(false);
   const [show, setShow] = useState(false);
+
+  
+
 
   useEffect(() => {
 
