@@ -72,6 +72,7 @@ function AdminCandidatesTable({
           <option value="closed">Closed</option>
           <option value="interviewing">Interviewing</option>
           <option value="hired">Hired</option>
+          <option value="trial">Trial</option>
         </select>
         </div>
         
