@@ -74,7 +74,7 @@ function AdminClientsTable({ clients, totalClients,role }) {
         </div>
         )}
 
-        <Table columns="grid-cols-[12rem_1fr_10rem_8rem_8rem]">
+        <Table columns="grid-cols-[1.3fr_1.5fr_10rem_8rem_8rem]">
           <Table.Header>
             <div className="info">Name</div>
             <div className="info text-center">Email</div>
