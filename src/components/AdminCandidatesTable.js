@@ -80,7 +80,7 @@ function AdminCandidatesTable({
       </div>  
      )}
 
-      <Table columns="grid-cols-[1fr_5.7rem_4rem_6rem_4.5rem_4.1rem_7.4rem_1fr]">
+      <Table columns="grid-cols-[9rem_5.7rem_4rem_6rem_4.5rem_4.1rem_7.4rem_9.8rem]">
         <Table.Header>
           <div className="info text-center">Info</div>
           <div className="skills text-center">Skills</div>
