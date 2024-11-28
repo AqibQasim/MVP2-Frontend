@@ -151,6 +151,7 @@ function ClientHeader({ client, client_id }) {
                
               
             </ButtonRounded>
+            
             {notificationCount > 0 ?  <div className="relative z-10 top-6 right-7 w-0" >
               <span 
                    className={` inline-flex  px-3 py-3  h-[1.2rem] w-[1.2rem] text-sm items-center justify-center rounded-5xl bg-red-500 text-white  `}
