@@ -92,11 +92,6 @@ function Login() {
     }
   };
 
-
-
-
-
-
   const handleCloseOverlay = () => {
     setIsForgotPasswordOpened(false);
   };
