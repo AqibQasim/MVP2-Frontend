@@ -114,7 +114,7 @@ function AdminCandidateRow({ candidate, score, onClick }) {
 
 
         <div className="experience flex justify-center text-center">
-          {candidate?.hourly_rate || 0}
+          {candidate?.hourly_rate || 0}$
         </div>
 
         <div className="experience text-center">
@@ -128,7 +128,9 @@ function AdminCandidateRow({ candidate, score, onClick }) {
           className="status mx-auto w-max"
           status={candidate?.talent_status}
         >
-          {candidate?.talent_status}
+          {candidate?.talent_status === "open"  ? "Avaliable"            
+            :  candidate?.talent_status?.toLowerCase() === "closed"  ? "Un-Avaliable"
+            :   candidate?.talent_status }
         </Capsule>
 
         <CapsuleLink

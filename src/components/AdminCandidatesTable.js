@@ -58,9 +58,6 @@ function AdminCandidatesTable({
 
         <div>
           
-        <label htmlFor="options" className="mr-2 mt-2">
-          Choose an option:
-        </label>
         <select
           id="options"
           value={talentStatus}
@@ -68,8 +65,8 @@ function AdminCandidatesTable({
           className="rounded border border-gray-300 p-2"
         >
           <option value="">Select an talent status</option>
-          <option value="open">Open</option>
-          <option value="closed">Closed</option>
+          <option value="open">Avaliable</option>
+          <option value="closed">Un-Avaliable</option>
           <option value="interviewing">Interviewing</option>
           <option value="hired">Hired</option>
           <option value="trial">Trial</option>
