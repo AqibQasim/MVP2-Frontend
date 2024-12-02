@@ -33,7 +33,7 @@ function AdminCandidateJobHistoryRow({ job }) {
       </div>
       <div className="experience text-center">
         {job?.end_date === null
-          ? "Present"
+          ? "_"
           : formatDate(job?.end_date)}
       </div>
       <Capsule

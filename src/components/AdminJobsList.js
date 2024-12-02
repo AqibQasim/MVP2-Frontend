@@ -40,9 +40,6 @@ function AdminJobsList({ jobs, totalJobs, role }) {
       />
         </div>
         <div>
-        <label htmlFor="options" className="mr-2 mt-2">
-          Choose an option:
-        </label>
         <select
           id="options"
           value={jobStatus}
@@ -69,8 +66,8 @@ function AdminJobsList({ jobs, totalJobs, role }) {
         }
       >
         <Table.Header>
-          {jobs[0]?.client && <div className="name">Clients</div>}
-          <div className="name text-center">Info</div>
+          {jobs[0]?.client && <div className="name">Clients-Name</div>}
+          <div className="name text-center">Job-Info</div>
           <div className="email text-center">Skills</div>
           <div className="experience text-center">Experience</div>
           <div className="commit text-center">Commit</div>

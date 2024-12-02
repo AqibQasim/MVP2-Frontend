@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import LoaderIcon from "@/svgs/LoaderIcon";
 import Capsule from "./Capsule";
 
+
 function AdminCandidatesClientsHiringRow({
   candidate,
   job,

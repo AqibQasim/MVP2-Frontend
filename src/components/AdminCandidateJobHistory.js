@@ -4,6 +4,7 @@ import Table from "./Table";
 import AdminCandidateJobHistoryRow from "./AdminCandidateJobHistoryRow";
 
 function AdminCandidateJobHistory({ job_history, total_job_history }) {
+  const router = useRouter(); 
   const path = window.location.href;
 
   return (
