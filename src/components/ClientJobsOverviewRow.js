@@ -20,12 +20,12 @@ function ClientJobsOverviewRow({ job }) {
       />
       <div className="skills flex  items-center justify-center gap-1.5 text-center">
          {job.skills.length > 1 ? (
-         <>
+         <div className="flex">
          <SkillIconWithBg icon={job.skills[0]} skill={job.skills[0]} />
-         <div className="text-sm text-gray-500">
+         <div className="text-sm text-gray-500 mt-2">
           +{job.skills.length - 1}  
          </div>
-         </>
+         </div>
          ) : (
       
         <SkillIconWithBg icon={job.skills[0]} skill={job.skills[0]} />
