@@ -7,7 +7,7 @@ import ChangeStatusDropdown from "./ChangeStatusDropdown";
 import { useSelector } from "react-redux";
 import LoaderIcon from "@/svgs/LoaderIcon";
 import Capsule from "./Capsule";
-
+import { useRouter } from "next/navigation";
 
 function AdminCandidatesClientsHiringRow({
   candidate,
@@ -21,6 +21,12 @@ function AdminCandidatesClientsHiringRow({
 
   const [subscriptionId, setSubcriptionId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  
+   const autoRefresh = () => {
+    router.refresh();
+  }
 
 
   //console.log(first)
@@ -180,9 +186,6 @@ function AdminCandidatesClientsHiringRow({
     // }
   }
 }, [payload]);
-
-
-  
 
   const getClientStripe = () => {
     console.log("pASSING TO PAYLOAD ", typeof changeStatus.client_id);
@@ -477,8 +480,9 @@ function AdminCandidatesClientsHiringRow({
 
           // // Simulate API call delay (remove after integrating real API)
             setTimeout(() => {
-              setIsLoading(false); // Stop loader after status change
-           }, 7000); // Replace with actual API response time
+              setIsLoading(false); 
+              autoRefresh();
+           }, 1000); 
         }}
         className="text-sm font-bold"
       />
