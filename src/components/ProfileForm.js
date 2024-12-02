@@ -132,8 +132,8 @@ const ProfileForm = ({ client }) => {
             </div>
           </div>
         </div>
-
-        {/* <div className="mb-4 grid grid-cols-4 items-start gap-4">
+       
+         <div className="mb-4 grid grid-cols-4 items-start gap-4">
           <Heading xm className="col-span-1"></Heading>
 
           <div className="col-span-2">
@@ -153,8 +153,76 @@ const ProfileForm = ({ client }) => {
               </div>
             </div>
           </div>
-        </div> */}
+        </div> 
+
+        <div className="mb-4 grid grid-cols-4 items-start gap-4">
+          {/* Section Heading */}
+          <Heading xm className="col-span-1"></Heading>
+          {/* Input Group */}
+          <div className="col-span-2">
+            {/* First Name and Last Name Row */}
+            <div className="flex flex-col sm:flex-row sm:space-x-4">
+              {/* First Name */}
+              <div className="flex flex-1 flex-col">
+                <b>
+                  <label>Phone Number</label>
+                </b>
+                <input
+                  disabled
+                  ref={emailRef}
+                  // defaultValue={client?.email || ""}
+                  type="email"
+                  placeholder="Phone Number"
+                  className="focus:ring-none mt-1 cursor-not-allowed rounded-full border text-gray-400 bg-gray-100 p-2 focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+
         <hr />
+
+        <div className="my-4 grid grid-cols-4 items-start gap-4">
+          {/* Section Heading */}
+          <Heading xm className="col-span-1">
+            Compony Details
+          </Heading>
+
+          {/* Input Group */}
+          <div className="col-span-2">
+            {/* First Name and Last Name Row */}
+            <div className="flex flex-col sm:flex-row sm:space-x-4">
+              {/* First Name */}
+              <div className="flex flex-1 flex-col">
+                <b>
+                  <label>Compony Name</label>
+                </b>
+                <input
+                  ref={firstNameRef}
+                  // defaultValue={client?.name?.split(" ", 2)[0] || ""}
+                  type="text"
+                  placeholder="Compony Name"
+                  className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
+                />
+              </div>
+
+              {/* Last Name */}
+              <div className="flex flex-1 flex-col">
+                <b>
+                  <label>Compony Size</label>
+                </b>
+                <input
+                  ref={lastNameRef}
+                  // defaultValue={client?.name?.split(" ", 2)[1] || ""}
+                  type="text"
+                  placeholder="Compony Size"
+                  className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div className="mb-4 mt-4 grid grid-cols-4 items-start gap-4">
           {/* Section Heading */}
