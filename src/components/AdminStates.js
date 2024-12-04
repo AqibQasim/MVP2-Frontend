@@ -117,11 +117,11 @@ const ClientEmptyScreen = () => {
               </div>
 
               <div className="text-medium flex justify-between font-medium">
-                <div className="text-xl">NO Jobs:</div>
+                <div className="text-xl">NO Jobs Posted:</div>
                 <div className="px-4">{adminStats?.clients?.no_jobs ?? 0}</div>
               </div>
               <div className="text-medium flex justify-between font-medium">
-                <div className="text-xl">Jobs:</div>
+                <div className="text-xl">Posted Jobs:</div>
                 <div className="px-4">{adminStats?.clients.jobs ?? 0}</div>
               </div>
             </div>

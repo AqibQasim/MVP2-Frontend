@@ -1,3 +1,4 @@
+
 import SvgIconJobStatus from "@/svgs/SvgIconJobStatus";
 import SvgIconWork from "@/svgs/SvgIconWork";
 import Capsule from "./Capsule";
@@ -7,10 +8,8 @@ import Skill from "./Skill";
 import Table from "./Table";
 import CapsuleLink from "./CapsuleLink";
 import { useParams } from "next/navigation";
-
 function AdminJobsRow({ job }) {
   console.log("job ka data", job);
-
   return (
     <Table.Row>
       {job?.client && (
@@ -35,14 +34,12 @@ function AdminJobsRow({ job }) {
           <Skill skill={job.skills[0]} />
         )}
       </div>
-
       <div className="experience text-center">{job?.experience}</div>
       <div className="commitment text-center">{job?.commitment}</div>
       <Capsule
         className="!mx-auto mr-auto w-max !bg-primary-tint-100"
         icon={<IconWithBg job={job?.job_status} className="pl-4" />}
       ></Capsule>
-
       <CapsuleLink
         className="ml-auto"
         href={`/admin/jobs/${job?.job_posting_id}?client_id=${job?.client_id}`}
@@ -59,5 +56,4 @@ function AdminJobsRow({ job }) {
     </Table.Row>
   );
 }
-
 export default AdminJobsRow;

@@ -24,7 +24,7 @@ function ChangeStatusDropdown({
     <div className={`relative ${className}`}>
       <select className={commonClasses} onChange={handleChange} {...rest}>
         {placeholder && <option value="">{placeholder}</option>}
-        {options.map((option, index) => (
+        {options?.map((option, index) => (
           <option key={index} value={option.value}>
             {option.label}
           </option>
