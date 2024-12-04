@@ -6,7 +6,7 @@ import ReportOverlay from "@/components/ReportOverlay";
 import WithAdminAuth from "@/components/WithAdminAuth";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { fetchRecommendedCandidates } from "@/lib/data-service";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const metadata = {
   title: "Candidates",
@@ -15,17 +15,19 @@ const metadata = {
 //export const revalidate = 60 * 60 * 24; // invalidate every 24 hours
 
 const Page = async () => {
-  let candidates = [];
+  // let candidates = [];
+  const [candidates, setCandidates] = useState([])
   const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
   const [selected_candidate_id, setSelectedCandidateId] = useState(null);
   const [candidateReport, setCandidateReport] = useState(null);
+  const [error,setError]= useState(null)
 
   const handleCloseOverlay = () => {
     setIsReportOverlayOpened(false);
     //setSuccessAcknowledge(false);
   };
 
-  const getCandidateResult = () => {
+  const getCandidateResult = useCallback(() => {
     const payload = {
       endpoint: `get-customer-result?customer_id=${selected_candidate_id}`,
       method: "GET",
@@ -33,21 +35,28 @@ const Page = async () => {
     mvp2ApiHelper(payload).then((result) => {
       if (result) setCandidateReport(result?.data?.data);
     });
-  };
+  },[selected_candidate_id]);
+
+  const getRecommendedCandidates= useCallback(async()=>{
+    const { data, error } = await fetchRecommendedCandidates();
+    if (error) setError(error);
+    else setCandidates(data?.data)
+  },[]);
 
   useEffect(() => {
     getCandidateResult();
+    getRecommendedCandidates();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected_candidate_id]);
 
-  try {
-    const { data, error } = await fetchRecommendedCandidates();
-    if (error) throw new Error(error);
-    console.log(data);
-    candidates = data?.data;
-  } catch (err) {
-    return <div>{err}</div>;
-  }
+  // try {
+  //   const { data, error } = await fetchRecommendedCandidates();
+  //   if (error) throw new Error(error);
+  //   console.log(data);
+  //   candidates = data?.data;
+  // } catch (err) {
+  //   return <div>{err}</div>;
+  // }
 
   if (!candidates) {
     return <EmptyScreen className={"h-[32.188rem]"} />;

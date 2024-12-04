@@ -27,7 +27,7 @@ function Page({ params }) {
   const [client, setClient] = useState(null);
   const client_id = params?.clientId;
   const [candidates, setCandidates] = useState(null);
-  const [dataError, setDataError] = useState(null);
+  //const [dataError, setDataError] = useState(null);
 
   //const [assignedCandidates, setAssignedCandidates]= useState(null);
 
@@ -74,11 +74,11 @@ function Page({ params }) {
 
   if (!client) return <div>Loading...</div>;
 
-  function parseDateString(dateString) {
-    const [day, month, year] = dateString.split(" ");
-    const monthIndex = new Date(Date.parse(month + " 1, 2024")).getMonth(); // Convert month name to index
-    return new Date(year, monthIndex, day);
-  }
+  // function parseDateString(dateString) {
+  //   const [day, month, year] = dateString.split(" ");
+  //   const monthIndex = new Date(Date.parse(month + " 1, 2024")).getMonth(); // Convert month name to index
+  //   return new Date(year, monthIndex, day);
+  // }
 
   return (
     <>
