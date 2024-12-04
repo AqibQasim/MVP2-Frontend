@@ -7,6 +7,7 @@ import ChangeStatusDropdown from "./ChangeStatusDropdown";
 import { useSelector } from "react-redux";
 import LoaderIcon from "@/svgs/LoaderIcon";
 import Capsule from "./Capsule";
+import { useRouter } from "next/navigation";
 
 function AdminCandidatesClientsHiringRow({
   candidate,
@@ -18,6 +19,11 @@ function AdminCandidatesClientsHiringRow({
 
   const [subscriptionId, setSubcriptionId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const autoRefresh = useCallback(() => {
+    router.refresh();
+  },[]);
 
   //console.log(first)
   const [changeStatus, setChangeStatus] = useState({
@@ -136,14 +142,14 @@ function AdminCandidatesClientsHiringRow({
         response_status: changeStatus.response_status,
       },
     }),
-    [
-      changeStatus.client_id,
-      changeStatus.customer_id,
-      changeStatus.job_posting_id,
-      changeStatus.job_status,
-      changeStatus.talent_status,
-      changeStatus.response_status,
-    ],
+    // [
+    //   changeStatus.client_id,
+    //   changeStatus.customer_id,
+    //   changeStatus.job_posting_id,
+    //   changeStatus.job_status,
+    //   changeStatus.talent_status,
+    //   changeStatus.response_status,
+    // ],
   );
 
   const handleChangeStatus = useCallback(async () => {
@@ -471,8 +477,9 @@ function AdminCandidatesClientsHiringRow({
 
                     // // Simulate API call delay (remove after integrating real API)
                     setTimeout(() => {
-                      setIsLoading(false); // Stop loader after status change
-                    }, 7000); // Replace with actual API response time
+                      setIsLoading(false);
+                      autoRefresh();
+                    }, 1000);
                   }}
                   className="text-sm font-bold"
                 />

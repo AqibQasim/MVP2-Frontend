@@ -408,7 +408,7 @@ const fetchInvoiceDetails = async (invoiceId) => {
             <div>Invoice</div>
             <div>Payment History</div>
             <div>Details</div>
-            <div>Hiring Details</div>
+            <div>Client History</div>
             
           </li>
           <hr></hr>

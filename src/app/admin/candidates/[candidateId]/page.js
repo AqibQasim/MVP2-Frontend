@@ -22,6 +22,7 @@ import { referCandidateToClientAction } from "@/lib/actions";
 import { fetchClientJobs, getClients } from "@/lib/data-service";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import AdminCandidateJobHistory from "@/components/AdminCandidateJobHistory";
+import getCandidateStatus from "@/utils/getCandidateStatus";
 
 function Page({ params }) {
   const [talent, setTalent] = useState(null);
@@ -208,15 +209,18 @@ function Page({ params }) {
 
           <Capsule
             onClick={
-              talent?.talent_status === "open" ? () => setShowForm(true) : null
+              getCandidateStatus(talent?.talent_status, talent?.status) ===
+              "Available"
+                ? () => setShowForm(true)
+                : null
             }
-            className={`ml-auto cursor-not-allowed !bg-grey-primary-tint-90 ${talent?.talent_status === "open" ? "!text-primary-tint-10" : "!text-gray-500"}`}
+            className={`ml-auto cursor-not-allowed !bg-grey-primary-tint-90 ${getCandidateStatus(talent?.talent_status, talent?.status) === "Available" ? "!text-primary-tint-10" : "!text-gray-500"}`}
           >
             Refer To Client
           </Capsule>
 
           <Capsule className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
-            {talent?.talent_status}
+            {getCandidateStatus(talent?.talent_status, talent?.status)}
             {talent?.talent_status !== "open" &&
               talent?.talent_status !== "interviewing" && (
                 <>
@@ -321,7 +325,9 @@ function Page({ params }) {
           Refer {talent?.role} to Client
         </h3>
         <form action={handleReferCandidate}>
-          <label className="flex">Hourly Rate  <div className="text-red-600" >*</div></label>
+          <label className="flex">
+            Hourly Rate <div className="text-red-600">*</div>
+          </label>
           <input
             //type="number"
             name="hourlyRate"
@@ -332,7 +338,9 @@ function Page({ params }) {
             className="mt-2 block w-full border px-2 py-1"
           />
 
-          <label className="mt-4 flex">Assign to Client   <div className="text-red-600" >*</div> </label>
+          <label className="mt-4 flex">
+            Assign to Client <div className="text-red-600">*</div>{" "}
+          </label>
           <input
             type="text"
             value={searchClient}
@@ -369,7 +377,9 @@ function Page({ params }) {
               </option>
             ))}
 
-          <label className="mt-4 flex">Select Job   <div className="text-red-600" >*</div> </label>
+          <label className="mt-4 flex">
+            Select Job <div className="text-red-600">*</div>{" "}
+          </label>
           <input
             type="text"
             value={searchJob}
@@ -400,7 +410,10 @@ function Page({ params }) {
           {/* </select> */}
           {/* Error Temp */}
           {error ? (
-            <div className="error text-red-500"> {error || error?.message} </div>
+            <div className="error text-red-500">
+              {" "}
+              {error || error?.message}{" "}
+            </div>
           ) : null}
 
           <div className="mt-4">

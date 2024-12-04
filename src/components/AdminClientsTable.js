@@ -56,18 +56,15 @@ function AdminClientsTable({ clients, totalClients,role }) {
         />
         </div>
         <div  >
-        <label htmlFor="options" className="mr-2 mt-2">
-            Choose an option:
-          </label>
           <select
             id="options"
             value={jobStatus}
             onChange={handleJobStatusChange}
             className="rounded border border-gray-300 p-2"
           >
-            <option value="">All Jobs</option>
-            <option value="nojobs">No Jobs</option>
-            <option value="jobs">Jobs</option>
+            <option value="">List of Jobs </option>
+            <option value="nojobs">No Jobs Posted </option>
+            <option value="jobs"> Posted Jobs </option>
           </select>
         </div>
         

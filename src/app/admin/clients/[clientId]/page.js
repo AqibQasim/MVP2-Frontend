@@ -89,7 +89,7 @@ function Page({ params }) {
           {/* <ButtonBack /> */}
           <div>
             <ButtonCapsuleWhite />
-            <Heading sm>Profile Overview</Heading>
+            <Heading sm>Client Profile</Heading>
           </div>
           {/* <Capsule className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
             {talent?.talent_status} {formatDate(talent?.updatedAt)} -{" "}
