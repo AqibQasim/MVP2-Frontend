@@ -123,7 +123,7 @@ function JobViewById({ job, user_role }) {
                 <TagCard
                   icon={note_add}
                   title={"Est. Length"}
-                  answer={job.project_length}
+                  answer={job.project_length} 
                 />
 
                 <TagCard

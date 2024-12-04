@@ -12,6 +12,7 @@ const metadata = {
 // export const revalidate = 60 * 60 * 24; // invalidate every 24 hours
 
 async function Page() {
+
   let jobs = [];
   try {
     const { data, error } = await getJobs();
@@ -23,11 +24,16 @@ async function Page() {
 
   console.log("data of jobs", jobs);
 
+
+  
+
+
+
   if (jobs && jobs?.length === 0) {
     return <EmptyScreen className={"h-[32.188rem]"} />;
   }
 
-  return <AdminJobsList totalJobs={jobs?.length} jobs={jobs} role="admin" />;
+  return <AdminJobsList totalJobs={jobs?.length} jobs={jobs}    role="admin" />;
 }
 
 export default WithAdminAuth(Page);

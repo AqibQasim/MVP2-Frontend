@@ -414,7 +414,9 @@ function AdminCandidatesClientsHiringRow({
 
   useEffect(()=>{
     if(subscriptionId){
-          handleHiring()
+          handleHiring();
+        
+        
       }
   }, [subscriptionId, changeStatus])
 
@@ -478,11 +480,10 @@ function AdminCandidatesClientsHiringRow({
             response_status,
           });
 
-          // // Simulate API call delay (remove after integrating real API)
-            setTimeout(() => {
+           
               setIsLoading(false); 
               autoRefresh();
-           }, 1000); 
+          
         }}
         className="text-sm font-bold"
       />

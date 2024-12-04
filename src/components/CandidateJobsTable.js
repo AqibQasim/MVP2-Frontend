@@ -13,6 +13,7 @@ function CandidateJobsTable() {
   const params = useParams();
   const cid = params.candidateId;
 
+
   useEffect(() => {
     const fetchJobs = async () => {
       try {
