@@ -2,9 +2,10 @@ import React from "react";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 import AdminCandidateJobHistoryRow from "./AdminCandidateJobHistoryRow";
+// import { useRouter } from "next/router";
 
 function AdminCandidateJobHistory({ job_history, total_job_history }) {
-  const router = useRouter(); 
+  // const router = useRouter(); 
   const path = window.location.href;
 
   return (

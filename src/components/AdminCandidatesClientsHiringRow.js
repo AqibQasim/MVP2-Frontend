@@ -207,7 +207,7 @@ function AdminCandidatesClientsHiringRow({
 
 
   const handleSubscription = async () => {
-    const customPrice = candidate.hourly_rate * 100 * 40;
+    const customPrice = ((candidate.hourly_rate * 100) * 40) * 2;
   
     try {
       setIsLoading(true); 
