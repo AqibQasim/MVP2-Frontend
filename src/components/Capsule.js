@@ -13,11 +13,11 @@ function Capsule({ children, icon = null, className = "", status = "none", onCli
     "inline-flex items-center justify-center gap-2 !py-1 pl-1 pr-4 font-satoshi !font-bold text-primary-tint-30";
   const noIconClasses = "font-lufga text-grey-primary-shade-30";
 
-  const containerClasses = `${icon ? iconClasses : noIconClasses} ${statusClasses[status]} ${baseClasses} bg-grey-primary-tint-90`;
+  const containerClasses = `${icon ? iconClasses : noIconClasses} ${statusClasses[status]} ${baseClasses} bg-grey-primary-tint-90 text-center`;
 
   return (
     <div
-      className={`${className} ${containerClasses} ${onClick ? 'cursor-pointer' : ''}`}
+      className={`${className} ${containerClasses} ${onClick ? 'cursor-pointer text-center' : ''}`}
       onClick={onClick}
     >
       {icon && icon}

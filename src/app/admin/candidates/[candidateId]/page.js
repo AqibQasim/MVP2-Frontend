@@ -39,6 +39,12 @@ function Page({ params }) {
   const [isClientsShow, setIsClientShow] = useState(false);
   const [isJobsShow, setIsJobsShow] = useState(false);
   const [jobHistory, setJobHistory] = useState(null);
+  const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
+
+  const handleCloseOverlay = () => {
+    setIsReportOverlayOpened(false);
+    //setSuccessAcknowledge(false);
+  };
 
   const filteredClients = clients?.filter((client) =>
     client.name.toLowerCase().includes(searchClient.toLowerCase()),
