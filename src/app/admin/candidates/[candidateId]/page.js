@@ -352,7 +352,7 @@ function Page({ params }) {
             </div>
             
             <div className="text-grey-primary-shade-20 mt-2"> Candidate Report</div>
-            <div  className="w-1/3 mt-4" >
+            <div  className="w-1/2 mt-4" >
             <Capsule className="!text-primary-tint-10 ml-5"
                   onClick={() => {
                     setIsReportOverlayOpened(true);
