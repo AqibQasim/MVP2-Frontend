@@ -159,8 +159,8 @@ function Page({ params }) {
           <div />
         </div>
 
-        <div  className="flex justify-center mt-5 " >
-            <Capsule className="w-[16rem] " >
+        <div  className="flex justify-center mt-12 " >
+            <Capsule className="w-[16rem] mt-20 " >
               <AdminCreateAJobModal clientId={client.client_id} />
             </Capsule>
           </div>
