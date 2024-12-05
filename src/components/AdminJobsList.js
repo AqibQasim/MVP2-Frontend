@@ -61,8 +61,8 @@ function AdminJobsList({ jobs, totalJobs, role}) {
       <Table
         columns={
           jobs[0]?.client
-            ? "grid-cols-[1fr_1.7fr_6.5rem_6rem_5rem_7.1rem_8.1rem]"
-            : "grid-cols-[1fr_6.5rem_6rem_5rem_7.1rem_8.1rem]"
+            ? "grid-cols-[1fr_1.7fr_12.5rem_8rem_7rem_9.1rem]"
+            : "grid-cols-[1fr_12.5rem_8rem_8rem_9.1rem]"
         }
       >
         <Table.Header>
@@ -72,7 +72,6 @@ function AdminJobsList({ jobs, totalJobs, role}) {
           <div className="experience text-center">Experience</div>
           <div className="commit text-center">Commit</div>
           <div className="status text-center">Status</div>
-          <div className="action text-center">Action</div>
         </Table.Header>
         <Table.Body
           data={filteredJobs}

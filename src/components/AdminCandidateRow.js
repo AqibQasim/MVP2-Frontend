@@ -8,10 +8,10 @@ import EntityCard from "./EntityCard";
 import IconWithBg from "./IconWithBg";
 import SkillIconWithBg from "./SkillIconWithBg";
 import Table from "./Table";
-import CapsuleLink from "./CapsuleLink";
 import getCandidateStatus from "@/utils/getCandidateStatus";
+import { useRouter } from "next/navigation";
 
-function AdminCandidateRow({ candidate, score, onClick }) {
+function AdminCandidateRow({ candidate, score }) {
   const [showForm, setShowForm] = useState(false);
   const [hourlyRate, setHourlyRate] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
@@ -23,6 +23,8 @@ function AdminCandidateRow({ candidate, score, onClick }) {
   const [selectedJob, setSelectedJob] = useState("");
   const [selectedJobId, setSelectedJobId] = useState("");
   const [error, setError] = useState(null);
+
+  const router = useRouter();
 
   const filteredClients = clients?.filter((client) =>
     client.name.toLowerCase().includes(searchClient.toLowerCase()),
@@ -84,8 +86,13 @@ function AdminCandidateRow({ candidate, score, onClick }) {
 
   return (
     <>
-      <Table.Row>
-        <div onClick={onClick} className="cursor-pointer text-start">
+    <div  className = "cursor-pointer"  >
+      <Table.Row
+        className = "cursor-pointer"
+         onClick={() => router.push(`/admin/candidates/${candidate?.customer_id}`)}
+      >
+        <div  
+          className="cursor-pointer text-start">
           <EntityCard
             entity={{
               name: candidate?.name,
@@ -95,7 +102,7 @@ function AdminCandidateRow({ candidate, score, onClick }) {
           />
         </div>
 
-        <div className="skills flex flex-col items-center justify-center gap-1 text-center">
+        <div className="skills flex flex-col items-center justify-center gap-1 text-center ">
           {candidate?.expertise?.length > 1 ? (
             <div className="flex">
               <SkillIconWithBg
@@ -141,14 +148,7 @@ function AdminCandidateRow({ candidate, score, onClick }) {
             :   candidate?.talent_status } */}
         </Capsule>
 
-        <CapsuleLink
-          className="ml-auto"
-          href={`/admin/candidates/${candidate?.customer_id}`}
-          // href={window.location.href + `/${candidate?.customer_id}`}
-        >
-          {" "}
-          view talent{" "}
-        </CapsuleLink>
+       
         {/* Button to open form */}
         {/* <button onClick={() => {
           if (candidate?.talent_status === "open") {
@@ -163,6 +163,7 @@ function AdminCandidateRow({ candidate, score, onClick }) {
           </Capsule>
         </button> */}
       </Table.Row>
+      </div>
 
       {/* <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
         <h3 className="mb-4 text-xl font-semibold">

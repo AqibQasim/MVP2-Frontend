@@ -9,7 +9,6 @@ import note_add from "@/../public/icons/note-add.svg";
 import tag from "@/../public/icons/tag-user.svg";
 import timer_start from "@/../public/icons/timer-start.svg";
 import ButtonCapsuleWhite from "@/components/ButtonCapsuleWhite";
-import Capsule from "@/components/Capsule";
 import EntityCard from "@/components/EntityCard";
 import Heading from "@/components/Heading";
 import Hr from "@/components/Hr";
@@ -21,8 +20,16 @@ import { cityTimezoneOffset } from "@/utils/cityTimezoneOffset";
 import { formatDate } from "@/utils/utility";
 import { fetchRecommendedCandidates, getClientById } from "@/lib/data-service";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
 import CapsuleLink from "./CapsuleLink";
+//
+import { useCallback, useEffect, useMemo, useState } from "react";
+import SkillIconWithBg from "./SkillIconWithBg";
+import Table from "./Table";
+import ChangeStatusDropdown from "./ChangeStatusDropdown";
+import { useSelector } from "react-redux";
+import LoaderIcon from "@/svgs/LoaderIcon";
+import Capsule from "./Capsule";
+import { useRouter } from "next/navigation";
 import Modal from "./Modal";
 
 function AdminJobViewById({ job, setShowForm }) {
@@ -31,7 +38,352 @@ function AdminJobViewById({ job, setShowForm }) {
   const [jobQuestionLength, setJobQuestionLength] = useState(1);
   const [assignedCandidates, setassignedCandidates] = useState(null);
   const [client, setClient] = useState(null);
-  
+
+  const [subscriptionId, setSubcriptionId] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const autoRefresh = () => {
+    router.refresh();
+  };
+
+  //console.log(first)
+  const [changeStatus, setChangeStatus] = useState({
+    customer_id: null,
+    job_posting_id: null,
+    client_id: null,
+    job_status: job?.job_status, //'open',
+    talent_status: null, //'open',
+    response_status: null, //'decline'
+  });
+  const [stripeClientId, setStripeClientId] = useState(null);
+
+  const selectedMethodId = useSelector(
+    (state) => state.payment.selectedMethodId,
+  );
+
+  let options = null;
+
+  if (job?.job_status === "interviewing") {
+    options = [
+      { value: "open", label: "Open" },
+      { value: "trial", label: "Trial" },
+      { value: "hired", label: "Hired" },
+      { value: "close", label: "Close" },
+    ];
+  }
+
+  if (job?.job_status === "trial") {
+    options = [
+      { value: "open", label: "Open" },
+      { value: "hired", label: "Hired" },
+      { value: "close", label: "Close" },
+    ];
+  }
+
+  if (job?.job_status === "open") {
+    options = [
+      { value: "hired", label: "Hired" },
+      { value: "trial", label: "Trial" },
+      { value: "close", label: "Close" },
+    ];
+  }
+
+  if (job?.job_status === "hired") {
+    options = [
+      { value: "open", label: "Open" },
+      { value: "trial", label: "Trial" },
+      { value: "close", label: "Close" },
+    ];
+  }
+
+  const payload = useMemo(
+    () => ({
+      endpoint: "client/client-response",
+      method: "POST",
+      body: {
+        client_id: changeStatus.client_id,
+        customer_id: changeStatus.customer_id,
+        job_posting_id: changeStatus.job_posting_id,
+        job_status: changeStatus.job_status,
+        talent_status: changeStatus.talent_status,
+        response_status: changeStatus.response_status,
+      },
+    }),
+    [
+      changeStatus.client_id,
+      changeStatus.customer_id,
+      changeStatus.job_posting_id,
+      changeStatus.job_status,
+      changeStatus.talent_status,
+      changeStatus.response_status,
+    ],
+  );
+
+  const handleChangeStatus = //useCallback(
+    async () => {
+    console.log(changeStatus)
+    const {
+      client_id,
+      customer_id,
+      job_posting_id,
+      job_status,
+      talent_status,
+      response_status,
+    } = changeStatus;
+
+    if (
+      client_id &&
+      customer_id &&
+      job_posting_id &&
+      talent_status &&
+      response_status &&
+      job_status
+    ) {
+      try {
+        setIsLoading(true);
+        console.log(changeStatus)
+        const result = await mvp2ApiHelper(payload);
+        console.log(result);
+      } catch (error) {
+        console.error(error);
+      }
+      // finally {
+      //   setIsLoading(false);
+      // }
+    }
+  }//, [payload]);
+
+  const getClientStripe = () => {
+    console.log("pASSING TO PAYLOAD ", typeof changeStatus.client_id);
+    const payload = {
+      endpoint: `get-client-stripe-account?client_id=${changeStatus.client_id}`,
+      method: "GET",
+    };
+
+    mvp2ApiHelper(payload).then((result) => {
+      //  console.log("Stripe API result: ", result.status)
+      if (result.status === 200) {
+        console.log("TEST 124", changeStatus);
+        setStripeClientId(result.data.data.stripe_id);
+      }
+      console.error(result?.data?.message);
+      return null; // Return null or handle the error appropriately
+    });
+  };
+
+  const handleSubscription = async () => {
+    const customPrice = assignedCandidates.hourly_rate * 100 * 40;
+
+    try {
+      setIsLoading(true);
+      const subscriptionResponse = await fetch("/api/create-subscription", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          customerId: stripeClientId,
+          price: customPrice,
+          paymentMethodId: selectedMethodId,
+        }),
+      });
+
+      if (!subscriptionResponse.ok) {
+        setIsLoading(false);
+        throw new Error(`HTTP error! status: ${subscriptionResponse.status}`);
+      }
+
+      const { subscriptionId } = await subscriptionResponse.json();
+      setSubcriptionId(subscriptionId);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error creating subscription:", error);
+      setIsLoading(false);
+    }
+  };
+
+  const handleHiring = async () => {
+    const customPrice = assignedCandidates.hourly_rate * 100 * 40;
+
+    try {
+      // Fetch client secret for subscription
+      setIsLoading(true);
+      const subscriptionResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-hiring`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            client_id: changeStatus.client_id,
+            subscription_id: subscriptionId,
+            stripe_client_id: stripeClientId,
+            job_posting_id: changeStatus.job_posting_id,
+            customer_id: changeStatus.customer_id,
+            amount: customPrice,
+          }),
+        },
+      );
+
+      if (!subscriptionResponse.ok) {
+        setIsLoading(false);
+        throw new Error(`HTTP error! status: ${subscriptionResponse.status}`);
+      }
+
+      const { clientSecret } = await subscriptionResponse.json();
+      //setClientSecret(clientSecret);
+    } catch (error) {
+      setIsLoading(false);
+      console.error("Error creating subscription:", error);
+    }
+  };
+
+  // useEffect(() => {
+  //   handleChangeStatus();
+  // }, [changeStatus]);
+
+  //  const handleCancelSubscription = async () => {
+  //   try {
+  //       const subscriptionResponse = await fetch(
+  //           `/api/client-subscriptions-list`,
+  //           {
+  //             method: "POST",
+  //             headers: {
+  //               "Content-Type": "application/json",
+  //             },
+  //             body: JSON.stringify({ customer_id: stripeClientId }),
+  //           }
+  //         );
+
+  //         const subscriptionData = await subscriptionResponse.json();
+
+  //         // // You can use subscriptionData as needed, for example:
+  //         // customer.subscriptions = subscriptionData.data;
+
+  //         console.log("Subscription Daata is", subscriptionData.data)
+
+  //     if (!subscriptionResponse.ok) {
+  //       throw new Error(`HTTP error! status: ${subscriptionResponse.status}`);
+  //     }
+
+  //     if (subscriptionData?.data?.length > 0) {
+  //           const subscriptionId = subscriptionData.data[0].id;
+
+  //           // Call delete subscription API
+  //           const deleteResponse = await fetch(`/api/delete-subscription`, {
+  //               method: "DELETE",
+  //               headers: {
+  //                   "Content-Type": "application/json",
+  //               },
+  //               body: JSON.stringify({ subscriptionId }),
+  //           });
+
+  //           if (!deleteResponse.ok) {
+  //               throw new Error(`HTTP error! status: ${deleteResponse.status}`);
+  //           }
+
+  //           const deleteResult = await deleteResponse.json();
+  //           console.log("Subscription deleted successfully:", deleteResult);
+  //       } else {
+  //           console.log("No subscriptions found to delete");
+  //       }
+  //   } catch (error) {
+  //     console.error('Error creating subscription:', error);
+  //   }
+  // };
+
+  const handleCancelSubscription = async () => {
+    try {
+      setIsLoading(true);
+      const subscriptionResponse = await fetch(
+        `/api/client-subscriptions-list`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ customer_id: stripeClientId }),
+        },
+      );
+
+      const subscriptionData = await subscriptionResponse.json();
+
+      // // You can use subscriptionData as needed, for example:
+      // customer.subscriptions = subscriptionData.data;
+
+      console.log("Subscription Daata is", subscriptionData.data);
+
+      if (!subscriptionResponse.ok) {
+        throw new Error(`HTTP error! status: ${subscriptionResponse.status}`);
+      }
+
+      if (subscriptionData?.data?.length > 0) {
+        const subscriptionId = subscriptionData.data[0].id;
+
+        // Call delete subscription API
+        const deleteResponse = await fetch(`/api/delete-subscription`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ subscriptionId }),
+        });
+
+        if (!deleteResponse.ok) {
+          throw new Error(`HTTP error! status: ${deleteResponse.status}`);
+        }
+
+        const deleteResult = await deleteResponse.json();
+        console.log("Subscription deleted successfully:", deleteResult);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        console.log("No subscriptions found to delete");
+      }
+    } catch (error) {
+      console.error("Error creating subscription:", error);
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleChangeStatus();
+  }, [changeStatus]);
+
+  useEffect(() => {
+    // console.log(changeStatus)
+    handleChangeStatus();
+    getClientStripe();
+
+    if (changeStatus.job_status === "hired") {
+      console.log("JOB STATUS CHANGED TO ", changeStatus.job_status);
+
+      if (stripeClientId) {
+        handleSubscription();
+      }
+      //stripeClientId
+    } else if (
+      changeStatus.job_status === "open" ||
+      changeStatus.job_status === "trial" ||
+      changeStatus.job_status === "close"
+    ) {
+      if (stripeClientId) {
+        handleCancelSubscription();
+      }
+    }
+  }, [changeStatus, stripeClientId]);
+
+  useEffect(() => {
+    if (subscriptionId) {
+      handleHiring();
+    }
+  }, [subscriptionId, changeStatus]);
+
+  const rowClassName =
+    job?.job_status === "trial" ? "bg-red-600 rounded-lg" : "";
+
   useEffect(() => {
     if (!job?.client_id) return;
 
@@ -130,8 +482,57 @@ function AdminJobViewById({ job, setShowForm }) {
               <div className="flex flex-row items-center gap-3">
                 <ButtonCapsuleWhite />
                 <Heading sm>{job?.position}</Heading>
+                <div>
+                  {isLoading ? (
+                    // Loader Icon displayed when loading
+                    <div className="flex items-center justify-center rounded-5xl bg-blue-800 py-3">
+                      <LoaderIcon className="text-5xl" />
+                    </div>
+                  ) : (
+                    assignedCandidates?(
+                    // Change Status Dropdown displayed when not loading
+                    <ChangeStatusDropdown
+                      options={options}
+                      placeholder="Change Job Status"
+                      className="mr-6"
+                      onPress={(selected_status) => {
+                        setIsLoading(true); // Start loader
+
+                        let response_status = null;
+
+                        if (selected_status === "open") {
+                          response_status = "decline";
+                        } else if (
+                          selected_status === "trial" ||
+                          selected_status === "hired"
+                        ) {
+                          response_status = "accept";
+                        } else if (selected_status === "close") {
+                          response_status = "close";
+                        }
+
+                        setChangeStatus((prev)=>({
+                          ...prev,
+                          customer_id: assignedCandidates?.customer_id,
+                          job_posting_id: job?.job_posting_id,
+                          client_id: job?.client_id,
+                          job_status: selected_status,
+                          talent_status: selected_status,
+                          response_status,
+                        }));
+
+                        setIsLoading(false);
+                        autoRefresh();
+                      }}
+                    />
+                    ):null
+                  )}
+                </div>
+                <Heading toxm>
+                  <div>Job Status :</div>
+                  <div>{job?.job_status}</div>
+                </Heading>
               </div>
-              <Heading toxm>Job Status : {job?.job_status}</Heading>
             </div>
             <Hr />
             <div className="mx-5 mb-6 flex justify-between">
@@ -250,6 +651,7 @@ function AdminJobViewById({ job, setShowForm }) {
                   ))}
                 </div>
               </div>
+
               <CapsuleLink
                 className="mx-3 mt-5"
                 href={`/admin/candidates/${assignedCandidates?.customer_id}`}
@@ -276,7 +678,6 @@ function AdminJobViewById({ job, setShowForm }) {
           )}
         </div>
       </div>
-      
     </>
   );
 }
