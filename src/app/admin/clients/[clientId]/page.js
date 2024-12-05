@@ -12,6 +12,8 @@ import Hr from "@/components/Hr";
 import IconWithBg from "@/components/IconWithBg";
 //import TalentDescription from "./TalentDescription";
 import EmailSvg from "../../../../../public/icons/email.svg";
+import phone from "../../../../../public/icons/Call.png";
+
 import { cityTimezoneOffset } from "@/utils/cityTimezoneOffset";
 import { formatDate } from "@/utils/utility";
 import ButtonCapsuleWhite from "@/components/ButtonCapsuleWhite";
@@ -95,8 +97,6 @@ function Page({ params }) {
             {talent?.talent_status} {formatDate(talent?.updatedAt)} -{" "}
             {newEndTrialDate}
           </Capsule> */}
-         
-
         </div>
         <Hr />
         <div className="mini-profile flex items-center justify-start">
@@ -110,29 +110,28 @@ function Page({ params }) {
           {/* <Capsule className="ml-auto mt-auto" icon={<IconWithBg icon="$" />}>
             ${talent?.hourly_rate}hr
           </Capsule> */}
-
-
-          
         </div>
 
         {/* <TalentDescription
           description={talent?.job_postings?.description}
           skills={talent?.job_postings?.skills}
         /> */}
- 
-        <div className="flex justify-between h-auto   space-y-5  ">
-          <div className=" flex-1   ">
-          <div>
-            <Heading xm>About</Heading>
-            <Capsule className="flex w-fit flex-wrap items-center gap-2">
-              <Image src={EmailSvg} />
-              {client?.email}
-            </Capsule>
-           </div>
-           
-          </div>
 
-          <div className=" flex-1">
+        <div className="flex h-auto justify-between space-y-5">
+          <div className="flex-1">
+            <div>
+              <Heading xm>About</Heading>
+              <Capsule className="flex w-fit flex-wrap items-center gap-2">
+                <Image src={EmailSvg} />
+                {client?.email}
+              </Capsule>
+              <Capsule className="mt-5 flex w-fit flex-wrap items-center gap-2">
+                <Image src={phone} />
+                {client?.contact_no}
+              </Capsule>
+            </div>
+          </div>
+          <div className="flex-1">
             <Heading xm>Address</Heading>
             <div className="flex items-start gap-1.5">
               <div className="space-y-3">
@@ -159,13 +158,13 @@ function Page({ params }) {
           <div />
         </div>
 
-        <div  className="flex justify-center mt-12 " >
-            <Capsule className="w-[16rem] mt-20 " >
-              <AdminCreateAJobModal clientId={client.client_id} />
-            </Capsule>
-          </div>
+        <div className="mt-12 flex justify-center">
+          <Capsule className="mt-20 w-[16rem]">
+            <AdminCreateAJobModal clientId={client.client_id} />
+          </Capsule>
+        </div>
         <div>
-          <div className="space-y-4 mt-6">
+          <div className="mt-6 space-y-4">
             {client.job_postings && (
               <div
                 //key={job.job_posting_id}

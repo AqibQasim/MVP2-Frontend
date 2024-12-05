@@ -12,6 +12,7 @@ import Hr from "@/components/Hr";
 import IconWithBg from "@/components/IconWithBg";
 //import TalentDescription from "./TalentDescription";
 import EmailSvg from "../../../../../public/icons/email.svg";
+import phone from "../../../../../public/icons/call.png";
 import { cityTimezoneOffset } from "@/utils/cityTimezoneOffset";
 import { formatDate } from "@/utils/utility";
 import ButtonCapsuleWhite from "@/components/ButtonCapsuleWhite";
@@ -47,8 +48,8 @@ function Page({ params }) {
   const [editedPrice, setEditedPrice] = useState(talent?.hourly_rate);
   const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
   const [candidateReport, setCandidateReport] = useState(null);
-  const router= useRouter();
-  const [alert,setAlert]= useState(null)
+  const router = useRouter();
+  const [alert, setAlert] = useState(null);
   //const [error,setError]= useState(null)
 
   const customer_id = params?.candidateId;
@@ -65,7 +66,7 @@ function Page({ params }) {
     mvp2ApiHelper(payload).then((result) => {
       if (result) setCandidateReport(result?.data?.data);
     });
-  },[customer_id]);
+  }, [customer_id]);
 
   const filteredClients = clients?.filter((client) =>
     client.name.toLowerCase().includes(searchClient.toLowerCase()),
@@ -102,8 +103,6 @@ function Page({ params }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customer_id]);
 
-
-
   const fetchJobHistory = useCallback(async () => {
     const payload = {
       endpoint: `get-job-history-of-candidate?customer_id=${customer_id}`,
@@ -116,10 +115,10 @@ function Page({ params }) {
   }, []);
 
   const saveEditedPrice = useCallback(async (price) => {
-    if(isNaN(price)||price===null){
-      setError("price can only be a number")
+    if (isNaN(price) || price === null) {
+      setError("price can only be a number");
       setAlert(true);
-    }else{
+    } else {
       const payload = {
         endpoint: `profile-info-update/${customer_id}`,
         method: "PUT",
@@ -127,10 +126,10 @@ function Page({ params }) {
           hourly_rate: price,
         },
       };
-  
+
       try {
         const result = await mvp2ApiHelper(payload);
-  
+
         if (result.status === 200) {
           console.log("Price updated successfully!");
         } else {
@@ -338,6 +337,11 @@ function Page({ params }) {
               {talent?.email}
             </Capsule>
 
+            <Capsule className="mb-2 mt-2 flex w-fit flex-wrap items-center gap-2">
+              <Image src={phone} />
+              {talent?.contact_no}
+            </Capsule>
+
             <div className="text-grey-primary-shade-20">Top Skills</div>
             <div className="flex items-start gap-1.5">
               {talent?.expertise.map((skill, i) => (
@@ -350,19 +354,25 @@ function Page({ params }) {
                 </>
               ))}
             </div>
-            
-            <div className="text-grey-primary-shade-20 mt-2"> Candidate Report</div>
-            <div  className="w-1/3 mt-4" >
-            <Capsule className="!text-primary-tint-10 ml-5"
-                  onClick={() => {
-                    setIsReportOverlayOpened(true);
-                  }}
-                  > View Report</Capsule>
 
+            <div className="mt-2 text-grey-primary-shade-20">
+              {" "}
+              Candidate Report
             </div>
-            
+            <div className="mt-4 w-1/3">
+              <Capsule
+                className="ml-5 !text-primary-tint-10"
+                onClick={() => {
+                  setIsReportOverlayOpened(true);
+                }}
+              >
+                {" "}
+                View Report
+              </Capsule>
+            </div>
+
             <Hr />
-                
+
             <Heading xm>Address</Heading>
             <div className="flex items-start gap-1.5">
               <div>
@@ -387,13 +397,12 @@ function Page({ params }) {
             </div>
           </div>
 
-
           {isReportOverlayOpened && (
-          <ReportOverlay
-            reportOverlay={isReportOverlayOpened}
-            onClose={handleCloseOverlay}
-            selectedCandidate={candidateReport}
-          />
+            <ReportOverlay
+              reportOverlay={isReportOverlayOpened}
+              onClose={handleCloseOverlay}
+              selectedCandidate={candidateReport}
+            />
           )}
 
           <div className="mr-3 space-x-3">
