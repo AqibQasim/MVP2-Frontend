@@ -265,7 +265,7 @@ function Page({ params }) {
       >
         <div className="top flex items-center justify-start gap-3">
           {/* <ButtonBack /> */}
-          <Heading sm>Profile Overview</Heading>
+          <Heading sm>Candidate Profile</Heading>
 
           <Capsule
             onClick={
