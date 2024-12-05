@@ -260,10 +260,11 @@ function Page({ params }) {
   return (
     <>
       <div
-        className={`${showPaymentHistory ? "min-h-auto mb-2" : "min-h-full"} space-y-4 rounded-3xl bg-neutral-white p-6`}
+        className={`${
+          showPaymentHistory ? "min-h-auto mb-2" : "min-h-full"
+        } space-y-4 rounded-3xl bg-neutral-white p-6`}
       >
         <div className="top flex items-center justify-start gap-3">
-          {/* <ButtonBack /> */}
           <Heading sm>Candidate Profile</Heading>
 
           <Capsule
@@ -273,26 +274,28 @@ function Page({ params }) {
                 ? () => setShowForm(true)
                 : null
             }
-            className={`ml-auto cursor-not-allowed !bg-grey-primary-tint-90 ${getCandidateStatus(talent?.talent_status, talent?.status) === "Available" ? "!text-primary-tint-10" : "!text-gray-500"}`}
+            className={`ml-auto cursor-not-allowed !bg-grey-primary-tint-90 ${
+              getCandidateStatus(talent?.talent_status, talent?.status) ===
+              "Available"
+                ? "!text-primary-tint-10"
+                : "!text-gray-500"
+            }`}
           >
             Refer To Client
           </Capsule>
 
           <Capsule className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
             {getCandidateStatus(talent?.talent_status, talent?.status)}
-            {getCandidateStatus(
-              talent?.talent_status,
-              talent?.status,
-            ).toLowerCase() !== "available" &&
+            {["available", "interviewing"].includes(
               getCandidateStatus(
                 talent?.talent_status,
                 talent?.status,
-              ).toLowerCase() !== "interviewing" && (
-                <>
-                  {" "}
-                  {formatDate(talent?.updatedAt)} - {newEndTrialDate}
-                </>
-              )}
+              ).toLowerCase(),
+            ) ? null : (
+              <>
+                {formatDate(talent?.updatedAt)} - {newEndTrialDate}
+              </>
+            )}
           </Capsule>
         </div>
         <Hr />
@@ -317,7 +320,6 @@ function Page({ params }) {
           ) : (
             <div className="gap-2">
               <input
-                //type="number"
                 className="rounded-[2.25rem] border-2 border-black px-4 py-3 text-sm font-medium capitalize"
                 value={editedPrice}
                 onChange={(event) => setEditedPrice(event.target.value)}
@@ -345,31 +347,23 @@ function Page({ params }) {
             <div className="text-grey-primary-shade-20">Top Skills</div>
             <div className="flex items-start gap-1.5">
               {talent?.expertise.map((skill, i) => (
-                <>
-                  <Skill
-                    key={i}
-                    skill={skill.skill}
-                    className="!bg-neutral-white"
-                  />
-                </>
+                <Skill
+                  key={i}
+                  skill={skill.skill}
+                  className="!bg-neutral-white"
+                />
               ))}
             </div>
 
             <div className="mt-2 text-grey-primary-shade-20">
-              {" "}
               Candidate Report
             </div>
-            <div className="mt-4 w-1/3">
-              <Capsule
-                className="ml-5 !text-primary-tint-10"
-                onClick={() => {
-                  setIsReportOverlayOpened(true);
-                }}
-              >
-                {" "}
-                View Report
-              </Capsule>
-            </div>
+            <Capsule
+              className="ml-5 mt-4 w-1/2 !text-primary-tint-10"
+              onClick={() => setIsReportOverlayOpened(true)}
+            >
+              View Report
+            </Capsule>
 
             <Hr />
 
@@ -410,7 +404,6 @@ function Page({ params }) {
               Job Information
             </Heading>
             <div className="grid grid-cols-2 grid-rows-4 gap-x-5 gap-y-5">
-              {/* <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] justify-items-start gap-x-8 gap-y-4.5"> */}
               {talentDetails.map((detail, i) => (
                 <DetailTag
                   key={i}
@@ -429,12 +422,8 @@ function Page({ params }) {
           />
         )}
       </div>
-      {showPaymentHistory && (
-        <ClientPaymentHistoryTable
-        // paymentHistory={paymentHistory}
-        // clientId={client_id}
-        />
-      )}
+
+      {showPaymentHistory && <ClientPaymentHistoryTable />}
 
       <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
         <h3 className="mb-4 text-xl font-semibold">
@@ -445,7 +434,6 @@ function Page({ params }) {
             Hourly Rate <div className="text-red-600">*</div>
           </label>
           <input
-            //type="number"
             name="hourlyRate"
             id="hourlyRate"
             value={hourlyRate}
@@ -453,9 +441,8 @@ function Page({ params }) {
             required
             className="mt-2 block w-full border px-2 py-1"
           />
-
           <label className="mt-4 flex">
-            Assign to Client <div className="text-red-600">*</div>{" "}
+            Assign to Client <div className="text-red-600">*</div>
           </label>
           <input
             type="text"
@@ -467,14 +454,6 @@ function Page({ params }) {
             placeholder="Search client by name"
             className="mb-2 block w-full border px-2 py-1"
           />
-
-          {/* <select
-            value={selectedClient}
-            onChange={(e) => setSelectedClient(e.target.value)}
-            required
-            className="mt-2 block w-full border px-2 py-1"
-          > */}
-          {/* <option value="">Select a client</option> */}
           {isClientsShow &&
             filteredClients?.map((client) => (
               <option
@@ -482,7 +461,6 @@ function Page({ params }) {
                   setIsClientShow(false);
                   setSearchClient(client.name);
                   setSelectedClient(client.name);
-                  //console.log(client.client_id)
                   setSelectedClientId(client.client_id);
                 }}
                 key={client.client_id}
@@ -492,9 +470,8 @@ function Page({ params }) {
                 {client.name}
               </option>
             ))}
-
           <label className="mt-4 flex">
-            Select Job <div className="text-red-600">*</div>{" "}
+            Select Job <div className="text-red-600">*</div>
           </label>
           <input
             type="text"
@@ -506,7 +483,6 @@ function Page({ params }) {
             placeholder="Search Job"
             className="mb-2 block w-full border px-2 py-1"
           />
-
           {isJobsShow &&
             filteredJobs?.map((job) => (
               <option
@@ -523,15 +499,9 @@ function Page({ params }) {
                 {job.position}
               </option>
             ))}
-          {/* </select> */}
-          {/* Error Temp */}
-          {error ? (
-            <div className="error text-red-500">
-              {" "}
-              {error || error?.message}{" "}
-            </div>
-          ) : null}
-
+          {error && (
+            <div className="error text-red-500">{error || error?.message}</div>
+          )}
           <div className="mt-4">
             <button
               type="submit"
@@ -540,7 +510,7 @@ function Page({ params }) {
               Confirm Referral
             </button>
             <button
-              type="submit"
+              type="button"
               onClick={() => setShowForm(false)}
               className="bg-gray-300 px-4 py-2"
             >
@@ -559,5 +529,4 @@ function Page({ params }) {
     </>
   );
 }
-
 export default Page;

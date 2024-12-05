@@ -435,7 +435,7 @@ function Page() {
                   name="countryCode"
                   value={form.countryCode}
                   onChange={handleChange}
-                  className="block w-full rounded-full border border-gray-300 p-1 text-sm leading-tight text-gray-900 focus:border-primary focus:ring-primary"
+                  className="block w-full  rounded-full border border-gray-300 px-5 h-[42px] mt-3 text-sm leading-tight text-gray-900 focus:border-primary focus:ring-primary"
                 >
                   <option value="+93">+93 (Afghanistan)</option>
                   <option value="+355">+355 (Albania)</option>

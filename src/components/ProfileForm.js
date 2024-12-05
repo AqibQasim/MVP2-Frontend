@@ -24,6 +24,8 @@ const ProfileForm = ({ client }) => {
   const provinceRef = useRef(null);
   const areaCodeRef = useRef(null);
   const countryRef = useRef(null);
+  const componyRef = useRef(null);
+  const componySizeRef = useRef(null);
 
   console.log("client is", client);
 
@@ -192,10 +194,10 @@ const ProfileForm = ({ client }) => {
               {/* First Name */}
               <div className="flex flex-1 flex-col">
                 <b>
-                  <label>Compony Name</label>
+                  <label>Company Name</label>
                 </b>
                 <input
-                  ref={firstNameRef}
+                  ref={companyRef}
                   // defaultValue={client?.name?.split(" ", 2)[0] || ""}
                   type="text"
                   placeholder="Compony Name"
@@ -206,10 +208,10 @@ const ProfileForm = ({ client }) => {
               {/* Last Name */}
               <div className="flex flex-1 flex-col">
                 <b>
-                  <label>Compony Size</label>
+                  <label>Company Size</label>
                 </b>
                 <input
-                  ref={lastNameRef}
+                  ref={companySizeRef}
                   // defaultValue={client?.name?.split(" ", 2)[1] || ""}
                   type="text"
                   placeholder="Compony Size"
@@ -219,7 +221,7 @@ const ProfileForm = ({ client }) => {
             </div>
           </div>
         </div>
-
+<hr></hr>
         <div className="mb-4 mt-4 grid grid-cols-4 items-start gap-4">
           {/* Section Heading */}
           <Heading xm className="col-span-1">
