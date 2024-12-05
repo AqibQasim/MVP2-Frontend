@@ -12,6 +12,7 @@ import Hr from "@/components/Hr";
 import IconWithBg from "@/components/IconWithBg";
 //import TalentDescription from "./TalentDescription";
 import EmailSvg from "../../../../../public/icons/email.svg";
+import phone from "../../../../../public/icons/call.png";
 import { cityTimezoneOffset } from "@/utils/cityTimezoneOffset";
 import { formatDate } from "@/utils/utility";
 import ButtonCapsuleWhite from "@/components/ButtonCapsuleWhite";
@@ -47,8 +48,8 @@ function Page({ params }) {
   const [editedPrice, setEditedPrice] = useState(talent?.hourly_rate);
   const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
   const [candidateReport, setCandidateReport] = useState(null);
-  const router= useRouter();
-  const [alert,setAlert]= useState(null)
+  const router = useRouter();
+  const [alert, setAlert] = useState(null);
   //const [error,setError]= useState(null)
 
   const customer_id = params?.candidateId;
@@ -65,7 +66,7 @@ function Page({ params }) {
     mvp2ApiHelper(payload).then((result) => {
       if (result) setCandidateReport(result?.data?.data);
     });
-  },[customer_id]);
+  }, [customer_id]);
 
   const filteredClients = clients?.filter((client) =>
     client.name.toLowerCase().includes(searchClient.toLowerCase()),
@@ -102,8 +103,6 @@ function Page({ params }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customer_id]);
 
-
-
   const fetchJobHistory = useCallback(async () => {
     const payload = {
       endpoint: `get-job-history-of-candidate?customer_id=${customer_id}`,
@@ -116,10 +115,10 @@ function Page({ params }) {
   }, []);
 
   const saveEditedPrice = useCallback(async (price) => {
-    if(isNaN(price)||price===null){
-      setError("price can only be a number")
+    if (isNaN(price) || price === null) {
+      setError("price can only be a number");
       setAlert(true);
-    }else{
+    } else {
       const payload = {
         endpoint: `profile-info-update/${customer_id}`,
         method: "PUT",
@@ -127,10 +126,10 @@ function Page({ params }) {
           hourly_rate: price,
         },
       };
-  
+
       try {
         const result = await mvp2ApiHelper(payload);
-  
+
         if (result.status === 200) {
           console.log("Price updated successfully!");
         } else {
@@ -261,10 +260,11 @@ function Page({ params }) {
   return (
     <>
       <div
-        className={`${showPaymentHistory ? "min-h-auto mb-2" : "min-h-full"} space-y-4 rounded-3xl bg-neutral-white p-6`}
+        className={`${
+          showPaymentHistory ? "min-h-auto mb-2" : "min-h-full"
+        } space-y-4 rounded-3xl bg-neutral-white p-6`}
       >
         <div className="top flex items-center justify-start gap-3">
-          {/* <ButtonBack /> */}
           <Heading sm>Candidate Profile</Heading>
 
           <Capsule
@@ -274,26 +274,28 @@ function Page({ params }) {
                 ? () => setShowForm(true)
                 : null
             }
-            className={`ml-auto cursor-not-allowed !bg-grey-primary-tint-90 ${getCandidateStatus(talent?.talent_status, talent?.status) === "Available" ? "!text-primary-tint-10" : "!text-gray-500"}`}
+            className={`ml-auto cursor-not-allowed !bg-grey-primary-tint-90 ${
+              getCandidateStatus(talent?.talent_status, talent?.status) ===
+              "Available"
+                ? "!text-primary-tint-10"
+                : "!text-gray-500"
+            }`}
           >
             Refer To Client
           </Capsule>
 
           <Capsule className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
             {getCandidateStatus(talent?.talent_status, talent?.status)}
-            {getCandidateStatus(
-              talent?.talent_status,
-              talent?.status,
-            ).toLowerCase() !== "available" &&
+            {["available", "interviewing"].includes(
               getCandidateStatus(
                 talent?.talent_status,
                 talent?.status,
-              ).toLowerCase() !== "interviewing" && (
-                <>
-                  {" "}
-                  {formatDate(talent?.updatedAt)} - {newEndTrialDate}
-                </>
-              )}
+              ).toLowerCase(),
+            ) ? null : (
+              <>
+                {formatDate(talent?.updatedAt)} - {newEndTrialDate}
+              </>
+            )}
           </Capsule>
         </div>
         <Hr />
@@ -318,7 +320,6 @@ function Page({ params }) {
           ) : (
             <div className="gap-2">
               <input
-                //type="number"
                 className="rounded-[2.25rem] border-2 border-black px-4 py-3 text-sm font-medium capitalize"
                 value={editedPrice}
                 onChange={(event) => setEditedPrice(event.target.value)}
@@ -338,31 +339,34 @@ function Page({ params }) {
               {talent?.email}
             </Capsule>
 
+            <Capsule className="mb-2 mt-2 flex w-fit flex-wrap items-center gap-2">
+              <Image src={phone} />
+              {talent?.contact_no}
+            </Capsule>
+
             <div className="text-grey-primary-shade-20">Top Skills</div>
             <div className="flex items-start gap-1.5">
               {talent?.expertise.map((skill, i) => (
-                <>
-                  <Skill
-                    key={i}
-                    skill={skill.skill}
-                    className="!bg-neutral-white"
-                  />
-                </>
+                <Skill
+                  key={i}
+                  skill={skill.skill}
+                  className="!bg-neutral-white"
+                />
               ))}
             </div>
-            
-            <div className="text-grey-primary-shade-20 mt-2"> Candidate Report</div>
-            <div  className="w-1/2 mt-4" >
-            <Capsule className="!text-primary-tint-10 ml-5"
-                  onClick={() => {
-                    setIsReportOverlayOpened(true);
-                  }}
-                  > View Report</Capsule>
 
+            <div className="mt-2 text-grey-primary-shade-20">
+              Candidate Report
             </div>
-            
+            <Capsule
+              className="ml-5 mt-4 w-1/2 !text-primary-tint-10"
+              onClick={() => setIsReportOverlayOpened(true)}
+            >
+              View Report
+            </Capsule>
+
             <Hr />
-                
+
             <Heading xm>Address</Heading>
             <div className="flex items-start gap-1.5">
               <div>
@@ -387,13 +391,12 @@ function Page({ params }) {
             </div>
           </div>
 
-
           {isReportOverlayOpened && (
-          <ReportOverlay
-            reportOverlay={isReportOverlayOpened}
-            onClose={handleCloseOverlay}
-            selectedCandidate={candidateReport}
-          />
+            <ReportOverlay
+              reportOverlay={isReportOverlayOpened}
+              onClose={handleCloseOverlay}
+              selectedCandidate={candidateReport}
+            />
           )}
 
           <div className="mr-3 space-x-3">
@@ -401,7 +404,6 @@ function Page({ params }) {
               Job Information
             </Heading>
             <div className="grid grid-cols-2 grid-rows-4 gap-x-5 gap-y-5">
-              {/* <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] justify-items-start gap-x-8 gap-y-4.5"> */}
               {talentDetails.map((detail, i) => (
                 <DetailTag
                   key={i}
@@ -420,12 +422,8 @@ function Page({ params }) {
           />
         )}
       </div>
-      {showPaymentHistory && (
-        <ClientPaymentHistoryTable
-        // paymentHistory={paymentHistory}
-        // clientId={client_id}
-        />
-      )}
+
+      {showPaymentHistory && <ClientPaymentHistoryTable />}
 
       <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
         <h3 className="mb-4 text-xl font-semibold">
@@ -436,7 +434,6 @@ function Page({ params }) {
             Hourly Rate <div className="text-red-600">*</div>
           </label>
           <input
-            //type="number"
             name="hourlyRate"
             id="hourlyRate"
             value={hourlyRate}
@@ -444,9 +441,8 @@ function Page({ params }) {
             required
             className="mt-2 block w-full border px-2 py-1"
           />
-
           <label className="mt-4 flex">
-            Assign to Client <div className="text-red-600">*</div>{" "}
+            Assign to Client <div className="text-red-600">*</div>
           </label>
           <input
             type="text"
@@ -458,14 +454,6 @@ function Page({ params }) {
             placeholder="Search client by name"
             className="mb-2 block w-full border px-2 py-1"
           />
-
-          {/* <select
-            value={selectedClient}
-            onChange={(e) => setSelectedClient(e.target.value)}
-            required
-            className="mt-2 block w-full border px-2 py-1"
-          > */}
-          {/* <option value="">Select a client</option> */}
           {isClientsShow &&
             filteredClients?.map((client) => (
               <option
@@ -473,7 +461,6 @@ function Page({ params }) {
                   setIsClientShow(false);
                   setSearchClient(client.name);
                   setSelectedClient(client.name);
-                  //console.log(client.client_id)
                   setSelectedClientId(client.client_id);
                 }}
                 key={client.client_id}
@@ -483,9 +470,8 @@ function Page({ params }) {
                 {client.name}
               </option>
             ))}
-
           <label className="mt-4 flex">
-            Select Job <div className="text-red-600">*</div>{" "}
+            Select Job <div className="text-red-600">*</div>
           </label>
           <input
             type="text"
@@ -497,7 +483,6 @@ function Page({ params }) {
             placeholder="Search Job"
             className="mb-2 block w-full border px-2 py-1"
           />
-
           {isJobsShow &&
             filteredJobs?.map((job) => (
               <option
@@ -514,15 +499,9 @@ function Page({ params }) {
                 {job.position}
               </option>
             ))}
-          {/* </select> */}
-          {/* Error Temp */}
-          {error ? (
-            <div className="error text-red-500">
-              {" "}
-              {error || error?.message}{" "}
-            </div>
-          ) : null}
-
+          {error && (
+            <div className="error text-red-500">{error || error?.message}</div>
+          )}
           <div className="mt-4">
             <button
               type="submit"
@@ -531,7 +510,7 @@ function Page({ params }) {
               Confirm Referral
             </button>
             <button
-              type="submit"
+              type="button"
               onClick={() => setShowForm(false)}
               className="bg-gray-300 px-4 py-2"
             >
@@ -550,5 +529,4 @@ function Page({ params }) {
     </>
   );
 }
-
 export default Page;
