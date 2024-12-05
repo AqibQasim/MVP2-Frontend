@@ -19,18 +19,19 @@ import TalentDescription from "@/components/TalentDescription";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { cityTimezoneOffset } from "@/utils/cityTimezoneOffset";
 import { formatDate } from "@/utils/utility";
-import { getClientById } from "@/lib/data-service";
+import { fetchRecommendedCandidates, getClientById } from "@/lib/data-service";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import CapsuleLink from "./CapsuleLink";
+import Modal from "./Modal";
 
-function AdminJobViewById({ job }) {
+function AdminJobViewById({ job, setShowForm }) {
   const [isShowMoreEnabled, setIsShowMoreEnabled] = useState(false);
   const [isReadMoreEnabled, setIsReadMoreEnabled] = useState(false);
   const [jobQuestionLength, setJobQuestionLength] = useState(1);
   const [assignedCandidates, setassignedCandidates] = useState(null);
   const [client, setClient] = useState(null);
-
+  
   useEffect(() => {
     if (!job?.client_id) return;
 
@@ -121,149 +122,162 @@ function AdminJobViewById({ job }) {
   //   );
 
   return (
-    <div className="flex flex-row gap-2">
-      <div className="flex-1 rounded-3xl bg-white p-4">
-        <div className="w-auto">
-          <div className="flex flex-row justify-between">
-            <div className="flex flex-row items-center gap-3">
-              <ButtonCapsuleWhite />
-              <Heading sm>{job?.position}</Heading>
+    <>
+      <div className="flex flex-row gap-2">
+        <div className="flex-1 rounded-3xl bg-white p-4">
+          <div className="w-auto">
+            <div className="flex flex-row justify-between">
+              <div className="flex flex-row items-center gap-3">
+                <ButtonCapsuleWhite />
+                <Heading sm>{job?.position}</Heading>
+              </div>
+              <Heading toxm>Job Status : {job?.job_status}</Heading>
             </div>
-            <Heading toxm>Job Status : {job?.job_status}</Heading>
-          </div>
-          <Hr />
-          <div className="mx-5 mb-6 flex justify-between">
-            <Heading className="font-semibold !text-[#8992A3]" toxm>
-              Client : {client ? client.name : "Loading..."}
-            </Heading>
-            <CapsuleLink
-              className="ml-auto"
-              href={`/admin/clients/${job?.client_id}`}
-              // href={window.location.href + `/${client?.client_id}`}
-            >
-              {" "}
-              view details{" "}
-            </CapsuleLink>
-          </div>
-          <TalentDescription
-            description={job.description}
-            isShowMoreEnabled={isShowMoreEnabled}
-            skills={job.skills}
-          />
-          {job.description.length > 300 && (
-            <div className="m-3">
-              <button
-                className="weigh flex w-36 flex-row items-center justify-around rounded-3xl border-[1px] px-4 py-3 text-[14px] text-primary"
-                onClick={handleShowMore}
+            <Hr />
+            <div className="mx-5 mb-6 flex justify-between">
+              <Heading className="font-semibold !text-[#8992A3]" toxm>
+                Client : {client ? client.name : "Loading..."}
+              </Heading>
+              <CapsuleLink
+                className="ml-auto"
+                href={`/admin/clients/${job?.client_id}`}
+                // href={window.location.href + `/${client?.client_id}`}
               >
-                {isShowMoreEnabled ? "Show Less" : "Show More"}
-                <Image alt="dropdown" src={dropdown} />
-              </button>
+                {" "}
+                view details{" "}
+              </CapsuleLink>
             </div>
-          )}
-
-          <div className="gap-8">
-            <div className="flex flex-row flex-wrap">
-              <div className="h-auto">
-                <TagCard
-                  icon={note_add}
-                  title={"Est. Length"}
-                  answer={job.project_length}
-                />
-
-                <TagCard
-                  icon={clipboard_text}
-                  title={"Job Posted"}
-                  answer={formatDate(job.createdAt)}
-                />
-
-                <TagCard
-                  icon={briefcase_tick}
-                  title={"Job Type"}
-                  answer={job.job_type}
-                />
-                <TagCard
-                  icon={copy_success}
-                  title={"Workday Overlap"}
-                  answer={job.workday_overlap}
-                />
+            <TalentDescription
+              description={job.description}
+              isShowMoreEnabled={isShowMoreEnabled}
+              skills={job.skills}
+            />
+            {job.description.length > 300 && (
+              <div className="m-3">
+                <button
+                  className="weigh flex w-36 flex-row items-center justify-around rounded-3xl border-[1px] px-4 py-3 text-[14px] text-primary"
+                  onClick={handleShowMore}
+                >
+                  {isShowMoreEnabled ? "Show Less" : "Show More"}
+                  <Image alt="dropdown" src={dropdown} />
+                </button>
               </div>
+            )}
 
-              <div className="h-auto">
-                <TagCard
-                  icon={tag}
-                  title={"Specialization"}
-                  answer={job?.position ?? "[job specialization]"}
-                />
+            <div className="gap-8">
+              <div className="flex flex-row flex-wrap">
+                <div className="h-auto">
+                  <TagCard
+                    icon={note_add}
+                    title={"Est. Length"}
+                    answer={job.project_length}
+                  />
 
-                <TagCard
-                  icon={commitment}
-                  title={"Commitment"}
-                  answer={job.commitment}
-                />
+                  <TagCard
+                    icon={clipboard_text}
+                    title={"Job Posted"}
+                    answer={formatDate(job.createdAt)}
+                  />
 
-                <TagCard
-                  icon={calendar}
-                  title={"Desired Start Date"}
-                  answer={formatDate(job.start_date)}
-                />
+                  <TagCard
+                    icon={briefcase_tick}
+                    title={"Job Type"}
+                    answer={job.job_type}
+                  />
+                  <TagCard
+                    icon={copy_success}
+                    title={"Workday Overlap"}
+                    answer={job.workday_overlap}
+                  />
+                </div>
 
-                <TagCard
-                  icon={timer_start}
-                  title={"Time zone"}
-                  answer={cityTimezoneOffset(job.location)}
-                />
+                <div className="h-auto">
+                  <TagCard
+                    icon={tag}
+                    title={"Specialization"}
+                    answer={job?.position ?? "[job specialization]"}
+                  />
+
+                  <TagCard
+                    icon={commitment}
+                    title={"Commitment"}
+                    answer={job.commitment}
+                  />
+
+                  <TagCard
+                    icon={calendar}
+                    title={"Desired Start Date"}
+                    answer={formatDate(job.start_date)}
+                  />
+
+                  <TagCard
+                    icon={timer_start}
+                    title={"Time zone"}
+                    answer={cityTimezoneOffset(job.location)}
+                  />
+                </div>
               </div>
             </div>
+
+            <Hr />
           </div>
-
-          <Hr />
         </div>
-      </div>
-      <div className="w-[23.375rem] items-center justify-center rounded-[36px] bg-white p-3">
-        <div className="flex h-auto w-auto flex-row items-center justify-between">
-          <Heading className="text-[24px]">Assigned Customer</Heading>
-          {/* <Capsule className="items-center text-primary-tint-20">
+        <div className="w-[23.375rem] items-center justify-center rounded-[36px] bg-white p-3">
+          <div className="flex h-auto w-auto flex-row items-center justify-between">
+            <Heading className="text-[24px]">Assigned Customer</Heading>
+            {/* <Capsule className="items-center text-primary-tint-20">
                         Assigned Customer
                     </Capsule> */}
-        </div>
-        <Hr />
-        {assignedCandidates && (
-          <div className="mb-3 w-full gap-3 rounded-xl">
-            <div className="flex flex-row">
-              <div className="flex flex-1 items-center justify-between border-[1px] border-[#F9F8FC]">
-                <EntityCard
-                  entity={{
-                    name: assignedCandidates?.name,
-                    profession: assignedCandidates?.specialization,
-                    image: "/avatars/avatar-1.png",
-                  }}
-                />
-              </div>
-              <div className="skills flex items-center gap-1.5 text-center">
-                {assignedCandidates?.expertise?.map((skill, i) => (
-                  <>
-                    <Skill key={i} skill={skill?.skill} />
-                  </>
-                ))}
-              </div>
-            </div>
-            <CapsuleLink
-              className="mx-3 mt-5"
-              href={`/admin/candidates/${assignedCandidates?.customer_id}`}
-              // href={`/client/${clientId}/jobs/${job.job_posting_id}`}
-              //  href={`/client/${clientId}/jobs/${job.job_posting_id}`}
-            >
-              {" "}
-              view details{" "}
-            </CapsuleLink>
-            <div className="mx-3 mt-5">
-              Status : {assignedCandidates?.talent_status}
-            </div>
           </div>
-        )}
+          <Hr />
+          {assignedCandidates ? (
+            <div className="mb-3 w-full gap-3 rounded-xl">
+              <div className="flex flex-row">
+                <div className="flex flex-1 items-center justify-between border-[1px] border-[#F9F8FC]">
+                  <EntityCard
+                    entity={{
+                      name: assignedCandidates?.name,
+                      profession: assignedCandidates?.specialization,
+                      image: "/avatars/avatar-1.png",
+                    }}
+                  />
+                </div>
+                <div className="skills flex items-center gap-1.5 text-center">
+                  {assignedCandidates?.expertise?.map((skill, i) => (
+                    <>
+                      <Skill key={i} skill={skill?.skill} />
+                    </>
+                  ))}
+                </div>
+              </div>
+              <CapsuleLink
+                className="mx-3 mt-5"
+                href={`/admin/candidates/${assignedCandidates?.customer_id}`}
+                // href={`/client/${clientId}/jobs/${job.job_posting_id}`}
+                //  href={`/client/${clientId}/jobs/${job.job_posting_id}`}
+              >
+                {" "}
+                view details{" "}
+              </CapsuleLink>
+              <div className="mx-3 mt-5">
+                Status : {assignedCandidates?.talent_status}
+              </div>
+            </div>
+          ) : (
+            <div className="align-center flex w-full flex-col justify-center">
+              <div>There's no assigned customer yet</div>
+              <div
+                onClick={() => setShowForm(true)}
+                className="cursor-pointer text-primary"
+              >
+                Click here to Assign
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+      
+    </>
   );
 }
 
