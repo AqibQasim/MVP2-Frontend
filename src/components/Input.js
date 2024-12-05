@@ -1,4 +1,4 @@
-function Input({
+function  Input({
   as = "input",
   type = "text",
   className,
