@@ -25,6 +25,7 @@ import AdminCandidateJobHistory from "@/components/AdminCandidateJobHistory";
 import getCandidateStatus from "@/utils/getCandidateStatus";
 import ButtonCapsule from "@/components/ButtonCapsule";
 import ErrorPopup from "@/components/ErrorPopup";
+import ReportOverlay from "@/components/ReportOverlay";
 
 function Page({ params }) {
   const [talent, setTalent] = useState(null);
@@ -42,20 +43,29 @@ function Page({ params }) {
   const [isClientsShow, setIsClientShow] = useState(false);
   const [isJobsShow, setIsJobsShow] = useState(false);
   const [jobHistory, setJobHistory] = useState(null);
-<<<<<<< HEAD
+  const [isEditPrice, setIsEditPrice] = useState(false);
+  const [editedPrice, setEditedPrice] = useState(talent?.hourly_rate);
   const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
+  const [candidateReport, setCandidateReport] = useState(null);
+  const router= useRouter();
+  const [alert,setAlert]= useState(null)
+  //const [error,setError]= useState(null)
+
+  const customer_id = params?.candidateId;
 
   const handleCloseOverlay = () => {
     setIsReportOverlayOpened(false);
     //setSuccessAcknowledge(false);
   };
-=======
-  const [isEditPrice, setIsEditPrice] = useState(false);
-  const [editedPrice, setEditedPrice] = useState(talent?.hourly_rate);
-  const router= useRouter();
-  const [alert,setAlert]= useState(null)
-  //const [error,setError]= useState(null)
->>>>>>> 3dd5170b07b521d931c2fded914bfee5cb0d0a6f
+  const getCandidateResult = useCallback(() => {
+    const payload = {
+      endpoint: `get-customer-result?customer_id=${customer_id}`,
+      method: "GET",
+    };
+    mvp2ApiHelper(payload).then((result) => {
+      if (result) setCandidateReport(result?.data?.data);
+    });
+  },[customer_id]);
 
   const filteredClients = clients?.filter((client) =>
     client.name.toLowerCase().includes(searchClient.toLowerCase()),
@@ -87,7 +97,12 @@ function Page({ params }) {
     fetchClients();
   }, []);
 
-  const customer_id = params?.candidateId;
+  useEffect(() => {
+    getCandidateResult();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customer_id]);
+
+
 
   const fetchJobHistory = useCallback(async () => {
     const payload = {
@@ -335,8 +350,19 @@ function Page({ params }) {
                 </>
               ))}
             </div>
-            <Hr />
+            
+            <div className="text-grey-primary-shade-20 mt-2"> Candidate Report</div>
+            <div  className="w-1/3 mt-4" >
+            <Capsule className="!text-primary-tint-10 ml-5"
+                  onClick={() => {
+                    setIsReportOverlayOpened(true);
+                  }}
+                  > View Report</Capsule>
 
+            </div>
+            
+            <Hr />
+                
             <Heading xm>Address</Heading>
             <div className="flex items-start gap-1.5">
               <div>
@@ -360,6 +386,16 @@ function Page({ params }) {
               </div>
             </div>
           </div>
+
+
+          {isReportOverlayOpened && (
+          <ReportOverlay
+            reportOverlay={isReportOverlayOpened}
+            onClose={handleCloseOverlay}
+            selectedCandidate={candidateReport}
+          />
+          )}
+
           <div className="mr-3 space-x-3">
             <Heading xm className="text-center">
               Job Information
