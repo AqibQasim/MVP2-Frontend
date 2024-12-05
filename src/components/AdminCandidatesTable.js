@@ -80,16 +80,16 @@ function AdminCandidatesTable({
         </div>
       )}
 
-      <Table columns="grid-cols-[9rem_5.7rem_4rem_6rem_4.5rem_4.1rem_7.4rem_9.8rem]">
+      <Table columns="grid-cols-[1fr_5.7rem_4rem_6rem_4.5rem_4.1rem_7.4rem]">
         <Table.Header>
-          <div className="info text-center">Info</div>
+          <div className="info text-start ">Info</div>
           <div className="skills text-center">Skills</div>
           <div className="skills text-center">Hourly Rate</div>
           <div className="experience text-center">Experience</div>
           <div className="job-type text-center">Job type</div>
           <div className="score text-center">Score</div>
           <div className="talent-status text-center">Talent Status</div>
-          <div className="actions text-center">Actions</div>
+          
         </Table.Header>
         {/* Make the body container scrollable */}
         <div className="h-full overflow-x-hidden overflow-y-hidden">

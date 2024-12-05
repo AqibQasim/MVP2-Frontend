@@ -95,11 +95,8 @@ function Page({ params }) {
             {talent?.talent_status} {formatDate(talent?.updatedAt)} -{" "}
             {newEndTrialDate}
           </Capsule> */}
-          <div>
-            <Capsule>
-              <AdminCreateAJobModal clientId={client.client_id} />
-            </Capsule>
-          </div>
+         
+
         </div>
         <Hr />
         <div className="mini-profile flex items-center justify-start">
@@ -113,23 +110,29 @@ function Page({ params }) {
           {/* <Capsule className="ml-auto mt-auto" icon={<IconWithBg icon="$" />}>
             ${talent?.hourly_rate}hr
           </Capsule> */}
+
+
+          
         </div>
 
         {/* <TalentDescription
           description={talent?.job_postings?.description}
           skills={talent?.job_postings?.skills}
         /> */}
-
-        <div className="flex justify-between">
-          <div className="">
+ 
+        <div className="flex justify-between h-auto   space-y-5  ">
+          <div className=" flex-1   ">
+          <div>
             <Heading xm>About</Heading>
             <Capsule className="flex w-fit flex-wrap items-center gap-2">
               <Image src={EmailSvg} />
               {client?.email}
             </Capsule>
+           </div>
+           
           </div>
 
-          <div className="">
+          <div className=" flex-1">
             <Heading xm>Address</Heading>
             <div className="flex items-start gap-1.5">
               <div className="space-y-3">
@@ -155,8 +158,14 @@ function Page({ params }) {
           </div>
           <div />
         </div>
+
+        <div  className="flex justify-center mt-5 " >
+            <Capsule className="w-[16rem] " >
+              <AdminCreateAJobModal clientId={client.client_id} />
+            </Capsule>
+          </div>
         <div>
-          <div className="space-y-4">
+          <div className="space-y-4 mt-6">
             {client.job_postings && (
               <div
                 //key={job.job_posting_id}

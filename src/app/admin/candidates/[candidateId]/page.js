@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 //import ButtonBack from "./ButtonBack";
 import Capsule from "@/components/Capsule";
@@ -23,6 +23,9 @@ import { fetchClientJobs, getClients } from "@/lib/data-service";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import AdminCandidateJobHistory from "@/components/AdminCandidateJobHistory";
 import getCandidateStatus from "@/utils/getCandidateStatus";
+import ButtonCapsule from "@/components/ButtonCapsule";
+import ErrorPopup from "@/components/ErrorPopup";
+import ReportOverlay from "@/components/ReportOverlay";
 
 function Page({ params }) {
   const [talent, setTalent] = useState(null);
@@ -40,6 +43,29 @@ function Page({ params }) {
   const [isClientsShow, setIsClientShow] = useState(false);
   const [isJobsShow, setIsJobsShow] = useState(false);
   const [jobHistory, setJobHistory] = useState(null);
+  const [isEditPrice, setIsEditPrice] = useState(false);
+  const [editedPrice, setEditedPrice] = useState(talent?.hourly_rate);
+  const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
+  const [candidateReport, setCandidateReport] = useState(null);
+  const router= useRouter();
+  const [alert,setAlert]= useState(null)
+  //const [error,setError]= useState(null)
+
+  const customer_id = params?.candidateId;
+
+  const handleCloseOverlay = () => {
+    setIsReportOverlayOpened(false);
+    //setSuccessAcknowledge(false);
+  };
+  const getCandidateResult = useCallback(() => {
+    const payload = {
+      endpoint: `get-customer-result?customer_id=${customer_id}`,
+      method: "GET",
+    };
+    mvp2ApiHelper(payload).then((result) => {
+      if (result) setCandidateReport(result?.data?.data);
+    });
+  },[customer_id]);
 
   const filteredClients = clients?.filter((client) =>
     client.name.toLowerCase().includes(searchClient.toLowerCase()),
@@ -71,7 +97,12 @@ function Page({ params }) {
     fetchClients();
   }, []);
 
-  const customer_id = params?.candidateId;
+  useEffect(() => {
+    getCandidateResult();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customer_id]);
+
+
 
   const fetchJobHistory = useCallback(async () => {
     const payload = {
@@ -82,6 +113,35 @@ function Page({ params }) {
     console.log(response?.data?.data);
     setJobHistory(response?.data?.data);
     //console.log(jobHistory)
+  }, []);
+
+  const saveEditedPrice = useCallback(async (price) => {
+    if(isNaN(price)||price===null){
+      setError("price can only be a number")
+      setAlert(true);
+    }else{
+      const payload = {
+        endpoint: `profile-info-update/${customer_id}`,
+        method: "PUT",
+        body: {
+          hourly_rate: price,
+        },
+      };
+  
+      try {
+        const result = await mvp2ApiHelper(payload);
+  
+        if (result.status === 200) {
+          console.log("Price updated successfully!");
+        } else {
+          console.error("Failed to update profile.");
+        }
+      } catch (error) {
+        console.error("Error while updating profile:", error);
+      }
+      setIsEditPrice(false);
+      router?.refresh();
+    }
   }, []);
 
   useEffect(() => {
@@ -221,8 +281,14 @@ function Page({ params }) {
 
           <Capsule className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
             {getCandidateStatus(talent?.talent_status, talent?.status)}
-            {talent?.talent_status !== "open" &&
-              talent?.talent_status !== "interviewing" && (
+            {getCandidateStatus(
+              talent?.talent_status,
+              talent?.status,
+            ).toLowerCase() !== "available" &&
+              getCandidateStatus(
+                talent?.talent_status,
+                talent?.status,
+              ).toLowerCase() !== "interviewing" && (
                 <>
                   {" "}
                   {formatDate(talent?.updatedAt)} - {newEndTrialDate}
@@ -231,7 +297,7 @@ function Page({ params }) {
           </Capsule>
         </div>
         <Hr />
-        <div className="mini-profile flex items-center justify-start">
+        <div className="mini-profile flex items-center justify-between">
           <EntityCard
             entity={{
               image: "/avatars/avatar-1.png",
@@ -239,9 +305,29 @@ function Page({ params }) {
               profession: talent?.specialization,
             }}
           />
-          <Capsule className="ml-auto mt-auto" icon={<IconWithBg icon="$" />}>
-            ${talent?.hourly_rate}hr
-          </Capsule>
+          {!isEditPrice ? (
+            <Capsule className="ml-auto mt-auto" icon={<IconWithBg icon="$" />}>
+              ${talent?.hourly_rate}hr
+              <div
+                onClick={() => setIsEditPrice(true)}
+                className="cursor-pointer"
+              >
+                <Image src={"/icons/icon-edit.svg"} width={20} height={20} />
+              </div>
+            </Capsule>
+          ) : (
+            <div className="gap-2">
+              <input
+                //type="number"
+                className="rounded-[2.25rem] border-2 border-black px-4 py-3 text-sm font-medium capitalize"
+                value={editedPrice}
+                onChange={(event) => setEditedPrice(event.target.value)}
+              />
+              <ButtonCapsule onPress={() => saveEditedPrice(editedPrice)}>
+                Save
+              </ButtonCapsule>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-row justify-center">
@@ -264,8 +350,19 @@ function Page({ params }) {
                 </>
               ))}
             </div>
-            <Hr />
+            
+            <div className="text-grey-primary-shade-20 mt-2"> Candidate Report</div>
+            <div  className="w-1/3 mt-4" >
+            <Capsule className="!text-primary-tint-10 ml-5"
+                  onClick={() => {
+                    setIsReportOverlayOpened(true);
+                  }}
+                  > View Report</Capsule>
 
+            </div>
+            
+            <Hr />
+                
             <Heading xm>Address</Heading>
             <div className="flex items-start gap-1.5">
               <div>
@@ -289,6 +386,16 @@ function Page({ params }) {
               </div>
             </div>
           </div>
+
+
+          {isReportOverlayOpened && (
+          <ReportOverlay
+            reportOverlay={isReportOverlayOpened}
+            onClose={handleCloseOverlay}
+            selectedCandidate={candidateReport}
+          />
+          )}
+
           <div className="mr-3 space-x-3">
             <Heading xm className="text-center">
               Job Information
@@ -433,6 +540,13 @@ function Page({ params }) {
           </div>
         </form>
       </Modal>
+      {alert && (
+        <ErrorPopup
+          message={error}
+          type="error"
+          onClose={() => setAlert(false)}
+        />
+      )}
     </>
   );
 }
