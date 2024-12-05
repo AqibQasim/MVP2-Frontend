@@ -15,19 +15,15 @@ function AdminCandidatesClientsHiringRow({
   client,
   daysPassed,
 }) {
-
   console.log("renderrrrrr");
-
 
   const [subscriptionId, setSubcriptionId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  
-   const autoRefresh = () => {
+  const autoRefresh = useCallback(() => {
     router.refresh();
-  }
-
+  },[]);
 
   //console.log(first)
   const [changeStatus, setChangeStatus] = useState({
@@ -146,46 +142,46 @@ function AdminCandidatesClientsHiringRow({
         response_status: changeStatus.response_status,
       },
     }),
-    [
-      changeStatus.client_id,
-      changeStatus.customer_id,
-      changeStatus.job_posting_id,
-      changeStatus.job_status,
-      changeStatus.talent_status,
-      changeStatus.response_status,
-    ],
+    // [
+    //   changeStatus.client_id,
+    //   changeStatus.customer_id,
+    //   changeStatus.job_posting_id,
+    //   changeStatus.job_status,
+    //   changeStatus.talent_status,
+    //   changeStatus.response_status,
+    // ],
   );
 
   const handleChangeStatus = useCallback(async () => {
-  const {
-    client_id,
-    customer_id,
-    job_posting_id,
-    job_status,
-    talent_status,
-    response_status,
-  } = changeStatus;
+    const {
+      client_id,
+      customer_id,
+      job_posting_id,
+      job_status,
+      talent_status,
+      response_status,
+    } = changeStatus;
 
-  if (
-    client_id &&
-    customer_id &&
-    job_posting_id &&
-    talent_status &&
-    response_status &&
-    job_status
-  ) {
-    try {
-      setIsLoading(true); 
-      const result = await mvp2ApiHelper(payload);
-      console.log(result);
-    } catch (error) {
-      console.error(error);
-    } 
-    // finally {
-    //   setIsLoading(false); 
-    // }
-  }
-}, [payload]);
+    if (
+      client_id &&
+      customer_id &&
+      job_posting_id &&
+      talent_status &&
+      response_status &&
+      job_status
+    ) {
+      try {
+        setIsLoading(true);
+        const result = await mvp2ApiHelper(payload);
+        console.log(result);
+      } catch (error) {
+        console.error(error);
+      }
+      // finally {
+      //   setIsLoading(false);
+      // }
+    }
+  }, [payload]);
 
   const getClientStripe = () => {
     console.log("pASSING TO PAYLOAD ", typeof changeStatus.client_id);
@@ -205,12 +201,11 @@ function AdminCandidatesClientsHiringRow({
     });
   };
 
-
   const handleSubscription = async () => {
-    const customPrice = candidate.hourly_rate * 100 * 40;
+    const customPrice = ((candidate.hourly_rate * 100) * 40) * 2;
   
     try {
-      setIsLoading(true); 
+      setIsLoading(true);
       const subscriptionResponse = await fetch("/api/create-subscription", {
         method: "POST",
         headers: {
@@ -222,22 +217,20 @@ function AdminCandidatesClientsHiringRow({
           paymentMethodId: selectedMethodId,
         }),
       });
-  
+
       if (!subscriptionResponse.ok) {
-        setIsLoading(false); 
+        setIsLoading(false);
         throw new Error(`HTTP error! status: ${subscriptionResponse.status}`);
       }
-  
+
       const { subscriptionId } = await subscriptionResponse.json();
       setSubcriptionId(subscriptionId);
-      setIsLoading(false); 
+      setIsLoading(false);
     } catch (error) {
       console.error("Error creating subscription:", error);
-      setIsLoading(false); 
-
+      setIsLoading(false);
     }
   };
-  
 
   const handleHiring = async () => {
     const customPrice = candidate.hourly_rate * 100 * 40;
@@ -245,32 +238,35 @@ function AdminCandidatesClientsHiringRow({
     try {
       // Fetch client secret for subscription
       setIsLoading(true);
-      const subscriptionResponse = await fetch(`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-hiring`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const subscriptionResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-hiring`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            client_id: changeStatus.client_id,
+            subscription_id: subscriptionId,
+            stripe_client_id: stripeClientId,
+            job_posting_id: changeStatus.job_posting_id,
+            customer_id: changeStatus.customer_id,
+            amount: customPrice,
+          }),
         },
-        body: JSON.stringify({
-          client_id: changeStatus.client_id,
-          subscription_id: subscriptionId,
-          stripe_client_id: stripeClientId,
-          job_posting_id:changeStatus.job_posting_id,
-          customer_id:changeStatus.customer_id,
-          amount: customPrice
-        }),
-      });
+      );
 
       if (!subscriptionResponse.ok) {
-        setIsLoading(false); 
+        setIsLoading(false);
         throw new Error(`HTTP error! status: ${subscriptionResponse.status}`);
       }
 
       const { clientSecret } = await subscriptionResponse.json();
       //setClientSecret(clientSecret);
     } catch (error) {
-      setIsLoading(false); 
+      setIsLoading(false);
       console.error("Error creating subscription:", error);
-    } 
+    }
   };
 
   // useEffect(() => {
@@ -293,7 +289,7 @@ function AdminCandidatesClientsHiringRow({
   //         const subscriptionData = await subscriptionResponse.json();
 
   //         // // You can use subscriptionData as needed, for example:
-  //         // customer.subscriptions = subscriptionData.data;      
+  //         // customer.subscriptions = subscriptionData.data;
 
   //         console.log("Subscription Daata is", subscriptionData.data)
 
@@ -327,58 +323,57 @@ function AdminCandidatesClientsHiringRow({
   //   }
   // };
 
-
-   const handleCancelSubscription = async () => {
+  const handleCancelSubscription = async () => {
     try {
-      setIsLoading(true); 
-        const subscriptionResponse = await fetch(
-            `/api/client-subscriptions-list`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ customer_id: stripeClientId }),
-            }
-          );
+      setIsLoading(true);
+      const subscriptionResponse = await fetch(
+        `/api/client-subscriptions-list`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ customer_id: stripeClientId }),
+        },
+      );
 
-          const subscriptionData = await subscriptionResponse.json();
+      const subscriptionData = await subscriptionResponse.json();
 
-          // // You can use subscriptionData as needed, for example:
-          // customer.subscriptions = subscriptionData.data;      
+      // // You can use subscriptionData as needed, for example:
+      // customer.subscriptions = subscriptionData.data;
 
-          console.log("Subscription Daata is", subscriptionData.data)
+      console.log("Subscription Daata is", subscriptionData.data);
 
       if (!subscriptionResponse.ok) {
         throw new Error(`HTTP error! status: ${subscriptionResponse.status}`);
       }
 
       if (subscriptionData?.data?.length > 0) {
-            const subscriptionId = subscriptionData.data[0].id;
+        const subscriptionId = subscriptionData.data[0].id;
 
-            // Call delete subscription API
-            const deleteResponse = await fetch(`/api/delete-subscription`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ subscriptionId }),
-            });
+        // Call delete subscription API
+        const deleteResponse = await fetch(`/api/delete-subscription`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ subscriptionId }),
+        });
 
-            if (!deleteResponse.ok) {
-                throw new Error(`HTTP error! status: ${deleteResponse.status}`);
-            }
-
-            const deleteResult = await deleteResponse.json();
-            console.log("Subscription deleted successfully:", deleteResult);
-            setIsLoading(false); 
-        } else {
-          setIsLoading(false); 
-            console.log("No subscriptions found to delete");
+        if (!deleteResponse.ok) {
+          throw new Error(`HTTP error! status: ${deleteResponse.status}`);
         }
+
+        const deleteResult = await deleteResponse.json();
+        console.log("Subscription deleted successfully:", deleteResult);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        console.log("No subscriptions found to delete");
+      }
     } catch (error) {
-      console.error('Error creating subscription:', error);
-      setIsLoading(false); 
+      console.error("Error creating subscription:", error);
+      setIsLoading(false);
     }
   };
 
@@ -386,39 +381,34 @@ function AdminCandidatesClientsHiringRow({
     handleChangeStatus();
   }, [changeStatus]);
 
-
   useEffect(() => {
     // console.log(changeStatus)
-    handleChangeStatus()
-    getClientStripe()
+    handleChangeStatus();
+    getClientStripe();
 
     if (changeStatus.job_status === "hired") {
-      console.log("JOB STATUS CHANGED TO ", changeStatus.job_status)
-      
+      console.log("JOB STATUS CHANGED TO ", changeStatus.job_status);
 
       if (stripeClientId) {
         handleSubscription();
-
-
-         
-        
       }
       //stripeClientId
-    }else if(changeStatus.job_status === "open" || changeStatus.job_status === "trial" || changeStatus.job_status === "close"){
-        if (stripeClientId) {
-            handleCancelSubscription()
-         }
+    } else if (
+      changeStatus.job_status === "open" ||
+      changeStatus.job_status === "trial" ||
+      changeStatus.job_status === "close"
+    ) {
+      if (stripeClientId) {
+        handleCancelSubscription();
+      }
     }
   }, [changeStatus, stripeClientId]);
 
-
-  useEffect(()=>{
-    if(subscriptionId){
-          handleHiring();
-        
-        
-      }
-  }, [subscriptionId, changeStatus])
+  useEffect(() => {
+    if (subscriptionId) {
+      handleHiring();
+    }
+  }, [subscriptionId, changeStatus]);
 
   const rowClassName =
     job?.job_status === "trial" && daysPassed > 14
@@ -444,57 +434,58 @@ function AdminCandidatesClientsHiringRow({
           <div className="experience text-center">
             {job?.job_status || "No job status"}
           </div>
-          <div className="experience text-center">{daysPassed}</div>
+          <div className="experience text-center">
+            {job?.job_status?.toLowerCase() === "hired" ? "-" : daysPassed}
+          </div>
 
           <div className="flex flex-col text-center">
-  <div className="flex-1 ">
-    {isLoading ? (
-      // Loader Icon displayed when loading
-      <div className="flex  py-3 bg-blue-800 rounded-5xl items-center justify-center">
-        <LoaderIcon className="text-5xl " />
-      </div>
-    ) : (
-      // Change Status Dropdown displayed when not loading
-      <ChangeStatusDropdown
-        options={options}
-        placeholder="Change Job Status"
-        onPress={(selected_status) => {
-          setIsLoading(true); // Start loader
+            <div className="flex-1">
+              {isLoading ? (
+                // Loader Icon displayed when loading
+                <div className="flex items-center justify-center rounded-5xl bg-blue-800 py-3">
+                  <LoaderIcon className="text-5xl" />
+                </div>
+              ) : (
+                // Change Status Dropdown displayed when not loading
+                <ChangeStatusDropdown
+                  options={options}
+                  placeholder="Change Job Status"
+                  onPress={(selected_status) => {
+                    setIsLoading(true); // Start loader
 
-          let response_status = null;
+                    let response_status = null;
 
-          if (selected_status === "open") {
-            response_status = "decline";
-          } else if (selected_status === "trial" || selected_status === "hired") {
-            response_status = "accept";
-          } else if (selected_status === "close") {
-            response_status = "close";
-          }
+                    if (selected_status === "open") {
+                      response_status = "decline";
+                    } else if (
+                      selected_status === "trial" ||
+                      selected_status === "hired"
+                    ) {
+                      response_status = "accept";
+                    } else if (selected_status === "close") {
+                      response_status = "close";
+                    }
 
-          setChangeStatus({
-            customer_id: candidate?.customer_id,
-            job_posting_id: job?.job_posting_id,
-            client_id: client?.client_id,
-            job_status: selected_status,
-            talent_status: selected_status,
-            response_status,
-          });
+                    setChangeStatus({
+                      customer_id: candidate?.customer_id,
+                      job_posting_id: job?.job_posting_id,
+                      client_id: client?.client_id,
+                      job_status: selected_status,
+                      talent_status: selected_status,
+                      response_status,
+                    });
 
-           
-              setIsLoading(false); 
-              autoRefresh();
-          
-        }}
-        className="text-sm font-bold"
-      />
-    )}
-  </div>
-</div>
-
-
-        
-
-
+                    // // Simulate API call delay (remove after integrating real API)
+                    setTimeout(() => {
+                      setIsLoading(false);
+                      autoRefresh();
+                    }, 1000);
+                  }}
+                  className="text-sm font-bold"
+                />
+              )}
+            </div>
+          </div>
         </Table.Row>
       </div>
     </>
@@ -502,5 +493,3 @@ function AdminCandidatesClientsHiringRow({
 }
 
 export default AdminCandidatesClientsHiringRow;
-
-

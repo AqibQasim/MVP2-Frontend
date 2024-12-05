@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 //import ButtonBack from "./ButtonBack";
 import Capsule from "@/components/Capsule";
@@ -22,6 +22,9 @@ import { referCandidateToClientAction } from "@/lib/actions";
 import { fetchClientJobs, getClients } from "@/lib/data-service";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import AdminCandidateJobHistory from "@/components/AdminCandidateJobHistory";
+import getCandidateStatus from "@/utils/getCandidateStatus";
+import ButtonCapsule from "@/components/ButtonCapsule";
+import ErrorPopup from "@/components/ErrorPopup";
 
 function Page({ params }) {
   const [talent, setTalent] = useState(null);
@@ -39,12 +42,20 @@ function Page({ params }) {
   const [isClientsShow, setIsClientShow] = useState(false);
   const [isJobsShow, setIsJobsShow] = useState(false);
   const [jobHistory, setJobHistory] = useState(null);
+<<<<<<< HEAD
   const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
 
   const handleCloseOverlay = () => {
     setIsReportOverlayOpened(false);
     //setSuccessAcknowledge(false);
   };
+=======
+  const [isEditPrice, setIsEditPrice] = useState(false);
+  const [editedPrice, setEditedPrice] = useState(talent?.hourly_rate);
+  const router= useRouter();
+  const [alert,setAlert]= useState(null)
+  //const [error,setError]= useState(null)
+>>>>>>> 3dd5170b07b521d931c2fded914bfee5cb0d0a6f
 
   const filteredClients = clients?.filter((client) =>
     client.name.toLowerCase().includes(searchClient.toLowerCase()),
@@ -87,6 +98,35 @@ function Page({ params }) {
     console.log(response?.data?.data);
     setJobHistory(response?.data?.data);
     //console.log(jobHistory)
+  }, []);
+
+  const saveEditedPrice = useCallback(async (price) => {
+    if(isNaN(price)||price===null){
+      setError("price can only be a number")
+      setAlert(true);
+    }else{
+      const payload = {
+        endpoint: `profile-info-update/${customer_id}`,
+        method: "PUT",
+        body: {
+          hourly_rate: price,
+        },
+      };
+  
+      try {
+        const result = await mvp2ApiHelper(payload);
+  
+        if (result.status === 200) {
+          console.log("Price updated successfully!");
+        } else {
+          console.error("Failed to update profile.");
+        }
+      } catch (error) {
+        console.error("Error while updating profile:", error);
+      }
+      setIsEditPrice(false);
+      router?.refresh();
+    }
   }, []);
 
   useEffect(() => {
@@ -214,17 +254,26 @@ function Page({ params }) {
 
           <Capsule
             onClick={
-              talent?.talent_status === "open" ? () => setShowForm(true) : null
+              getCandidateStatus(talent?.talent_status, talent?.status) ===
+              "Available"
+                ? () => setShowForm(true)
+                : null
             }
-            className={`ml-auto cursor-not-allowed !bg-grey-primary-tint-90 ${talent?.talent_status === "open" ? "!text-primary-tint-10" : "!text-gray-500"}`}
+            className={`ml-auto cursor-not-allowed !bg-grey-primary-tint-90 ${getCandidateStatus(talent?.talent_status, talent?.status) === "Available" ? "!text-primary-tint-10" : "!text-gray-500"}`}
           >
             Refer To Client
           </Capsule>
 
           <Capsule className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
-            {talent?.talent_status}
-            {talent?.talent_status !== "open" &&
-              talent?.talent_status !== "interviewing" && (
+            {getCandidateStatus(talent?.talent_status, talent?.status)}
+            {getCandidateStatus(
+              talent?.talent_status,
+              talent?.status,
+            ).toLowerCase() !== "available" &&
+              getCandidateStatus(
+                talent?.talent_status,
+                talent?.status,
+              ).toLowerCase() !== "interviewing" && (
                 <>
                   {" "}
                   {formatDate(talent?.updatedAt)} - {newEndTrialDate}
@@ -233,7 +282,7 @@ function Page({ params }) {
           </Capsule>
         </div>
         <Hr />
-        <div className="mini-profile flex items-center justify-start">
+        <div className="mini-profile flex items-center justify-between">
           <EntityCard
             entity={{
               image: "/avatars/avatar-1.png",
@@ -241,9 +290,29 @@ function Page({ params }) {
               profession: talent?.specialization,
             }}
           />
-          <Capsule className="ml-auto mt-auto" icon={<IconWithBg icon="$" />}>
-            ${talent?.hourly_rate}hr
-          </Capsule>
+          {!isEditPrice ? (
+            <Capsule className="ml-auto mt-auto" icon={<IconWithBg icon="$" />}>
+              ${talent?.hourly_rate}hr
+              <div
+                onClick={() => setIsEditPrice(true)}
+                className="cursor-pointer"
+              >
+                <Image src={"/icons/icon-edit.svg"} width={20} height={20} />
+              </div>
+            </Capsule>
+          ) : (
+            <div className="gap-2">
+              <input
+                //type="number"
+                className="rounded-[2.25rem] border-2 border-black px-4 py-3 text-sm font-medium capitalize"
+                value={editedPrice}
+                onChange={(event) => setEditedPrice(event.target.value)}
+              />
+              <ButtonCapsule onPress={() => saveEditedPrice(editedPrice)}>
+                Save
+              </ButtonCapsule>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-row justify-center">
@@ -327,7 +396,9 @@ function Page({ params }) {
           Refer {talent?.role} to Client
         </h3>
         <form action={handleReferCandidate}>
-          <label className="flex">Hourly Rate  <div className="text-red-600" >*</div></label>
+          <label className="flex">
+            Hourly Rate <div className="text-red-600">*</div>
+          </label>
           <input
             //type="number"
             name="hourlyRate"
@@ -338,7 +409,9 @@ function Page({ params }) {
             className="mt-2 block w-full border px-2 py-1"
           />
 
-          <label className="mt-4 flex">Assign to Client   <div className="text-red-600" >*</div> </label>
+          <label className="mt-4 flex">
+            Assign to Client <div className="text-red-600">*</div>{" "}
+          </label>
           <input
             type="text"
             value={searchClient}
@@ -375,7 +448,9 @@ function Page({ params }) {
               </option>
             ))}
 
-          <label className="mt-4 flex">Select Job   <div className="text-red-600" >*</div> </label>
+          <label className="mt-4 flex">
+            Select Job <div className="text-red-600">*</div>{" "}
+          </label>
           <input
             type="text"
             value={searchJob}
@@ -406,7 +481,10 @@ function Page({ params }) {
           {/* </select> */}
           {/* Error Temp */}
           {error ? (
-            <div className="error text-red-500"> {error || error?.message} </div>
+            <div className="error text-red-500">
+              {" "}
+              {error || error?.message}{" "}
+            </div>
           ) : null}
 
           <div className="mt-4">
@@ -426,6 +504,13 @@ function Page({ params }) {
           </div>
         </form>
       </Modal>
+      {alert && (
+        <ErrorPopup
+          message={error}
+          type="error"
+          onClose={() => setAlert(false)}
+        />
+      )}
     </>
   );
 }

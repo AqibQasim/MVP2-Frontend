@@ -176,8 +176,6 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
           />
         </div>
             
-        {jobType === "hybrid" || jobType === "on-site" ? (
-          <>
             <div className="mb-4">
               <label htmlFor="city" className="block text-gray-700">
                 City
@@ -204,8 +202,10 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
                 required
               />
             </div>
+        {/* {jobType === "hybrid" || jobType === "on-site" ? (
+          <>
           </>
-        ) : null}
+        ) : null} */}
 
       
 

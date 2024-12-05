@@ -3,22 +3,12 @@
 import React from 'react'
 import DashboardSection from './DashboardSection'
 import Table from './Table'
-import AdminCandidateRow from './AdminCandidateRow'
 import AdminCandidatesClientsHiringRow from './AdminCandidatesClientsHiringRow';
- 
- 
-
-
-
-
 
 function AdminCandidatesClientsHiringTable({totalHirings, candidateJobStatus}) {
   const path= window.location.href;
     
   //console.log(candidateJobStatus)
-
-
-
   return (
     <DashboardSection
       className="!min-h-full"
