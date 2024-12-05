@@ -9,6 +9,7 @@ import IconWithBg from "./IconWithBg";
 import SkillIconWithBg from "./SkillIconWithBg";
 import Table from "./Table";
 import CapsuleLink from "./CapsuleLink";
+import getCandidateStatus from "@/utils/getCandidateStatus";
 
 function AdminCandidateRow({ candidate, score, onClick }) {
   const [showForm, setShowForm] = useState(false);
@@ -22,8 +23,6 @@ function AdminCandidateRow({ candidate, score, onClick }) {
   const [selectedJob, setSelectedJob] = useState("");
   const [selectedJobId, setSelectedJobId] = useState("");
   const [error, setError] = useState(null);
-  const [isClientsShow, setIsClientShow] = useState(false);
-  const [isJobsShow, setIsJobsShow] = useState(false);
 
   const filteredClients = clients?.filter((client) =>
     client.name.toLowerCase().includes(searchClient.toLowerCase()),
@@ -95,23 +94,28 @@ function AdminCandidateRow({ candidate, score, onClick }) {
             }}
           />
         </div>
-       
-          
-        <div
-         className= "flex-col  skills flex items-center justify-center gap-1 text-center">
-            {candidate?.expertise?.length > 1 ? (
-              <div className="flex" >
-             <SkillIconWithBg icon={candidate.expertise[0].skill} skill={candidate.expertise[0].skill} />
-             <div className="text-sm text-gray-500 mt-2">
-              +{candidate.expertise.length - 1}
-              </div>
-              </div>
-            )
-          : (
-          <span> <SkillIconWithBg icon={candidate.expertise[0].skill} skill={candidate.expertise[0].skill}/></span>
-        )}
-       </div>
 
+        <div className="skills flex flex-col items-center justify-center gap-1 text-center">
+          {candidate?.expertise?.length > 1 ? (
+            <div className="flex">
+              <SkillIconWithBg
+                icon={candidate.expertise[0].skill}
+                skill={candidate.expertise[0].skill}
+              />
+              <div className="mt-2 text-sm text-gray-500">
+                +{candidate.expertise.length - 1}
+              </div>
+            </div>
+          ) : (
+            <span>
+              {" "}
+              <SkillIconWithBg
+                icon={candidate.expertise[0].skill}
+                skill={candidate.expertise[0].skill}
+              />
+            </span>
+          )}
+        </div>
 
         <div className="experience flex justify-center text-center">
           {candidate?.hourly_rate || 0}$
@@ -126,11 +130,15 @@ function AdminCandidateRow({ candidate, score, onClick }) {
 
         <Capsule
           className="status mx-auto w-max"
-          status={candidate?.talent_status}
+          status={getCandidateStatus(
+            candidate?.talent_status,
+            candidate?.status,
+          )}
         >
-          {candidate?.talent_status === "open"  ? "Avaliable"            
-            :  candidate?.talent_status?.toLowerCase() === "closed"  ? "Un-Avaliable"
-            :   candidate?.talent_status }
+          {getCandidateStatus(candidate?.talent_status, candidate?.status)}
+          {/* {candidate?.talent_status === "open" && candidate?.status==="active"  ? "Avaliable"            
+            :  candidate?.talent_status?.toLowerCase() === "open" && candidate?.status==="in-active" ? "Un-Avaliable"
+            :   candidate?.talent_status } */}
         </Capsule>
 
         <CapsuleLink

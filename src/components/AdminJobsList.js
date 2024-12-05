@@ -5,7 +5,7 @@ import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 import { useEffect, useState } from "react";
 
-function AdminJobsList({ jobs, totalJobs, role }) {
+function AdminJobsList({ jobs, totalJobs, role}) {
   const path = window.location.href;
   const [jobStatus, setJobStatus] = useState("");
   const [searchTerm, setSearchTerm] = useState("");

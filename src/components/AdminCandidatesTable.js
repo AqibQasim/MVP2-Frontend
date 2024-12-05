@@ -3,6 +3,7 @@ import { useState } from "react";
 import AdminCandidateRow from "./AdminCandidateRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
+import getCandidateStatus from "@/utils/getCandidateStatus";
 
 function AdminCandidatesTable({
   totalCandidates,
@@ -23,17 +24,24 @@ function AdminCandidatesTable({
 
   console.log("Candidates:", candidates);
 
- 
-    
+  const filteredCandidates = candidates
+    .filter(
+      (candidate) =>
+        !talentStatus ||
+        getCandidateStatus(
+          candidate?.customer?.talent_status,
+          candidate?.customer?.status,
+        ).toLowerCase() === talentStatus
+    )
+    .filter(
+      (candidate) =>
+        !searchTerm ||
+        (typeof candidate.customer?.name === "string" &&
+          candidate.customer?.name
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())),
+    );
 
-     const filteredCandidates = candidates
-     .filter(candidate =>
-       !talentStatus || candidate.customer?.talent_status === talentStatus
-     )
-     .filter(candidate =>
-       !searchTerm || (typeof candidate.customer?.name === 'string' && candidate.customer?.name.toLowerCase().includes(searchTerm.toLowerCase()))
-     );
-   
   return (
     <DashboardSection
       className="!min-h-full"
@@ -42,40 +50,35 @@ function AdminCandidatesTable({
       href={!path.includes("/admin/candidates") ? `/admin/candidates` : null}
       info={`Total Candidates: ${totalCandidates}`}
     >
+      {role !== "dashboard" && (
+        <div className="mb-4 flex justify-between">
+          <div>
+            <input
+              type="text"
+              placeholder="Search by name"
+              className="mb-4 w-full cursor-pointer rounded border border-gray-300 p-2"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
 
-{role !== "dashboard" && (
-      <div className="mb-4 flex justify-between ">
-
-      <div>
-        <input
-        type="text"
-        placeholder="Search by name"
-        className="mb-4 w-full cursor-pointer rounded border border-gray-300 p-2"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+          <div>
+            <select
+              id="options"
+              value={talentStatus}
+              onChange={handleTalentStatusChange}
+              className="rounded border border-gray-300 p-2"
+            >
+              <option value="">Select an talent status</option>
+              <option value="available">Avaliable</option>
+              <option value="un-available">Un-Avaliable</option>
+              <option value="interviewing">Interviewing</option>
+              <option value="hired">Hired</option>
+              <option value="trial">Trial</option>
+            </select>
+          </div>
         </div>
-
-        <div>
-          
-        <select
-          id="options"
-          value={talentStatus}
-          onChange={handleTalentStatusChange}
-          className="rounded border border-gray-300 p-2"
-        >
-          <option value="">Select an talent status</option>
-          <option value="open">Avaliable</option>
-          <option value="closed">Un-Avaliable</option>
-          <option value="interviewing">Interviewing</option>
-          <option value="hired">Hired</option>
-          <option value="trial">Trial</option>
-        </select>
-        </div>
-        
-
-      </div>  
-     )}
+      )}
 
       <Table columns="grid-cols-[9rem_5.7rem_4rem_6rem_4.5rem_4.1rem_7.4rem_9.8rem]">
         <Table.Header>
@@ -89,11 +92,11 @@ function AdminCandidatesTable({
           <div className="actions text-center">Actions</div>
         </Table.Header>
         {/* Make the body container scrollable */}
-        <div className="h-full overflow-y-hidden overflow-x-hidden">
+        <div className="h-full overflow-x-hidden overflow-y-hidden">
           {" "}
           {/* Set the height as per your needs */}
           <Table.Body
-            data={filteredCandidates }
+            data={filteredCandidates}
             render={(candidate, i) => {
               const res =
                 (candidate?.result?.softskillRating +
