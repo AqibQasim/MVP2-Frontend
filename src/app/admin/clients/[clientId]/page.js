@@ -29,9 +29,6 @@ function Page({ params }) {
   const [client, setClient] = useState(null);
   const client_id = params?.clientId;
   const [candidates, setCandidates] = useState(null);
-  //const [dataError, setDataError] = useState(null);
-
-  //const [assignedCandidates, setAssignedCandidates]= useState(null);
 
   const fetchCandidates = async () => {
     const payload = {
@@ -75,12 +72,6 @@ function Page({ params }) {
   }, [client_id]);
 
   if (!client) return <div>Loading...</div>;
-
-  // function parseDateString(dateString) {
-  //   const [day, month, year] = dateString.split(" ");
-  //   const monthIndex = new Date(Date.parse(month + " 1, 2024")).getMonth(); // Convert month name to index
-  //   return new Date(year, monthIndex, day);
-  // }
 
   return (
     <>
@@ -127,8 +118,25 @@ function Page({ params }) {
               </Capsule>
               <Capsule className="mt-5 flex w-fit flex-wrap items-center gap-2">
                 <Image src={phone} />
-                {client?.contact_no}
+                {client?.contact_no || "No Contact number given"}
               </Capsule>
+            </div>
+
+            <div className="mt-3">
+              <Heading xm className="mb-3">
+                Company Details
+              </Heading>
+              <DetailTag
+                icon="/icons/routing.svg"
+                name="Company Name: "
+                content={client?.company_name || "No Company Name given"}
+              />
+              <br />
+              <DetailTag
+                icon="/icons/address.svg"
+                name="Company Size: "
+                content={client?.company_size || "No comapany Size given"}
+              />
             </div>
           </div>
           <div className="flex-1">
@@ -184,12 +192,6 @@ function Page({ params }) {
           </div>
         </div>
       </div>
-      {/* {showPaymentHistory && (
-        <ClientPaymentHistoryTable
-        // paymentHistory={paymentHistory}
-        // clientId={client_id}
-        />
-      )} */}
     </>
   );
 }

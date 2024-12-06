@@ -338,7 +338,7 @@ function Page({ params }) {
               <Image src={EmailSvg} />
               {talent?.email}
             </Capsule>
-
+            
             <Capsule className="mb-2 mt-2 flex w-fit flex-wrap items-center gap-2">
               <Image src={phone} />
               {talent?.contact_no}
