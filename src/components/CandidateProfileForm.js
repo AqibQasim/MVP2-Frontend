@@ -21,7 +21,7 @@ const CandidateProfileForm = ({ candidate }) => {
   const stateRef = useRef(null);
   const areaCodeRef = useRef(null);
   const countryRef = useRef(null);
-  const companySizeRef = useRef(null);
+  const companySizeRef =useRef(null);
   const companyRef = useRef(null);
   
   useEffect(() => {
