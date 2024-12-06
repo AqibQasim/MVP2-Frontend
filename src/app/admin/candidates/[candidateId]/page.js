@@ -12,7 +12,7 @@ import Hr from "@/components/Hr";
 import IconWithBg from "@/components/IconWithBg";
 //import TalentDescription from "./TalentDescription";
 import EmailSvg from "../../../../../public/icons/email.svg";
-import phone from "../../../../../public/icons/call.png";
+import phone from "../../../../../public/icons/Call.png";
 import { cityTimezoneOffset } from "@/utils/cityTimezoneOffset";
 import { formatDate } from "@/utils/utility";
 import ButtonCapsuleWhite from "@/components/ButtonCapsuleWhite";
