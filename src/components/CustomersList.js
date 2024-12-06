@@ -36,6 +36,7 @@ function CustomersList() {
   const[totalPaymentsDue, setTotalPaymentsDue] = useState(0);
   const [customerDetails, setCustomerDetails] = useState(null);
   const [customerHiringDetails, setCustomerHiringDetails] = useState(null);
+  const [invoiceStatusFilter, setInvoiceStatusFilter] = useState("");
   const observer = useRef();
 
   useEffect(() => {
@@ -353,9 +354,15 @@ const fetchInvoiceDetails = async (invoiceId) => {
     setSelectedCustomer(null);
   };
 
-  const filteredCustomers = customers.filter((customer) =>
-    customer.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredCustomers = customers.filter((customer) => {
+    const emailMatch = customer.email
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const statusMatch = invoiceStatusFilter
+      ? customer.last_invoice_det?.status === invoiceStatusFilter
+      : true;
+    return emailMatch && statusMatch;
+  });
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -388,13 +395,24 @@ const fetchInvoiceDetails = async (invoiceId) => {
         </div>
       </div>
 
-      <input
-        type="text"
-        placeholder="Search by email"
-        className="mb-4 w-full rounded border border-gray-300 p-2"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+      <div className="flex gap-4">
+        <input
+          type="text"
+          placeholder="Search by email"
+          className="mb-4 w-full rounded border border-gray-300 p-2"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <select
+          value={invoiceStatusFilter}
+          onChange={(e) => setInvoiceStatusFilter(e.target.value)}
+          className="w-52 border py-4 border-gray-300 rounded-lg"
+        >
+          <option value="">Last Invoice Status</option>
+          <option value="paid">Paid</option>
+          <option value="open">Open</option>
+        </select>
+      </div>
       <div className="h-[90vh] overflow-y-auto p-5">
         <ul className="flex flex-col flex-wrap gap-3">
           <li className="grid grid-cols-10 text-start">
@@ -409,7 +427,6 @@ const fetchInvoiceDetails = async (invoiceId) => {
             <div>Payment History</div>
             <div>Details</div>
             <div>Client History</div>
-            
           </li>
           <hr></hr>
           {filteredCustomers.map((customer) => (
@@ -421,40 +438,49 @@ const fetchInvoiceDetails = async (invoiceId) => {
                 {/* <div className="break-words">{customer.id}</div> */}
                 <div className="break-words">{customer?.name}</div>
                 <div className="break-words">{customer?.email}</div>
-                <div>{new Date(customer?.subscriptions[0]?.current_period_start * 1000).toLocaleDateString()}</div>
-                <div>{(customer.subscriptions[0]?.items?.data[0].plan.amount) / 100}$</div>
-                <div>{new Date(customer?.subscriptions[0]?.current_period_end * 1000).toLocaleDateString()}</div>
+                <div>
+                  {new Date(
+                    customer?.subscriptions[0]?.current_period_start * 1000,
+                  ).toLocaleDateString()}
+                </div>
+                <div>
+                  {customer.subscriptions[0]?.items?.data[0].plan.amount / 100}$
+                </div>
+                <div>
+                  {new Date(
+                    customer?.subscriptions[0]?.current_period_end * 1000,
+                  ).toLocaleDateString()}
+                </div>
                 <div>{customer?.last_invoice_det?.status}</div>
                 <Capsule
                   onClick={() => openInvoiceModal(customer)}
-                  className="mx-auto w-auto cursor-pointer !bg-primary-tint-100 h-auto text-xs"
+                  className="mx-auto h-auto w-auto cursor-pointer !bg-primary-tint-100 text-xs"
                 >
                   Create Invoice
                 </Capsule>
                 <Capsule
                   onClick={() => handleCustomerClick(customer.id)}
-                  className="mx-auto w-auto cursor-pointer !bg-primary-tint-100 h-auto text-xs"
+                  className="mx-auto h-auto w-auto cursor-pointer !bg-primary-tint-100 text-xs"
                 >
                   View History
                 </Capsule>
                 <Capsule
                   onClick={() => handleCustomerDetailsClick(customer.id)}
-                  className="mx-auto w-auto cursor-pointer !bg-primary-tint-100 h-auto text-xs"
+                  className="mx-auto h-auto w-auto cursor-pointer !bg-primary-tint-100 text-xs"
                 >
                   View Details
                 </Capsule>
                 <Capsule
                   onClick={() => handleCustomerHiringClick(customer.id)}
-                  className="mx-auto w-auto cursor-pointer !bg-primary-tint-100 h-auto text-xs"
+                  className="mx-auto h-auto w-auto cursor-pointer !bg-primary-tint-100 text-xs"
                 >
                   View Hiring Details
                 </Capsule>
               </li>
               <hr></hr>
             </>
-            
           ))}
-           <li>{loadingMore && <p>Loading clients...</p>}</li>
+          <li>{loadingMore && <p>Loading clients...</p>}</li>
         </ul>
         <div>Total Amount: {totalPaymentsDue}$</div>
         {loading && <p>Loading...</p>}
@@ -463,13 +489,12 @@ const fetchInvoiceDetails = async (invoiceId) => {
 
       {/* Modal for Client Payment History */}
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-        
-        <div className="w-full gap-4 rounded-[24px] max-h-[80vh] overflow-y-auto bg-neutral-white p-6">
+        <div className="max-h-[80vh] w-full gap-4 overflow-y-auto rounded-[24px] bg-neutral-white p-6">
           {/* <h2>Client Payment History</h2> */}
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <ul className="flex flex-col   gap-3">
+            <ul className="flex flex-col gap-3">
               <li className="grid grid-cols-6 text-start">
                 <div>Card Name</div>
                 <div>Amount</div>
@@ -480,7 +505,7 @@ const fetchInvoiceDetails = async (invoiceId) => {
               </li>
               {clientCharges.length > 0 ? (
                 clientCharges.map((charge, index) => (
-                  <li key={index} className="grid grid-cols-6 text-start ">
+                  <li key={index} className="grid grid-cols-6 text-start">
                     <div>{charge?.name}</div>
                     <div>{charge?.amount}</div>
                     <div>{charge?.status}</div>
@@ -504,108 +529,138 @@ const fetchInvoiceDetails = async (invoiceId) => {
       </Modal>
       {/* Modal for creating invoice */}
       {selectedCustomer && (
-         <Modal isOpen={isInvoiceModalOpen} onClose={handleCloseInvoiceModal}>
-        <div className="p-6">
-          
-          <h2>Create Invoice for {selectedCustomer?.name}</h2>
-          <input
-            type="number"
-            placeholder="Amount (in dollars)"
-            value={invoiceDetails.amount}
-            required
-            onChange={(e) =>
-              setInvoiceDetails({ ...invoiceDetails, amount: e.target.value })
-            }
-            
-            className="mb-4 w-full rounded border border-gray-300 p-2"
-          />
-          <input
-            type="text"
-            placeholder="Description"
-            value={invoiceDetails.description}
-            required
-            onChange={(e) =>
-              setInvoiceDetails({
-                ...invoiceDetails,
-                description: e.target.value,
-              })
-            }
-            className="mb-4 w-full rounded border border-gray-300 p-2"
-          />
-          <button onClick={handleCreateInvoice} className="btn-primary">
-            Send
-          </button>
-        </div>
-      </Modal>
+        <Modal isOpen={isInvoiceModalOpen} onClose={handleCloseInvoiceModal}>
+          <div className="p-6">
+            <h2>Create Invoice for {selectedCustomer?.name}</h2>
+            <input
+              type="number"
+              placeholder="Amount (in dollars)"
+              value={invoiceDetails.amount}
+              required
+              onChange={(e) =>
+                setInvoiceDetails({ ...invoiceDetails, amount: e.target.value })
+              }
+              className="mb-4 w-full rounded border border-gray-300 p-2"
+            />
+            <input
+              type="text"
+              placeholder="Description"
+              value={invoiceDetails.description}
+              required
+              onChange={(e) =>
+                setInvoiceDetails({
+                  ...invoiceDetails,
+                  description: e.target.value,
+                })
+              }
+              className="mb-4 w-full rounded border border-gray-300 p-2"
+            />
+            <button onClick={handleCreateInvoice} className="btn-primary">
+              Send
+            </button>
+          </div>
+        </Modal>
       )}
 
-
-       {/* Modal for Client details */}
+      {/* Modal for Client details */}
       <Modal isOpen={isDetailsModalOpen} onClose={handleDetailsCloseModal}>
-      <div className="w-96 p-4">
-        <h2 className="text-xl font-semibold mb-4">Client Payment Details</h2>
-        {customerDetails ? (
-          <div>
-            <p><strong>Customer ID:</strong> {customerDetails[0]?.customer}</p>
-            <p><strong>First Payment:</strong> {new Date(customerDetails[0]?.created * 1000).toLocaleDateString()} </p>
-            <p><strong>Currency:</strong> {customerDetails[0]?.currency}</p>
-            <p><strong>Payment Amount:</strong>   {(customerDetails[0]?.items?.data[0]?.plan.amount) / 100}</p>
-            <p><strong>Previous Payment:</strong> {new Date(customerDetails[0]?.current_period_start * 1000).toLocaleDateString()}</p>
-            <p><strong>Next Payment:</strong> {new Date(customerDetails[0]?.current_period_end * 1000).toLocaleDateString()}</p> 
-            <p><strong>Payment Interval:</strong> {customerDetails[0]?.items?.data[0]?.plan?.interval}</p>
-            <p><strong>Number of payments:</strong> {customerDetails[0]?.items?.data[0]?.plan?.interval_count}</p>
-            <p><strong>Total payment amount:</strong> {(customerDetails[0]?.items?.data[0]?.plan?.interval_count * ((customerDetails[0]?.items?.data[0]?.plan?.amount) / 100))}</p>
-          
-            {/* <p>Plan: {customerDetails[0].items.data[0].plan.nickname}</p>
+        <div className="w-96 p-4">
+          <h2 className="mb-4 text-xl font-semibold">Client Payment Details</h2>
+          {customerDetails ? (
+            <div>
+              <p>
+                <strong>Customer ID:</strong> {customerDetails[0]?.customer}
+              </p>
+              <p>
+                <strong>First Payment:</strong>{" "}
+                {new Date(
+                  customerDetails[0]?.created * 1000,
+                ).toLocaleDateString()}{" "}
+              </p>
+              <p>
+                <strong>Currency:</strong> {customerDetails[0]?.currency}
+              </p>
+              <p>
+                <strong>Payment Amount:</strong>{" "}
+                {customerDetails[0]?.items?.data[0]?.plan.amount / 100}
+              </p>
+              <p>
+                <strong>Previous Payment:</strong>{" "}
+                {new Date(
+                  customerDetails[0]?.current_period_start * 1000,
+                ).toLocaleDateString()}
+              </p>
+              <p>
+                <strong>Next Payment:</strong>{" "}
+                {new Date(
+                  customerDetails[0]?.current_period_end * 1000,
+                ).toLocaleDateString()}
+              </p>
+              <p>
+                <strong>Payment Interval:</strong>{" "}
+                {customerDetails[0]?.items?.data[0]?.plan?.interval}
+              </p>
+              <p>
+                <strong>Number of payments:</strong>{" "}
+                {customerDetails[0]?.items?.data[0]?.plan?.interval_count}
+              </p>
+              <p>
+                <strong>Total payment amount:</strong>{" "}
+                {customerDetails[0]?.items?.data[0]?.plan?.interval_count *
+                  (customerDetails[0]?.items?.data[0]?.plan?.amount / 100)}
+              </p>
+
+              {/* <p>Plan: {customerDetails[0].items.data[0].plan.nickname}</p>
             <p>Amount: ${customerDetails[0].items.data[0].plan.amount / 100}</p>
             <p>Status: {customerDetails[0].status}</p>*/}
-          </div>
-        ) : (
-          <div>Loading...</div>
-        )}
+            </div>
+          ) : (
+            <div>Loading...</div>
+          )}
         </div>
       </Modal>
 
       {/* Modal for Client details */}
-      <Modal  isOpen={isHiringDetailsModalOpen} onClose={handleHiringDetailsCloseModal}>
-      <div className="p-4">
-        <h2 className="text-xl font-semibold mb-4">Client Hiring Details</h2>
-        {customerHiringDetails ? (
-
-          customerHiringDetails.length > 0 ? (
-          
-          <ul className="flex flex-col gap-3">
-              <li className="grid grid-cols-8 text-start">
-                <div className="font-bold">Client Name</div>
-                <div className="font-bold">Client Email</div>
-                <div className="font-bold">Customer Name</div>
-                <div className="font-bold">Customer Email</div>
-                <div className="font-bold">Customer Hourly Rate</div>
-                <div className="font-bold">Job</div>
-                <div className="font-bold">Job Hourly Rate</div>
-                <div className="font-bold">Amount</div>
-                
-              </li>
-             {customerHiringDetails.map((detail, index) => (
-            <li key={index} className="grid grid-cols-8 text-start">
-              <div>{detail?.client?.name}</div>
-              <div className="break-words">{detail?.client?.email}</div>
-              <div>{detail?.customer?.name}</div>
-              <div className="break-words">{detail?.customer?.email}</div>
-              <div>{detail?.customer?.hourly_rate}</div>
-              <div>{detail?.job_posting?.position}</div>
-              <div>{detail?.job_posting?.hourly_rate}</div>
-              <div>{detail?.amount / 100}</div>
-            </li>
-          ))}
-          </ul>
-          
-          ) : (<div>No data Found...</div>)
-        ) : (
-          <div>Loading...</div>
-        )}
+      <Modal
+        isOpen={isHiringDetailsModalOpen}
+        onClose={handleHiringDetailsCloseModal}
+      >
+        <div className="p-4">
+          <h2 className="mb-4 text-xl font-semibold">Client Hiring Details</h2>
+          {customerHiringDetails ? (
+            customerHiringDetails.length > 0 ? (
+              <ul className="flex flex-col gap-3">
+                <li className="grid grid-cols-8 text-start">
+                  <div className="font-bold">Client Name</div>
+                  <div className="font-bold">Client Email</div>
+                  <div className="font-bold">Customer Name</div>
+                  <div className="font-bold">Customer Email</div>
+                  <div className="font-bold">Customer Hourly Rate</div>
+                  <div className="font-bold">Job</div>
+                  <div className="font-bold">Job Hourly Rate</div>
+                  <div className="font-bold">Amount</div>
+                </li>
+                {customerHiringDetails.map((detail, index) => (
+                  <li key={index} className="grid grid-cols-8 text-start">
+                    <div>{detail?.client?.name}</div>
+                    <div className="break-words">{detail?.client?.email}</div>
+                    <div>{detail?.customer?.name}</div>
+                    <div className="break-words">{detail?.customer?.email}</div>
+                    <div>{detail?.customer?.hourly_rate}</div>
+                    <div>{detail?.job_posting?.position}</div>
+                    <div>{detail?.job_posting?.hourly_rate}</div>
+                    <div>{detail?.amount / 100}</div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div>No data Found...</div>
+            )
+          ) : (
+            <div>Loading...</div>
+          )}
         </div>
-      </Modal>      
+      </Modal>
     </div>
   );
 }
