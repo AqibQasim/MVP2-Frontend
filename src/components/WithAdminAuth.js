@@ -10,14 +10,14 @@ const WithAdminAuth = (WrappedComponent) => {
     useEffect(() => {
       const isAuthenticated = localStorage.getItem("adminAuth");
       if (!isAuthenticated) {
-        router.push("/admin/login");
+        router.push("/adminlogin");
       }
     }, [router]); // Include router in the dependency array
 
     return <WrappedComponent {...props} />;
   };
 
-  AuthenticatedComponent.displayName = `WithAdminAuth(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`;
+  AuthenticatedComponent.displayName = `WithAdminAuth(${WrappedComponent.displayName || WrappedComponent.name || "Component"})`;
 
   return AuthenticatedComponent;
 };

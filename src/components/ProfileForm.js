@@ -24,8 +24,8 @@ const ProfileForm = ({ client }) => {
   const provinceRef = useRef(null);
   const areaCodeRef = useRef(null);
   const countryRef = useRef(null);
-  const componyRef = useRef(null);
-  const componySizeRef = useRef(null);
+  const companyRef = useRef(null);
+  const companySizeRef = useRef(null);
 
   console.log("client is", client);
 
@@ -47,6 +47,8 @@ const ProfileForm = ({ client }) => {
         area_code:
           areaCodeRef.current?.value != "" ? areaCodeRef.current?.value : null,
         country: countryRef.current.value,
+        company_name: companyRef.current.value,
+        company_size: companySizeRef.current.value,
       },
     };
 
@@ -184,7 +186,7 @@ const ProfileForm = ({ client }) => {
         <div className="my-4 grid grid-cols-4 items-start gap-4">
           {/* Section Heading */}
           <Heading xm className="col-span-1">
-            Compony Details
+            Company Details
           </Heading>
 
           {/* Input Group */}
@@ -198,9 +200,9 @@ const ProfileForm = ({ client }) => {
                 </b>
                 <input
                   ref={companyRef}
-                  // defaultValue={client?.name?.split(" ", 2)[0] || ""}
+                  defaultValue={client?.company_name || ""}
                   type="text"
-                  placeholder="Compony Name"
+                  placeholder="Company Name"
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
               </div>
@@ -212,16 +214,16 @@ const ProfileForm = ({ client }) => {
                 </b>
                 <input
                   ref={companySizeRef}
-                  // defaultValue={client?.name?.split(" ", 2)[1] || ""}
+                  defaultValue={client?.company_size || ""}
                   type="text"
-                  placeholder="Compony Size"
+                  placeholder="Company Size"
                   className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
                 />
               </div>
             </div>
           </div>
         </div>
-<hr></hr>
+        <hr></hr>
         <div className="mb-4 mt-4 grid grid-cols-4 items-start gap-4">
           {/* Section Heading */}
           <Heading xm className="col-span-1">
