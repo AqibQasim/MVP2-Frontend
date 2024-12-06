@@ -34,7 +34,7 @@ function Row({ children, onClick = () => {} }) {
 }
 
 function Body({ data, render, error }) {
-  if (!data?.length) return <p>{error || 'No data to show at the moment'}</p>;
+  if (!data?.length) return <p>{error || "No data to show at the moment"}</p>;
 
   return (
     <div className="divide-dashboard-border divide-y-[1px]">
@@ -43,8 +43,36 @@ function Body({ data, render, error }) {
   );
 }
 
+function Footer({ data, startIndex, endIndex, onNext, onPrevious }) {
+  return (
+    <div className="flex justify-between">
+      <div>
+        Showing {startIndex} - {endIndex} of{" "}
+        {endIndex}
+      </div>
+      <div className="flex gap-2">
+        <button
+          onClick={onPrevious}
+          className="cursor-pointer"
+          disabled={startIndex === 1}
+        >
+          Previous
+        </button>
+        <button
+          onClick={onNext}
+          className="cursor-pointer"
+          disabled={endIndex === data.length}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+}
+
 Table.Header = Header;
 Table.Body = Body;
 Table.Row = Row;
+Table.Footer = Footer;
 
 export default Table;
