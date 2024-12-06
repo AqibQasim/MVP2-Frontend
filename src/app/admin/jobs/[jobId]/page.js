@@ -127,7 +127,7 @@ function Page({ params }) {
           {candidateHourlyRate && (
             <>
               <label className="flex">
-                Candidate's Hourly Rate <div className="text-red-600">*</div>
+                Candidate{'&apos'}s Hourly Rate <div className="text-red-600">*</div>
               </label>
               <div>{candidateHourlyRate}</div>
             </>
