@@ -667,7 +667,7 @@ function AdminJobViewById({ job, setShowForm }) {
             </div>
           ) : (
             <div className="align-center flex w-full flex-col justify-center">
-              <div>There{'&apos'}s no assigned customer yet</div>
+              <div>There&apos;s no assigned customer yet</div>
               <div
                 onClick={() => setShowForm(true)}
                 className="cursor-pointer text-primary"
