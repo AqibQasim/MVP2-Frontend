@@ -10,24 +10,11 @@ function AdminClientsTable({ clients, totalClients, role }) {
   const [jobStatus, setJobStatus] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [startIndex, setStartIndex] = useState(0);
-  const [itemsPerPage] = useState(2); // Number of items per page
-
+  const [itemsPerPage] = useState(2);
+  
   const handleJobStatusChange = (event) => {
     setJobStatus(event.target.value);
   };
-
-  const router = useRouter();
-
-  const onNext = useCallback(() => {
-    setStartIndex((prevIndex) =>
-      Math.min(prevIndex + itemsPerPage, clients.length),
-    );
-  }, [clients.length, itemsPerPage]);
-
-  const onPrev = useCallback(() => {
-    setStartIndex((prevIndex) => Math.max(prevIndex - itemsPerPage, 0));
-  }, [itemsPerPage]);
-
   const filteredClients = clients
     .filter((client) => {
       if (jobStatus === "" || jobStatus === "All Jobs") {
@@ -46,10 +33,23 @@ function AdminClientsTable({ clients, totalClients, role }) {
           client?.name.toLowerCase().includes(searchTerm.toLowerCase())),
     );
 
-  // const paginatedClients = filteredClients.slice(
-  //   startIndex,
-  //   startIndex + itemsPerPage,
-  // );
+  const router = useRouter();
+
+  const onNext = useCallback(() => {
+    setStartIndex((prevIndex) => Math.min(prevIndex + itemsPerPage, filteredClients.length));
+  }, [filteredClients.length, itemsPerPage]);
+
+  const onPrev = useCallback(() => {
+    setStartIndex((prevIndex) => Math.max(prevIndex - itemsPerPage, 0));
+  }, [itemsPerPage]);
+
+  useEffect(() => {
+    // Reset to first page whenever the filters/search change
+    setStartIndex(0);
+  }, [searchTerm, jobStatus]);
+
+
+  const paginatedClients = filteredClients.slice(startIndex, startIndex + itemsPerPage);
 
   return (
     <>
@@ -94,7 +94,7 @@ function AdminClientsTable({ clients, totalClients, role }) {
             <div className="info text-center">Total Candidates</div>
           </Table.Header>
           <Table.Body
-            data={filteredClients}
+            data={paginatedClients}
             render={(client) => (
               <Table.Row
                 key={client.client_id}
@@ -103,28 +103,23 @@ function AdminClientsTable({ clients, totalClients, role }) {
                 }
               >
                 <div className="cursor-pointer">{client.name}</div>
-                <div className="cursor-pointer break-words text-center">
-                  {client.email}
-                </div>
-                <div className="cursor-pointer text-center">
-                  {client?.job_postings?.length}
-                </div>
+                <div className="cursor-pointer break-words text-center">{client.email}</div>
+                <div className="cursor-pointer text-center">{client?.job_postings?.length}</div>
                 <div className="cursor-pointer text-center">
                   {client?.assigned_customers?.length ?? 0}
                 </div>
               </Table.Row>
             )}
           />
-          <Table.Footer
-            data={filteredClients}
-            startIndex={startIndex + 1}
-            endIndex={Math.min(
-              startIndex + itemsPerPage,
-              clients.length,
-            )}
-            onNext={onNext}
-            onPrevious={onPrev}
-          />
+          
+            <Table.Footer
+              data={filteredClients}
+              startIndex={startIndex + 1}
+              endIndex={Math.min(startIndex + itemsPerPage, filteredClients.length)}
+              onNext={onNext}
+              onPrevious={onPrev}
+            />
+          
         </Table>
       </DashboardSection>
     </>
