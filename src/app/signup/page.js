@@ -21,7 +21,9 @@ function Page() {
     firstName: "",
     lastName: "",
     email: "",
+    phoneNumber: "",
     password: "",
+    countryCode: "+92",
     confirmPassword: "",
   });
 
@@ -48,6 +50,7 @@ function Page() {
         email: form.email,
         name: form.firstName + " " + form.lastName,
         password: form.password,
+        contact_no: `${form.countryCode ? form.countryCode.split(" ")[0] : ""}${form.phoneNumber}`,
         user_role,
         method: "signup",
       },
@@ -253,6 +256,7 @@ function Page() {
       !form.firstName ||
       !form.lastName ||
       !form.email ||
+      !form.phoneNumber ||
       !form.password ||
       !form.confirmPassword
     );
@@ -277,6 +281,11 @@ function Page() {
           errorMsg = "Invalid email address";
         }
         break;
+      case "phoneNumber":
+        if (!/^\d{8,12}$/.test(value)) {
+          errorMsg = "Invalid phone number";
+        }
+        break;
       case "password":
         if (!/^.{8,}$/.test(value)) {
           errorMsg = "Password must be at least 8 characters";
@@ -294,6 +303,7 @@ function Page() {
           errorMsg = "Passwords do not match";
         }
         break;
+
       default:
         break;
     }
@@ -400,7 +410,6 @@ function Page() {
                     <p className="text-xs text-red-500">{errors.firstName}</p>
                   )}
                 </div>
-
                 <div>
                   {errors.lastName && (
                     <p className="text-xs text-red-500">{errors.lastName}</p>
@@ -420,6 +429,88 @@ function Page() {
                 <p className="text-xs text-red-500">{errors.email}</p>
               )}
 
+              {/* Phone Number with Country Code */}
+              <div className="mt-3 flex gap-2">
+                <select
+                  name="countryCode"
+                  value={form.countryCode}
+                  onChange={handleChange}
+                  className="block w-full  rounded-full border border-gray-300 px-5 h-[42px] mt-3 text-sm leading-tight text-gray-900 focus:border-primary focus:ring-primary"
+                >
+                  <option value="+93">+93 (Afghanistan)</option>
+                  <option value="+355">+355 (Albania)</option>
+                  <option value="+213">+213 (Algeria)</option>
+                  <option value="+54">+54 (Argentina)</option>
+                  <option value="+61">+61 (Australia)</option>
+                  <option value="+43">+43 (Austria)</option>
+                  <option value="+994">+994 (Azerbaijan)</option>
+                  <option value="+973">+973 (Bahrain)</option>
+                  <option value="+880">+880 (Bangladesh)</option>
+                  <option value="+32">+32 (Belgium)</option>
+                  <option value="+55">+55 (Brazil)</option>
+                  <option value="+1">+1 (Canada)</option>
+                  <option value="+86">+86 (China)</option>
+                  <option value="+57">+57 (Colombia)</option>
+                  <option value="+420">+420 (Czech Republic)</option>
+                  <option value="+45">+45 (Denmark)</option>
+                  <option value="+20">+20 (Egypt)</option>
+                  <option value="+358">+358 (Finland)</option>
+                  <option value="+33">+33 (France)</option>
+                  <option value="+49">+49 (Germany)</option>
+                  <option value="+30">+30 (Greece)</option>
+                  <option value="+91">+91 (India)</option>
+                  <option value="+62">+62 (Indonesia)</option>
+                  <option value="+98">+98 (Iran)</option>
+                  <option value="+964">+964 (Iraq)</option>
+                  <option value="+353">+353 (Ireland)</option>
+                  <option value="+972">+972 (Israel)</option>
+                  <option value="+39">+39 (Italy)</option>
+                  <option value="+81">+81 (Japan)</option>
+                  <option value="+962">+962 (Jordan)</option>
+                  <option value="+254">+254 (Kenya)</option>
+                  <option value="+965">+965 (Kuwait)</option>
+                  <option value="+961">+961 (Lebanon)</option>
+                  <option value="+60">+60 (Malaysia)</option>
+                  <option value="+52">+52 (Mexico)</option>
+                  <option value="+977">+977 (Nepal)</option>
+                  <option value="+31">+31 (Netherlands)</option>
+                  <option value="+64">+64 (New Zealand)</option>
+                  <option value="+234">+234 (Nigeria)</option>
+                  <option value="+47">+47 (Norway)</option>
+                  <option value="+92">+92 (Pakistan)</option>
+                  <option value="+63">+63 (Philippines)</option>
+                  <option value="+48">+48 (Poland)</option>
+                  <option value="+351">+351 (Portugal)</option>
+                  <option value="+974">+974 (Qatar)</option>
+                  <option value="+7">+7 (Russia)</option>
+                  <option value="+966">+966 (Saudi Arabia)</option>
+                  <option value="+65">+65 (Singapore)</option>
+                  <option value="+27">+27 (South Africa)</option>
+                  <option value="+82">+82 (South Korea)</option>
+                  <option value="+34">+34 (Spain)</option>
+                  <option value="+46">+46 (Sweden)</option>
+                  <option value="+41">+41 (Switzerland)</option>
+                  <option value="+66">+66 (Thailand)</option>
+                  <option value="+90">+90 (Turkey)</option>
+                  <option value="+971">+971 (UAE)</option>
+                  <option value="+44">+44 (UK)</option>
+                  <option value="+1">+1 (USA)</option>
+                  <option value="+58">+58 (Venezuela)</option>
+                  <option value="+84">+84 (Vietnam)</option>
+                </select>
+                <Input
+                  type="tel"
+                  name="phoneNumber"
+                  value={form.phoneNumber}
+                  onChange={handleChange}
+                  placeholder="Phone number"
+                  className="mt-3 flex-grow"
+                />
+              </div>
+              {errors.phoneNumber && (
+                <p className="text-xs text-red-500">{errors.phoneNumber}</p>
+              )}
+
               <div className="flex gap-2">
                 <div className="flex">
                   <Input
@@ -436,7 +527,7 @@ function Page() {
                         src="eye-close.svg"
                         width={20}
                         height={20}
-                        alt="line"
+                        alt="eye close"
                         onClick={handClick}
                         className="mt-[24px] inline-block cursor-pointer"
                       />
@@ -445,7 +536,7 @@ function Page() {
                         src="eye.svg"
                         width={20}
                         height={20}
-                        alt="line"
+                        alt="eye open"
                         onClick={handClick}
                         className="mt-[24px] inline-block cursor-pointer"
                       />
@@ -467,7 +558,7 @@ function Page() {
                         src="eye-close.svg"
                         width={20}
                         height={20}
-                        alt="line"
+                        alt="eye close"
                         onClick={handClick2}
                         className="mt-[24px] inline-block cursor-pointer"
                       />
@@ -476,7 +567,7 @@ function Page() {
                         src="eye.svg"
                         width={20}
                         height={20}
-                        alt="line"
+                        alt="eye open"
                         onClick={handClick2}
                         className="mt-[24px] inline-block cursor-pointer"
                       />
@@ -484,6 +575,7 @@ function Page() {
                   </p>
                 </div>
               </div>
+
               <div className="flex gap-1">
                 <div>
                   {errors.password && (
@@ -498,6 +590,7 @@ function Page() {
                   )}
                 </div>
               </div>
+
               <div className="mt-1 w-full text-start">
                 <input
                   type="checkbox"
@@ -521,6 +614,7 @@ function Page() {
                 Create account
               </OnBoardingButton>
             </form>
+
             <div className="my-1 w-full text-center text-grey-primary-tint-30">
               <div className="flex items-center justify-center gap-2">
                 <Image

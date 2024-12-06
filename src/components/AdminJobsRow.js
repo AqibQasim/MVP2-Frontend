@@ -8,15 +8,29 @@ import Skill from "./Skill";
 import Table from "./Table";
 import CapsuleLink from "./CapsuleLink";
 import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 function AdminJobsRow({ job }) {
   console.log("job ka data", job);
+  const router = useRouter();
+
+  const handleRowClick = () => {
+    router.push(`/admin/jobs/${job?.job_posting_id}?client_id=${job?.client_id}`);
+  };
+
+
   return (
-    <Table.Row>
+    <div
+        className ="cursor-pointer"
+    >
+    <Table.Row
+      onClick={handleRowClick}
+    >
       {job?.client && (
         <div className="w-max text-center">{job?.client?.name}</div>
       )}
       <EntityCard
-        icon={<SvgIconWork className="relative -right-[1.3px]" />}
+      className = "text-center"
+        icon={<SvgIconWork className="relative -right-[1.3px] text-center" />}
         entity={{
           name: job?.position,
           profession: job?.specialization,
@@ -40,20 +54,20 @@ function AdminJobsRow({ job }) {
         className="!mx-auto mr-auto w-max !bg-primary-tint-100"
         icon={<IconWithBg job={job?.job_status} className="pl-4" />}
       ></Capsule>
-      <CapsuleLink
+      {/* <CapsuleLink
         className="ml-auto"
         href={`/admin/jobs/${job?.job_posting_id}?client_id=${job?.client_id}`}
       >
         {" "}
         view details{" "}
-      </CapsuleLink>
+      </CapsuleLink> */}
       {/* <Capsule
         className="mx-auto w-max !bg-primary-tint-100"
         icon={<IconWithBg icon={<SvgIconJobStatus status="hired" />} />}
       >
         view talent
       </Capsule> */}
-    </Table.Row>
+    </Table.Row></div>
   );
 }
 export default AdminJobsRow;

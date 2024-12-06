@@ -20,9 +20,12 @@ const ProfileForm = ({ client }) => {
   const passwordRef = useRef(null);
   const locationRef = useRef(null);
   const cityRef = useRef(null);
+  const phoneNumRef = useRef(null);
   const provinceRef = useRef(null);
   const areaCodeRef = useRef(null);
   const countryRef = useRef(null);
+  // const componyRef = useRef(null);
+  // const componySizeRef = useRef(null);
 
   console.log("client is", client);
 
@@ -37,6 +40,7 @@ const ProfileForm = ({ client }) => {
         lastName: lastNameRef.current.value,
         // email: emailRef.current.value,
         // password: passwordRef.current.value,
+        contact_no: phoneNumRef.current.value,
         client_location: locationRef.current.value,
         city: cityRef.current.value,
         province: provinceRef.current.value,
@@ -59,10 +63,6 @@ const ProfileForm = ({ client }) => {
       console.error("Error while updating profile", error);
     }
   };
-
-  // const [firstName, lastName] = client?.name
-  //   ? client?.name.split(" ", 2)
-  //   : ["", ""];
   return (
     <div className="">
       <form onSubmit={submitHandler}>
@@ -126,14 +126,14 @@ const ProfileForm = ({ client }) => {
                   defaultValue={client?.email || ""}
                   type="email"
                   placeholder="Email"
-                  className="focus:ring-none mt-1 cursor-not-allowed rounded-full border text-gray-400 bg-gray-100 p-2 focus:outline-none"
+                  className="focus:ring-none mt-1 cursor-not-allowed rounded-full border bg-gray-100 p-2 text-gray-400 focus:outline-none"
                 />
               </div>
             </div>
           </div>
         </div>
-       
-         <div className="mb-4 grid grid-cols-4 items-start gap-4">
+
+        <div className="mb-4 grid grid-cols-4 items-start gap-4">
           <Heading xm className="col-span-1"></Heading>
 
           <div className="col-span-2">
@@ -153,7 +153,7 @@ const ProfileForm = ({ client }) => {
               </div>
             </div>
           </div>
-        </div> 
+        </div>
 
         <div className="mb-4 grid grid-cols-4 items-start gap-4">
           {/* Section Heading */}
@@ -168,25 +168,23 @@ const ProfileForm = ({ client }) => {
                   <label>Phone Number</label>
                 </b>
                 <input
-                  disabled
-                  ref={emailRef}
-                  // defaultValue={client?.email || ""}
-                  type="email"
+                  ref={phoneNumRef}
+                  defaultValue={client?.contact_no || ""}
+                  type="text"
                   placeholder="Phone Number"
-                  className="focus:ring-none mt-1 cursor-not-allowed rounded-full border text-gray-400 bg-gray-100 p-2 focus:outline-none"
+                  className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
                 />
               </div>
             </div>
           </div>
         </div>
 
-
         <hr />
 
         <div className="my-4 grid grid-cols-4 items-start gap-4">
           {/* Section Heading */}
           <Heading xm className="col-span-1">
-            Compony Details
+            Company Details
           </Heading>
 
           {/* Input Group */}
@@ -196,13 +194,13 @@ const ProfileForm = ({ client }) => {
               {/* First Name */}
               <div className="flex flex-1 flex-col">
                 <b>
-                  <label>Compony Name</label>
+                  <label>Company Name</label>
                 </b>
                 <input
-                  ref={firstNameRef}
+                  // ref={companyRef}
                   // defaultValue={client?.name?.split(" ", 2)[0] || ""}
                   type="text"
-                  placeholder="Compony Name"
+                  placeholder="Company Name"
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
               </div>
@@ -210,20 +208,20 @@ const ProfileForm = ({ client }) => {
               {/* Last Name */}
               <div className="flex flex-1 flex-col">
                 <b>
-                  <label>Compony Size</label>
+                  <label>Company Size</label>
                 </b>
                 <input
-                  ref={lastNameRef}
+                  // ref={companySizeRef}
                   // defaultValue={client?.name?.split(" ", 2)[1] || ""}
                   type="text"
-                  placeholder="Compony Size"
+                  placeholder="Company Size"
                   className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
                 />
               </div>
             </div>
           </div>
         </div>
-
+        <hr></hr>
         <div className="mb-4 mt-4 grid grid-cols-4 items-start gap-4">
           {/* Section Heading */}
           <Heading xm className="col-span-1">

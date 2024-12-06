@@ -1,11 +1,10 @@
 "use client";
 import DashboardSection from "@/components/DashboardSection";
 import Table from "@/components/Table";
-import AdminCreateAJobModal from "./AdminCreateAJobModal";
-import CapsuleLink from "./CapsuleLink";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
-function AdminClientsTable({ clients, totalClients,role }) {
+function AdminClientsTable({ clients, totalClients, role }) {
   const path = window.location.href;
 
   const [jobStatus, setJobStatus] = useState("");
@@ -14,26 +13,26 @@ function AdminClientsTable({ clients, totalClients,role }) {
   const handleJobStatusChange = (event) => {
     setJobStatus(event.target.value);
   };
-  console.log(clients);
-  console.log(totalClients);
+
+  const router = useRouter();
 
   const filteredClients = clients
-  .filter((client) => {
-    if (jobStatus === "" || jobStatus === "All Jobs") {
+    .filter((client) => {
+      if (jobStatus === "" || jobStatus === "All Jobs") {
+        return true;
+      } else if (jobStatus === "jobs") {
+        return client.job_postings.length > 0;
+      } else if (jobStatus === "nojobs") {
+        return client.job_postings.length === 0;
+      }
       return true;
-    } else if (jobStatus === "jobs") {
-      return client.job_postings.length > 0;
-    } else if (jobStatus === "nojobs") {
-      return client.job_postings.length === 0;
-    }
-    return true;
-  })
- 
-      .filter(client =>
-        !searchTerm || (typeof client?.name === 'string' && client?.name.toLowerCase().includes(searchTerm.toLowerCase()))
-      );
-    
-
+    })
+    .filter(
+      (client) =>
+        !searchTerm ||
+        (typeof client?.name === "string" &&
+          client?.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
 
   return (
     <>
@@ -45,62 +44,57 @@ function AdminClientsTable({ clients, totalClients,role }) {
         info={`Total Clients: ${totalClients || 0}`}
       >
         {role !== "dashboard" && (
-        <div className="mb-4 flex justify-between">
-        <div className="flex-1" > 
-         <input
-         type="text"
-         placeholder="Search by name"
-         className="mb-4  cursor-pointer rounded border border-gray-300 p-2"
-         value={searchTerm}
-         onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        </div>
-        <div  >
-          <select
-            id="options"
-            value={jobStatus}
-            onChange={handleJobStatusChange}
-            className="rounded border border-gray-300 p-2"
-          >
-            <option value="">List of Jobs </option>
-            <option value="nojobs">No Jobs Posted </option>
-            <option value="jobs"> Posted Jobs </option>
-          </select>
-        </div>
-        
-        </div>
+          <div className="mb-4 flex justify-between">
+            <div className="flex-1">
+              <input
+                type="text"
+                placeholder="Search by name"
+                className="mb-4 cursor-pointer rounded border border-gray-300 p-2"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <div>
+              <select
+                id="options"
+                value={jobStatus}
+                onChange={handleJobStatusChange}
+                className="rounded border border-gray-300 p-2"
+              >
+                <option value="">List of Jobs </option>
+                <option value="nojobs">No Jobs Posted </option>
+                <option value="jobs"> Posted Jobs </option>
+              </select>
+            </div>
+          </div>
         )}
 
-        <Table columns="grid-cols-[1.3fr_1.5fr_10rem_8rem_8rem]">
+        <Table columns="grid-cols-[1fr_1.5fr_12rem_12rem]">
           <Table.Header>
-            <div className="info">Name</div>
+            <div className="info">Client-Name</div>
             <div className="info text-center">Email</div>
             <div className="info text-center">Total Jobs</div>
             <div className="info text-center">Total Candidates</div>
-            <div className="info text-end">Clients-Info</div>
+            
           </Table.Header>
           <Table.Body
             data={filteredClients}
             render={(client) => (
-              <Table.Row key={client.client_id}>
-                {/* <div>{client.client_id}</div> */}
-                <div>{client.name}</div>
-                <div className="break-words text-center">{client.email}</div>
-                <div className="text-center">
-                  {client?.job_postings?.length}
+              <Table.Row
+                key={client.client_id}
+                onClick={() => router.push(`/admin/clients/${client.client_id}`)}
+                
+              >
+           
+                <div  className="cursor-pointer" >{client.name}</div>
+                <div className="break-words text-center cursor-pointer">{client.email}</div>
+                <div className="text-center cursor-pointer">
+                        {client?.job_postings?.length}
                 </div>
-                <div className="text-center">
+                <div className="text-center cursor-pointer">
                   {client?.assigned_customers?.length ?? 0}
                 </div>
-                <CapsuleLink
-                  className="ml-auto"
-                  href={`/admin/clients/${client?.client_id}`}
-                  // href={window.location.href + `/${client?.client_id}`}
-                >
-                  {" "}
-                  view details{" "}
-                </CapsuleLink>
-                {/* <AdminCreateAJobModal clientId={client.client_id} /> */}
+                {/* Removed CapsuleLink */}
               </Table.Row>
             )}
           />

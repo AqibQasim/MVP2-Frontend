@@ -12,6 +12,8 @@ import Hr from "@/components/Hr";
 import IconWithBg from "@/components/IconWithBg";
 //import TalentDescription from "./TalentDescription";
 import EmailSvg from "../../../../../public/icons/email.svg";
+import phone from "../../../../../public/icons/Call.png";
+
 import { cityTimezoneOffset } from "@/utils/cityTimezoneOffset";
 import { formatDate } from "@/utils/utility";
 import ButtonCapsuleWhite from "@/components/ButtonCapsuleWhite";
@@ -95,11 +97,6 @@ function Page({ params }) {
             {talent?.talent_status} {formatDate(talent?.updatedAt)} -{" "}
             {newEndTrialDate}
           </Capsule> */}
-          <div>
-            <Capsule>
-              <AdminCreateAJobModal clientId={client.client_id} />
-            </Capsule>
-          </div>
         </div>
         <Hr />
         <div className="mini-profile flex items-center justify-start">
@@ -120,16 +117,21 @@ function Page({ params }) {
           skills={talent?.job_postings?.skills}
         /> */}
 
-        <div className="flex justify-between">
-          <div className="">
-            <Heading xm>About</Heading>
-            <Capsule className="flex w-fit flex-wrap items-center gap-2">
-              <Image src={EmailSvg} />
-              {client?.email}
-            </Capsule>
+        <div className="flex h-auto justify-between space-y-5">
+          <div className="flex-1">
+            <div>
+              <Heading xm>About</Heading>
+              <Capsule className="flex w-fit flex-wrap items-center gap-2">
+                <Image src={EmailSvg} />
+                {client?.email}
+              </Capsule>
+              <Capsule className="mt-5 flex w-fit flex-wrap items-center gap-2">
+                <Image src={phone} />
+                {client?.contact_no}
+              </Capsule>
+            </div>
           </div>
-
-          <div className="">
+          <div className="flex-1">
             <Heading xm>Address</Heading>
             <div className="flex items-start gap-1.5">
               <div className="space-y-3">
@@ -155,8 +157,14 @@ function Page({ params }) {
           </div>
           <div />
         </div>
+
+        <div className="mt-12 flex justify-center">
+          <Capsule className="mt-20 w-[16rem]">
+            <AdminCreateAJobModal clientId={client.client_id} />
+          </Capsule>
+        </div>
         <div>
-          <div className="space-y-4">
+          <div className="mt-6 space-y-4">
             {client.job_postings && (
               <div
                 //key={job.job_posting_id}

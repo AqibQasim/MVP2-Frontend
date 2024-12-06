@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 //import ButtonBack from "./ButtonBack";
 import Capsule from "@/components/Capsule";
@@ -12,6 +12,7 @@ import Hr from "@/components/Hr";
 import IconWithBg from "@/components/IconWithBg";
 //import TalentDescription from "./TalentDescription";
 import EmailSvg from "../../../../../public/icons/email.svg";
+import phone from "../../../../../public/icons/Call.png";
 import { cityTimezoneOffset } from "@/utils/cityTimezoneOffset";
 import { formatDate } from "@/utils/utility";
 import ButtonCapsuleWhite from "@/components/ButtonCapsuleWhite";
@@ -23,6 +24,9 @@ import { fetchClientJobs, getClients } from "@/lib/data-service";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import AdminCandidateJobHistory from "@/components/AdminCandidateJobHistory";
 import getCandidateStatus from "@/utils/getCandidateStatus";
+import ButtonCapsule from "@/components/ButtonCapsule";
+import ErrorPopup from "@/components/ErrorPopup";
+import ReportOverlay from "@/components/ReportOverlay";
 
 function Page({ params }) {
   const [talent, setTalent] = useState(null);
@@ -40,6 +44,29 @@ function Page({ params }) {
   const [isClientsShow, setIsClientShow] = useState(false);
   const [isJobsShow, setIsJobsShow] = useState(false);
   const [jobHistory, setJobHistory] = useState(null);
+  const [isEditPrice, setIsEditPrice] = useState(false);
+  const [editedPrice, setEditedPrice] = useState(talent?.hourly_rate);
+  const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
+  const [candidateReport, setCandidateReport] = useState(null);
+  const router = useRouter();
+  const [alert, setAlert] = useState(null);
+  //const [error,setError]= useState(null)
+
+  const customer_id = params?.candidateId;
+
+  const handleCloseOverlay = () => {
+    setIsReportOverlayOpened(false);
+    //setSuccessAcknowledge(false);
+  };
+  const getCandidateResult = useCallback(() => {
+    const payload = {
+      endpoint: `get-customer-result?customer_id=${customer_id}`,
+      method: "GET",
+    };
+    mvp2ApiHelper(payload).then((result) => {
+      if (result) setCandidateReport(result?.data?.data);
+    });
+  }, [customer_id]);
 
   const filteredClients = clients?.filter((client) =>
     client.name.toLowerCase().includes(searchClient.toLowerCase()),
@@ -71,7 +98,10 @@ function Page({ params }) {
     fetchClients();
   }, []);
 
-  const customer_id = params?.candidateId;
+  useEffect(() => {
+    getCandidateResult();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customer_id]);
 
   const fetchJobHistory = useCallback(async () => {
     const payload = {
@@ -82,6 +112,35 @@ function Page({ params }) {
     console.log(response?.data?.data);
     setJobHistory(response?.data?.data);
     //console.log(jobHistory)
+  }, []);
+
+  const saveEditedPrice = useCallback(async (price) => {
+    if (isNaN(price) || price === null) {
+      setError("price can only be a number");
+      setAlert(true);
+    } else {
+      const payload = {
+        endpoint: `profile-info-update/${customer_id}`,
+        method: "PUT",
+        body: {
+          hourly_rate: price,
+        },
+      };
+
+      try {
+        const result = await mvp2ApiHelper(payload);
+
+        if (result.status === 200) {
+          console.log("Price updated successfully!");
+        } else {
+          console.error("Failed to update profile.");
+        }
+      } catch (error) {
+        console.error("Error while updating profile:", error);
+      }
+      setIsEditPrice(false);
+      router?.refresh();
+    }
   }, []);
 
   useEffect(() => {
@@ -201,11 +260,12 @@ function Page({ params }) {
   return (
     <>
       <div
-        className={`${showPaymentHistory ? "min-h-auto mb-2" : "min-h-full"} space-y-4 rounded-3xl bg-neutral-white p-6`}
+        className={`${
+          showPaymentHistory ? "min-h-auto mb-2" : "min-h-full"
+        } space-y-4 rounded-3xl bg-neutral-white p-6`}
       >
         <div className="top flex items-center justify-start gap-3">
-          {/* <ButtonBack /> */}
-          <Heading sm>Profile Overview</Heading>
+          <Heading sm>Candidate Profile</Heading>
 
           <Capsule
             onClick={
@@ -214,24 +274,32 @@ function Page({ params }) {
                 ? () => setShowForm(true)
                 : null
             }
-            className={`ml-auto cursor-not-allowed !bg-grey-primary-tint-90 ${getCandidateStatus(talent?.talent_status, talent?.status) === "Available" ? "!text-primary-tint-10" : "!text-gray-500"}`}
+            className={`ml-auto cursor-not-allowed !bg-grey-primary-tint-90 ${
+              getCandidateStatus(talent?.talent_status, talent?.status) ===
+              "Available"
+                ? "!text-primary-tint-10"
+                : "!text-gray-500"
+            }`}
           >
             Refer To Client
           </Capsule>
 
           <Capsule className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
             {getCandidateStatus(talent?.talent_status, talent?.status)}
-            {talent?.talent_status !== "open" &&
-              talent?.talent_status !== "interviewing" && (
-                <>
-                  {" "}
-                  {formatDate(talent?.updatedAt)} - {newEndTrialDate}
-                </>
-              )}
+            {["available", "interviewing"].includes(
+              getCandidateStatus(
+                talent?.talent_status,
+                talent?.status,
+              ).toLowerCase(),
+            ) ? null : (
+              <>
+                {formatDate(talent?.updatedAt)} - {newEndTrialDate}
+              </>
+            )}
           </Capsule>
         </div>
         <Hr />
-        <div className="mini-profile flex items-center justify-start">
+        <div className="mini-profile flex items-center justify-between">
           <EntityCard
             entity={{
               image: "/avatars/avatar-1.png",
@@ -239,9 +307,28 @@ function Page({ params }) {
               profession: talent?.specialization,
             }}
           />
-          <Capsule className="ml-auto mt-auto" icon={<IconWithBg icon="$" />}>
-            ${talent?.hourly_rate}hr
-          </Capsule>
+          {!isEditPrice ? (
+            <Capsule className="ml-auto mt-auto" icon={<IconWithBg icon="$" />}>
+              ${talent?.hourly_rate}hr
+              <div
+                onClick={() => setIsEditPrice(true)}
+                className="cursor-pointer"
+              >
+                <Image src={"/icons/icon-edit.svg"} width={20} height={20} />
+              </div>
+            </Capsule>
+          ) : (
+            <div className="gap-2">
+              <input
+                className="rounded-[2.25rem] border-2 border-black px-4 py-3 text-sm font-medium capitalize"
+                value={editedPrice}
+                onChange={(event) => setEditedPrice(event.target.value)}
+              />
+              <ButtonCapsule onPress={() => saveEditedPrice(editedPrice)}>
+                Save
+              </ButtonCapsule>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-row justify-center">
@@ -252,18 +339,32 @@ function Page({ params }) {
               {talent?.email}
             </Capsule>
 
+            <Capsule className="mb-2 mt-2 flex w-fit flex-wrap items-center gap-2">
+              <Image src={phone} />
+              {talent?.contact_no}
+            </Capsule>
+
             <div className="text-grey-primary-shade-20">Top Skills</div>
             <div className="flex items-start gap-1.5">
               {talent?.expertise.map((skill, i) => (
-                <>
-                  <Skill
-                    key={i}
-                    skill={skill.skill}
-                    className="!bg-neutral-white"
-                  />
-                </>
+                <Skill
+                  key={i}
+                  skill={skill.skill}
+                  className="!bg-neutral-white"
+                />
               ))}
             </div>
+
+            <div className="mt-2 text-grey-primary-shade-20">
+              Candidate Report
+            </div>
+            <Capsule
+              className="ml-5 mt-4 w-1/2 !text-primary-tint-10"
+              onClick={() => setIsReportOverlayOpened(true)}
+            >
+              View Report
+            </Capsule>
+
             <Hr />
 
             <Heading xm>Address</Heading>
@@ -289,12 +390,20 @@ function Page({ params }) {
               </div>
             </div>
           </div>
+
+          {isReportOverlayOpened && (
+            <ReportOverlay
+              reportOverlay={isReportOverlayOpened}
+              onClose={handleCloseOverlay}
+              selectedCandidate={candidateReport}
+            />
+          )}
+
           <div className="mr-3 space-x-3">
             <Heading xm className="text-center">
               Job Information
             </Heading>
             <div className="grid grid-cols-2 grid-rows-4 gap-x-5 gap-y-5">
-              {/* <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] justify-items-start gap-x-8 gap-y-4.5"> */}
               {talentDetails.map((detail, i) => (
                 <DetailTag
                   key={i}
@@ -313,12 +422,8 @@ function Page({ params }) {
           />
         )}
       </div>
-      {showPaymentHistory && (
-        <ClientPaymentHistoryTable
-        // paymentHistory={paymentHistory}
-        // clientId={client_id}
-        />
-      )}
+
+      {showPaymentHistory && <ClientPaymentHistoryTable />}
 
       <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
         <h3 className="mb-4 text-xl font-semibold">
@@ -329,7 +434,6 @@ function Page({ params }) {
             Hourly Rate <div className="text-red-600">*</div>
           </label>
           <input
-            //type="number"
             name="hourlyRate"
             id="hourlyRate"
             value={hourlyRate}
@@ -337,9 +441,8 @@ function Page({ params }) {
             required
             className="mt-2 block w-full border px-2 py-1"
           />
-
           <label className="mt-4 flex">
-            Assign to Client <div className="text-red-600">*</div>{" "}
+            Assign to Client <div className="text-red-600">*</div>
           </label>
           <input
             type="text"
@@ -351,14 +454,6 @@ function Page({ params }) {
             placeholder="Search client by name"
             className="mb-2 block w-full border px-2 py-1"
           />
-
-          {/* <select
-            value={selectedClient}
-            onChange={(e) => setSelectedClient(e.target.value)}
-            required
-            className="mt-2 block w-full border px-2 py-1"
-          > */}
-          {/* <option value="">Select a client</option> */}
           {isClientsShow &&
             filteredClients?.map((client) => (
               <option
@@ -366,7 +461,6 @@ function Page({ params }) {
                   setIsClientShow(false);
                   setSearchClient(client.name);
                   setSelectedClient(client.name);
-                  //console.log(client.client_id)
                   setSelectedClientId(client.client_id);
                 }}
                 key={client.client_id}
@@ -376,9 +470,8 @@ function Page({ params }) {
                 {client.name}
               </option>
             ))}
-
           <label className="mt-4 flex">
-            Select Job <div className="text-red-600">*</div>{" "}
+            Select Job <div className="text-red-600">*</div>
           </label>
           <input
             type="text"
@@ -390,7 +483,6 @@ function Page({ params }) {
             placeholder="Search Job"
             className="mb-2 block w-full border px-2 py-1"
           />
-
           {isJobsShow &&
             filteredJobs?.map((job) => (
               <option
@@ -407,15 +499,9 @@ function Page({ params }) {
                 {job.position}
               </option>
             ))}
-          {/* </select> */}
-          {/* Error Temp */}
-          {error ? (
-            <div className="error text-red-500">
-              {" "}
-              {error || error?.message}{" "}
-            </div>
-          ) : null}
-
+          {error && (
+            <div className="error text-red-500">{error || error?.message}</div>
+          )}
           <div className="mt-4">
             <button
               type="submit"
@@ -424,7 +510,7 @@ function Page({ params }) {
               Confirm Referral
             </button>
             <button
-              type="submit"
+              type="button"
               onClick={() => setShowForm(false)}
               className="bg-gray-300 px-4 py-2"
             >
@@ -433,8 +519,14 @@ function Page({ params }) {
           </div>
         </form>
       </Modal>
+      {alert && (
+        <ErrorPopup
+          message={error}
+          type="error"
+          onClose={() => setAlert(false)}
+        />
+      )}
     </>
   );
 }
-
 export default Page;

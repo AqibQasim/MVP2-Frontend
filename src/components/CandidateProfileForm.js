@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Heading from "./Heading";
 import ButtonCapsule from "./ButtonCapsule";
-import ButtonBack from "./ButtonBack"
+import ButtonBack from "./ButtonBack";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import ErrorPopup from "./ErrorPopup";
 // import { useEffect } from "react/cjs/react.production.min";
@@ -21,6 +21,8 @@ const CandidateProfileForm = ({ candidate }) => {
   const stateRef = useRef(null);
   const areaCodeRef = useRef(null);
   const countryRef = useRef(null);
+  // const companySizeRef = useRef(null);
+  // const companyRef = useRef(null);
 
   useEffect(() => {
     console.log("the parsed customer id is ", candidate?.data?.customer_id);
@@ -41,6 +43,9 @@ const CandidateProfileForm = ({ candidate }) => {
         area_code:
           areaCodeRef.current?.value != "" ? areaCodeRef.current?.value : null,
         country: countryRef.current.value,
+        phoneNumber: phoneRef.current.value,
+        // companyName: companyRef.current.value,
+        // companySize: companySizeRef.current.value,
       },
     };
 
@@ -119,8 +124,31 @@ const CandidateProfileForm = ({ candidate }) => {
           </div>
         </div>
 
-        <hr />
-
+        <div className="mb-4 grid grid-cols-4 items-start gap-4">
+          {/* Section Heading */}
+          <Heading xm className="col-span-1"></Heading>
+          {/* Input Group */}
+          <div className="col-span-2">
+            {/* First Name and Last Name Row */}
+            <div className="flex flex-col sm:flex-row sm:space-x-4">
+              {/* First Name */}
+              <div className="flex flex-1 flex-col">
+                <b>
+                  <label>Phone Number</label>
+                </b>
+                <input
+                  disabled
+                  // ref={companyRef}
+                  // defaultValue={client?.email || ""}
+                  type="text"
+                  placeholder="Phone Number"
+                  className="focus:ring-none mt-1 cursor-not-allowed rounded-full border bg-gray-100 p-2 text-gray-400 focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr></hr>
         {/* Street Address */}
         <div className="mb-4 mt-4 grid grid-cols-4 items-start gap-4">
           <Heading xm className="col-span-1">
@@ -219,7 +247,7 @@ const CandidateProfileForm = ({ candidate }) => {
             </div>
           </div>
         </div>
-         
+
         <div className="mb-4 mt-8 grid grid-cols-4 items-start gap-3">
           {/* Section Heading */}
           <Heading xm className="col-span-1"></Heading>
@@ -239,9 +267,6 @@ const CandidateProfileForm = ({ candidate }) => {
             </div>
           </div>
         </div>
-
-
-     
       </form>
       {sucess && (
         <ErrorPopup
