@@ -128,6 +128,7 @@ function AdminCandidatesTable({
             }}
           />
         </div>
+        {role !== "dashboard" &&(
           <Table.Footer
       
               data={filteredCandidates}
@@ -136,6 +137,8 @@ function AdminCandidatesTable({
               onNext={onNext}
               onPrevious={onPrev}
             />
+
+        )}
 
       </Table>
     </DashboardSection>

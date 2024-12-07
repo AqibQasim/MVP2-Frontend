@@ -100,14 +100,17 @@ function AdminJobsList({ jobs, totalJobs, role }) {
           data={paginatedJobs}
           render={(job, i) => <AdminJobsRow job={job} key={i} />}
         />
+        {role !== "dashboard" && (
+         
+         <Table.Footer
+              data={filteredJobs}
+              startIndex={startIndex + 1}
+              endIndex={Math.min(startIndex + itemsPerPage, filteredJobs.length)}
+              onNext={onNext}
+              onPrevious={onPrev}
+            />
+        )}
 
-        <Table.Footer
-          data={filteredJobs}
-          startIndex={startIndex + 1}
-          endIndex={Math.min(startIndex + itemsPerPage, filteredJobs.length)}
-          onNext={onNext}
-          onPrevious={onPrev}
-        />
       </Table>
     </DashboardSection>
   );
