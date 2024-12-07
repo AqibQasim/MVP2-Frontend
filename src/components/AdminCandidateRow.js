@@ -58,31 +58,31 @@ function AdminCandidateRow({ candidate, score }) {
     fetchJobs();
   }, [searchJob]);
 
-  const handleReferCandidate = async (formData) => {
-    // e.preventDefault();
+  // const handleReferCandidate = async (formData) => {
+  //   // e.preventDefault();
 
-    const referClientBody = {
-      client_id: selectedClientId,
-      customer_id: candidate.customer_id,
-      job_posting_id: selectedJobId,
-      hourly_rate: hourlyRate,
-    };
+  //   const referClientBody = {
+  //     client_id: selectedClientId,
+  //     customer_id: candidate.customer_id,
+  //     job_posting_id: selectedJobId,
+  //     hourly_rate: hourlyRate,
+  //   };
 
-    console.log(referClientBody);
+  //   console.log(referClientBody);
 
-    const { error, message } =
-      await referCandidateToClientAction(referClientBody);
-    if (error) {
-      console.log({ Error: error });
-      return setError(error);
-    } else {
-      setShowForm(false);
-    }
-    // if (message) {
-    //   console.log("Refer Message: ", message);
-    //   return setShowForm(false);
-    // }
-  };
+  //   const { error, message } =
+  //     await referCandidateToClientAction(referClientBody);
+  //   if (error) {
+  //     console.log({ Error: error });
+  //     return setError(error);
+  //   } else {
+  //     setShowForm(false);
+  //   }
+  //   // if (message) {
+  //   //   console.log("Refer Message: ", message);
+  //   //   return setShowForm(false);
+  //   // }
+  // };
 
   return (
     <>

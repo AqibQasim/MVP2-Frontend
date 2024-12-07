@@ -624,10 +624,7 @@ function AdminJobViewById({ job, setShowForm }) {
         </div>
         <div className="w-[23.375rem] items-center justify-center rounded-[36px] bg-white p-3">
           <div className="flex h-auto w-auto flex-row items-center justify-between">
-            <Heading className="text-[24px]">Assigned Customer</Heading>
-            {/* <Capsule className="items-center text-primary-tint-20">
-                        Assigned Customer
-                    </Capsule> */}
+            <Heading className="text-[24px]">Assigned Candidate</Heading>
           </div>
           <Hr />
           {assignedCandidates ? (
@@ -668,7 +665,7 @@ function AdminJobViewById({ job, setShowForm }) {
             </div>
           ) : (
             <div className="align-center flex w-full flex-col justify-center">
-              <div>There&apos;s no assigned customer yet</div>
+              <div>There&apos;s no assigned candidates yet</div>
               <div
                 onClick={() => setShowForm(true)}
                 className="cursor-pointer text-primary"

@@ -239,6 +239,7 @@ function Page({ params }) {
       customer_id: talent.customer_id,
       job_posting_id: selectedJobId,
       hourly_rate: hourlyRate,
+      candidate_hourly_rate: talent.hourly_rate
     };
 
     console.log(referClientBody);
