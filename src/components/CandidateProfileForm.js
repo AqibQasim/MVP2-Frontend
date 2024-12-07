@@ -21,6 +21,7 @@ const CandidateProfileForm = ({ candidate }) => {
   const stateRef = useRef(null);
   const areaCodeRef = useRef(null);
   const countryRef = useRef(null);
+  const phoneRef = useRef(null);
   // const companySizeRef = useRef(null);
   // const companyRef = useRef(null);
 
@@ -35,15 +36,15 @@ const CandidateProfileForm = ({ candidate }) => {
       endpoint: `profile-info-update/${candidate?.data?.customer_id}`,
       method: "PUT",
       body: {
-        firstName: firstNameRef.current.value,
-        lastName: lastNameRef.current.value,
-        customer_location: streetAddressRef.current.value,
-        city: cityRef.current.value,
-        province: stateRef.current.value,
+        firstName: firstNameRef?.current.value,
+        lastName: lastNameRef?.current.value,
+        customer_location: streetAddressRef?.current.value,
+        city: cityRef?.current.value,
+        province: stateRef?.current.value,
         area_code:
           areaCodeRef.current?.value != "" ? areaCodeRef.current?.value : null,
-        country: countryRef.current.value,
-        phoneNumber: phoneRef.current.value,
+        country: countryRef?.current.value,
+        contact_no: phoneRef?.current.value,
         // companyName: companyRef.current.value,
         // companySize: companySizeRef.current.value,
       },
@@ -137,12 +138,11 @@ const CandidateProfileForm = ({ candidate }) => {
                   <label>Phone Number</label>
                 </b>
                 <input
-                  disabled
-                  // ref={companyRef}
-                  // defaultValue={client?.email || ""}
+                  ref={phoneRef}
+                  defaultValue={candidate?.data?.contact_no}
                   type="text"
                   placeholder="Phone Number"
-                  className="focus:ring-none mt-1 cursor-not-allowed rounded-full border bg-gray-100 p-2 text-gray-400 focus:outline-none"
+                  className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
                 />
               </div>
             </div>

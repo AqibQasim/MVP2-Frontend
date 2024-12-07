@@ -8,7 +8,7 @@ const AdminLogout = ({ className }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("adminAuth");
-    router.push("/admin/login");
+    router.push("/adminlogin");
   };
 
   return (
