@@ -19,7 +19,7 @@ function AdminClientCandidatesTable({
       className="!min-h-full"
       paragraph="These are all"
       heading="Candidates of Client"
-      href={!path.includes("/admin/candidates") ? `/admin/candidates` : null}
+      href={!path.includes("/admin/candidates")&&!path.includes(`/admin/clients/`) ? `/admin/candidates` : null}
       info={`Total Candidates: ${totalCandidates}`}
     >
       <Table columns="grid-cols-[1fr_9rem_1fr_8rem_10rem]">

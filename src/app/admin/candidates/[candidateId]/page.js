@@ -27,6 +27,7 @@ import getCandidateStatus from "@/utils/getCandidateStatus";
 import ButtonCapsule from "@/components/ButtonCapsule";
 import ErrorPopup from "@/components/ErrorPopup";
 import ReportOverlay from "@/components/ReportOverlay";
+import AvailabilityDropdown from "@/components/AvailabilityDropdown";
 
 function Page({ params }) {
   const [talent, setTalent] = useState(null);
@@ -36,6 +37,9 @@ function Page({ params }) {
   const [searchClient, setSearchClient] = useState("");
   const [selectedClientId, setSelectedClientId] = useState("");
   const [searchJob, setSearchJob] = useState("");
+  const [selectedAvailabilityValue, setSelectedAvailabilityValue] = useState(
+    talent?.status,
+  );
   const [jobs, setFetchedJobs] = useState(null);
   const [selectedJob, setSelectedJob] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
@@ -53,6 +57,34 @@ function Page({ params }) {
   //const [error,setError]= useState(null)
 
   const customer_id = params?.candidateId;
+
+  const handleChangeCandidateAvailabilityStatus = async (value) => {
+    console.log("Selected Value:", value);
+    setSelectedAvailabilityValue(value);
+
+    try {
+      const payload = {
+        method: "PUT",
+        endpoint: "status",
+        body: {
+          customer_id: talent?.customer_id,
+          status: value,
+        },
+      };
+
+      const res = await mvp2ApiHelper(payload);
+      console.log("API Response:", res);
+
+      if (res.status === 200) {
+        console.log("Status updated successfully!");
+        router.refresh();
+      } else {
+        console.error("Status change failed:", res);
+      }
+    } catch (error) {
+      console.error("Error in changeStatus:", error);
+    }
+  };
 
   const handleCloseOverlay = () => {
     setIsReportOverlayOpened(false);
@@ -84,6 +116,12 @@ function Page({ params }) {
       setClients(f.data);
     }
   }, []);
+
+  // Options for the dropdown
+  const options = [
+    { value: "active", label: "Available" },
+    { value: "in-active", label: "Un-Available" },
+  ];
 
   const fetchJobs = useCallback(async () => {
     if (selectedClientId) {
@@ -239,7 +277,7 @@ function Page({ params }) {
       customer_id: talent.customer_id,
       job_posting_id: selectedJobId,
       hourly_rate: hourlyRate,
-      candidate_hourly_rate: talent.hourly_rate
+      candidate_hourly_rate: talent.hourly_rate,
     };
 
     console.log(referClientBody);
@@ -287,7 +325,7 @@ function Page({ params }) {
 
           <Capsule className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
             {getCandidateStatus(talent?.talent_status, talent?.status)}
-            {["available", "interviewing"].includes(
+            {["available", "interviewing", "un-available"].includes(
               getCandidateStatus(
                 talent?.talent_status,
                 talent?.status,
@@ -339,7 +377,7 @@ function Page({ params }) {
               <Image src={EmailSvg} />
               {talent?.email}
             </Capsule>
-            
+
             <Capsule className="mb-2 mt-2 flex w-fit flex-wrap items-center gap-2">
               <Image src={phone} />
               {talent?.contact_no}
@@ -414,6 +452,13 @@ function Page({ params }) {
                 />
               ))}
             </div>
+            <AvailabilityDropdown
+              options={options}
+              placeholder="Change Availability Status"
+              value={selectedAvailabilityValue}
+              onChange={handleChangeCandidateAvailabilityStatus}
+              className="text-sm font-bold"
+            />
           </div>
         </div>
         {jobHistory && (
