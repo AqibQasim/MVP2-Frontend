@@ -3,12 +3,15 @@ import AdminJobsRow from "./AdminJobsRow";
 import CandidateJobsRow from "./CandidateJobsRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 function AdminJobsList({ jobs, totalJobs, role}) {
   const path = window.location.href;
   const [jobStatus, setJobStatus] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [startIndex, setStartIndex] = useState(0);
+  const [itemsPerPage] = useState(2);
+  
 
   const handleJobStatusChange = (event) => {
     setJobStatus(event.target.value);
@@ -18,6 +21,23 @@ function AdminJobsList({ jobs, totalJobs, role}) {
     .filter(job =>
       !searchTerm || (typeof job?.position === 'string' && job?.position.toLowerCase().includes(searchTerm.toLowerCase()))
     );
+
+    const onNext = useCallback(() => {
+      setStartIndex((prevIndex) => Math.min(prevIndex + itemsPerPage, filteredJobs.length));
+    }, [filteredJobs.length, itemsPerPage]);
+  
+    const onPrev = useCallback(() => {
+      setStartIndex((prevIndex) => Math.max(prevIndex - itemsPerPage, 0));
+    }, [itemsPerPage]);
+
+    useEffect(() => {
+      // Reset to first page whenever the filters/search change
+      setStartIndex(0);
+    }, [searchTerm, jobStatus]);
+  
+  
+    const paginatedJobs = filteredJobs.slice(startIndex, startIndex + itemsPerPage);
+    
 
   return (
     <DashboardSection
@@ -74,9 +94,18 @@ function AdminJobsList({ jobs, totalJobs, role}) {
           <div className="status text-center">Status</div>
         </Table.Header>
         <Table.Body
-          data={filteredJobs}
+          data={paginatedJobs}
           render={(job, i) => <AdminJobsRow job={job} key={i} />}
         />
+         
+         <Table.Footer
+              data={filteredJobs}
+              startIndex={startIndex + 1}
+              endIndex={Math.min(startIndex + itemsPerPage, filteredJobs.length)}
+              onNext={onNext}
+              onPrevious={onPrev}
+            />
+
       </Table>
     </DashboardSection>
   );
