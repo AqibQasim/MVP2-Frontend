@@ -97,6 +97,7 @@ function AdminJobsList({ jobs, totalJobs, role}) {
           data={paginatedJobs}
           render={(job, i) => <AdminJobsRow job={job} key={i} />}
         />
+        {role !== "dashboard" && (
          
          <Table.Footer
               data={filteredJobs}
@@ -105,6 +106,7 @@ function AdminJobsList({ jobs, totalJobs, role}) {
               onNext={onNext}
               onPrevious={onPrev}
             />
+        )}
 
       </Table>
     </DashboardSection>

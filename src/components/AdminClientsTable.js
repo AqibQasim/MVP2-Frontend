@@ -111,6 +111,7 @@ function AdminClientsTable({ clients, totalClients, role }) {
               </Table.Row>
             )}
           />
+           {role !== "dashboard" && (
           
             <Table.Footer
               data={filteredClients}
@@ -119,7 +120,7 @@ function AdminClientsTable({ clients, totalClients, role }) {
               onNext={onNext}
               onPrevious={onPrev}
             />
-          
+           )}
         </Table>
       </DashboardSection>
     </>
