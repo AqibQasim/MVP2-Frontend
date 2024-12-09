@@ -21,7 +21,7 @@ export default function CandidateIdPage({ candidate, candidateId }) {
       if (result) setCandidateReport(result?.data?.data);
     });
   };
-
+//// new
   useEffect(() => {
     getCandidateResult();
     // eslint-disable-next-line react-hooks/exhaustive-deps

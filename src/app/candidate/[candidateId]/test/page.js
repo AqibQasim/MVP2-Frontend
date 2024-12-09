@@ -12,7 +12,26 @@ const Page = ({ params }) => {
   const [skills, setSkills] = useState(null);
   const hasPreparedTest = useRef(false); // Ref to track if prepareTest has been called
   const [questions, setQuestions] = useState(null);
+  const [candidateReport, setCandidateReport] = useState(null);
   const [codingQuestion, setCodingQuestions] = useState(null);
+ 
+
+ 
+  const getCandidateResult = () => {
+    const payload = {
+      endpoint: `get-customer-result?customer_id=${params.candidateId}`,
+      method: "GET",
+    };
+    mvp2ApiHelper(payload).then((result) => {
+      if (result) setCandidateReport(result?.data?.data);
+    });
+  };
+//// new
+  useEffect(() => {
+    getCandidateResult();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  
 
   const closePopup = () => {
     setInstructionsPopup(false);
@@ -90,7 +109,14 @@ const Page = ({ params }) => {
 
   return (
     <html lang="en">
+      
+     {candidateReport && Object.keys(candidateReport).length > 0 ? (
+        <div className="text-5xl">You have already given the test</div>
+      ) : (
+ 
       <body>
+
+     
         {instructionsPopup && (
           <TestInstruction
             isLoading={isLoading}
@@ -108,9 +134,12 @@ const Page = ({ params }) => {
             codingQuestions={codingQuestion}
           />
         </div>
+   
       </body>
+    )}
     </html>
   );
 };
 
 export default Page;
+
