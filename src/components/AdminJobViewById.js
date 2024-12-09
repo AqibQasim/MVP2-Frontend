@@ -18,7 +18,7 @@ import TalentDescription from "@/components/TalentDescription";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { cityTimezoneOffset } from "@/utils/cityTimezoneOffset";
 import { formatDate } from "@/utils/utility";
-import { fetchRecommendedCandidates, getClientById } from "@/lib/data-service";
+import { getClientById } from "@/lib/data-service";
 import Image from "next/image";
 import CapsuleLink from "./CapsuleLink";
 //

@@ -87,7 +87,7 @@ async function Page() {
       setCandidateLength(data?.data?.length);
       console.log("Data from API:", data);
       const showCandidates = data?.data?.filter(
-        (c) => c?.customer?.talent_status === "open",
+        (c) => c?.res?.customer?.talent_status === "open",
       ).slice(0, 3);
       console.log("Filtered candidates:", showCandidates);
       setCandidates(showCandidates);

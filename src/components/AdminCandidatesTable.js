@@ -28,15 +28,15 @@ function AdminCandidatesTable({
       (candidate) =>
         !talentStatus ||
         getCandidateStatus(
-          candidate?.customer?.talent_status,
-          candidate?.customer?.status,
+          candidate?.res?.customer?.talent_status,
+          candidate?.res?.customer?.status,
         ).toLowerCase() === talentStatus
     )
     .filter(
       (candidate) =>
         !searchTerm ||
-        (typeof candidate.customer?.name === "string" &&
-          candidate.customer?.name
+        (typeof candidate?.res?.customer?.name === "string" &&
+          candidate?.res?.customer?.name
             .toLowerCase()
             .includes(searchTerm.toLowerCase())),
     );
@@ -115,13 +115,13 @@ function AdminCandidatesTable({
             data={paginatedCandidates}
             render={(candidate, i) => {
               const res =
-                (candidate?.result?.softskillRating +
-                  candidate?.result?.technicalRating) /
+                (candidate?.res?.result?.softskillRating +
+                  candidate?.res?.result?.technicalRating) /
                 2;
               return (
                 <AdminCandidateRow
                   score={res}
-                  candidate={candidate?.customer}
+                  candidate={candidate?.res?.customer}
                   key={i}
                 />
               );
