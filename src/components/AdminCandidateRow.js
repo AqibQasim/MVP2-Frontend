@@ -127,6 +127,11 @@ function AdminCandidateRow({ candidate, score }) {
         <div className="experience flex justify-center text-center">
           {candidate?.hourly_rate || 0}$
         </div>
+        <div className="experience flex justify-center text-center">
+          { 0}$
+        </div>
+
+        
 
         <div className="experience text-center">
           {candidate?.experience || "No experience"}
@@ -134,6 +139,8 @@ function AdminCandidateRow({ candidate, score }) {
         <Capsule>{candidate?.commitment || "No job type"}</Capsule>
 
         <div className="experience text-center">{score}/10</div>
+
+      
 
         <Capsule
           className="status mx-auto w-max"
