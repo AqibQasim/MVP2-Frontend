@@ -1,7 +1,7 @@
 "use client";
 import DashboardSection from "@/components/DashboardSection";
 import Table from "@/components/Table";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 function AdminClientsTable({ clients, totalClients, role }) {
@@ -9,13 +9,12 @@ function AdminClientsTable({ clients, totalClients, role }) {
 
   const [jobStatus, setJobStatus] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [startIndex, setStartIndex] = useState(0);
+  const [itemsPerPage] = useState(role === "dashboard"?3:5);
+  
   const handleJobStatusChange = (event) => {
     setJobStatus(event.target.value);
   };
-
-  const router = useRouter();
-
   const filteredClients = clients
     .filter((client) => {
       if (jobStatus === "" || jobStatus === "All Jobs") {
@@ -31,8 +30,26 @@ function AdminClientsTable({ clients, totalClients, role }) {
       (client) =>
         !searchTerm ||
         (typeof client?.name === "string" &&
-          client?.name.toLowerCase().includes(searchTerm.toLowerCase()))
+          client?.name.toLowerCase().includes(searchTerm.toLowerCase())),
     );
+
+  const router = useRouter();
+
+  const onNext = useCallback(() => {
+    setStartIndex((prevIndex) => Math.min(prevIndex + itemsPerPage, filteredClients.length));
+  }, [filteredClients.length, itemsPerPage]);
+
+  const onPrev = useCallback(() => {
+    setStartIndex((prevIndex) => Math.max(prevIndex - itemsPerPage, 0));
+  }, [itemsPerPage]);
+
+  useEffect(() => {
+    // Reset to first page whenever the filters/search change
+    setStartIndex(0);
+  }, [searchTerm, jobStatus]);
+
+
+  const paginatedClients = filteredClients.slice(startIndex, startIndex + itemsPerPage);
 
   return (
     <>
@@ -75,29 +92,35 @@ function AdminClientsTable({ clients, totalClients, role }) {
             <div className="info text-center">Email</div>
             <div className="info text-center">Total Jobs</div>
             <div className="info text-center">Total Candidates</div>
-            
           </Table.Header>
           <Table.Body
-            data={filteredClients}
+            data={paginatedClients}
             render={(client) => (
               <Table.Row
                 key={client.client_id}
-                onClick={() => router.push(`/admin/clients/${client.client_id}`)}
-                
+                onClick={() =>
+                  router.push(`/admin/clients/${client.client_id}`)
+                }
               >
-           
-                <div  className="cursor-pointer" >{client.name}</div>
-                <div className="break-words text-center cursor-pointer">{client.email}</div>
-                <div className="text-center cursor-pointer">
-                        {client?.job_postings?.length}
-                </div>
-                <div className="text-center cursor-pointer">
+                <div className="cursor-pointer">{client.name}</div>
+                <div className="cursor-pointer break-words text-center">{client.email}</div>
+                <div className="cursor-pointer text-center">{client?.job_postings?.length}</div>
+                <div className="cursor-pointer text-center">
                   {client?.assigned_customers?.length ?? 0}
                 </div>
-                {/* Removed CapsuleLink */}
               </Table.Row>
             )}
           />
+           {role !== "dashboard" && (
+          
+            <Table.Footer
+              data={filteredClients}
+              startIndex={startIndex + 1}
+              endIndex={Math.min(startIndex + itemsPerPage, filteredClients.length)}
+              onNext={onNext}
+              onPrevious={onPrev}
+            />
+           )}
         </Table>
       </DashboardSection>
     </>

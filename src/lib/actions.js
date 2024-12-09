@@ -99,12 +99,18 @@ export async function createAJobAction(formData) {
   if (!workday_overlap || isNaN(workday_overlap) || workday_overlap <= 0) {
     return { error: "Workday overlap is required and must be a valid number." };
   }
-  if (//(job_type === "hybrid" || job_type === "on-site") && 
-  (!city || city.trim() === "")) {
+  if (
+    //(job_type === "hybrid" || job_type === "on-site") &&
+    !city ||
+    city.trim() === ""
+  ) {
     return { error: "City is required for hybrid and on-site jobs." };
   }
-  if (//(job_type === "hybrid" || job_type === "on-site") && 
-    (!country || country.trim() === "")) {
+  if (
+    //(job_type === "hybrid" || job_type === "on-site") &&
+    !country ||
+    country.trim() === ""
+  ) {
     return { error: "Country is required for hybrid and on-site jobs." };
   }
   if (skills.length === 0 || skills.some((skill) => skill.trim() === "")) {
@@ -129,8 +135,8 @@ export async function createAJobAction(formData) {
     applied_customers_count,
     //application_questions,
     start_date,
-    location: //job_type === "hybrid" || job_type === "on-site"?
-    city+","+country,//:null,
+    //job_type === "hybrid" || job_type === "on-site"?
+    location: city + "," + country, //:null,
     //...(job_type === "hybrid" || job_type === "on-site" ? { location: `${city}, ${country}` } : {}),
     project_length: `${project_length} Month`,
     is_test_required,
@@ -155,16 +161,26 @@ export async function createAJobAction(formData) {
   // redirect("/admin/clients");
 }
 
-
-
 export async function referCandidateToClientAction(params) {
-  const { client_id, customer_id, job_posting_id, hourly_rate } = params;
+  const {
+    client_id,
+    customer_id,
+    job_posting_id,
+    hourly_rate,
+    candidate_hourly_rate,
+  } = params;
   if (!client_id) return { error: "Client id is required" };
   if (!customer_id) return { error: "Candidate id is required" };
   if (!job_posting_id) return { error: "Job is required" };
   //if (!hourly_rate) return { error: "Hourly rate is required" };
   if (!hourly_rate || isNaN(hourly_rate) || hourly_rate <= 0) {
     return { error: "Hourly rate is required and must be a valid number." };
+  }
+  if (parseInt(candidate_hourly_rate) >= parseInt(hourly_rate)) {
+    return {
+      error:
+        "Your hourly rate can not be less than and/or equal to your proposed hourly rate",
+    };
   }
 
   const { error, data } = await referCandidate({
@@ -200,7 +216,10 @@ export async function updateCandidateProfileAction(formData) {
   if (!commitment || !["full-time", "part-time"].includes(commitment.trim())) {
     return { error: "Valid commitment is required." };
   }
-  if (!hourly_rate || isNaN(hourly_rate)) return { error: "Valid hourly rate is required and it should be a number." };
+  if (!hourly_rate || isNaN(hourly_rate))
+    return {
+      error: "Valid hourly rate is required and it should be a number.",
+    };
   if (!specialization)
     return { error: "Valid specialization rate is required." };
   if (!candidateId) return { error: "Valid candidate id is required." };

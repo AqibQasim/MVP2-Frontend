@@ -112,7 +112,7 @@ function CandidateHeader({ candidate }) {
         />
         <div className="info ml-auto space-y-4">
           <div className="buttons flex items-start justify-end gap-2">
-            <AvailabilityDropdown
+            {/* <AvailabilityDropdown
               options={options}
               placeholder={
                 candidate?.status == "active" ? "Available" : "Un-Available"
@@ -122,7 +122,7 @@ function CandidateHeader({ candidate }) {
               }
               onChange={handleChange}
               className="text-sm font-bold"
-            />
+            /> */}
             <EntityCard
               sm
               entity={{

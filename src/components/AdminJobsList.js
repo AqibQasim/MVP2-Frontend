@@ -3,60 +3,83 @@ import AdminJobsRow from "./AdminJobsRow";
 import CandidateJobsRow from "./CandidateJobsRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-function AdminJobsList({ jobs, totalJobs, role}) {
+function AdminJobsList({ jobs, totalJobs, role }) {
   const path = window.location.href;
   const [jobStatus, setJobStatus] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [startIndex, setStartIndex] = useState(0);
+  const [itemsPerPage] = useState(role === "dashboard" ? 3 : 5);
 
   const handleJobStatusChange = (event) => {
     setJobStatus(event.target.value);
   };
-  const filteredJobs =   jobs
-    .filter((job) => !jobStatus ||  job.job_status === jobStatus)
-    .filter(job =>
-      !searchTerm || (typeof job?.position === 'string' && job?.position.toLowerCase().includes(searchTerm.toLowerCase()))
+  const filteredJobs = jobs
+    .filter((job) => !jobStatus || job.job_status === jobStatus)
+    .filter(
+      (job) =>
+        !searchTerm ||
+        (typeof job?.position === "string" &&
+          job?.position.toLowerCase().includes(searchTerm.toLowerCase())),
     );
+
+  const onNext = useCallback(() => {
+    setStartIndex((prevIndex) =>
+      Math.min(prevIndex + itemsPerPage, filteredJobs.length),
+    );
+  }, [filteredJobs.length, itemsPerPage]);
+
+  const onPrev = useCallback(() => {
+    setStartIndex((prevIndex) => Math.max(prevIndex - itemsPerPage, 0));
+  }, [itemsPerPage]);
+
+  useEffect(() => {
+    // Reset to first page whenever the filters/search change
+    setStartIndex(0);
+  }, [searchTerm, jobStatus]);
+
+  const paginatedJobs = filteredJobs.slice(
+    startIndex,
+    startIndex + itemsPerPage,
+  );
 
   return (
     <DashboardSection
       className="!min-h-full"
       paragraph="This is the list of all"
-      heading="jobs"
-      href={!path.includes("/admin/jobs") ? `/admin/jobs` : null}
-      info={`Total Jobs: ${totalJobs || 0}`}
+      heading="Jobs"
+      href={!path.includes("/admin/jobs")&& !path.includes(`/admin/clients/`) ? `/admin/jobs` : null}
+      info={`Total Jobs: ${filteredJobs?.length || 0}`}
     >
-
-{role !== "dashboard" && (
-      <div className="mb-4 flex justify-between">
-      <div>
-        <input
-        type="text"
-        placeholder="Search by Job title"
-        className="mb-4 w-full cursor-pointer rounded border border-gray-300 p-2"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+      {role !== "dashboard" && (
+        <div className="mb-4 flex justify-between">
+          <div>
+            <input
+              type="text"
+              placeholder="Search by Job title"
+              className="mb-4 w-full cursor-pointer rounded border border-gray-300 p-2"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div>
+            <select
+              id="options"
+              value={jobStatus}
+              onChange={handleJobStatusChange}
+              className="rounded border border-gray-300 p-2"
+            >
+              <option value="">Select an job status</option>
+              <option value="open">open</option>
+              <option value="closed">Closed</option>
+              <option value="interviewing">Interviewing</option>
+              <option value="hired">Hired</option>
+              <option value="trial">Trial</option>
+            </select>
+          </div>
         </div>
-        <div>
-        <select
-          id="options"
-          value={jobStatus}
-          onChange={handleJobStatusChange}
-          className="rounded border border-gray-300 p-2"
-        >
-          <option value="">Select an job status</option>
-          <option value="open">open</option>
-          <option value="closed">Closed</option>
-          <option value="interviewing">Interviewing</option>
-          <option value="hired">Hired</option>
-          <option value="trial">Trial</option>
-        </select>
-        </div>
-       
-      </div>
-    )}
+      )}
 
       <Table
         columns={
@@ -74,9 +97,20 @@ function AdminJobsList({ jobs, totalJobs, role}) {
           <div className="status text-center">Status</div>
         </Table.Header>
         <Table.Body
-          data={filteredJobs}
+          data={paginatedJobs}
           render={(job, i) => <AdminJobsRow job={job} key={i} />}
         />
+        {role !== "dashboard" && (
+         
+         <Table.Footer
+              data={filteredJobs}
+              startIndex={startIndex + 1}
+              endIndex={Math.min(startIndex + itemsPerPage, filteredJobs.length)}
+              onNext={onNext}
+              onPrevious={onPrev}
+            />
+        )}
+
       </Table>
     </DashboardSection>
   );

@@ -32,16 +32,16 @@ function AdminDashboardNavLinks() {
       ),
     },
     {
-      name: "Jobs",
-      href: `/admin/jobs`,
-
-      icon: <SvgIconJob className="size-6" />,
-    },
-    {
       name: "Candidates",
       href: `/admin/candidates`,
 
       icon: <SvgIconPayment className="size-6" />,
+    },
+    {
+      name: "Jobs",
+      href: `/admin/jobs`,
+
+      icon: <SvgIconJob className="size-6" />,
     },
     {
       name: "Payments",

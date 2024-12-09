@@ -122,37 +122,37 @@ function AdminJobViewById({ job, setShowForm }) {
 
   const handleChangeStatus = //useCallback(
     async () => {
-    console.log(changeStatus)
-    const {
-      client_id,
-      customer_id,
-      job_posting_id,
-      job_status,
-      talent_status,
-      response_status,
-    } = changeStatus;
+      console.log(changeStatus);
+      const {
+        client_id,
+        customer_id,
+        job_posting_id,
+        job_status,
+        talent_status,
+        response_status,
+      } = changeStatus;
 
-    if (
-      client_id &&
-      customer_id &&
-      job_posting_id &&
-      talent_status &&
-      response_status &&
-      job_status
-    ) {
-      try {
-        setIsLoading(true);
-        console.log(changeStatus)
-        const result = await mvp2ApiHelper(payload);
-        console.log(result);
-      } catch (error) {
-        console.error(error);
+      if (
+        client_id &&
+        customer_id &&
+        job_posting_id &&
+        talent_status &&
+        response_status &&
+        job_status
+      ) {
+        try {
+          setIsLoading(true);
+          console.log(changeStatus);
+          const result = await mvp2ApiHelper(payload);
+          console.log(result);
+        } catch (error) {
+          console.error(error);
+        }
+        // finally {
+        //   setIsLoading(false);
+        // }
       }
-      // finally {
-      //   setIsLoading(false);
-      // }
-    }
-  }//, [payload]);
+    }; //, [payload]);
 
   const getClientStripe = () => {
     console.log("pASSING TO PAYLOAD ", typeof changeStatus.client_id);
@@ -488,8 +488,8 @@ function AdminJobViewById({ job, setShowForm }) {
                     <div className="flex items-center justify-center rounded-5xl bg-blue-800 py-3">
                       <LoaderIcon className="text-5xl" />
                     </div>
-                  ) : (
-                    assignedCandidates?(
+                  ) : assignedCandidates &&
+                    assignedCandidates?.talent_status !== "open" ? (
                     // Change Status Dropdown displayed when not loading
                     <ChangeStatusDropdown
                       options={options}
@@ -511,7 +511,7 @@ function AdminJobViewById({ job, setShowForm }) {
                           response_status = "close";
                         }
 
-                        setChangeStatus((prev)=>({
+                        setChangeStatus((prev) => ({
                           ...prev,
                           customer_id: assignedCandidates?.customer_id,
                           job_posting_id: job?.job_posting_id,
@@ -525,8 +525,7 @@ function AdminJobViewById({ job, setShowForm }) {
                         autoRefresh();
                       }}
                     />
-                    ):null
-                  )}
+                  ) : null}
                 </div>
                 <Heading toxm>
                   <div>Job Status :</div>
@@ -625,10 +624,7 @@ function AdminJobViewById({ job, setShowForm }) {
         </div>
         <div className="w-[23.375rem] items-center justify-center rounded-[36px] bg-white p-3">
           <div className="flex h-auto w-auto flex-row items-center justify-between">
-            <Heading className="text-[24px]">Assigned Customer</Heading>
-            {/* <Capsule className="items-center text-primary-tint-20">
-                        Assigned Customer
-                    </Capsule> */}
+            <Heading className="text-[24px]">Assigned Candidate</Heading>
           </div>
           <Hr />
           {assignedCandidates ? (
@@ -661,13 +657,15 @@ function AdminJobViewById({ job, setShowForm }) {
                 {" "}
                 view details{" "}
               </CapsuleLink>
-              <div className="mx-3 mt-5">
-                Status : {assignedCandidates?.talent_status}
-              </div>
+              {assignedCandidates?.talent_status !== "open" ? (
+                <div className="mx-3 mt-5">
+                  Status : {assignedCandidates?.talent_status}
+                </div>
+              ) : null}
             </div>
           ) : (
             <div className="align-center flex w-full flex-col justify-center">
-              <div>There&apos;s no assigned customer yet</div>
+              <div>There&apos;s no assigned candidates yet</div>
               <div
                 onClick={() => setShowForm(true)}
                 className="cursor-pointer text-primary"

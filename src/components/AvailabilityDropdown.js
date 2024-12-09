@@ -2,28 +2,35 @@ import React from "react";
 import ButtonDown from "@/svgs/ButtonDown";
 
 function AvailabilityDropdown({
-  options = [], // List of options for the dropdown
+  options = [],
   className,
   placeholder = "",
-  onPress, // This will be used for handling the option selection
+  onChange, // Changed from `onPress` to `onChange` for consistency
   ...rest
 }) {
   const commonClasses =
     "border border-gray-300 bg-[#F2F1F8] text-gray-900 rounded-full focus:ring-primary focus:border-primary block py-3 px-10 transition-colors duration-300 ease-in-out custom-select";
 
-  // Handle option selection
   const handleChange = (e) => {
     const selectedValue = e.target.value;
-    // Call the onPress function (if passed) when an option is selected
-    if (onPress) {
-      onPress(selectedValue);
+    if (onChange) {
+      onChange(selectedValue); // Pass only the value to the handler
     }
   };
 
   return (
     <div className={`relative ${className}`}>
-      <select className={commonClasses} onChange={handleChange} {...rest}>
-        {placeholder && <option value="">{placeholder}</option>}
+      <select
+        className={commonClasses}
+        onChange={handleChange}
+        defaultValue={placeholder ? "" : undefined}
+        {...rest}
+      >
+        {placeholder && (
+          <option value="" disabled>
+            {placeholder}
+          </option>
+        )}
         {options.map((option, index) => (
           <option key={index} value={option.value}>
             {option.label}

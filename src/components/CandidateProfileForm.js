@@ -217,7 +217,7 @@ const CandidateProfileForm = ({ candidate }) => {
                   type="number"
                   ref={areaCodeRef}
                   placeholder="Zip Code"
-                  defaultValue={candidate?.area_code || ""}
+                  defaultValue={candidate?.data?.area_code || ""}
                   className="no-arrows mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
                 />
               </div>

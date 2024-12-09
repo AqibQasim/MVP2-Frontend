@@ -64,6 +64,7 @@ function Page({ params }) {
       customer_id: selectedCandidateId,
       job_posting_id: job?.job_posting_id,
       hourly_rate: hourlyRate,
+      candidate_hourly_rate: candidateHourlyRate
     };
 
     console.log(referClientBody);
@@ -134,7 +135,7 @@ function Page({ params }) {
           )}
 
           <label className="flex">
-            Hourly Rate <div className="text-red-600">*</div>
+            Your Proposed Hourly Rate <div className="text-red-600">*</div>
           </label>
           <input
             type='text'

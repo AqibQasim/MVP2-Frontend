@@ -187,7 +187,7 @@ function Page({ params }) {
           </div>
           <div className="space-y-4">
             <div className="job-posting-card mt-4 h-fit rounded-lg border border-gray-300 p-4">
-              <AdminClientCandidatesTable candidates={candidates?.data} />
+              <AdminClientCandidatesTable candidates={candidates?.data} totalCandidates={candidates?.data?.length} />
             </div>
           </div>
         </div>
