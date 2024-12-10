@@ -64,6 +64,7 @@ function Page({ params }) {
       customer_id: selectedCandidateId,
       job_posting_id: job?.job_posting_id,
       hourly_rate: hourlyRate,
+      candidate_hourly_rate: candidateHourlyRate
     };
 
     console.log(referClientBody);
@@ -115,10 +116,10 @@ function Page({ params }) {
                 onClick={() => {
                   setIsCandidateShow(false);
                   setSearchCandidate(candidate?.customer?.name);
-                  setSelectedCandidateId(candidate.customer_id);
+                  setSelectedCandidateId(candidate?.customer_id);
                   setCandidateHourlyRate(candidate?.customer?.hourly_rate);
                 }}
-                key={candidate.customer_id}
+                key={candidate?.customer_id}
                 className="cursor-pointer"
               >
                 {candidate?.customer?.name}
@@ -134,7 +135,7 @@ function Page({ params }) {
           )}
 
           <label className="flex">
-            Hourly Rate <div className="text-red-600">*</div>
+            Your Proposed Hourly Rate <div className="text-red-600">*</div>
           </label>
           <input
             type='text'

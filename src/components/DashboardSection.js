@@ -23,7 +23,7 @@ function DashboardSection({
           <Heading sm>{heading}</Heading>
         </div>
 
-        {/* {info && (
+        {info && (
           <div className="ml-auto mt-auto">
             <div
               href={href}
@@ -32,7 +32,7 @@ function DashboardSection({
               {info}
             </div>{" "}
           </div>
-        )} */}
+        )}
 
         {href && (
           <div className="ml-auto mt-auto">
