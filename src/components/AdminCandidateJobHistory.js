@@ -14,8 +14,8 @@ function AdminCandidateJobHistory({ job_history, total_job_history }) {
   const [itemsPerPage] = useState(2);
 
   const onNext = useCallback(() => {
-    setStartIndex((prevIndex) => Math.min(prevIndex + itemsPerPage, total_job_history));
-  }, [ total_job_history, itemsPerPage]);
+    setStartIndex((prevIndex) => Math.min(prevIndex + itemsPerPage, job_history.length));
+  }, [ job_history.length, itemsPerPage]);
 
   const onPrev = useCallback(() => {
     setStartIndex((prevIndex) => Math.max(prevIndex - itemsPerPage, 0));
@@ -24,7 +24,7 @@ function AdminCandidateJobHistory({ job_history, total_job_history }) {
   useEffect(() => {
     // Reset to first page whenever the filters/search change
     setStartIndex(0);
-  }, [job_history]);
+  }, [job_history.length]);
 
 
   const paginatedjobs = job_history.slice(startIndex, startIndex + itemsPerPage);
