@@ -112,15 +112,6 @@ const Page = ({ params }) => {
 
   return (
 
-    <>
-     {(candidateReport ) ? (
-
-     
-
-          <TestDone /> 
-
-         )  :
-    (
     <html lang="en">
       <body>
         {instructionsPopup && (
@@ -142,8 +133,7 @@ const Page = ({ params }) => {
         </div>
       </body>
     </html>
-    )}
-    </>
+    
   );
 };
 

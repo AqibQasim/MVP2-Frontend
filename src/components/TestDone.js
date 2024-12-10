@@ -5,7 +5,7 @@ import Heading from "./Heading";
 function TestDone() {
  
   return (
-    <div className="h-screen w-screen flex-grow gap-8 rounded-4xl bg-neutral-white px-8 py-10">
+    <div className="h-screen min-w-4.5 gap-8 rounded-4xl bg-neutral-white px-8 py-10 overflow-hidden">
 
       <div className="flex h-full w-full flex-col items-center justify-center">
         <div className="flex h-auto w-auto flex-col items-center justify-center space-y-6">
@@ -39,3 +39,4 @@ function TestDone() {
 }
 
 export default TestDone;
+
