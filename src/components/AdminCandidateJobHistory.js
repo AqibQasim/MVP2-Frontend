@@ -15,7 +15,7 @@ function AdminCandidateJobHistory({ job_history, total_job_history }) {
 
   const onNext = useCallback(() => {
     setStartIndex((prevIndex) => Math.min(prevIndex + itemsPerPage, job_history.length));
-  }, [ job_history.length, itemsPerPage]);
+  }, [job_history.length, itemsPerPage]);
 
   const onPrev = useCallback(() => {
     setStartIndex((prevIndex) => Math.max(prevIndex - itemsPerPage, 0));
