@@ -1,18 +1,40 @@
+"use client"
+
 import React from "react";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 import AdminCandidateJobHistoryRow from "./AdminCandidateJobHistoryRow";
 import { useRouter } from "next/navigation";
+import { useState,useCallback, useEffect } from "react";
+
 
 function AdminCandidateJobHistory({ job_history, total_job_history }) {
   const path = window.location.href;
+  const [startIndex, setStartIndex] = useState(0);
+  const [itemsPerPage] = useState(2);
+
+  const onNext = useCallback(() => {
+    setStartIndex((prevIndex) => Math.min(prevIndex + itemsPerPage, total_job_history));
+  }, [ total_job_history, itemsPerPage]);
+
+  const onPrev = useCallback(() => {
+    setStartIndex((prevIndex) => Math.max(prevIndex - itemsPerPage, 0));
+  }, [itemsPerPage]);
+
+  useEffect(() => {
+    // Reset to first page whenever the filters/search change
+    setStartIndex(0);
+  }, [job_history]);
+
+
+  const paginatedjobs = job_history.slice(startIndex, startIndex + itemsPerPage);
 
   return (
     <DashboardSection
       className="!min-h-full"
       paragraph="This is the list of all"
       heading="Job History"
-      href={!path.includes("/admin/jobs") ? `/admin/jobs` : null}
+      // href={!path.includes("/admin/jobs") ? `/admin/jobs` : null}
       info={`Total Jobs: ${total_job_history || 0}`}
     >
       <Table
@@ -31,9 +53,17 @@ function AdminCandidateJobHistory({ job_history, total_job_history }) {
           <div className="action text-center">Action</div>
         </Table.Header>
         <Table.Body
-          data={job_history}
+          data={paginatedjobs}
           render={(job, i) => <AdminCandidateJobHistoryRow job={job} key={i} />}
         />
+          <Table.Footer
+              data={paginatedjobs}
+              startIndex={startIndex + 1}
+              endIndex={Math.min(startIndex + itemsPerPage, paginatedjobs.length)}
+              onNext={onNext}
+              onPrevious={onPrev}
+            />
+
       </Table>
     </DashboardSection>
   );
