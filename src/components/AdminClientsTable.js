@@ -3,6 +3,7 @@ import DashboardSection from "@/components/DashboardSection";
 import Table from "@/components/Table";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Modal from "./AdminJobsFormModal";
 
 function AdminClientsTable({ clients, totalClients, role }) {
   const path = window.location.href;
@@ -10,8 +11,146 @@ function AdminClientsTable({ clients, totalClients, role }) {
   const [jobStatus, setJobStatus] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [startIndex, setStartIndex] = useState(0);
-  const [itemsPerPage] = useState(role === "dashboard"?3:5);
+  const [itemsPerPage] = useState(role === "dashboard" ? 3 : 5);
+  const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const [formData, setFormData] = useState({
+    companyName: "",
+    email: "",
+    content: "",
+  });
+
+  const generatePassword = () => {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let password = "";
+    for (let i = 0; i < 8; i++) {
+      password += characters.charAt(
+        Math.floor(Math.random() * characters.length),
+      );
+    }
+    return password;
+  };
+  const password = generatePassword();
+
+  const handleGenerateContent = () => {
+    const contentTemplate = `Hey ${formData.companyName},
+
+We’re thrilled to invite you to start using our product! Below are your credentials to get started:
+
+Email: ${formData.email}
+Password: ${password}
+You can log in and explore the platform here: https://app.co-ventech.com/login.
+We’re confident you’ll love the features and benefits our product offers.
+
+If you have any questions or need assistance, feel free to reach out to us at support@co-ventech.com.
+
+Looking forward to seeing you onboard!
+
+Best regards,
+Zubair Alam
+Co-ventech
+    `;
+    setFormData((prevData) => ({
+      ...prevData,
+      content: contentTemplate,
+    }));
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    // Generate password here to ensure consistency
+    const password = generatePassword();
+
+    const signupBody = {
+      name: formData.companyName,
+      email: formData.email,
+      password: password,
+      method: "signup",
+      user_role: "client",
+    };
+
+    const sendEmailBody = {
+      to: formData.email,
+      subject: "Inviting a client",
+      text: formData.content,
+    };
+
+    try {
+      // Call Signup API
+      const signupResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/signup`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(signupBody),
+        },
+      );
+
+      if (!signupResponse.ok) {
+        throw new Error("Failed to sign up the client.");
+      }
+
+      // Update the content with the correct password before sending the email
+      const updatedContent = `Hey ${formData.companyName || "Company Name"},
   
+  We’re thrilled to invite you to start using our product! Below are your credentials to get started:
+  
+  Email: ${formData.email || "Client email"}
+  Password: ${password}
+  You can log in and explore the platform here: https://app.co-ventech.com/login.
+  We’re confident you’ll love the features and benefits our product offers.
+  
+  If you have any questions or need assistance, feel free to reach out to us at support@co-ventech.com.
+  
+  Looking forward to seeing you onboard!
+  
+  Best regards,
+  Zubair Alam
+  Co-ventech
+  `;
+
+      // Update the sendEmailBody with the correct content
+      sendEmailBody.text = updatedContent;
+
+      const emailResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/send-email`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(sendEmailBody),
+        },
+      );
+
+      if (!emailResponse.ok) {
+        throw new Error("Failed to send the invitation email.");
+      }
+
+      alert("Client invited successfully!");
+      setShowForm(false);
+    } catch (error) {
+      console.error(error);
+      alert("Email with this account already created");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleJobStatusChange = (event) => {
     setJobStatus(event.target.value);
   };
@@ -36,7 +175,9 @@ function AdminClientsTable({ clients, totalClients, role }) {
   const router = useRouter();
 
   const onNext = useCallback(() => {
-    setStartIndex((prevIndex) => Math.min(prevIndex + itemsPerPage, filteredClients.length));
+    setStartIndex((prevIndex) =>
+      Math.min(prevIndex + itemsPerPage, filteredClients.length),
+    );
   }, [filteredClients.length, itemsPerPage]);
 
   const onPrev = useCallback(() => {
@@ -48,8 +189,10 @@ function AdminClientsTable({ clients, totalClients, role }) {
     setStartIndex(0);
   }, [searchTerm, jobStatus]);
 
-
-  const paginatedClients = filteredClients.slice(startIndex, startIndex + itemsPerPage);
+  const paginatedClients = filteredClients.slice(
+    startIndex,
+    startIndex + itemsPerPage,
+  );
 
   return (
     <>
@@ -70,6 +213,17 @@ function AdminClientsTable({ clients, totalClients, role }) {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
+            </div>
+            <div className="flex-1">
+              <button
+                onClick={() => {
+                  setShowForm(true);
+                  handleGenerateContent();
+                }}
+                className="hover:bg-primary-hover active:bg-primary-hover focus:ring-primary-hover rounded bg-primary px-8 py-2 text-base font-medium text-white transition-colors duration-300 ease-in-out focus:outline-none focus:ring focus:ring-offset-2"
+              >
+                Invite A New Client +
+              </button>
             </div>
             <div>
               <select
@@ -103,25 +257,93 @@ function AdminClientsTable({ clients, totalClients, role }) {
                 }
               >
                 <div className="cursor-pointer">{client.name}</div>
-                <div className="cursor-pointer break-words text-center">{client.email}</div>
-                <div className="cursor-pointer text-center">{client?.job_postings?.length}</div>
+                <div className="cursor-pointer break-words text-center">
+                  {client.email}
+                </div>
+                <div className="cursor-pointer text-center">
+                  {client?.job_postings?.length}
+                </div>
                 <div className="cursor-pointer text-center">
                   {client?.assigned_customers?.length ?? 0}
                 </div>
               </Table.Row>
             )}
           />
-           {role !== "dashboard" && (
-          
+          {role !== "dashboard" && (
             <Table.Footer
               data={filteredClients}
               startIndex={startIndex + 1}
-              endIndex={Math.min(startIndex + itemsPerPage, filteredClients.length)}
+              endIndex={Math.min(
+                startIndex + itemsPerPage,
+                filteredClients.length,
+              )}
               onNext={onNext}
               onPrevious={onPrev}
             />
-           )}
+          )}
         </Table>
+        <Modal
+          className="w-[50%]"
+          isOpen={showForm}
+          onClose={() => setShowForm(false)}
+        >
+          <h3 className="mb-4 text-xl font-semibold">Enter Your Details</h3>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Company Name
+              </label>
+              <input
+                type="text"
+                name="companyName"
+                value={formData.companyName}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Content
+              </label>
+              <textarea
+                name="content"
+                value={formData.content}
+                onChange={handleChange} // Add this line to enable editing
+                className="mt-1 block w-full rounded-md border px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                rows="6"
+              />
+            </div>
+            <div className="flex justify-end">
+              <button
+                type="button"
+                className="mr-2 rounded bg-gray-200 px-4 py-2 hover:bg-gray-300"
+                onClick={() => setShowForm(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+              >
+                {loading ? "Sending" : "Send Invitation"}
+              </button>
+            </div>
+          </form>
+        </Modal>
       </DashboardSection>
     </>
   );
