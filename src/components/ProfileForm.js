@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import ErrorPopup from "./ErrorPopup";
 import ButtonBack from "./ButtonBack";
 import "../styles/Setting.css";
+import Modal from "@/components/AdminJobsFormModal";
 
 const ProfileForm = ({ client }) => {
   const pathname = usePathname();
@@ -26,6 +27,8 @@ const ProfileForm = ({ client }) => {
   const countryRef = useRef(null);
   const companyRef = useRef(null);
   const companySizeRef = useRef(null);
+  const newPasswordRef = useRef(null);
+  const [showForm, setShowForm]  = useState(false)
 
   console.log("client is", client);
 
@@ -141,9 +144,16 @@ const ProfileForm = ({ client }) => {
           <div className="col-span-2">
             <div className="flex flex-col sm:flex-row sm:space-x-4">
               <div className="flex flex-1 flex-col">
-                <b>
+                <b className="flex justify-between" >
                   <label>Password</label>
+                  <span
+                  className="text-blue-700 cursor-pointer"
+                   onClick={() => setShowForm(true)}
+                   >
+            Change Password
+          </span>
                 </b>
+
                 <input
                   disabled
                   ref={passwordRef}
@@ -365,6 +375,68 @@ const ProfileForm = ({ client }) => {
           </button>
         </div> */}
       </form>
+      <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
+     <form>
+
+     <div className="mb-4 mt-4 grid grid-cols-4  items-start gap-4">
+          {/* Section Heading */}
+          <Heading xm className="col-span-1  mt-4">
+              New Password:
+          </Heading>
+
+          <div className="col-span-3 mr-12">
+            <div className="flex flex-col sm:flex-row sm:space-x-4">
+              <div className="flex flex-1 flex-col">
+                <input
+                  type="password" 
+                  placeholder="New Password"
+                  ref={newPasswordRef}
+                  defaultValue={client?.password || ""}
+                  className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+     <div className="mb-4 mt-4 grid grid-cols-4 items-start gap-4">
+          {/* Section Heading */}
+          <Heading xm className="col-span-1 mt-4">
+              Confirm  Password:
+          </Heading>
+
+          <div className="col-span-3 mr-12">
+            <div className="flex flex-col sm:flex-row sm:space-x-4">
+              <div className="flex flex-1 flex-col">
+                <input
+                  type="password"
+                  placeholder="Confirm Password"
+                  ref={newPasswordRef}
+                  
+                  className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+  
+    <div className="flex justify-center mt-12">
+      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+        Save Password
+      </button>
+      <button
+        type="button"
+        onClick={() => setShowForm(false)}
+        className="ml-2 bg-gray-300 px-10 text-center py-2 rounded"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+</Modal>
+
       {sucess && (
         <ErrorPopup
           message="Profile Updated Successfully "

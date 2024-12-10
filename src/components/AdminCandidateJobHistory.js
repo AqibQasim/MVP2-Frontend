@@ -7,7 +7,7 @@ import AdminCandidateJobHistoryRow from "./AdminCandidateJobHistoryRow";
 
 function AdminCandidateJobHistory({ job_history, total_job_history }) {
   const [startIndex, setStartIndex] = useState(0);
-  const [itemsPerPage] = useState(2);
+  const [itemsPerPage] = useState(5);
 
   const paginatedjobs = job_history?.slice(
     startIndex,
