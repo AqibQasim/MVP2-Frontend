@@ -422,8 +422,8 @@ function Page({ params }) {
                 <DetailTag
                   icon="/icons/routing.svg"
                   name="City State: "
-                  content={
-                    talent?.city + talent?.province || "No city/state given"
+                  content={ (talent?.city&&talent?.province)?
+                    talent?.city +" , "+ talent?.province : "No city/state given"
                   }
                 />
                 <DetailTag
