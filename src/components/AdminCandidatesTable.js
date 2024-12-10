@@ -11,7 +11,7 @@ function AdminCandidatesTable({ totalCandidates, candidates, role }) {
   const [talentStatus, setTalentStatus] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [startIndex, setStartIndex] = useState(0);
-  const [itemsPerPage] = useState(2);
+  const [itemsPerPage] = useState(5);
 
   const handleTalentStatusChange = (event) => {
     setTalentStatus(event.target.value);
