@@ -5,6 +5,7 @@ import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import styles from "@/styles/test.module.css";
+import TestDone from "@/components/TestDone";
 
 const Page = ({ params }) => {
   const [instructionsPopup, setInstructionsPopup] = useState(true);
@@ -12,11 +13,13 @@ const Page = ({ params }) => {
   const [skills, setSkills] = useState(null);
   const hasPreparedTest = useRef(false); // Ref to track if prepareTest has been called
   const [questions, setQuestions] = useState(null);
-  const [candidateReport, setCandidateReport] = useState(null);
   const [codingQuestion, setCodingQuestions] = useState(null);
+  const [candidateReport, setCandidateReport] = useState(null);
+
+
+  
  
 
- 
   const getCandidateResult = () => {
     const payload = {
       endpoint: `get-customer-result?customer_id=${params.candidateId}`,
@@ -31,7 +34,7 @@ const Page = ({ params }) => {
     getCandidateResult();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
+
 
   const closePopup = () => {
     setInstructionsPopup(false);
@@ -108,15 +111,9 @@ const Page = ({ params }) => {
   ];
 
   return (
-    <html lang="en">
-      
-     {candidateReport && Object.keys(candidateReport).length > 0 ? (
-        <div className="text-5xl">You have already given the test</div>
-      ) : (
- 
-      <body>
 
-     
+    <html lang="en">
+      <body>
         {instructionsPopup && (
           <TestInstruction
             isLoading={isLoading}
@@ -134,12 +131,10 @@ const Page = ({ params }) => {
             codingQuestions={codingQuestion}
           />
         </div>
-   
       </body>
-    )}
     </html>
+    
   );
 };
 
 export default Page;
-
