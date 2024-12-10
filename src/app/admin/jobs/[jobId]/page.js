@@ -51,7 +51,7 @@ function Page({ params }) {
   }, []);
 
   const filteredCandidates = candidates?.filter((candidate) =>
-    candidate?.res?.customer?.name
+    candidate?.customer?.name
       ?.toLowerCase()
       .includes(searchCandidate?.toLowerCase()),
   );
@@ -115,14 +115,14 @@ function Page({ params }) {
               <div
                 onClick={() => {
                   setIsCandidateShow(false);
-                  setSearchCandidate(candidate?.res?.customer?.name);
-                  setSelectedCandidateId(candidate?.res.customer_id);
-                  setCandidateHourlyRate(candidate?.res?.customer?.hourly_rate);
+                  setSearchCandidate(candidate?.customer?.name);
+                  setSelectedCandidateId(candidate?.customer_id);
+                  setCandidateHourlyRate(candidate?.customer?.hourly_rate);
                 }}
-                key={candidate?.res.customer_id}
+                key={candidate?.customer_id}
                 className="cursor-pointer"
               >
-                {candidate?.res?.customer?.name}
+                {candidate?.customer?.name}
               </div>
             ))}
           {candidateHourlyRate && (
