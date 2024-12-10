@@ -116,10 +116,10 @@ function Page({ params }) {
                 onClick={() => {
                   setIsCandidateShow(false);
                   setSearchCandidate(candidate?.customer?.name);
-                  setSelectedCandidateId(candidate.customer_id);
+                  setSelectedCandidateId(candidate?.customer_id);
                   setCandidateHourlyRate(candidate?.customer?.hourly_rate);
                 }}
-                key={candidate.customer_id}
+                key={candidate?.customer_id}
                 className="cursor-pointer"
               >
                 {candidate?.customer?.name}

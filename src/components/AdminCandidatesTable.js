@@ -1,15 +1,11 @@
 "use client";
-import { useState,useCallback,useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import AdminCandidateRow from "./AdminCandidateRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 import getCandidateStatus from "@/utils/getCandidateStatus";
 
-function AdminCandidatesTable({
-  totalCandidates,
-  candidates,
-  role,
-}) {
+function AdminCandidatesTable({ totalCandidates, candidates, role }) {
   const path = window.location.href;
 
   const [talentStatus, setTalentStatus] = useState("");
@@ -30,7 +26,7 @@ function AdminCandidatesTable({
         getCandidateStatus(
           candidate?.customer?.talent_status,
           candidate?.customer?.status,
-        ).toLowerCase() === talentStatus
+        ).toLowerCase() === talentStatus,
     )
     .filter(
       (candidate) =>
@@ -41,9 +37,10 @@ function AdminCandidatesTable({
             .includes(searchTerm.toLowerCase())),
     );
 
-    
   const onNext = useCallback(() => {
-    setStartIndex((prevIndex) => Math.min(prevIndex + itemsPerPage,  filteredCandidates.length));
+    setStartIndex((prevIndex) =>
+      Math.min(prevIndex + itemsPerPage, filteredCandidates.length),
+    );
   }, [filteredCandidates.length, itemsPerPage]);
 
   const onPrev = useCallback(() => {
@@ -55,9 +52,11 @@ function AdminCandidatesTable({
     setStartIndex(0);
   }, [searchTerm, talentStatus]);
 
+  const paginatedCandidates = filteredCandidates.slice(
+    startIndex,
+    startIndex + itemsPerPage,
+  );
 
-  const paginatedCandidates = filteredCandidates.slice(startIndex, startIndex + itemsPerPage);
-  
   return (
     <DashboardSection
       className="!min-h-full"
@@ -98,7 +97,7 @@ function AdminCandidatesTable({
 
       <Table columns="grid-cols-[1fr_5.7rem_4rem_4rem_6.5rem_4.5rem_4.1rem_7.4rem]">
         <Table.Header>
-          <div className="info text-start "> Candidate-Info</div>
+          <div className="info text-start"> Candidate-Info</div>
           <div className="skills text-center">Skills</div>
           <div className="skills text-center">Hourly Rate</div>
           <div className="skills text-center">Referral Rate</div>
@@ -106,7 +105,6 @@ function AdminCandidatesTable({
           <div className="job-type text-center">Job type</div>
           <div className="score text-center">Score</div>
           <div className="talent-status text-center">Talent Status</div>
-          
         </Table.Header>
         {/* Make the body container scrollable */}
         <div className="min-h-fit overflow-x-hidden overflow-y-hidden">
@@ -129,18 +127,18 @@ function AdminCandidatesTable({
             }}
           />
         </div>
-        {role !== "dashboard" &&(
+        {role !== "dashboard" && (
           <Table.Footer
-      
-              data={filteredCandidates}
-              startIndex={startIndex + 1}
-              endIndex={Math.min(startIndex + itemsPerPage, filteredCandidates.length)}
-              onNext={onNext}
-              onPrevious={onPrev}
-            />
-
+            data={filteredCandidates}
+            startIndex={startIndex + 1}
+            endIndex={Math.min(
+              startIndex + itemsPerPage,
+              filteredCandidates.length,
+            )}
+            onNext={onNext}
+            onPrevious={onPrev}
+          />
         )}
-
       </Table>
     </DashboardSection>
   );

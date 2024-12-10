@@ -128,7 +128,7 @@ function AdminCandidateRow({ candidate, score }) {
           {candidate?.hourly_rate || 0}$
         </div>
         <div className="experience flex justify-center text-center">
-          { 0}$
+          { candidate?.admin_hourly_rate || 0}$
         </div>
 
         

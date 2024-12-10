@@ -1,26 +1,43 @@
-import React from "react";
+"use client";
+
+import React, { useState, useCallback, useEffect } from "react";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 import AdminCandidateJobHistoryRow from "./AdminCandidateJobHistoryRow";
-import { useRouter } from "next/navigation";
 
 function AdminCandidateJobHistory({ job_history, total_job_history }) {
-  const path = window.location.href;
+  const [startIndex, setStartIndex] = useState(0);
+  const [itemsPerPage] = useState(2);
+
+  const paginatedjobs = job_history?.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+
+  const onNext = useCallback(() => {
+    setStartIndex((prevIndex) =>
+      Math.min(prevIndex + itemsPerPage, job_history?.length - itemsPerPage)
+    );
+  }, [job_history?.length, itemsPerPage]);
+
+  const onPrev = useCallback(() => {
+    setStartIndex((prevIndex) => Math.max(prevIndex - itemsPerPage, 0));
+  }, [itemsPerPage]);
+
+  useEffect(() => {
+    // Reset to first page whenever job history changes
+    setStartIndex(0);
+  }, [job_history?.length]);
 
   return (
     <DashboardSection
       className="!min-h-full"
       paragraph="This is the list of all"
       heading="Job History"
-      href={!path.includes("/admin/jobs") ? `/admin/jobs` : null}
       info={`Total Jobs: ${total_job_history || 0}`}
     >
       <Table
-        columns={
-          "grid-cols-[1fr_1fr_1fr_1fr_7.1rem_8.1rem]"
-
-          //: "grid-cols-[1fr_6.5rem_6rem_5rem_7.1rem_8.1rem]"
-        }
+        columns="grid-cols-[1fr_1fr_1fr_1fr_7.1rem_8.1rem]"
       >
         <Table.Header>
           <div className="name">Clients</div>
@@ -31,8 +48,15 @@ function AdminCandidateJobHistory({ job_history, total_job_history }) {
           <div className="action text-center">Action</div>
         </Table.Header>
         <Table.Body
-          data={job_history}
+          data={paginatedjobs}
           render={(job, i) => <AdminCandidateJobHistoryRow job={job} key={i} />}
+        />
+        <Table.Footer
+          data={job_history}
+          startIndex={startIndex + 1}
+          endIndex={Math.min(startIndex + itemsPerPage, job_history?.length)}
+          onNext={onNext}
+          onPrevious={onPrev}
         />
       </Table>
     </DashboardSection>
