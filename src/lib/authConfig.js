@@ -199,7 +199,30 @@ export const authConfig = {
               "Stripe account created successfully:",
               createAccountData,
             );
-          } 
+          }else{
+             const createAccountResponse = await fetch(
+               `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-customer-stripe-account`,
+               {
+                 method: "POST",
+                 headers: {
+                   "Content-Type": "application/json",
+                 },
+                 body: JSON.stringify({
+                   customer_id: result.data.customer_id,
+                   stripe_id: stripeData.customer.id,
+                 }),
+               },
+             );
+             createAccountData = await createAccountResponse.json();
+
+             if (createAccountResponse.status !== 200) {
+               throw new Error(createAccountData.error);
+             }
+             console.log(
+               "Stripe account created successfully:",
+               createAccountData,
+             );
+          }
         }
         return true;
       } catch {

@@ -6,8 +6,10 @@ import Heading from "./Heading";
 import Capsule from "./Capsule";
 import IconWithBg from "./IconWithBg";
 import SvgIconDownload from "@/svgs/SvgIconDownload";
+import { useRouter } from "next/navigation";
 
 function CustomersList() {
+  const router = useRouter();
   const handleReceiptClick = (url) => {
     if (url) {
       window.open(url, "_blank", "noopener,noreferrer");
@@ -21,19 +23,24 @@ function CustomersList() {
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDetailsModalOpen, setDetailsIsModalOpen] = useState(false);
-  const [isHiringDetailsModalOpen, setIsHiringDetailsModalOpen] = useState(false);
-  
+  const [isHiringDetailsModalOpen, setIsHiringDetailsModalOpen] =
+    useState(false);
+
   const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
+  const [isBalanceModalOpen, setIsBalanceModalOpen] = useState(false);
   const [invoiceDetails, setInvoiceDetails] = useState({
     amount: "",
     description: "",
+  });
+  const [BalanceDetails, setBalanceDetails] = useState({
+    amount: "",
   });
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [balance, setBalance] = useState({ available: [], pending: [] });
   const [lastCustomerId, setLastCustomerId] = useState(null);
   const [hasMore, setHasMore] = useState(false);
-  const[totalPaymentsDue, setTotalPaymentsDue] = useState(0);
+  const [totalPaymentsDue, setTotalPaymentsDue] = useState(0);
   const [customerDetails, setCustomerDetails] = useState(null);
   const [customerHiringDetails, setCustomerHiringDetails] = useState(null);
   const [invoiceStatusFilter, setInvoiceStatusFilter] = useState("");
@@ -44,15 +51,13 @@ function CustomersList() {
     fetchBalance();
   }, []);
 
-  
-
   const handleObserver = (entries) => {
-  const target = entries[0];
-  if (target.isIntersecting && hasMore && !loadingMore) {
-    setLoadingMore(true); // Set loading state when fetching more data
-    fetchCustomers(lastCustomerId);
-  }
-};
+    const target = entries[0];
+    if (target.isIntersecting && hasMore && !loadingMore) {
+      setLoadingMore(true); // Set loading state when fetching more data
+      fetchCustomers(lastCustomerId);
+    }
+  };
 
   const calculateTotalPaymentsDue = () => {
     const total = customers.reduce((acc, customer) => {
@@ -66,122 +71,127 @@ function CustomersList() {
     setTotalPaymentsDue(total);
   };
 
-// Adjust the IntersectionObserver useEffect
-useEffect(() => {
-  const options = {
-    root: null,
-    rootMargin: "0px",
-    threshold: 1.0,
-  };
+  // Adjust the IntersectionObserver useEffect
+  useEffect(() => {
+    const options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 1.0,
+    };
 
-  const observerInstance = new IntersectionObserver(handleObserver, options);
-  if (observer.current) observer.current = observerInstance;
+    const observerInstance = new IntersectionObserver(handleObserver, options);
+    if (observer.current) observer.current = observerInstance;
 
-  const loadMoreElement = document.querySelector("#load-more");
-  if (loadMoreElement) observerInstance.observe(loadMoreElement);
+    const loadMoreElement = document.querySelector("#load-more");
+    if (loadMoreElement) observerInstance.observe(loadMoreElement);
 
-  return () => {
-    if (observerInstance && observerInstance.disconnect) {
-      observerInstance.disconnect();
-    }
-  };
-}, [hasMore, loadingMore]); // Adjust dependencies to avoid reinitializing observer
-
+    return () => {
+      if (observerInstance && observerInstance.disconnect) {
+        observerInstance.disconnect();
+      }
+    };
+  }, [hasMore, loadingMore]); // Adjust dependencies to avoid reinitializing observer
 
   const fetchCustomers = async (startingAfter = null) => {
-  try {
-    setLoadingMore(true);
-    const baseUrl = "/api/customers-list";
-    const url = new URL(baseUrl, window.location.origin);
-    url.searchParams.append("limit", 100);
+    try {
+      setLoadingMore(true);
+      const baseUrl = "/api/customers-list";
+      const url = new URL(baseUrl, window.location.origin);
+      url.searchParams.append("limit", 100);
 
-    if (startingAfter) {
-      url.searchParams.append("starting_after", startingAfter);
-    }
+      if (startingAfter) {
+        url.searchParams.append("starting_after", startingAfter);
+      }
 
-    const response = await fetch(url.toString());
-    const data = await response.json();
+      const response = await fetch(url.toString());
+      const data = await response.json();
 
-    if (response.ok) {
-      const filteredCustomers = await Promise.all(
-          data.data.map(async (customer) => {
-            const chargesResponse = await fetch("/api/client-charges-list", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ customer_id: customer.id }),
-            });
-            const chargesData = await chargesResponse.json();
-
-            if (chargesData.data.length > 0) {
-              // Fetch subscriptions if charges exist
-              const subscriptionResponse = await fetch(
-                `/api/client-subscriptions-list`,
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({ customer_id: customer.id }),
-                }
-              );
-
-              const subscriptionData = await subscriptionResponse.json();
-
-              // You can use subscriptionData as needed, for example:
-              customer.subscriptions = subscriptionData.data;
-
-              customer.latestInvoiceId = customer.subscriptions[0]?.latest_invoice;
-
-              customer.last_invoice_det = await fetchInvoiceDetails(customer.subscriptions[0]?.latest_invoice)
-              
-
-              return customer;
-            } else {
-              return null;
+      if (response.ok) {
+        const filteredCustomers = data?.data?.map((customer) => {
+            if(customer?.metadata?.customer == 1){
+                return customer;
+            }else{
+                return null;
             }
-          })
+        })
+        //await Promise.all(
+        //   data.data.map(async (customer) => {
+        //     const chargesResponse = await fetch("/api/client-charges-list", {
+        //       method: "POST",
+        //       headers: {
+        //         "Content-Type": "application/json",
+        //       },
+        //       body: JSON.stringify({ customer_id: customer.id }),
+        //     });
+        //     const chargesData = await chargesResponse.json();
+
+        //     if (chargesData.data.length > 0) {
+        //       // Fetch subscriptions if charges exist
+        //       const subscriptionResponse = await fetch(
+        //         `/api/client-subscriptions-list`,
+        //         {
+        //           method: "POST",
+        //           headers: {
+        //             "Content-Type": "application/json",
+        //           },
+        //           body: JSON.stringify({ customer_id: customer.id }),
+        //         },
+        //       );
+
+        //       const subscriptionData = await subscriptionResponse.json();
+
+        //       // You can use subscriptionData as needed, for example:
+        //       customer.subscriptions = subscriptionData.data;
+
+        //       customer.latestInvoiceId =
+        //         customer.subscriptions[0]?.latest_invoice;
+
+        //       customer.last_invoice_det = await fetchInvoiceDetails(
+        //         customer.subscriptions[0]?.latest_invoice,
+        //       );
+
+        //       return customer;
+        //     } else {
+        //       return null;
+        //     }
+        //   }),
+        // );
+        // setCustomers(data.data)
+        setCustomers((prevCustomers) => [
+          ...prevCustomers,
+          ...filteredCustomers.filter((customer) => customer !== null),
+        ]);
+        setHasMore(data.has_more);
+        setLastCustomerId(
+          data.data.length > 0 ? data.data[data.data.length - 1].id : null,
         );
-
-
-      setCustomers((prevCustomers) => [
-        ...prevCustomers,
-        ...filteredCustomers.filter((customer) => customer !== null),
-      ]);
-      setHasMore(data.has_more);
-      setLastCustomerId(
-        data.data.length > 0 ? data.data[data.data.length - 1].id : null
-      );
-      console.log("Last Cus id ", data.data[data.data.length - 1].id)
-    } else {
-      setError(data.error);
+        console.log("Last Cus id ", data.data[data.data.length - 1].id);
+      } else {
+        setError(data.error);
+      }
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoadingMore(false); // Reset loading state
     }
-  } catch (error) {
-    setError(error.message);
-  } finally {
-    setLoadingMore(false); // Reset loading state
-  }
-};
+  };
 
-
-const fetchInvoiceDetails = async (invoiceId) => {
-  try {
+  const fetchInvoiceDetails = async (invoiceId) => {
+    try {
       const response = await fetch("/api/stripe-invoice", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ invoiceId }),
-    });
-    const data = await response.json();
-    return data; // Return invoice data to be used
-  } catch (error) {
-    console.error("Error fetching invoice details:", error);
-    setError(error.message);
-  }
-};
-
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ invoiceId }),
+      });
+      const data = await response.json();
+      return data; // Return invoice data to be used
+    } catch (error) {
+      console.error("Error fetching invoice details:", error);
+      setError(error.message);
+    }
+  };
 
   const fetchBalance = async () => {
     try {
@@ -244,14 +254,17 @@ const fetchInvoiceDetails = async (invoiceId) => {
   };
 
   const handleCustomerHiringClick = async (customer_id) => {
-   setLoading(true);
+    setLoading(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/get-hiring-payments?stripe_client_id=${customer_id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/get-hiring-payments?customer_id=${customer_id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -267,12 +280,10 @@ const fetchInvoiceDetails = async (invoiceId) => {
     } finally {
       setLoading(false);
     }
-    
   };
 
-
   const handleCustomerDetailsClick = async (customer_id) => {
-   setLoading(true);
+    setLoading(true);
     try {
       const response = await fetch("/api/client-subscriptions-list", {
         method: "POST",
@@ -296,9 +307,7 @@ const fetchInvoiceDetails = async (invoiceId) => {
     } finally {
       setLoading(false);
     }
-    
   };
-
 
   const handleDetailsCloseModal = () => {
     setDetailsIsModalOpen(false);
@@ -309,6 +318,36 @@ const fetchInvoiceDetails = async (invoiceId) => {
     setIsHiringDetailsModalOpen(false);
     setCustomerHiringDetails(null);
   };
+
+  const handleAddBalance = async () => {
+    if (!selectedCustomer) return;
+
+    try{
+        const response = await fetch("/api/add-wallet-balance", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            customer_id: selectedCustomer.id,
+            amount: parseInt(-(BalanceDetails.amount * 100)),
+          }),
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          setError(data.error || "Failed to add balance");
+        }
+
+    }catch(error){
+        setError(error.message);
+    } finally {
+      setIsBalanceModalOpen(false);
+      setBalanceDetails({ amount: ""});
+      setSelectedCustomer(null);
+      router.refresh()
+    }
+  }
 
   const handleCreateInvoice = async () => {
     if (!selectedCustomer) return;
@@ -347,6 +386,11 @@ const fetchInvoiceDetails = async (invoiceId) => {
     setSelectedCustomer(customer);
     setIsInvoiceModalOpen(true);
   };
+  const openBalanceModal = (customer) => {
+    setSelectedCustomer(customer);
+    setIsBalanceModalOpen(true);
+  };
+
 
   const handleCloseInvoiceModal = () => {
     setIsInvoiceModalOpen(false);
@@ -354,24 +398,30 @@ const fetchInvoiceDetails = async (invoiceId) => {
     setSelectedCustomer(null);
   };
 
+  const handleCloseBalanceModal = () => {
+    setIsBalanceModalOpen(false);
+    setBalanceDetails({ amount: ""});
+    setSelectedCustomer(null);
+  };
+
   const filteredCustomers = customers.filter((customer) => {
     const emailMatch = customer.email
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
-    const statusMatch = invoiceStatusFilter
-      ? customer.last_invoice_det?.status === invoiceStatusFilter
-      : true;
-    return emailMatch && statusMatch;
+    // const statusMatch = invoiceStatusFilter
+    //   ? customer.last_invoice_det?.status === invoiceStatusFilter
+    //   : true;
+    return emailMatch; //&& statusMatch;
   });
 
   if (error) {
     return <div>Error: {error}</div>;
   }
-   
+
   return (
     <div className="rounded-3xl bg-neutral-white p-6 text-sm">
       <div className="flex justify-between">
-        <Heading>Client Payments</Heading>
+        <Heading>Candidate Payments</Heading>
         <div>
           <Heading>Balance</Heading>
           <h1 className="text-lg">
@@ -401,7 +451,7 @@ const fetchInvoiceDetails = async (invoiceId) => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <select
+        {/* <select
           value={invoiceStatusFilter}
           onChange={(e) => setInvoiceStatusFilter(e.target.value)}
           className="w-52 rounded-lg border border-gray-300 py-4"
@@ -409,34 +459,60 @@ const fetchInvoiceDetails = async (invoiceId) => {
           <option value="">Last Invoice Status</option>
           <option value="paid">Paid</option>
           <option value="open">Open</option>
-        </select>
+        </select> */}
       </div>
       <div className="h-[90vh] overflow-y-auto p-5">
         <ul className="flex flex-col flex-wrap gap-3">
-          <li className="grid grid-cols-10 text-start">
+          <li className="grid grid-cols-6 text-start">
             {/* <div>ID</div> */}
             <div>Name</div>
             <div>Email</div>
-            <div>Last Payment Date</div>
+            <div>Wallet Balance</div>
+            <div>Top Up Wallet</div>
+            <div>Invoice</div>
+            <div>Hiring History</div>
+            {/* <div>Last Payment Date</div>
             <div>Amount</div>
             <div>Next Payment Date</div>
             <div>Last Invoice Status</div>
-            <div>Invoice</div>
             <div>Payment History</div>
             <div>Details</div>
-            <div>Client History</div>
+            <div>Client History</div> */}
           </li>
           <hr></hr>
           {filteredCustomers.map((customer) => (
             <>
               <li
-                className="grid grid-cols-10 text-wrap text-start"
+                className="grid grid-cols-6 text-wrap text-start"
                 key={customer.id}
               >
                 {/* <div className="break-words">{customer.id}</div> */}
                 <div className="break-words">{customer?.name}</div>
                 <div className="break-words">{customer?.email}</div>
-                <div>
+                <div className="break-words">{-customer?.balance / 100}$</div>
+                <Capsule
+                  onClick={() => openBalanceModal(customer)}
+                  className="mx-auto h-auto w-auto cursor-pointer !bg-primary-tint-100 text-xs"
+                >
+                  add Balance +/-
+                </Capsule>
+                <Capsule
+                  onClick={() => openInvoiceModal(customer)}
+                  className="mx-auto h-auto w-auto cursor-pointer !bg-primary-tint-100 text-xs"
+                >
+                  Create Invoice
+                </Capsule>
+
+                <Capsule
+                  onClick={() =>
+                    handleCustomerHiringClick(customer?.metadata?.customer_id)
+                  }
+                  className="mx-auto h-auto w-auto cursor-pointer !bg-primary-tint-100 text-xs"
+                >
+                  View Hiring Details
+                </Capsule>
+
+                {/* <div>
                   {customer?.subscriptions[0]
                     ? new Date(
                         customer?.subscriptions[0]?.current_period_start * 1000,
@@ -451,13 +527,16 @@ const fetchInvoiceDetails = async (invoiceId) => {
                     : "-"}
                 </div>
                 <div>
-                  { customer?.subscriptions[0]?.current_period_end ? new Date(
-                    customer?.subscriptions[0]?.current_period_end * 1000,
-                  ).toLocaleDateString() : "-"}
+                  {customer?.subscriptions[0]?.current_period_end
+                    ? new Date(
+                        customer?.subscriptions[0]?.current_period_end * 1000,
+                      ).toLocaleDateString()
+                    : "-"}
                 </div>
                 <div>
-                  {customer?.last_invoice_det.status ? 
-                  customer?.last_invoice_det?.status : "-"}
+                  {customer?.last_invoice_det.status
+                    ? customer?.last_invoice_det?.status
+                    : "-"}
                 </div>
                 <Capsule
                   onClick={() => openInvoiceModal(customer)}
@@ -482,14 +561,14 @@ const fetchInvoiceDetails = async (invoiceId) => {
                   className="mx-auto h-auto w-auto cursor-pointer !bg-primary-tint-100 text-xs"
                 >
                   View Hiring Details
-                </Capsule>
+                </Capsule> */}
               </li>
               <hr></hr>
             </>
           ))}
-          <li>{loadingMore && <p>Loading clients...</p>}</li>
+          <li>{loadingMore && <p>Loading candidates...</p>}</li>
         </ul>
-        <div>Total Amount: {totalPaymentsDue}$</div>
+        {/* <div>Total Amount: {totalPaymentsDue}$</div> */}
         {loading && <p>Loading...</p>}
         <div id="load-more"></div>
       </div>
@@ -569,6 +648,32 @@ const fetchInvoiceDetails = async (invoiceId) => {
         </Modal>
       )}
 
+      {/* Modal for adding balance */}
+      {selectedCustomer && (
+        <Modal isOpen={isBalanceModalOpen} onClose={handleCloseBalanceModal}>
+          <div className="p-6">
+            <h2>Add Wallet Balance for {selectedCustomer?.name}</h2>
+            <input
+              type="number"
+              placeholder="Amount (in dollars)"
+              value={BalanceDetails.amount}
+              required
+              onChange={(e) =>
+                setBalanceDetails({ ...invoiceDetails, amount: e.target.value })
+              }
+              className="mb-4 w-full rounded border border-gray-300 p-2"
+            />
+
+            <button
+              onClick={handleAddBalance}
+              className="btn-primary rounded-lg bg-purple-950 p-2 text-white"
+            >
+              add
+            </button>
+          </div>
+        </Modal>
+      )}
+
       {/* Modal for Client details */}
       <Modal isOpen={isDetailsModalOpen} onClose={handleDetailsCloseModal}>
         <div className="w-96 p-4">
@@ -638,10 +743,10 @@ const fetchInvoiceDetails = async (invoiceId) => {
             customerHiringDetails.length > 0 ? (
               <ul className="flex flex-col gap-3">
                 <li className="grid grid-cols-8 text-start">
-                  <div className="font-bold">Client Name</div>
-                  <div className="font-bold">Client Email</div>
                   <div className="font-bold">Customer Name</div>
                   <div className="font-bold">Customer Email</div>
+                  <div className="font-bold">Client Name</div>
+                  <div className="font-bold">Client Email</div>
                   <div className="font-bold">Customer Hourly Rate</div>
                   <div className="font-bold">Job</div>
                   <div className="font-bold">Job Hourly Rate</div>
@@ -649,10 +754,10 @@ const fetchInvoiceDetails = async (invoiceId) => {
                 </li>
                 {customerHiringDetails.map((detail, index) => (
                   <li key={index} className="grid grid-cols-8 text-start">
-                    <div>{detail?.client?.name}</div>
-                    <div className="break-words">{detail?.client?.email}</div>
                     <div>{detail?.customer?.name}</div>
                     <div className="break-words">{detail?.customer?.email}</div>
+                    <div>{detail?.client?.name}</div>
+                    <div className="break-words">{detail?.client?.email}</div>
                     <div>{detail?.customer?.hourly_rate}</div>
                     <div>{detail?.job_posting?.position}</div>
                     <div>{detail?.job_posting?.hourly_rate}</div>

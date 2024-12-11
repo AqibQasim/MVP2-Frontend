@@ -20,10 +20,11 @@ function AdminCandidatesClientsHiringRow({
   const [subscriptionId, setSubcriptionId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const [clientSecret, setClientSecret] = useState(null);
 
   const autoRefresh = useCallback(() => {
     router.refresh();
-  },[]);
+  }, []);
 
   //console.log(first)
   const [changeStatus, setChangeStatus] = useState({
@@ -36,9 +37,11 @@ function AdminCandidatesClientsHiringRow({
   });
   const [stripeClientId, setStripeClientId] = useState(null);
 
-  const selectedMethodId = useSelector(
-    (state) => state.payment.selectedMethodId,
-  );
+  const [selectedMethodId, setSelectedMethodId] = useState("");
+
+  // const selectedMethodId = useSelector(
+  //   (state) => state.payment.selectedMethodId,
+  // );
 
   // const filteredClients = clients?.filter((client) =>
   //   client.name.toLowerCase().includes(searchClient.toLowerCase()),
@@ -202,8 +205,8 @@ function AdminCandidatesClientsHiringRow({
   };
 
   const handleSubscription = async () => {
-    const customPrice = ((candidate.hourly_rate * 100) * 40) * 2;
-  
+    const customPrice = candidate.hourly_rate * 100 * 40 * 2;
+
     try {
       setIsLoading(true);
       const subscriptionResponse = await fetch("/api/create-subscription", {
@@ -382,6 +385,44 @@ function AdminCandidatesClientsHiringRow({
   }, [changeStatus]);
 
   useEffect(() => {
+    const fetchData = async () => {
+      if (stripeClientId) {
+        try {
+          // Fetch client secret
+          const setupIntentResponse = await fetch("/api/setup-intent", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ customer_id: stripeClientId }), // Replace with actual customer ID
+          });
+
+          const { clientSecret } = await setupIntentResponse.json();
+          setClientSecret(clientSecret);
+
+          // Fetch payment methods
+          const paymentMethodsResponse = await fetch("/api/payment-methods", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ customer_id: stripeClientId }), // Replace with actual customer ID
+          });
+
+          const { data } = await paymentMethodsResponse.json();
+          console.log("Payment Data is: ", data[0]?.id);
+          setSelectedMethodId(data[0]?.id); // Assuming `data` contains the payment methods
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+    };
+
+    fetchData();
+  }, [stripeClientId]);
+
+
+  useEffect(() => {
     // console.log(changeStatus)
     handleChangeStatus();
     getClientStripe();
@@ -389,7 +430,7 @@ function AdminCandidatesClientsHiringRow({
     if (changeStatus.job_status === "hired") {
       console.log("JOB STATUS CHANGED TO ", changeStatus.job_status);
 
-      if (stripeClientId) {
+      if (stripeClientId && selectedMethodId != "") {
         handleSubscription();
       }
       //stripeClientId
@@ -402,7 +443,7 @@ function AdminCandidatesClientsHiringRow({
         handleCancelSubscription();
       }
     }
-  }, [changeStatus, stripeClientId]);
+  }, [changeStatus, stripeClientId, selectedMethodId]);
 
   useEffect(() => {
     if (subscriptionId) {
@@ -410,10 +451,13 @@ function AdminCandidatesClientsHiringRow({
     }
   }, [subscriptionId, changeStatus]);
 
+    
   const rowClassName =
     job?.job_status === "trial" && daysPassed > 14
       ? "bg-red-600 rounded-lg"
       : "";
+
+      
 
   return (
     <>

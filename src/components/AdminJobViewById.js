@@ -39,7 +39,9 @@ function AdminJobViewById({ job, setShowForm }) {
   const [assignedCandidates, setassignedCandidates] = useState(null);
   const [client, setClient] = useState(null);
 
+  const [selectedMethodId, setSelectedMethodId] = useState("");
   const [subscriptionId, setSubcriptionId] = useState("");
+  const [clientSecret, setClientSecret] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -58,9 +60,9 @@ function AdminJobViewById({ job, setShowForm }) {
   });
   const [stripeClientId, setStripeClientId] = useState(null);
 
-  const selectedMethodId = useSelector(
-    (state) => state.payment.selectedMethodId,
-  );
+  // const selectedMethodId = useSelector(
+  //   (state) => state.payment.selectedMethodId,
+  // );
 
   let options = null;
 
@@ -352,6 +354,43 @@ function AdminJobViewById({ job, setShowForm }) {
     handleChangeStatus();
   }, [changeStatus]);
 
+   useEffect(() => {
+     const fetchData = async () => {
+       if (stripeClientId) {
+         try {
+           // Fetch client secret
+           const setupIntentResponse = await fetch("/api/setup-intent", {
+             method: "POST",
+             headers: {
+               "Content-Type": "application/json",
+             },
+             body: JSON.stringify({ customer_id: stripeClientId }), // Replace with actual customer ID
+           });
+
+           const { clientSecret } = await setupIntentResponse.json();
+           setClientSecret(clientSecret);
+
+           // Fetch payment methods
+           const paymentMethodsResponse = await fetch("/api/payment-methods", {
+             method: "POST",
+             headers: {
+               "Content-Type": "application/json",
+             },
+             body: JSON.stringify({ customer_id: stripeClientId }), // Replace with actual customer ID
+           });
+
+           const { data } = await paymentMethodsResponse.json();
+           console.log("Payment Data is: ", data[0]?.id);
+           setSelectedMethodId(data[0]?.id); // Assuming `data` contains the payment methods
+         } catch (error) {
+           console.error("Error fetching data:", error);
+         }
+       }
+     };
+
+     fetchData();
+   }, [stripeClientId]);
+
   useEffect(() => {
     // console.log(changeStatus)
     handleChangeStatus();
@@ -360,7 +399,7 @@ function AdminJobViewById({ job, setShowForm }) {
     if (changeStatus.job_status === "hired") {
       console.log("JOB STATUS CHANGED TO ", changeStatus.job_status);
 
-      if (stripeClientId) {
+      if (stripeClientId && selectedMethodId != "") {
         handleSubscription();
       }
       //stripeClientId
@@ -373,7 +412,7 @@ function AdminJobViewById({ job, setShowForm }) {
         handleCancelSubscription();
       }
     }
-  }, [changeStatus, stripeClientId]);
+  }, [changeStatus, stripeClientId, selectedMethodId]);
 
   useEffect(() => {
     if (subscriptionId) {
@@ -472,6 +511,8 @@ function AdminJobViewById({ job, setShowForm }) {
   //     },
   //     [jobQuestionLength],
   //   );
+
+
 
   return (
     <>

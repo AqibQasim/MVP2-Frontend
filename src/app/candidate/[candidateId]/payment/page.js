@@ -12,6 +12,8 @@ const nextPaymentDate = "20-0:00";
 export default function CandidateIdPaymentPage({ params }) {
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [paymentHistory, setPaymentHistory] = useState(null);
+  const [customerId, setStripeAccId] = useState(null);
+  const [walletBalance, setWalletBalance] = useState(0)
 
   // Fetch payment details and payment history
   const getPaymentDetails = () => {
@@ -63,6 +65,66 @@ export default function CandidateIdPaymentPage({ params }) {
       ).toLocaleDateString("en-GB")
     : "N/A";
 
+
+    useEffect(() => {
+      if (!params?.candidateId) {
+        console.log("Candidate ID is not defined");
+        return;
+      }
+
+      const fetchData = async () => {
+        try {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/get-customer-stripe-account?customer_id=${params.candidateId}`,
+          );
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const result = await response.json();
+          console.log("THE DATA I GOT IS", result?.data?.stripe_id);
+          setStripeAccId(result?.data?.stripe_id);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+
+      fetchData();
+    }, [params?.candidateId]);
+
+
+     useEffect(() => {
+       if (!params?.candidateId) {
+         console.log("Candidate ID is not defined");
+         return;
+       }
+
+       const fetchData = async () => {
+         try {
+        
+          if(customerId){
+           const response = await fetch("/api/get-customer-balance", {
+             method: "POST",
+             headers: {
+               "Content-Type": "application/json",
+             },
+             body: JSON.stringify({ customerId }),
+           });
+          if (!response.ok) {
+             throw new Error("Network response was not ok");
+           }
+           const result = await response.json();
+           console.log("customer balanceee", result?.data[0]?.ending_balance);
+           setWalletBalance(result?.data[0]?.ending_balance / 100);
+
+          }
+         } catch (error) {
+           console.error("Error fetching data:", error);
+         }
+       };
+
+       fetchData();
+     }, [customerId]);
+
     return (
       <>
         {(!paymentDetails || Object.keys(paymentDetails).length === 0) ? (
@@ -70,10 +132,10 @@ export default function CandidateIdPaymentPage({ params }) {
         ) : (
           <div className="space-y-2">
             <CandidatePaymentHistorySummary
-              total_payment_by_candidate={totalPaymentsByCandidate}
-              total_hires={uniqueJobPostings}
-              last_payment={lastPaymentDate}
-              next_payment={`${nextPaymentDate} - 0:00`}
+              total_payment_by_candidate={walletBalance ? -walletBalance : 0}
+              // total_hires={uniqueJobPostings}
+              // last_payment={lastPaymentDate}
+              // next_payment={`${nextPaymentDate} - 0:00`}
             />
     
             <div className="flex-grow gap-8 rounded-4xl bg-neutral-white px-8 py-10">
