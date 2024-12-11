@@ -39,7 +39,7 @@ function AdminJobViewById({ job, setShowForm }) {
   const [assignedCandidates, setassignedCandidates] = useState(null);
   const [client, setClient] = useState(null);
 
-  const [selectedMethodId, setSelectedMethodId] = useState("");
+  const [selectedMethodId, setSelectedMethodId] = useState(null);
   const [subscriptionId, setSubcriptionId] = useState("");
   const [clientSecret, setClientSecret] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -175,7 +175,7 @@ function AdminJobViewById({ job, setShowForm }) {
   };
 
   const handleSubscription = async () => {
-    const customPrice = assignedCandidates.hourly_rate * 100 * 40;
+    const customPrice = assignedCandidates.hourly_rate * 100 * 80;
 
     try {
       setIsLoading(true);
@@ -399,7 +399,7 @@ function AdminJobViewById({ job, setShowForm }) {
     if (changeStatus.job_status === "hired") {
       console.log("JOB STATUS CHANGED TO ", changeStatus.job_status);
 
-      if (stripeClientId && selectedMethodId != "") {
+      if (stripeClientId && selectedMethodId) {
         handleSubscription();
       }
       //stripeClientId
