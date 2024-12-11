@@ -423,13 +423,14 @@ const ProfileForm = ({ client }) => {
 
   
     <div className="flex justify-center mt-12">
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+
+      <button type="submit" className="bg-primary cursor-pointer text-white px-4 py-2 rounded-full">
         Save Password
       </button>
       <button
         type="button"
         onClick={() => setShowForm(false)}
-        className="ml-2 bg-gray-300 px-10 text-center py-2 rounded"
+        className="ml-2 cursor-pointer bg-gray-300 px-10 text-center py-2 rounded-full"
       >
         Cancel
       </button>
