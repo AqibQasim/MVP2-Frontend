@@ -10,7 +10,7 @@ function AdminJobsList({ jobs, totalJobs, role }) {
   const [jobStatus, setJobStatus] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [startIndex, setStartIndex] = useState(0);
-  const [itemsPerPage] = useState(role === "dashboard" ? 3 : 5);
+  const [itemsPerPage] = useState(5);
 
   const handleJobStatusChange = (event) => {
     setJobStatus(event.target.value);
