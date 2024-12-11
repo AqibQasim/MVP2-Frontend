@@ -79,39 +79,6 @@ function Footer({ data, startIndex, endIndex, onNext, onPrevious }) {
 }
 
 
-// function Footer({ data, startIndex, endIndex, onNext, onPrevious }) {
-//   const isFirstPage = startIndex === 1; // If on the first page
-//   const isLastPage = endIndex >= data.length; // If on the last page
-//   return (
-//     <div className="flex justify-between">
-//       <div>
-//         Showing {startIndex} - {endIndex} of{" "}
-//         {data.length}
-//       </div>
-//       <div className="flex gap-2">
-//         <Capsule
-//          onClick={onPrevious}
-//          className={` ${
-//            isFirstPage ? " cursor-not-allowed" : ""
-//          }`}
-//          disabled={isFirstPage}
-        
-//         >
-//           Previous
-//         </Capsule>
-//         <Capsule
-//           onClick={onNext}
-//           className={` w-[100px]${
-//             isLastPage ? " cursor-not-allowed" : ""
-//           }`}
-//           disabled={isLastPage}
-//         >
-//           Next
-//         </Capsule>
-//       </div>
-//     </div>
-//   );
-// }
 
 Table.Header = Header;
 Table.Body = Body;

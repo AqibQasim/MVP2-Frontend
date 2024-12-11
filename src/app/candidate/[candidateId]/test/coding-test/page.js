@@ -26,6 +26,8 @@ const Page = () => {
   const params = useParams();
   const cid = params.candidateId;
 
+  
+
   const fetchCodingQuestion = () => {
     const codingTestPayload = {
       endpoint: `get-coding-question?candidate_id=${params.candidateId}`,

@@ -52,6 +52,7 @@ function Page({ params }) {
   const [editedPrice, setEditedPrice] = useState(talent?.hourly_rate);
   const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
   const [candidateReport, setCandidateReport] = useState(null);
+  const [budgetingError, setBudgetingError] = useState(false);
   const router = useRouter();
   const [alert, setAlert] = useState(null);
   //const [error,setError]= useState(null)
@@ -271,28 +272,32 @@ function Page({ params }) {
 
   const handleReferCandidate = async () => {
     // e.preventDefault();
-
-    const referClientBody = {
-      client_id: selectedClientId,
-      customer_id: talent.customer_id,
-      job_posting_id: selectedJobId,
-      hourly_rate: hourlyRate,
-      candidate_hourly_rate: talent.hourly_rate,
-    };
-
-    console.log(referClientBody);
-
-    const { error, message } =
-      await referCandidateToClientAction(referClientBody);
-    if (error) {
-      console.log({ Error: error });
-      return setError(error);
+    if (talent?.hourly_rate >= hourlyRate) {
+      setBudgetingError(true);
     } else {
-      setShowForm(false);
-    }
-    if (message) {
-      console.log("Refer Message: ", message);
-      return setShowForm(false);
+      setBudgetingError(false);
+      const referClientBody = {
+        client_id: selectedClientId,
+        customer_id: talent.customer_id,
+        job_posting_id: selectedJobId,
+        hourly_rate: hourlyRate,
+        candidate_hourly_rate: talent?.hourly_rate
+      };
+
+      console.log(referClientBody);
+
+      const { error, message } =
+        await referCandidateToClientAction(referClientBody);
+      if (error) {
+        console.log({ Error: error });
+        return setError(error);
+      } else {
+        setShowForm(false);
+      }
+      if (message) {
+        console.log("Refer Message: ", message);
+        return setShowForm(false);
+      }
     }
   };
 
@@ -417,8 +422,8 @@ function Page({ params }) {
                 <DetailTag
                   icon="/icons/routing.svg"
                   name="City State: "
-                  content={
-                    talent?.city + talent?.province || "No city/state given"
+                  content={ (talent?.city&&talent?.province)?
+                    talent?.city +" , "+ talent?.province : "No city/state given"
                   }
                 />
                 <DetailTag
@@ -477,7 +482,17 @@ function Page({ params }) {
         </h3>
         <form action={handleReferCandidate}>
           <label className="flex">
-            Hourly Rate <div className="text-red-600">*</div>
+            $ Hourly Rate (Candidate) <div className="text-red-600">*</div>
+          </label>
+          <input
+            disabled
+            defaultValue={talent?.hourly_rate}
+            onChange={(e) => setHourlyRate(e.target.value)}
+            required
+            className="mt-2 block w-[100%] border px-2 py-1"
+          />
+          <label className="flex">
+            $ Hourly Rate (Referral) <div className="text-red-600">*</div>
           </label>
           <input
             name="hourlyRate"
@@ -555,6 +570,12 @@ function Page({ params }) {
             >
               Confirm Referral
             </button>
+            {budgetingError && (
+              <p className="text-red-500">
+                {" "}
+                Refferal rate should be greater than Candidates rate{" "}
+              </p>
+            )}
             <button
               type="button"
               onClick={() => setShowForm(false)}

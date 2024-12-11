@@ -50,7 +50,7 @@ function AdminJobsList({ jobs, totalJobs, role }) {
       paragraph="This is the list of all"
       heading="Jobs"
       href={!path.includes("/admin/jobs")&& !path.includes(`/admin/clients/`) ? `/admin/jobs` : null}
-      info={`Total Jobs: ${filteredJobs?.length || 0}`}
+      info={`Total Jobs: ${totalJobs || 0}`}
     >
       {role !== "dashboard" && (
         <div className="mb-4 flex justify-between">

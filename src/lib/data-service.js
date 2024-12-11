@@ -467,7 +467,7 @@ export async function getAllRecommendedCandidates(
   if (job_status === "interviewing") {
     candidates = result?.data.data?.filter(
       (candidate) =>
-        candidate.client_response === "pending" &&
+        (candidate.client_response === "pending" || candidate?.client_response==="scheduled") &&
         candidate?.customer?.talent_status === job_status,
     );
   }
