@@ -236,8 +236,8 @@ function AdminCandidatesClientsHiringRow({
   };
 
   const handleHiring = async () => {
-    const customPrice = candidate.hourly_rate * 100 * 40;
-
+    const customPrice = (candidate.hourly_rate * 100) * 80;
+    
     try {
       // Fetch client secret for subscription
       setIsLoading(true);

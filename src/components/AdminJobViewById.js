@@ -206,7 +206,7 @@ function AdminJobViewById({ job, setShowForm }) {
   };
 
   const handleHiring = async () => {
-    const customPrice = assignedCandidates.hourly_rate * 100 * 40;
+    const customPrice = (assignedCandidates.hourly_rate * 100) * 80;
 
     try {
       // Fetch client secret for subscription
