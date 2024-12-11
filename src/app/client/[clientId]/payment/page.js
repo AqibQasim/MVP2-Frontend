@@ -66,7 +66,7 @@ function Page() {
   const [clientCharges, setClientCharges] = useState([]);
   const [clientCustomerIDs, setclientCustomerID] = useState("");
   const [totalPayments, setTotalPayments] = useState(0);
-  const [selectedMethodId, setSelectedMethodId2] = useState("");
+  const [selectedMethodId, setSelectedMethodId2] = useState(null);
 
   const dispatch = useDispatch();
 

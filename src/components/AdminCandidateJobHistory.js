@@ -31,7 +31,7 @@ function AdminCandidateJobHistory({ job_history, total_job_history }) {
 
   return (
     <DashboardSection
-      className="!min-h-full"
+      className=""
       paragraph="This is the list of all"
       heading="Job History"
       info={`Total Jobs: ${total_job_history || 0}`}

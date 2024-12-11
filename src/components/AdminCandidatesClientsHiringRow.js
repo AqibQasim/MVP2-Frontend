@@ -37,7 +37,7 @@ function AdminCandidatesClientsHiringRow({
   });
   const [stripeClientId, setStripeClientId] = useState(null);
 
-  const [selectedMethodId, setSelectedMethodId] = useState("");
+  const [selectedMethodId, setSelectedMethodId] = useState(null);
 
   // const selectedMethodId = useSelector(
   //   (state) => state.payment.selectedMethodId,
@@ -430,7 +430,7 @@ function AdminCandidatesClientsHiringRow({
     if (changeStatus.job_status === "hired") {
       console.log("JOB STATUS CHANGED TO ", changeStatus.job_status);
 
-      if (stripeClientId && selectedMethodId != "") {
+      if (stripeClientId && selectedMethodId) {
         handleSubscription();
       }
       //stripeClientId

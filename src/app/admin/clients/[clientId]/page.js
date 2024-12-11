@@ -29,6 +29,8 @@ function Page({ params }) {
   const [client, setClient] = useState(null);
   const client_id = params?.clientId;
   const [candidates, setCandidates] = useState(null);
+  const [clientCharges, setClientCharges] = useState([]);
+  const [clientCustomerIDs, setclientCustomerID] = useState("");
 
   const fetchCandidates = async () => {
     const payload = {
@@ -70,6 +72,85 @@ function Page({ params }) {
       isMounted = false;
     };
   }, [client_id]);
+
+   function convertUnixToDate(unixTimestamp) {
+     const milliseconds = unixTimestamp * 1000; // Convert seconds to milliseconds
+     const dateObject = new Date(milliseconds);
+
+     // Define options for toLocaleDateString
+     const options = { day: "numeric", month: "long", year: "numeric" };
+
+     return dateObject.toLocaleDateString("en-GB", options); // Format as a human-readable date string
+   }
+
+  async function getClientStripe(clientId) {
+    const payload = {
+      endpoint: `get-client-stripe-account?client_id=${clientId}`,
+      method: "GET",
+    };
+    const result = await mvp2ApiHelper(payload);
+    if (result.status === 200) {
+      return result.data.data.stripe_id;
+    }
+    console.error(result?.data?.message);
+    return null; // Return null or handle the error appropriately
+  }
+
+  useEffect(() => {
+    const fetchClientStripe = async () => {
+      const clientCustomerID = await getClientStripe(client_id);
+      setclientCustomerID(clientCustomerID);
+
+      console.log("RESULT FROM BK API", clientCustomerIDs);
+    };
+
+    fetchClientStripe();
+  }, [client_id]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (clientCustomerIDs) {
+        try {
+          const chargesResponse = await fetch("/api/client-charges-list", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ customer_id: clientCustomerIDs }), // Replace with actual customer ID
+          });
+
+          if (!chargesResponse.ok) {
+            throw new Error(`HTTP error! status: ${chargesResponse.status}`);
+          }
+
+          const { data } = await chargesResponse.json(); // Access the data property directly
+          console.log("Charges Data is: ", data); // Inspect the charges data
+
+          // Check if data is an array
+          if (!Array.isArray(data)) {
+            console.error("Expected an array but got:", data);
+            return;
+          }
+
+          // Transform charges data into client_payment_history format
+          const transformedCharges = data.map((charge) => ({
+            name: charge.billing_details.name || "Candidate ", // Fallback if no name is available
+            amount: `$${(charge.amount / 100).toFixed(2)}`, // Convert from cents to dollars
+            status: charge.status, // 'paid', 'pending', etc.
+            invoice: charge.id, // Assuming invoice refers to the charge id
+            receipt_url: charge.receipt_url,
+            date: convertUnixToDate(charge.created),
+          }));
+
+          setClientCharges(transformedCharges);
+        } catch (error) {
+          console.error("Error fetching charges:", error);
+        }
+      }
+    };
+
+    fetchData();
+  }, [clientCustomerIDs]); // Ensure `useEffect` is properly configured to run only once on mount
 
   if (!client) return <div>Loading...</div>;
 
@@ -187,8 +268,18 @@ function Page({ params }) {
           </div>
           <div className="space-y-4">
             <div className="job-posting-card mt-4 h-fit rounded-lg border border-gray-300 p-4">
-              <AdminClientCandidatesTable candidates={candidates?.data} totalCandidates={candidates?.data?.length} />
+              <AdminClientCandidatesTable
+                candidates={candidates?.data}
+                totalCandidates={candidates?.data?.length}
+              />
             </div>
+          </div>
+          <div className="space-y-4">
+              <ClientPaymentHistoryTable
+                client_id={client_id}
+                paymentHistory={clientCharges}
+              />
+          
           </div>
         </div>
       </div>
