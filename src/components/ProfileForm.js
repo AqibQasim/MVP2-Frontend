@@ -9,15 +9,19 @@ import ErrorPopup from "./ErrorPopup";
 import ButtonBack from "./ButtonBack";
 import "../styles/Setting.css";
 import Modal from "@/components/AdminJobsFormModal";
+import Image from "next/image";
 
 const ProfileForm = ({ client }) => {
   const pathname = usePathname();
   const client_id = pathname.split("/")[2];
   const [sucess, setsuccess] = useState(false);
   const [error, seterror] = useState(false);
+  const [errors, setErrors] = useState({});
   const firstNameRef = useRef(null);
   const lastNameRef = useRef(null);
   const emailRef = useRef(null);
+  const newPasswordRef = useRef(null);
+  const confirmPasswordRef = useRef(null);
   const passwordRef = useRef(null);
   const locationRef = useRef(null);
   const cityRef = useRef(null);
@@ -27,8 +31,17 @@ const ProfileForm = ({ client }) => {
   const countryRef = useRef(null);
   const companyRef = useRef(null);
   const companySizeRef = useRef(null);
-  const newPasswordRef = useRef(null);
   const [showForm, setShowForm]  = useState(false)
+  const [show, setShow] = useState(false);
+  const [show2, setShow2] = useState(false);
+  
+
+  const handClick = () => {
+    setShow(!show);
+  };
+  const handClick2 = () => {
+    setShow2(!show2);
+  };
 
   console.log("client is", client);
 
@@ -42,13 +55,13 @@ const ProfileForm = ({ client }) => {
         firstName: firstNameRef.current.value,
         lastName: lastNameRef.current.value,
         // email: emailRef.current.value,
-        // password: passwordRef.current.value,
+      //  password: passwordRef.current.value,
         contact_no: phoneNumRef.current.value,
         client_location: locationRef.current.value,
         city: cityRef.current.value,
         province: provinceRef.current.value,
         area_code:
-          areaCodeRef.current?.value != "" ? areaCodeRef.current?.value : null,
+        areaCodeRef.current?.value != "" ? areaCodeRef.current?.value : null,
         country: countryRef.current.value,
         company_name: companyRef.current.value,
         company_size: companySizeRef.current.value,
@@ -68,6 +81,85 @@ const ProfileForm = ({ client }) => {
       console.error("Error while updating profile", error);
     }
   };
+
+
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+  
+    const newPassword = newPasswordRef.current.value.trim();
+    const confirmPassword = confirmPasswordRef.current.value.trim();
+  
+    // Password validation rules
+    if (newPassword.length < 8) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        newPassword: "Password must be at least 8 characters long.",
+      }));
+      return;
+    }
+    if (!/[A-Z]/.test(newPassword)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        newPassword: "Password must contain at least one uppercase letter.",
+      }));
+      return;
+    }
+    if (!/[a-z]/.test(newPassword)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        newPassword: "Password must contain at least one lowercase letter.",
+      }));
+      return;
+    }
+    if (!/[0-9]/.test(newPassword)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        newPassword: "Password must contain at least one number.",
+      }));
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        confirmPassword: "Passwords do not match.",
+      }));
+      return;
+    }
+  
+    // Clear previous errors
+    setErrors({});
+  
+    const payload = {
+      endpoint: `client-profile-update/${client_id}`, 
+      method: "PUT",
+      body: {
+        password: newPassword,
+      },
+    };
+  
+    try {
+      const result = await mvp2ApiHelper(payload);
+      if (result.status === 200) {
+        console.log("Password updated successfully", result.data);
+        setShowForm(false);
+        setsuccess(true);
+      } else {
+        console.error("Error updating password", result?.data?.message);
+        seterror(true);
+      }
+    } catch (error) {
+      console.error("Error while updating password", error);
+      seterror(true);
+    }
+  };
+  
+
+
+//
+  
+ 
+ 
+
   return (
     <div className="">
       <form onSubmit={submitHandler}>
@@ -375,68 +467,118 @@ const ProfileForm = ({ client }) => {
           </button>
         </div> */}
       </form>
-      <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
-     <form>
+     
+  <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
+  <form onSubmit={handlePasswordChange}>
 
-     <div className="mb-4 mt-4 grid grid-cols-4  items-start gap-4">
+  <div className=" mt-4 grid grid-cols-4 items-start gap-4">
           {/* Section Heading */}
-          <Heading xm className="col-span-1  mt-4">
-              New Password:
-          </Heading>
-
-          <div className="col-span-3 mr-12">
-            <div className="flex flex-col sm:flex-row sm:space-x-4">
-              <div className="flex flex-1 flex-col">
+          <Heading xm className="col-span-1 mt-4">New Password:</Heading>
+          {/* Input Group */}
+          <div className="col-span-3">
+            {/* First Name and Last Name Row */}
+            <div className="flex flex-row ">
+              {/* First Name */}
+              <div className="flex flex-1 flex-col ">
                 <input
-                  type="password" 
-                  placeholder="New Password"
-                  ref={newPasswordRef}
-                  defaultValue={client?.password || ""}
-                  className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
+                     type={show ? "text" : "password"}
+                    placeholder="New Password"
+                    ref={newPasswordRef}
+                  className="focus:ring-none mt-1  rounded-full border bg-gray-100 p-2 text-gray-900 focus:outline-none"
                 />
+             
               </div>
+              <p className="relative right-[30px] bottom-2">
+                    {show ? (
+                      <Image
+                        src="/eye-close.svg"
+                        width={20}
+                        height={20}
+                        alt="eye close"
+                        onClick={handClick}
+                        className="mt-[24px] inline-block cursor-pointer"
+                      />
+                    ) : (
+                      <Image
+                        src="/eye.svg"
+                        width={20}
+                        height={20}
+                        alt="eye open"
+                        onClick={handClick}
+                        className="mt-[24px] inline-block cursor-pointer"
+                      />
+                    )}
+                  </p>
             </div>
           </div>
         </div>
-     <div className="mb-4 mt-4 grid grid-cols-4 items-start gap-4">
+  <div className=" mt-4 grid grid-cols-4 items-start gap-4">
           {/* Section Heading */}
-          <Heading xm className="col-span-1 mt-4">
-              Confirm  Password:
-          </Heading>
-
-          <div className="col-span-3 mr-12">
-            <div className="flex flex-col sm:flex-row sm:space-x-4">
-              <div className="flex flex-1 flex-col">
+          <Heading xm className="col-span-1 mt-4">Confirm Password:</Heading>
+          {/* Input Group */}
+          <div className="col-span-3">
+            {/* First Name and Last Name Row */}
+            <div className="flex flex-row ">
+              {/* First Name */}
+              <div className="flex flex-1 flex-col ">
                 <input
-                  type="password"
+                   type={show2 ? "text" : "password"}
                   placeholder="Confirm Password"
-                  ref={newPasswordRef}
-                  
-                  className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
+                  ref={confirmPasswordRef}
+                  className="focus:ring-none mt-1  rounded-full border bg-gray-100 p-2 text-gray-900 focus:outline-none"
                 />
+                  
               </div>
+
+              <p className="relative right-[30px] bottom-2">
+                    {show2 ? (
+                      <Image
+                        src="/eye-close.svg"
+                        width={20}
+                        height={20}
+                        alt="eye close"
+                        onClick={handClick2}
+                        className="mt-[24px] inline-block cursor-pointer"
+                      />
+                    ) : (
+                      <Image
+                        src="/eye.svg"
+                        width={20}
+                        height={20}
+                        alt="eye open"
+                        onClick={handClick2}
+                        className="mt-[24px] inline-block cursor-pointer"
+                      />
+                    )}
+                  </p>
             </div>
           </div>
         </div>
 
+        <p className="text-red-600">{errors?.newPassword}</p>
+        <p className="text-red-600">{errors?.confirmPassword}</p>
 
 
-  
+       
+    
     <div className="flex justify-center mt-12">
-
-      <button type="submit" className="bg-primary cursor-pointer text-white px-4 py-2 rounded-full">
+      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-full">
         Save Password
       </button>
       <button
         type="button"
         onClick={() => setShowForm(false)}
-        className="ml-2 cursor-pointer bg-gray-300 px-10 text-center py-2 rounded-full"
+        className="ml-2 bg-gray-300 px-10 text-center py-2 rounded-full"
       >
         Cancel
       </button>
     </div>
   </form>
 </Modal>
+
+
+       
+     
 
       {sucess && (
         <ErrorPopup
