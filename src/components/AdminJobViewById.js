@@ -698,7 +698,7 @@ function AdminJobViewById({ job, setShowForm }) {
                 {" "}
                 view details{" "}
               </CapsuleLink>
-              {assignedCandidates?.talent_status !== "open" ? (
+              {assignedCandidates?.talent_status !== "open" && job?.job_status!=="closed" ? (
                 <div className="mx-3 mt-5">
                   Status : {assignedCandidates?.talent_status}
                 </div>
@@ -713,6 +713,7 @@ function AdminJobViewById({ job, setShowForm }) {
               >
                 Click here to Assign
               </div>
+              
             </div>
           )}
         </div>
