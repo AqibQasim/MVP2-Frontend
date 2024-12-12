@@ -5,9 +5,9 @@ import Table from "./Table";
 
 function ClientPaymentHistoryTable({ client_id, paymentHistory }) {
 
-  // if(paymentHistory && paymentHistory?.length===0){
-  //   return null;
-  // }
+  if(paymentHistory && paymentHistory?.length===0){
+    return null;
+  }
   
   return (
     <DashboardSection
