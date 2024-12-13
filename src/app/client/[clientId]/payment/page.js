@@ -280,14 +280,14 @@ function Page() {
     return dateObject.toLocaleDateString("en-GB", options); // Format as a human-readable date string
   }
 
-  useEffect(() => {
-    // if(paymentMethods){
-    //     console.log("testttttt", paymentMethods[0]?.id)
-    // }
-    if (selectedMethodId != "") {
-      dispatch(setSelectedMethodId(selectedMethodId));
-    }
-  }, [selectedMethodId, dispatch]);
+  // useEffect(() => {
+  //   // if(paymentMethods){
+  //   //     console.log("testttttt", paymentMethods[0]?.id)
+  //   // }
+  //   if (selectedMethodId != "") {
+  //     dispatch(setSelectedMethodId(selectedMethodId));
+  //   }
+  // }, [selectedMethodId, dispatch]);
 
  function addThirtyDaysToDate(date) {
   const originalDate = new Date(date);
@@ -346,6 +346,7 @@ function Page() {
         paymentElementRef={paymentElementRef}
         stripe={stripe}
         elements={elements}
+        clientCustomerIDs={clientCustomerIDs}
         clientSecret={clientSecret}
         onSelect={setSelectedMethodId2}
       />
