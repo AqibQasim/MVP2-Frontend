@@ -355,40 +355,32 @@ function AdminJobViewById({ job, setShowForm }) {
   }, [changeStatus]);
 
    useEffect(() => {
-     const fetchData = async () => {
-       if (stripeClientId) {
-         try {
-           // Fetch client secret
-           const setupIntentResponse = await fetch("/api/setup-intent", {
-             method: "POST",
-             headers: {
-               "Content-Type": "application/json",
-             },
-             body: JSON.stringify({ customer_id: stripeClientId }), // Replace with actual customer ID
-           });
+     const fetchCustomer = async () => {
+      if (stripeClientId){
+        try {
+          const response = await fetch("/api/get-customer", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ customerId: clientCustomerIDs }), // Replace with the actual customer ID
+          });
 
-           const { clientSecret } = await setupIntentResponse.json();
-           setClientSecret(clientSecret);
+          if (!response.ok) {
+            throw new Error("Failed to fetch customer");
+          }
 
-           // Fetch payment methods
-           const paymentMethodsResponse = await fetch("/api/payment-methods", {
-             method: "POST",
-             headers: {
-               "Content-Type": "application/json",
-             },
-             body: JSON.stringify({ customer_id: stripeClientId }), // Replace with actual customer ID
-           });
+          const result = await response.json();
+          console.log("Data from fetch customer", result);
+          setSelectedMethodId(result?.invoice_settings?.default_payment_method);
+        } catch (error) {
+          console.error("Error fetching customer:", error);
+        }
 
-           const { data } = await paymentMethodsResponse.json();
-           console.log("Payment Data is: ", data[0]?.id);
-           setSelectedMethodId(data[0]?.id); // Assuming `data` contains the payment methods
-         } catch (error) {
-           console.error("Error fetching data:", error);
-         }
-       }
+      }
      };
 
-     fetchData();
+     fetchCustomer();
    }, [stripeClientId]);
 
   useEffect(() => {
