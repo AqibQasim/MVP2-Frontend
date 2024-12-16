@@ -1,13 +1,77 @@
 import Image from "next/image";
 import Dot from "./Dot";
+import {useState, useEffect, useRef} from "react";
 
 function PaymentMethodCard({
   last4 = "7460",
   name = "Richard Feymman",
   date = "12/2050",
+  card_id,
   selected,
-  onSelect
+  onSelect,
 }) {
+  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
+  const optionsRef = useRef(null);
+
+  const handleDotClick = () => {
+    setIsOptionsVisible((prev) => !prev);
+  };
+
+  async function detachPaymentMethod(paymentMethodId) {
+    try {
+      const response = await fetch("/api/remove-card", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ paymentMethodId }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        console.log("Payment method detached successfully:", result);
+        return result;
+      } else {
+        console.error("Error detaching payment method:", result.error);
+        throw new Error(result.error);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      throw error;
+    }
+  }
+
+  const handleRemoveCard = () => {
+    console.log("Card removed", card_id);
+    
+    // Example usage
+    detachPaymentMethod(card_id)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+      window.location.reload()
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (optionsRef.current && !optionsRef.current.contains(event.target)) {
+        setIsOptionsVisible(false);
+      }
+    };
+
+    if (isOptionsVisible) {
+      document.addEventListener("click", handleClickOutside);
+    } else {
+      document.removeEventListener("click", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [isOptionsVisible]);
   return (
     <div className="relative flex w-full items-center justify-start gap-8 rounded-xl bg-grey-primary-tint-90 p-4">
       <div className="flex items-center justify-center gap-2">
@@ -44,18 +108,34 @@ function PaymentMethodCard({
       <div className="settings? ml-auto mr-0.5">
         {/* <div className="dot block h-4 w-4 rounded-full border-4 border-primary-tint-80 bg-primary"></div> */}
         <div
-          className={`dot block h-4 w-4 rounded-full border-4 cursor-pointer ${
-            selected ? " border-primary-tint-80 bg-primary" : "border-primary-tint-80 bg-gray-600"
+          className={`dot block h-4 w-4 cursor-pointer rounded-full border-4 ${
+            selected
+              ? "border-primary-tint-80 bg-primary"
+              : "border-primary-tint-80 bg-gray-600"
           }`}
           onClick={onSelect}
         ></div>
       </div>
-      <div className="settings absolute right-4 top-4 flex items-center justify-center gap-[2px]">
+      <div
+        onClick={handleDotClick}
+        className="settings absolute right-4 top-4 flex cursor-pointer items-center justify-center gap-[2px]"
+      >
         {Array(3)
           .fill()
           .map((_, index) => (
             <Dot key={index} className="" />
           ))}
+
+        {isOptionsVisible && (
+          <div
+            ref={optionsRef}
+            className="options-menu absolute right-0 mt-14 w-28 rounded bg-white p-2 shadow-lg"
+          >
+            <button onClick={handleRemoveCard} className="text-red-600">
+              Remove Card
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

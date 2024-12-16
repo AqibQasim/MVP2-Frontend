@@ -162,6 +162,7 @@ function ClientPaymentMethod({
         {paymentMethods.map((method) => (
           <PaymentMethodCard
             key={method.id}
+            card_id={method.id}
             last4={method.card.last4}
             name={method.billing_details.name}
             date={`${method.card.exp_month}/${method.card.exp_year}`}
