@@ -12,7 +12,7 @@ function AdminClientsTable({ clients, totalClients, role }) {
   const [jobStatus, setJobStatus] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [startIndex, setStartIndex] = useState(0);
-  const [itemsPerPage] = useState(5);
+  const [itemsPerPage] = useState(10);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
 
