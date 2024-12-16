@@ -8,6 +8,19 @@ import { sendNotification } from "@/utils/notification";
 
 async function Page({ params }) {
   const router = useRouter();
+  const requestNotificationPermission = async () => {
+    if ("Notification" in window) {
+      const isAcceptedNotification = await Notification.requestPermission();
+      if (isAcceptedNotification === "granted") {
+        sendNotification(params?.candidateId, "candidate");
+      } else {
+        console.warn("notification permission denied");
+      }
+    } else {
+      console.error("This browser does not support notifications.");
+    }
+  };
+  
   useEffect(() => {
     // console.log("Requesting notification permission...");
     requestNotificationPermission();
@@ -27,18 +40,6 @@ async function Page({ params }) {
   console.log("candidates are :", candidate);
 
 
-  const requestNotificationPermission = async () => {
-    if ("Notification" in window) {
-      const isAcceptedNotification = await Notification.requestPermission();
-      if (isAcceptedNotification === "granted") {
-        sendNotification(params?.candidateId, "candidate");
-      } else {
-        console.warn("notification permission denied");
-      }
-    } else {
-      console.error("This browser does not support notifications.");
-    }
-  };
 
   return (
     <>
