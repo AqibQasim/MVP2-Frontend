@@ -8,8 +8,10 @@ import EntityCard from "./EntityCard";
 import IconWithBg from "./IconWithBg";
 import SkillIconWithBg from "./SkillIconWithBg";
 import Table from "./Table";
+import getCandidateStatus from "@/utils/getCandidateStatus";
+import { useRouter } from "next/navigation";
 
-function AdminCandidateRow({ candidate }) {
+function AdminCandidateRow({ candidate, score }) {
   const [showForm, setShowForm] = useState(false);
   const [hourlyRate, setHourlyRate] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
@@ -21,8 +23,8 @@ function AdminCandidateRow({ candidate }) {
   const [selectedJob, setSelectedJob] = useState("");
   const [selectedJobId, setSelectedJobId] = useState("");
   const [error, setError] = useState(null);
-  const [isClientsShow, setIsClientShow] = useState(false);
-  const [isJobsShow, setIsJobsShow] = useState(false);
+
+  const router = useRouter();
 
   const filteredClients = clients?.filter((client) =>
     client.name.toLowerCase().includes(searchClient.toLowerCase()),
@@ -50,72 +52,127 @@ function AdminCandidateRow({ candidate }) {
 
   useEffect(() => {
     fetchClients();
-  }, [showForm]);
+  }, []);
 
   useEffect(() => {
     fetchJobs();
   }, [searchJob]);
 
-  const handleReferCandidate = async (formData) => {
-    // e.preventDefault();
+  // const handleReferCandidate = async (formData) => {
+  //   // e.preventDefault();
 
-    const referClientBody = {
-      client_id: selectedClientId,
-      customer_id: candidate.customer_id,
-      job_posting_id: selectedJobId,
-      hourly_rate: hourlyRate,
-    };
+  //   const referClientBody = {
+  //     client_id: selectedClientId,
+  //     customer_id: candidate.customer_id,
+  //     job_posting_id: selectedJobId,
+  //     hourly_rate: hourlyRate,
+  //   };
 
-    const { error, message } =
-      await referCandidateToClientAction(referClientBody);
-    if (error) {
-      console.log({ Error: error });
-      return setError(error);
-    }
-    if (message) {
-      console.log("Refer Message: ", message);
-      return setShowForm(false);
-    }
-  };
+  //   console.log(referClientBody);
+
+  //   const { error, message } =
+  //     await referCandidateToClientAction(referClientBody);
+  //   if (error) {
+  //     console.log({ Error: error });
+  //     return setError(error);
+  //   } else {
+  //     setShowForm(false);
+  //   }
+  //   // if (message) {
+  //   //   console.log("Refer Message: ", message);
+  //   //   return setShowForm(false);
+  //   // }
+  // };
 
   return (
     <>
-      <Table.Row>
-        <EntityCard
-          entity={{
-            name: candidate?.name,
-            profession: candidate?.specialization,
-            image: "/avatars/avatar-1.png",
-          }}
-        />
-        <div className="skills flex items-center justify-center gap-1.5 text-center">
-          {candidate?.skills?.length > 0 ? (
-            candidate.skills.map((skill, i) => (
-              <SkillIconWithBg key={i} icon={skill} />
-            ))
+    <div  className = "cursor-pointer"  >
+      <Table.Row
+        className = "cursor-pointer"
+         onClick={() => router.push(`/admin/candidates/${candidate?.customer_id}`)}
+      >
+        <div  
+          className="cursor-pointer text-start">
+          <EntityCard
+            entity={{
+              name: candidate?.name,
+              profession: candidate?.specialization,
+              image: "/avatars/avatar-1.png",
+            }}
+          />
+        </div>
+
+        <div className="skills flex flex-col items-center justify-center gap-1 text-center ">
+          {candidate?.expertise?.length > 1 ? (
+            <div className="flex">
+              <SkillIconWithBg
+                icon={candidate.expertise[0].skill}
+                skill={candidate.expertise[0].skill}
+              />
+              <div className="mt-2 text-sm text-gray-500">
+                +{candidate.expertise.length - 1}
+              </div>
+            </div>
           ) : (
-            <span>No skills available</span>
+            <span>
+              {" "}
+              <SkillIconWithBg
+                icon={candidate.expertise[0].skill}
+                skill={candidate.expertise[0].skill}
+              />
+            </span>
           )}
         </div>
+
+        <div className="experience flex justify-center text-center">
+          {candidate?.hourly_rate || 0}$
+        </div>
+        <div className="experience flex justify-center text-center">
+          { candidate?.admin_hourly_rate || 0}$
+        </div>
+
+        
 
         <div className="experience text-center">
           {candidate?.experience || "No experience"}
         </div>
         <Capsule>{candidate?.commitment || "No job type"}</Capsule>
 
+        <div className="experience text-center">{score}/10</div>
+
+      
+
+        <Capsule
+          className="status mx-auto w-max"
+          status={getCandidateStatus(
+            candidate?.talent_status,
+            candidate?.status,
+          )}
+        >
+          {getCandidateStatus(candidate?.talent_status, candidate?.status)}
+          {/* {candidate?.talent_status === "open" && candidate?.status==="active"  ? "Avaliable"            
+            :  candidate?.talent_status?.toLowerCase() === "open" && candidate?.status==="in-active" ? "Un-Avaliable"
+            :   candidate?.talent_status } */}
+        </Capsule>
+
+       
         {/* Button to open form */}
-        <button onClick={() => setShowForm(true)}>
+        {/* <button onClick={() => {
+          if (candidate?.talent_status === "open") {
+            setShowForm(true)
+          }
+        }}>
           <Capsule
             className="ml-auto !bg-primary-tint-100"
             icon={<IconWithBg icon={<SvgIconRequestInterview />} />}
           >
-            Refer to Client
+            <div className={(candidate?.talent_status !== "open") ? `text-[grey] cursor-not-allowed` : null}>Refer to Client</div>
           </Capsule>
-        </button>
+        </button> */}
       </Table.Row>
+      </div>
 
-      {/* Modal for the referral form */}
-      <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
+      {/* <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
         <h3 className="mb-4 text-xl font-semibold">
           Refer {candidate?.role} to Client
         </h3>
@@ -129,9 +186,9 @@ function AdminCandidateRow({ candidate }) {
             onChange={(e) => setHourlyRate(e.target.value)}
             required
             className="mt-2 block w-full border px-2 py-1"
-          />
+          /> */}
 
-          <label className="mt-4 block">Assign to Client</label>
+      {/* <label className="mt-4 block">Assign to Client</label>
           <input
             type="text"
             value={searchClient}
@@ -141,16 +198,16 @@ function AdminCandidateRow({ candidate }) {
             }}
             placeholder="Search client by name"
             className="mb-2 block w-full border px-2 py-1"
-          />
+          /> */}
 
-          {/* <select
+      {/* <select
             value={selectedClient}
             onChange={(e) => setSelectedClient(e.target.value)}
             required
             className="mt-2 block w-full border px-2 py-1"
           > */}
-          {/* <option value="">Select a client</option> */}
-          {isClientsShow &&
+      {/* <option value="">Select a client</option> */}
+      {/* {isClientsShow &&
             filteredClients?.map((client) => (
               <option
                 onClick={() => {
@@ -161,6 +218,7 @@ function AdminCandidateRow({ candidate }) {
                 }}
                 key={client.client_id}
                 value={client.client_id}
+                className="cursor-pointer"
               >
                 {client.name}
               </option>
@@ -189,13 +247,14 @@ function AdminCandidateRow({ candidate }) {
                 }}
                 key={job.job_posting_id}
                 value={job.job_posting_id}
+                className="cursor-pointer"
               >
                 {job.position}
               </option>
-            ))}
-          {/* </select> */}
-          {/* Error Temp */}
-          {error ? <div className="error text-red-500"> {error} </div> : null}
+            ))} */}
+      {/* </select> */}
+      {/* Error Temp */}
+      {/* {error ? <div className="error text-red-500"> {error?.message} </div> : null}
 
           <div className="mt-4">
             <button
@@ -213,7 +272,7 @@ function AdminCandidateRow({ candidate }) {
             </button>
           </div>
         </form>
-      </Modal>
+      </Modal> */}
     </>
   );
 }

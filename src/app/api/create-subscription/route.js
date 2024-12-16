@@ -20,7 +20,10 @@ export async function POST(req) {
         const stripePrice = await stripe.prices.create({
             unit_amount: price, // The custom price in cents
             currency: 'usd',
-            recurring: { interval: 'month' },
+            recurring: { 
+                interval: 'week',
+                interval_count: 2, 
+            },
             product: product.id,
         });
 

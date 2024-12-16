@@ -203,13 +203,10 @@ const CodingChild = ({
                     name="confirm-code"
                     classes="min-w-[35.5rem] min-h-[15.6rem]"
                   >
-                    {isLoading ? (
-                      <div className="flex h-full min-h-[15.6rem] w-full min-w-[35.5rem] items-center justify-center">
-                        <div className={styles.loader}></div>
-                      </div>
-                    ) : (
-                      <ConfirmSubmit onSubmit={codeSubmitHandler} />
-                    )}
+                    <ConfirmSubmit
+                      onSubmit={codeSubmitHandler}
+                      isLoading={isLoading}
+                    />
                   </Modal.Window>
                 </Modal>
               </div>

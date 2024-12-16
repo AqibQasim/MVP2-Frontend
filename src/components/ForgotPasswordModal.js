@@ -10,6 +10,8 @@ import OTPInput from "react-otp-input";
 import ButtonCapsule from "./ButtonCapsule";
 import { candidateUpdateProfile } from "@/lib/data-service";
 import { useRouter } from "next/navigation";
+import LoaderIcon from "@/svgs/LoaderIcon";
+
 const ForgotPasswordModal = ({
   imgSrc,
   //mainHeading,
@@ -30,10 +32,14 @@ const ForgotPasswordModal = ({
   const [otp, setotp] = useState(null);
   const [error, setError] = useState(false);
   const [errors, setErrors] = useState({});
+  const [validateLoading, setvalidateLoading] = useState(false);
+  const [loadingOTP, setLoadingOtp] = useState(false);
+  const [loadingPassword, setLoadingPassword] = useState(false);
   const [password, setPassword] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState(null);
 
   const handlePasswordReset = async () => {
+    setLoadingPassword(true);
     const body = {
       new_password: password,
       email,
@@ -50,12 +56,14 @@ const ForgotPasswordModal = ({
     if (response.status === 200) {
       console.log(response.data);
       onClose();
+      setLoadingPassword(false);
     } else {
       console.log(response.data);
       setErrors((prevErrors) => ({
         ...prevErrors,
         ["passwordResetError"]: response.data?.message,
       }));
+      setLoadingPassword(false);
     }
   };
 
@@ -66,6 +74,18 @@ const ForgotPasswordModal = ({
       case "password":
         if (!/^.{8,}$/.test(value)) {
           errorMsg = "Password must be at least 8 characters";
+        } else if (confirmPassword && value !== confirmPassword) {
+          setErrors((prev) => ({
+            ...prev,
+            confirmPassword: "Passwords do not match",
+          }));
+        } else {
+          setErrors((prev) => ({ ...prev, confirmPassword: "" }));
+        }
+        break;
+      case "email":
+        if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value)) {
+          errorMsg = "Invalid email address";
         }
         break;
       case "confirmPassword":
@@ -80,8 +100,10 @@ const ForgotPasswordModal = ({
     setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMsg }));
   };
 
-  const validateUser = async () => {
+  const validateUser = async (e) => {
     let endpoint = null;
+
+    setvalidateLoading(true);
 
     if (user_role === "client") {
       endpoint = `client-by-email?email=${email}`;
@@ -104,15 +126,21 @@ const ForgotPasswordModal = ({
       }));
       console.log(result?.data?.message);
       //setOverlayVisible(true);
+      setvalidateLoading(false);
     } else {
       setErrors((prevErrors) => ({
         ...prevErrors,
         ["passwordResetError"]: null,
       }));
+
+      sendOtp(e);
+      setvalidateLoading(false);
+      setPopupState("otp");
     }
   };
 
   const handleOtpVerification = () => {
+    setLoadingOtp(true);
     if (enteredOtp.toString() === otp.toString()) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -121,14 +149,15 @@ const ForgotPasswordModal = ({
       console.log("OTP verified successfully");
       setPopupState("reset-password");
       onClose;
+      setLoadingOtp(false);
     } else {
       setErrors((prevErrors) => ({
         ...prevErrors,
         ["passwordResetError"]: "Incorrect OTP",
       }));
+      setLoadingOtp(false);
     }
   };
-
   const sendOtp = useCallback(
     async (event) => {
       event.preventDefault();
@@ -194,6 +223,12 @@ const ForgotPasswordModal = ({
 
   return (
     <div className="pt flex h-[100%] w-[100%] flex-col items-center justify-around font-lufga">
+      <button
+        onClick={onClose}
+        className="absolute right-4 top-2 text-2xl text-gray-500 hover:text-gray-700"
+      >
+        &times;
+      </button>
       <div className="flex flex-col items-center">
         <Image
           className="mb-[1rem]"
@@ -214,6 +249,7 @@ const ForgotPasswordModal = ({
             {popupState === "reset-password" &&
               text(`Must be at least 8 characters`)}
           </p>
+
           {popupState === "email" && (
             <Input
               type="email"
@@ -222,9 +258,17 @@ const ForgotPasswordModal = ({
               className="mt-5 py-3 text-center"
               onChange={(e) => {
                 setEmail(e.target.value);
+                validateField("email", e.target.value);
               }}
             />
           )}
+
+          <div>
+            {errors.email && (
+              <p className="text-xs text-red-500">{errors.email}</p>
+            )}
+          </div>
+
           {popupState === "otp" && (
             <div className="flex flex-col items-center justify-center">
               <OTPInput
@@ -233,7 +277,7 @@ const ForgotPasswordModal = ({
                   const pastedData = e.clipboardData.getData("text");
                   // Check if the pasted data contains exactly the right number of digits
                   if (pastedData.length === 6) {
-                    setEnteredOtp(pastedData); // Set the OTP value if the length matches
+                    setEnteredOtp(pastedData);
                   }
                 }}
                 onChange={setEnteredOtp}
@@ -259,7 +303,10 @@ const ForgotPasswordModal = ({
               />
               <div className="flex gap-1">
                 Did not get the code?
-                <div onClick={(e) => sendOtp(e)} className="text-primary">
+                <div
+                  onClick={(e) => sendOtp(e)}
+                  className="cursor-pointer text-primary"
+                >
                   Click to resend
                 </div>
               </div>
@@ -316,28 +363,65 @@ const ForgotPasswordModal = ({
           className="mt-3 w-full justify-between"
           onPress={async (e) => {
             if (popupState === "email" && email) {
-              await validateUser();
-              if (
-                errors?.passwordResetError === null //||
-                //errors?.passwordResetError === undefined
-              ) {
-                sendOtp(e);
-                setPopupState("otp");
-              }
+              await validateUser(e);
             }
-
             if (popupState === "otp") {
               if (enteredOtp) handleOtpVerification(e);
             }
 
             if (popupState === "reset-password") {
-              await handlePasswordReset();
+              if (password === confirmPassword) {
+                setErrors((prevErrors) => ({
+                  ...prevErrors,
+                  ["passwordResetError"]: null,
+                }));
+                await handlePasswordReset();
+              } else {
+                setErrors((prevErrors) => ({
+                  ...prevErrors,
+                  ["passwordResetError"]: "Please fill all required fields",
+                }));
+              }
             }
           }}
         >
-          {popupState === "email" && buttonText("Send 4-digit code")}
-          {popupState === "otp" && buttonText("Continue")}
-          {popupState === "reset-password" && buttonText("Set password")}
+          {popupState === "email" &&
+            buttonText(
+              validateLoading ? (
+                <div className="flex items-center">
+                  <LoaderIcon />
+                  <span className="ml-2">Sending ...</span>
+                </div>
+              ) : (
+                "Send 6 digit code"
+              ),
+            )}
+
+          {popupState === "otp" &&
+            buttonText(
+              loadingOTP ? (
+                <div className="flex items-center">
+                  <LoaderIcon />
+                  <span className="ml-2">Verifying ...</span>
+                </div>
+              ) : (
+                "Continue"
+              ),
+            )}
+          {popupState === "reset-password" &&
+            buttonText(
+              loadingPassword ? (
+                <div className="flex items-center">
+                  <LoaderIcon />
+                  <span className="ml-2">Setting Password ...</span>
+                </div>
+              ) : (
+                "Set Password"
+              ),
+              {
+                disabled: errors || loadingPassword, // disable if there are errors or loading
+              },
+            )}
         </ButtonCapsule>
         {/* ) : (
           <OnBoardingButton onClick={onClose}>

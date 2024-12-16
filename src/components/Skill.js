@@ -11,10 +11,11 @@ function Skill({ className, icon, skill, score = null }) {
         <>
           <Image
             className="size-5"
-            src={`/tech-icons/${skill}.svg`}
+            src={`/skills/${skill}.svg`}
             height={20}
             width={20}
             alt={`${skill} icon`}
+            onError={(e) => { e.target.src = '/icons/singularity.svg'; }}
           />
           {skill}
         </>
@@ -44,3 +45,4 @@ Skill.propTypes = {
 };
 
 export default Skill;
+

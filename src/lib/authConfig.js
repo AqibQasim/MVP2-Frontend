@@ -7,16 +7,30 @@ import {
   checkCustomerByEmail,
   createUserGoogle,
 } from "./data-service";
+//import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 
 export const authConfig = {
   providers: [
     Google({
       clientId: process.env.AUTH_GOOGLE_ID,
       clientSecret: process.env.AUTH_GOOGLE_SECRET,
+      authorization: {
+        //params: { prompt: 'select_account' }
+        params: {
+          prompt: "select_account",
+          access_type: "offline",
+          response_type: "code",
+          scope: "profile email",
+        },
+      },
     }),
   ],
+  
+  trustHost: true,
   callbacks: {
     async authorized({ auth, request }) {
+      console.log("AAAAHILL SIGN UP WITH  GOOOGLE ");
+
       const user = auth?.user;
       const credentialUserToken =
         cookies().get("credentialLoginToken")?.value || null;
@@ -29,11 +43,11 @@ export const authConfig = {
       const loginPage = pathname === "/login";
       const signupPage = pathname === "/signup";
       const googleUserRedirectPath = user
-        ? `/${user.user_role}/${user[`${user.user_role}_id`]}`
+        ? `/${user.user_role === "client" ? "client/" + user[`client_id`] : "candidate/" + user[`customer_id`]}`
         : null;
 
       const credentialUserRedirectPath = credentialUser?.id
-        ? `/${credentialUser.user_role}/${credentialUser.id}`
+        ? `/${credentialUser.user_role === "client" ? credentialUser.user_role : "candidate"}/${credentialUser.id}`
         : null;
 
       if (isAuthenticated && (loginPage || signupPage)) {
@@ -121,26 +135,101 @@ export const authConfig = {
       return true;
     },
     async signIn({ user, account, profile }) {
+      console.log("////////////////////", user);
       const role = {
         customer: checkCustomerByEmail,
         client: checkClientByEmail,
       };
-      try {
-        const userRoleCookie = cookies().get("user_role");
-        const userRole = userRoleCookie ? userRoleCookie.value : "customer";
-
-        const { existingUser } = await role[userRole](user.email);
-        if (!existingUser)
-          await createUserGoogle({
-            email: user.email,
-            name: user.name,
-            user_role: userRole,
-            method: "signup",
-          });
-        return true;
-      } catch {
-        return false;
+    
+      const userRoleCookie = cookies().get("user_role");
+      console.log(userRoleCookie)
+      const userRole = userRoleCookie ? userRoleCookie.value : "customer";
+    
+      const { existingUser } = await role[userRole](user.email);
+      if (!existingUser) {
+        let stripeData; // Ensure `stripeData` is declared in scope
+    
+        // Call the Stripe customer creation API
+        const stripeResponse = await fetch(
+          `${process.env.NEXTAUTH_URL}/api/create-customer`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: user.email,
+              name: user.name,
+            }),
+          },
+        );
+        stripeData = await stripeResponse.json();
+        if (userRole === "client") {
+    
+          if (stripeResponse.status !== 200) {
+            throw new Error(stripeData.error);
+          }
+    
+          console.log(
+            "Stripe customer created successfully:",
+            stripeData.customer,
+          );
+        }
+    
+        // Proceed with the rest of the signup process
+        const result = await createUserGoogle({
+          email: user.email,
+          name: user.name,
+          user_role: userRole,
+          method: "signup",
+        });
+    
+        console.log("USER ROLE IS: ", userRole);
+        let createAccountResponse, createAccountData;
+    
+        if (userRole === "client") {
+          createAccountResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-stripe-account`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                client_id: result.data.client_id,
+                stripe_id: stripeData?.customer?.id, // Use optional chaining
+              }),
+            },
+          );
+        } else {
+          createAccountResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-customer-stripe-account`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                customer_id: result.data.customer_id,
+                stripe_id: stripeData?.customer?.id, // Use optional chaining
+              }),
+            },
+          );
+        }
+    
+        createAccountData = await createAccountResponse.json();
+    
+        if (createAccountResponse.status !== 200) {
+          throw new Error(createAccountData.error);
+        }
+    
+        console.log(
+          "Stripe account created successfully:",
+          createAccountData,
+        );
       }
+    
+      return true;
     },
     async jwt({ token, user }) {
       if (user) {

@@ -5,8 +5,8 @@ import Image from "next/image";
 import Assessment from "@/components/Assessment";
 import ErrorIndicator from "./ErrorIndicator";
 import styles from "@/styles/ReportOverlay.module.css";
-import downloadIcon from '../../public/icons/download.svg'
-import candidateImage from '../../public/avatars/avatar-3.svg'
+import downloadIcon from "../../public/icons/download.svg";
+import candidateImage from "../../public/avatars/avatar-3.svg";
 // import html2canvas from "html2canvas";
 // import jsPDF from "jspdf";
 import generatePDF from "@/utils/generatePDF";
@@ -41,6 +41,7 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
       : null;
 
   useEffect(() => {
+    console.log("Selected candidate is: ", selectedCandidate);
     async function fetchCandidatesCodingResult() {
       setIsLoading(true);
       const requestBody = {
@@ -49,11 +50,11 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/coding-results/customer/${selectedCandidate?.customer?.customer_id}`,
         {
-          method: "POST",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(requestBody),
+          // body: JSON.stringify(requestBody),
         },
       );
 
@@ -211,7 +212,7 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
       <div ref={overlayRef} className={styles.parent}>
         <div className={styles.btn}>
           <button onClick={onClose}>
-            <Image src="/shut.svg" width={15} height={15} />
+             <Image src="/close.png" width={15} height={15} />
           </button>
         </div>
         <div
@@ -221,7 +222,7 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
           <div className={styles.coverContainer}>
             <div className={styles.topContainer}>
               <div className={styles.avatarContainer}>
-                <Image src="/avatarDefault.svg" width={65} height={84} />
+                <Image src="/avatars/avatar-3.svg" width={65} height={84} />
               </div>
               <div className={styles.information}>
                 <h1>{selectedCandidate?.name}</h1>
@@ -233,7 +234,7 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
                         calculateCumulativeMean(
                           selectedCandidate?.result?.technicalRating,
                           selectedCandidate?.result?.softskillRating,
-                          codingResult?.data?.result?.technicalRating
+                          codingResult?.data?.result?.technicalRating,
                         ),
                       ),
                     ),
@@ -244,7 +245,7 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
                       calculateCumulativeMean(
                         selectedCandidate?.result?.technicalRating,
                         selectedCandidate?.result?.softskillRating,
-                        codingResult?.data?.result?.technicalRating
+                        codingResult?.data?.result?.technicalRating,
                       ),
                     ),
                   )}
@@ -254,7 +255,7 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
                         calculateCumulativeMean(
                           selectedCandidate?.result?.technicalRating,
                           selectedCandidate?.result?.softskillRating,
-                          codingResult?.data?.result?.technicalRating
+                          codingResult?.data?.result?.technicalRating,
                         ),
                       ),
                     )}
@@ -289,23 +290,13 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
             {/* candidate test info div */}
             <div className={styles.infoContainer} ref={contentRef}>
               <div className={styles.infoDiv}>
-                <ul>
+                <ul className="mt-2">
                   <li>
                     <span className={styles.bold}>Name: </span>
                     <span>{selectedCandidate?.customer?.name}</span>
                   </li>
                   <li>
-                    <span className={styles.bold}>Phone: </span>
-                    <span>
-                      {selectedCandidate?.contactNo ||
-                      selectedCandidate?.contact_no
-                        ? selectedCandidate?.contactNo ||
-                          selectedCandidate?.contact_no
-                        : "+92 333 3333333"}
-                    </span>
-                  </li>
-                  <li>
-                    <span className={styles.bold}>Date: </span>
+                    <span className={styles.bold}>Date:</span>
                     {/* <span>
                       {selectedCandidate?.date || results?.data?.createdAt
                         ? selectedCandidate?.date || results?.data?.createdAt
@@ -314,32 +305,13 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
                     <span>
                       {/* {format(new Date(2014, 1, 11), "EEE, yyyy-MM-dd")} */}
 
-                      {selectedCandidate?.date || results?.data?.createdAt
-                        ? // format(
-                          // displayDate
-                          selectedCandidate?.date || results?.data?.createdAt
-                        : // new Date(
-                          //   selectedCandidate?.date ||
-                          //     results?.data?.createdAt
-                          // ),
-                          // "EEE, MMM dd yyyy"
-                          // )
-                          selectedCandidate?.date || results?.data?.createdAt}
+                     {selectedCandidate?.createdAt.split("T")[0]}
                     </span>
                   </li>
                   <li>
                     <span className={styles.bold}>Job Type: </span>
                     <span>
-                      {selectedCandidate?.customer?.jobType ||
-                        selectedCandidate?.job_type}
-                    </span>
-                  </li>
-                  <li>
-                    <span className={styles.bold}>Applied For: </span>
-                    <span>
-                      {selectedCandidate?.company
-                        ? selectedCandidate?.company?.name
-                        : "Self"}
+                      {selectedCandidate?.customer?.commitment}
                     </span>
                   </li>
                   <li>
@@ -399,16 +371,21 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
                 </span>
                 Back
               </button> */}
-              <ButtonBack onClose={onClose}>Back</ButtonBack>
+              <ButtonBack onClick={onClose}>Back</ButtonBack>
               {!isLoading && (
                 <button
                   className={styles.downloadButton}
                   // onClick={handleDownloadPdf}
                   onClick={() =>
                     generatePDF({
-                      setIsPdfLoading,
-                      contentRef,
+                      setIsPdfLoading: setIsPdfLoading,
                       selectedCandidate,
+                      technicalRating:selectedCandidate?.result?.technicalRating,
+                      technicalSummary: selectedCandidate?.result?.technicalAssessment,
+                      softSkillSummary: selectedCandidate?.result?.softskillAssessment,
+                      softSkillRating: selectedCandidate?.result?.softskillRating,
+                      codingSummary: codingResult?.data?.result?.technicalSummary,
+                      codingRating: codingResult?.data?.result?.technicalRating
                     })
                   }
                   disabled={isPdfLoading}

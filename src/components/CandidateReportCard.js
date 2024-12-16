@@ -57,7 +57,7 @@ function CandidateReportCard({ candidateReport, handleOpenOverlay }) {
                 <p> {candidateReport?.customer?.job_type} </p>
               </Capsule>
               <Capsule icon={<IconWithBg icon="$" />}>
-                <p className="">{formatCurrencyNoDecimals(2000)}</p>
+                <p className="">{formatCurrencyNoDecimals(candidateReport?.customer?.hourly_rate)}</p>
               </Capsule>
             </div>
           </div>

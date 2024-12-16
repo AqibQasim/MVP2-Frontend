@@ -1,16 +1,25 @@
+"use client";
 import AdminClientsTable from "@/components/AdminClientsTable";
+import EmptyScreen from "@/components/EmptyScreen";
+import WithAdminAuth from "@/components/WithAdminAuth";
 import { getClients } from "@/lib/data-service";
 
-export const metadata = {
-  title: "Clients",
-};
+// const metadata = {
+//   title: "Clients",
+// };
 
-export const revalidate = 60 * 60 * 24; // invalidate every 24 hours
+// export const revalidate = 60 * 60 * 24; // invalidate every 24 hours
 
-export default async function Page() {
-  const { data: clients, error } = await getClients();
+async function Page() {
+  let clients = [];
+  try {
+    const { data, error } = await getClients();
+    if (error) throw new Error(error);
+    clients = data;
+  } catch (err) {
+    return <EmptyScreen className={"h-[32.188rem]"} />;
+  }
 
-  if (error) throw new Error(error);
-
-  return <AdminClientsTable clients={clients} />;
+  return <AdminClientsTable totalClients={clients?.length} clients={clients} role="admin" />;
 }
+export default WithAdminAuth(Page);

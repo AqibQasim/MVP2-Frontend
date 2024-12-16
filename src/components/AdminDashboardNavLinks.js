@@ -11,34 +11,48 @@ function AdminDashboardNavLinks() {
 
   const candidateDashboardLinks = [
     {
-      name: "Clients",
-      href: `/admin/clients`,
-      amount: 0,
+      name: "Dashboard",
+      href: `/admin/dashboard`,
       icon: (
         <SvgIconDashboard
           className="size-6"
-          secondColor={
-            pathname === "/admin/clients"
-          }
+          secondColor={pathname === `/admin/dashboard`}
         />
       ),
     },
     {
-      name: "Jobs",
-      href: `/admin/jobs`,
-      amount: 0,
-      icon: <SvgIconJob className="size-6" />,
+      name: "Clients",
+      href: `/admin/clients`,
+
+      icon: (
+        <SvgIconDashboard
+          className="size-6"
+          secondColor={pathname === "/admin/clients"}
+        />
+      ),
     },
     {
       name: "Candidates",
       href: `/admin/candidates`,
-      amount: 0,
+
       icon: <SvgIconPayment className="size-6" />,
     },
     {
-      name: "Payments",
+      name: "Jobs",
+      href: `/admin/jobs`,
+
+      icon: <SvgIconJob className="size-6" />,
+    },
+    {
+      name: "Client Payments",
       href: `/admin/payments`,
-      amount: 0,
+
+      icon: <SvgIconPayment className="size-6" />,
+    },
+    {
+      name: "Candidate Payments",
+      href: `/admin/customer-payments`,
+
       icon: <SvgIconPayment className="size-6" />,
     },
   ];

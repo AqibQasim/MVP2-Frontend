@@ -212,11 +212,12 @@ export async function getClients() {
   const result = await mvp2ApiHelper(payload);
   if (result.status !== 200) {
     console.error(result.data.message);
-    return { data: null, error: result.data.message };
+    return { status: result?.status, data: null, error: result.data.message };
   }
   return {
     status: result.status,
-    data: result.data,
+    data: result.data.data,
+    error: null,
   };
 }
 
@@ -289,7 +290,7 @@ export async function revalidate(path) {
 
 export async function fetchRecommendedCandidates() {
   const payload = {
-    endpoint: "customers",
+    endpoint: "get-customer-result",
     method: "GET",
   };
   const result = await mvp2ApiHelper(payload);
@@ -332,6 +333,8 @@ export async function fetchClientJobs(client_id) {
     endpoint: `client/job-posting/${client_id}`,
     method: "GET",
   };
+
+  console.log("fetching candidates.......");
   const result = await mvp2ApiHelper(payload);
   // if (result?.status === 200) {
   //   return result?.data;
@@ -343,6 +346,22 @@ export async function fetchClientJobs(client_id) {
 }
 
 export async function fetchClientJob(client_id, job_posting_id) {
+  const payload = {
+    endpoint: `client/job-posting-by-client?job_posting_id=${job_posting_id}&client_id=${client_id}`,
+    method: "GET",
+  };
+
+  const result = await mvp2ApiHelper(payload);
+  console.log("result no condition: ", result);
+  if (result.status !== 200) {
+    console.log("result failed: ", result);
+    console.error(result?.data?.message);
+    return { status: result.status, data: null, error: result.data };
+  }
+  console.log("result success: ", result);
+  return { status: result.status, data: result.data.result, error: null };
+}
+export async function fetchAdminJob(client_id, job_posting_id) {
   const payload = {
     endpoint: `client/job-posting-by-client?job_posting_id=${job_posting_id}&client_id=${client_id}`,
     method: "GET",
@@ -372,7 +391,7 @@ export async function referCandidate(params) {
     console.error(result?.data?.message);
     return { status: result.status, data: null, error: result.data };
   }
-  return { status: result.status, data: result.data.data, error: null };
+  return { status: result.status, data: result?.data?.data, error: null };
 }
 
 export async function setHourlyRate(params) {
@@ -415,6 +434,7 @@ export async function candidateUpdateProfile(body, candidateId) {
 export async function getAllRecommendedCandidates(
   clientId,
   client_response = "all",
+  job_status = null,
 ) {
   const hired = "accept";
   const payload = {
@@ -423,22 +443,50 @@ export async function getAllRecommendedCandidates(
   };
 
   const result = await mvp2ApiHelper(payload);
+  console.log("candidates of clients job: ", result);
   if (result.status !== 200) {
-    console.error(result?.data?.err);
+    console.error(result?.data);
     return { status: result.status, error: result.data.err };
   }
 
   // FILTER
-  let candidates;
+  let candidates = result?.data.data;
 
-  if (client_response === "all") {
-    candidates = result?.data.data;
-  }
-  if (client_response === hired) {
+  // if (client_response === "all") {
+  //   candidates = result?.data.data;
+  // }
+  if (job_status === "hired-and-trial") {
     candidates = result?.data.data?.filter(
-      (candidate) => candidate.client_response === hired,
+      (candidate) =>
+        candidate.client_response === hired &&
+        (candidate?.customer?.talent_status === "hired" ||
+          candidate?.customer?.talent_status === "trial"),
     );
   }
 
-  return { data: candidates };
+  if (job_status === "interviewing") {
+    candidates = result?.data.data?.filter(
+      (candidate) =>
+        (candidate.client_response === "pending" || candidate?.client_response==="scheduled") &&
+        candidate?.customer?.talent_status === job_status,
+    );
+  }
+
+  return {
+    status: result.status,
+    data: candidates,
+  };
+}
+
+export async function fetchCandidatesJobStatus(job_status) {
+  const payload = {
+    endpoint: `get-job-candidates?job_status=${job_status}`,
+    method: "GET",
+  };
+  const result = await mvp2ApiHelper(payload);
+  if (result?.status === 200) {
+    return { data: result.data, error: null };
+  }
+
+  return { data: null, error: result.data.message };
 }

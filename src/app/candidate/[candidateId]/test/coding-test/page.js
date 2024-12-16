@@ -26,6 +26,8 @@ const Page = () => {
   const params = useParams();
   const cid = params.candidateId;
 
+  
+
   const fetchCodingQuestion = () => {
     const codingTestPayload = {
       endpoint: `get-coding-question?candidate_id=${params.candidateId}`,
@@ -119,8 +121,11 @@ const Page = () => {
     mvp2ApiHelper(codeSubmitPayload).then((data) => {
       console.log("response: ", data);
       if (data.status === 200) {
-        router.push(`/candidate/${params.candidateId}`);
-        // window.location.href=`/candidate/${params.candidateId}`;
+        // router.push(`/candidate/${params.candidateId}`);
+        // router.push(`/candidate`);
+        // window.location.href = "/candidate";
+        window.location.replace("/candidate");
+        setIsLoading(false);
       }
     });
 
@@ -135,7 +140,6 @@ const Page = () => {
 
     // const data = await response.json();
     // console.log("response: ", data);
-    setIsLoading(false);
   }
 
   const formatTime = (timeLeft) => {

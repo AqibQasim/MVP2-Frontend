@@ -16,7 +16,7 @@ const SuccessModal = ({
   signupHandler,
   confirmationtext,
   otp,
-  isLoading
+  isLoading,
 }) => {
   const [isSecondPopupVisible, setIsSecondPopupVisible] = useState(false);
   const [enteredOtp, setEnteredOtp] = useState("");
@@ -42,7 +42,15 @@ const SuccessModal = ({
   // };
 
   return (
-    <div className="pt flex h-[100%] w-[100%] flex-col items-center justify-around font-lufga">
+    <div className="pt relative flex h-[60%] w-[100%] flex-col items-center justify-around font-lufga">
+      {/* Close button */}
+      <button
+        onClick={onClose}
+        className="absolute right-2 top-2 text-2xl text-gray-500 hover:text-gray-700"
+      >
+        &times;
+      </button>
+
       <div className="flex flex-col items-center">
         <Image
           className="mb-[1rem]"
@@ -58,7 +66,7 @@ const SuccessModal = ({
           <p className="mt-[0.5rem] w-[100%] text-center text-sm">{text}</p>
           {onBoarding && containsOtp && (
             <Input
-              type="number"
+              //type="number"
               placeholder="000000"
               className="mt-5 py-3 text-center"
               onChange={handleOtpChange}
@@ -95,7 +103,7 @@ const SuccessModal = ({
             signupHandler={signupHandler}
             confirmationtext={confirmationtext}
             isLoading={isLoading}
-            // onClose={onClose}
+            onClose={onClose}
           />
         </Overlay>
       )}

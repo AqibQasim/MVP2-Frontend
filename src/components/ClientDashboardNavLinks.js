@@ -79,10 +79,10 @@ function ClientDashboardNavLinks({
             >
               {link.icon}
               <span>{link.name}</span>
-              {link.amount ? (
+              {link.amount >= 0 ? (
                 <span
                   className={`ml-auto inline-flex h-[1.6rem] w-[1.95rem] items-center justify-center rounded-4xl bg-grey-primary-tint-80 transition-colors duration-200 group-hover:bg-neutral-white ${pathname === link.href ? "!bg-neutral-white text-primary" : ""}`}
-                >
+                > 
                   {link.amount > 9 ? "9+" : link.amount}
                 </span>
               ) : null}

@@ -1,17 +1,29 @@
 "use client";
 import { createAJobAction } from "@/lib/actions";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import SubmitButton from "./SubmitButton";
 
 function AdminCreateAJobForm({ clientId, closeModal }) {
   const [skills, setSkills] = useState([""]);
   const [applicationQuestions, setApplicationQuestions] = useState([""]);
   const [error, setError] = useState(null);
+  const [fieldError, setFieldError] = useState(null);
+  const [jobType, setJobType] = useState("");
+
+  const minDate = useMemo(() => {
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0];
+    return formattedDate
+  }, [])
 
   const handleSkillChange = (index, event) => {
     const newSkills = [...skills];
     newSkills[index] = event.target.value;
     setSkills(newSkills);
+  };
+
+  const handleJobTypeChange = (event) => {
+    setJobType(event.target.value);
   };
 
   const handleQuestionChange = (index, event) => {
@@ -124,12 +136,11 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
             id="project_length"
             name="project_length"
             className="w-full rounded-full border p-2"
-            type="number"
+            type="text"
             placeholder="e.g. 1"
             required
           />
         </div>
-
         <div className="mb-4">
           <label htmlFor="job_type" className="block text-gray-700">
             Job Type
@@ -138,12 +149,18 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
             id="job_type"
             name="job_type"
             className="w-full rounded-full border p-2"
+            value={jobType}
+            onChange={handleJobTypeChange}
             required
           >
+            <option value="">Select Job Type</option>
             <option value="remote">Remote</option>
+            <option value="hybrid">Hybrid</option>
             <option value="on-site">On Site</option>
           </select>
         </div>
+
+       
 
         <div className="mb-4">
           <label htmlFor="start_date" className="block text-gray-700">
@@ -155,35 +172,42 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
             className="w-full rounded-full border p-2"
             type="date"
             required
+            min={minDate}
           />
         </div>
+            
+            <div className="mb-4">
+              <label htmlFor="city" className="block text-gray-700">
+                City
+              </label>
+              <input
+                id="city"
+                name="city"
+                placeholder="Enter City"
+                className="w-full rounded-full border p-2"
+                type="text"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="country" className="block text-gray-700">
+                Country
+              </label>
+              <input
+                id="country"
+                name="country"
+                placeholder="Enter Country"
+                className="w-full rounded-full border p-2"
+                type="text"
+                required
+              />
+            </div>
+        {/* {jobType === "hybrid" || jobType === "on-site" ? (
+          <>
+          </>
+        ) : null} */}
 
-        <div className="mb-4">
-          <label htmlFor="city" className="block text-gray-700">
-            City
-          </label>
-          <input
-            id="city"
-            name="city"
-            placeholder="Karachi"
-            className="w-full rounded-full border p-2"
-            type="text"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="country" className="block text-gray-700">
-            Country
-          </label>
-          <input
-            id="country"
-            name="country"
-            placeholder="Pakistan"
-            className="w-full rounded-full border p-2"
-            type="text"
-            required
-          />
-        </div>
+      
 
         <div className="mb-4">
           <label htmlFor="workday_overlap" className="block text-gray-700">
@@ -193,13 +217,13 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
             id="workday_overlap"
             name="workday_overlap"
             className="w-full rounded-full border p-2"
-            type="number"
+            type="text"
             placeholder="e.g. 5"
             required
           />
         </div>
 
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label htmlFor="is_test_required" className="block text-gray-700">
             Is Test Required
           </label>
@@ -212,7 +236,7 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
             <option value="true">Yes</option>
             <option value="false">No</option>
           </select>
-        </div>
+        </div> */}
 
         <div className="mb-4">
           <label htmlFor="skills" className="block text-gray-700">
@@ -250,7 +274,7 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
           </button>
         </div>
 
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label
             htmlFor="application_questions"
             className="block text-gray-700"
@@ -287,7 +311,7 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
           >
             Add more
           </button>
-        </div>
+        </div> */}
 
         {error ? (
           <div className="error">
@@ -295,8 +319,14 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
           </div>
         ) : null}
 
+        {/* {fieldError ? (
+          <div className="error">
+            <p className="text-red-500"> {fieldError} </p>
+          </div>
+        ) : null} */}
+
         <div className="flex justify-end">
-          <SubmitButton pendingLabel="Creating...">Create Job</SubmitButton>
+          <SubmitButton isDisabled={fieldError?true:false} pendingLabel="Creating...">Create Job</SubmitButton>
         </div>
       </form>
     </>
@@ -304,3 +334,5 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
 }
 
 export default AdminCreateAJobForm;
+
+

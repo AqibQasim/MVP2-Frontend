@@ -1,67 +1,68 @@
 "use client";
+import { useEffect, useState } from "react";
 import CandidateJobsRow from "./CandidateJobsRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
-
-const jobs = [
-  {
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commit: "full time",
-    status: "fulfilled",
-  },
-  {
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commit: "full time",
-    status: "open",
-  },
-  {
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commit: "full time",
-    status: "hired",
-  },
-  {
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commit: "full time",
-    status: "fulfilled",
-  },
-  {
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commit: "full time",
-    status: "open",
-  },
-  {
-    role: "Front-End Developer",
-    profession: "some profession",
-    skills: ["react", "python", "javascript"],
-    experience: "expert",
-    commit: "full time",
-    status: "hired",
-  },
-];
+import { useParams } from "next/navigation";
+import EmptyScreen from "./EmptyScreen";
 
 function CandidateJobsTable() {
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const params = useParams();
+  const cid = params.candidateId;
+
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/get-job-candidates?job_status=hired-and-trial&candidate_id=${cid}`);
+        // if (!response.ok) {
+        //   throw new Error("Network response was not ok");
+        // }
+        const data = await response.json();
+        console.log(data)
+
+        let filteredData= null;
+
+        if(data?.status===200){
+          filteredData = data?.data?.filter(
+            item => item.customer_info.customer_id === cid
+          );
+        }
+
+      
+        setJobs(filteredData); // assuming the data is in the 'data' field
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobs();
+  }, []); // Empty dependency array means this effect runs once on mount
+
+  if (loading) {
+    return <div>Loading...</div>; // You can customize your loading indicator
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>; // Handle errors here
+  }
+
+  if(jobs===null || jobs.length===0){
+    return <EmptyScreen className={'h-full'}/>
+  }
+
   return (
     <DashboardSection
-      className="!min-h-full"
+      className="!min-h-full overflow-auto"
       paragraph="These are all"
       heading="Your jobs"
     >
-      <Table columns="grid-cols-[1fr_1.7fr_6rem_5rem_7.1rem_8.1rem]">
+      <Table columns="grid-cols-[1fr_1.7fr_6rem_5rem_7.1rem_8.1rem]  "     >
         <Table.Header>
           <div className="name">Info</div>
           <div className="email text-center">Skills</div>
@@ -70,10 +71,16 @@ function CandidateJobsTable() {
           <div className="status text-center">Status</div>
           <div className="action text-center">Action</div>
         </Table.Header>
+        {jobs && jobs.length > 0 ? (
         <Table.Body
           data={jobs}
-          render={(job, i) => <CandidateJobsRow job={job} key={i} />}
+          render={(job, i) => <CandidateJobsRow job={job} key={i}    />}
         />
+        ) : (
+         <div >
+          <p>No data to show at the moment</p>
+         </div>
+        )}
       </Table>
     </DashboardSection>
   );

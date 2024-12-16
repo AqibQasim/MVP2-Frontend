@@ -27,6 +27,7 @@ const AddSkillForm = ({
   setLevel4,
   onContinue,
   onBack,
+  error
   // setCodingExpertise,
   // setTechStack,
   // isTestRequired,
@@ -197,6 +198,13 @@ const AddSkillForm = ({
               <option value="expert">Expert</option>
             </select>
           </div>
+          {
+            error && (
+              <div className="flex justify-center pr-7 pt-2 text-red-500">
+                {error}
+              </div>
+            )
+          }
           <div className="flex justify-end pr-7 pt-2">
             <ButtonBack
               onClick={onBack}

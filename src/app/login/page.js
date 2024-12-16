@@ -24,13 +24,89 @@ function Login() {
   const [isForgotPasswordOpened, setIsForgotPasswordOpened] = useState(false);
   const [show, setShow] = useState(false);
 
+  
+
+
+  useEffect(() => {
+
+    // console.log("Requesting notification permission...");
+    requestNotificationPermission();
+  }, []);
+  // Request Notification Permission
+  const requestNotificationPermission = async () => {
+    if ("Notification" in window) {
+      const isAcceptedNotification = await Notification.requestPermission();
+      if (isAcceptedNotification === "granted") {
+        sendNotification();
+      } else {
+        console.warn("notification permission denied");
+      }
+    } else {
+      console.error("This browser does not support notifications.");
+    }
+  };
+  // Send a Notification
+  const sendNotification = () => {
+    // if ("Notification" in window) {
+    //   console.log("Sending notification...");
+    //   new Notification("Hello!", {
+    //     body: "This is your notification.",
+    //     //icon: "/icon.png", // Optional: Add an icon
+    //   });
+    // } else {
+    //   console.error("Notifications are not supported in this browser.");
+    // }
+    if (
+      "serviceWorker" in navigator &&
+      "PushManager" in window
+    ) {
+      navigator.serviceWorker
+        .register("/sw.js", {
+          scope: "/",
+        })
+        .then(async (swRegistration) => {
+          const existingSubscription =
+            await swRegistration.pushManager.getSubscription();
+          if (existingSubscription) {
+            // Unsubscribe if the applicationServerKey is different
+            console.log("Unsubscribing existing subscription...");
+            await existingSubscription.unsubscribe();
+          }
+          const subscription = await swRegistration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(
+              process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+            ),
+          });
+          console.log("Push subscription:", subscription);
+          // Send the subscription object to your backend
+          fetch(`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/subscribe`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(subscription),
+          }).then(async (res) => {
+            console.log(await res.json());
+          });
+        })
+        .catch((error) => {
+          console.error("Service Worker registration failed:", error);
+        });
+    }
+  };
+
   const handleCloseOverlay = () => {
     setIsForgotPasswordOpened(false);
   };
 
   const handClick = () => {
-    setShow(!show)
-  }
+    setShow(!show);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.keyCode === 13) {
+      handleLogin(e); // Trigger login on Enter key press
+    }
+  };
 
   const validateField = (name, value) => {
     let errorMsg = "";
@@ -117,6 +193,9 @@ function Login() {
 
           router?.events?.on("routeChangeComplete", handleRouteChangeComplete);
 
+          const isLoggedIn =
+            localStorage.getItem("MVP_CLIENT_LOGGEDIN") === "true";
+
           if (user_role === "customer") {
             router.push(`/candidate/${result.data.id}`);
           } else {
@@ -129,6 +208,7 @@ function Login() {
       }
     },
     [form, errors, user_role],
+
   );
 
   return (
@@ -187,36 +267,38 @@ function Login() {
             {errors.email && (
               <p className="text-xs text-red-500">{errors.email}</p>
             )}
-             <div className="flex"  >
-               <Input
-               type= {show ? "text" :"password" }
-               name="password"
-               value={form.password}
-               onChange={handleChange}
-               placeholder="Enter your password"
-               className="mt-3"
-               /> 
-               <p className=" ml-[-6vh] " > 
-                  {show ?
-                   <Image
-                  src="eye-close.svg"
-                  width={20}
-                  height={20}
-                  alt="line"
-                  onClick={handClick}
-                  className="inline-block mb-[-6vh] cursor-pointer "
-                  />:
+            <div className="flex">
+              <Input
+                type={show ? "text" : "password"}
+                name="password"
+                value={form.password}
+                onKeyDown={handleKeyDown} // Trigger login on Enter
+                onChange={handleChange}
+                placeholder="Enter your password"
+                className="mt-3"
+              />
+              <p className="ml-[-37px]">
+                {show ? (
                   <Image
-                  src="eye.svg"
-                  width={20}
-                  height={20}
-                  alt="line"
-                  onClick={handClick}
-                  className="inline-block mb-[-6vh] cursor-pointer "
-                  />}
-                
-                </p>
-              </div>
+                    src="eye-close.svg"
+                    width={20}
+                    height={20}
+                    alt="line"
+                    onClick={handClick}
+                    className="mt-[24px] inline-block cursor-pointer"
+                  />
+                ) : (
+                  <Image
+                    src="eye.svg"
+                    width={20}
+                    height={20}
+                    alt="line"
+                    onClick={handClick}
+                    className="mt-[24px] inline-block cursor-pointer"
+                  />
+                )}
+              </p>
+            </div>
             {errors.password && (
               <p className="text-xs text-red-500">{errors.password}</p>
             )}
@@ -276,6 +358,7 @@ function Login() {
               </Link>
             </div>
           </div>
+
           <div className="align-end mt-auto px-7 py-5 text-start text-xs text-grey-primary">
             <Image
               src="icons/info_icon.svg"

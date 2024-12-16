@@ -6,7 +6,7 @@ function DetailTag({
   content = "2 weeks",
 }) {
   return (
-    <div className="flex flex-col text-sm font-bold text-grey-primary-shade-20 xl:flex-row">
+    <div className="grid grid-cols-2 text-sm font-bold text-grey-primary-shade-20 xl:flex-row">
       {/* // <div className="flex text-sm font-bold text-grey-primary-shade-20"> */}
       <p className="inline-flex flex-1 items-center justify-start gap-1 text-nowrap">
         {" "}
@@ -18,7 +18,7 @@ function DetailTag({
         />{" "}
         {name}
       </p>{" "}
-      <p className="flex-1 text-nowrap pl-7 text-grey-primary-shade-60 xl:pl-[unset]">
+      <p className="flex items-center flex-row text-nowrap pl-7 text-grey-primary-shade-60 xl:pl-[unset]">
         {" "}
         {content}{" "}
       </p>

@@ -16,31 +16,40 @@ import Hr from "@/components/Hr";
 import Skill from "@/components/Skill";
 import TagCard from "@/components/TagCard";
 import TalentDescription from "@/components/TalentDescription";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { cityTimezoneOffset } from "@/utils/cityTimezoneOffset";
 import { formatDate } from "@/utils/utility";
 import Image from "next/image";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-const job_questions = [
-  "It is a long established fact that a reader will be distracted by the readable content of a Page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters?",
-  "It is a long established fact that a reader will be distracted by the readable content of a Page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters?",
-];
-
-const job_on_progress = [
-  {
-    job_status: "open",
-    profession: "Software Developer",
-    candidate_name: "R. Feynman",
-    skills: ["Python", "JavaScript", "React"],
-    job_type: "Full-Time",
-    experience: "2Y",
-  },
-];
-
-function JobViewById({ job }) {
+function JobViewById({ job, user_role }) {
   const [isShowMoreEnabled, setIsShowMoreEnabled] = useState(false);
   const [isReadMoreEnabled, setIsReadMoreEnabled] = useState(false);
   const [jobQuestionLength, setJobQuestionLength] = useState(1);
+  const [interviewingCandidates, setInterviewingCandidates] = useState(null);
+
+  const fetchJob = () => {
+    const payload = {
+      endpoint: `get-jobs?job_posting_id=${job?.job_posting_id}&talent_status=interviewing`,
+      method: "GET",
+    };
+    mvp2ApiHelper(payload).then((value) => {
+      //console.log(value)
+      if (value.status === 200) {
+        setInterviewingCandidates(value?.data?.data);
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (user_role === "client") {
+      fetchJob();
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log(interviewingCandidates);
+  }, [interviewingCandidates]);
 
   const handleShowMore = () => {
     setIsShowMoreEnabled((value) => !value);
@@ -114,7 +123,7 @@ function JobViewById({ job }) {
                 <TagCard
                   icon={note_add}
                   title={"Est. Length"}
-                  answer={job.project_length}
+                  answer={job.project_length} 
                 />
 
                 <TagCard
@@ -140,7 +149,7 @@ function JobViewById({ job }) {
                 <TagCard
                   icon={tag}
                   title={"Specialization"}
-                  answer={"[job specialization]"}
+                  answer={job?.position ?? "[job specialization]"}
                 />
 
                 <TagCard
@@ -166,7 +175,7 @@ function JobViewById({ job }) {
 
           <Hr />
 
-          <div className="my-3">
+          {/* <div className="my-3">
             <Heading sm>Application Questions</Heading>
           </div>
 
@@ -185,9 +194,12 @@ function JobViewById({ job }) {
                 <Image alt="dropdown" src={dropdown} />
               </button>
             </div>
-          )}
+          )} */}
         </div>
       </div>
+      {
+        user_role==='client'&&
+      
       <div className="w-[23.375rem] items-center justify-center rounded-[36px] bg-white p-3">
         <div className="flex h-auto w-auto flex-row items-center justify-between">
           <Heading className="text-[24px]">Status</Heading>
@@ -196,25 +208,28 @@ function JobViewById({ job }) {
           </Capsule>
         </div>
         <Hr />
-        {job_on_progress.map((job, index) => (
-          <div key={index} className="mb-3 w-full gap-3 rounded-xl">
+        {interviewingCandidates && (
+          <div className="mb-3 w-full gap-3 rounded-xl">
             <div className="flex flex-1 flex-row items-center justify-between border-[1px] border-[#F9F8FC]">
               <EntityCard
                 entity={{
-                  name: job.candidate_name,
-                  profession: job.profession,
+                  name: interviewingCandidates?.name,
+                  profession: interviewingCandidates?.specialization,
                   image: "/avatars/avatar-1.png",
                 }}
               />
             </div>
             <div className="skills flex items-center gap-1.5 text-center">
-              {job.skills.map((skill, i) => (
-                <Skill key={i} skill={skill} />
+              {interviewingCandidates?.expertise?.map((skill, i) => (
+                <>
+                  <Skill key={i} skill={skill?.skill} />
+                </>
               ))}
             </div>
           </div>
-        ))}
+        )}
       </div>
+      }
     </div>
   );
 }

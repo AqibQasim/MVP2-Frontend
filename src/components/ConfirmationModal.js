@@ -13,7 +13,13 @@ const ConfirmationModal = ({
   signupHandler,
 }) => {
   return (
-    <div className="flex h-[100%] w-[100%] flex-col items-center justify-around font-lufga">
+    <div className="flex h-[60%] w-[100%] flex-col items-center justify-around font-lufga">
+      <button
+        onClick={onClose}
+        className="absolute right-4 top-3 text-2xl text-gray-500 hover:text-gray-700"
+      >
+        &times;
+      </button>
       <div className="flex flex-col items-center">
         <Image
           className="mb-[1rem]"

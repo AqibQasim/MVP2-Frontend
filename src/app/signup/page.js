@@ -12,6 +12,7 @@ import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
+import Link from "next/link";
 
 function Page() {
   const router = useRouter();
@@ -20,7 +21,9 @@ function Page() {
     firstName: "",
     lastName: "",
     email: "",
+    phoneNumber: "",
     password: "",
+    countryCode: "+92",
     confirmPassword: "",
   });
 
@@ -32,13 +35,12 @@ function Page() {
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
 
-
   const handClick = () => {
-    setShow(!show)
-  }
+    setShow(!show);
+  };
   const handClick2 = () => {
-    setShow2(!show2)
-  }
+    setShow2(!show2);
+  };
 
   const payload = useMemo(
     () => ({
@@ -48,6 +50,7 @@ function Page() {
         email: form.email,
         name: form.firstName + " " + form.lastName,
         password: form.password,
+        contact_no: `${form.countryCode ? form.countryCode.split(" ")[0] : ""}${form.phoneNumber}`,
         user_role,
         method: "signup",
       },
@@ -63,6 +66,10 @@ function Page() {
         return; // Do not proceed with signup if there are validation errors
       }
 
+      // Proceed with the rest of the signup process
+      const result = await mvp2ApiHelper(payload);
+      console.log("RESULT from signup: ", result?.data?.customer_id);
+
       try {
         // Call the Stripe customer creation API
         const stripeResponse = await fetch("/api/create-customer", {
@@ -73,6 +80,10 @@ function Page() {
           body: JSON.stringify({
             email: form.email,
             name: form.firstName + " " + form.lastName,
+            metadata:
+              user_role == "customer"
+                ? { customer: 1, customer_id: result?.data?.customer_id }
+                : { customer: 0, client_id: result?.data?.client_id },
           }),
         });
 
@@ -86,10 +97,6 @@ function Page() {
           "Stripe customer created successfully:",
           stripeData.customer,
         );
-
-        // Proceed with the rest of the signup process
-        const result = await mvp2ApiHelper(payload);
-        console.log("RESULT from signup: ", result.data.status);
 
         let createAccountData;
 
@@ -116,6 +123,29 @@ function Page() {
             "Stripe account created successfully:",
             createAccountData,
           );
+        } else {
+          const createAccountResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-customer-stripe-account`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                customer_id: result.data.customer_id,
+                stripe_id: stripeData.customer.id,
+              }),
+            },
+          );
+          createAccountData = await createAccountResponse.json();
+
+          if (createAccountResponse.status !== 200) {
+            throw new Error(createAccountData.error);
+          }
+          console.log(
+            "Stripe account created successfully:",
+            createAccountData,
+          );
         }
         if (result.data.status === 200) {
           console.log("Signed up successfully");
@@ -123,7 +153,39 @@ function Page() {
           setisLoading(false);
           const revalidatePathOnSignup = `/admin/${user_role === "client" ? "clients" : "candidates"}`;
           await revalidate(revalidatePathOnSignup);
-          router.push("/login");
+
+          const Authenticated = true;
+          if (Authenticated) {
+            localStorage.setItem("MVP_CLIENT_LOGGEDIN", true);
+
+            const now = new Date();
+            now.setTime(now.getTime() + 60 * 60 * 60 * 10 + 36000000); // 36000000 ms = 10 hours
+            const expires = now.toUTCString();
+
+            const token = result.data.token;
+            document.cookie = `credentialLoginToken=${token}; expires=${expires}; path=/;`;
+
+            // Handle navigation loading
+            // const handleRouteChangeComplete = () => {
+            //   setisLoading(false); // Stop loading when navigation is complete
+            //   router.events.off(
+            //     "routeChangeComplete",
+            //     handleRouteChangeComplete,
+            //   );
+            // };
+
+            // router?.events?.on(
+            //   "routeChangeComplete",
+            //   handleRouteChangeComplete,
+            // );
+
+            if (user_role === "customer") {
+              router.push(`/candidate/${result.data.customer_id}`);
+            } else {
+              router.push(`/client/${result.data.client_id}`);
+            }
+          }
+          // router.push("/login");
         } else {
           console.error("Error during signup:", error);
         }
@@ -221,6 +283,7 @@ function Page() {
       !form.firstName ||
       !form.lastName ||
       !form.email ||
+      !form.phoneNumber ||
       !form.password ||
       !form.confirmPassword
     );
@@ -245,9 +308,21 @@ function Page() {
           errorMsg = "Invalid email address";
         }
         break;
+      case "phoneNumber":
+        if (!/^\d{8,12}$/.test(value)) {
+          errorMsg = "Invalid phone number";
+        }
+        break;
       case "password":
         if (!/^.{8,}$/.test(value)) {
           errorMsg = "Password must be at least 8 characters";
+        } else if (form.confirmPassword && value !== form.confirmPassword) {
+          setErrors((prev) => ({
+            ...prev,
+            confirmPassword: "Passwords do not match",
+          }));
+        } else {
+          setErrors((prev) => ({ ...prev, confirmPassword: "" }));
         }
         break;
       case "confirmPassword":
@@ -255,6 +330,7 @@ function Page() {
           errorMsg = "Passwords do not match";
         }
         break;
+
       default:
         break;
     }
@@ -300,7 +376,7 @@ function Page() {
         </div>
 
         <div className="flex w-[33rem] flex-col items-start justify-start rounded-[36px] bg-white">
-          <div className="flex w-full justify-between space-y-2 p-5">
+          <div className="flex w-full justify-between space-y-1 p-5">
             <Image src="/logo.svg" width={100} height={25} alt="MVP 2 Logo" />
             <div className="flex gap-2">
               <button
@@ -323,20 +399,20 @@ function Page() {
               </button>
             </div>
           </div>
-          <div className="mx-auto mt-3 w-8/12 flex-grow">
-            <h2 className="text-start font-lufga text-2xl">
+          <div className="mx-auto mt-1 w-8/12 flex-grow">
+            <h2 className="text-start font-lufga text-lg">
               A sentence of perks and encouragement for{" "}
               <span className="gradient-text">freelancer.</span>
               <Image
                 src="/icons/clients_emoji.png"
-                width={100}
-                height={100}
+                width={60}
+                height={60}
                 alt="Clients Emoji"
                 className="inline-block"
               />
             </h2>
             <form onSubmit={handleOpenOverlay}>
-              <div className="mt-5 flex gap-2">
+              <div className="mt-1 flex gap-1">
                 <Input
                   type="text"
                   name="firstName"
@@ -355,13 +431,12 @@ function Page() {
                 />
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-1">
                 <div>
                   {errors.firstName && (
                     <p className="text-xs text-red-500">{errors.firstName}</p>
                   )}
                 </div>
-
                 <div>
                   {errors.lastName && (
                     <p className="text-xs text-red-500">{errors.lastName}</p>
@@ -381,69 +456,154 @@ function Page() {
                 <p className="text-xs text-red-500">{errors.email}</p>
               )}
 
+              {/* Phone Number with Country Code */}
+              <div className="mt-3 flex gap-2">
+                <select
+                  name="countryCode"
+                  value={form.countryCode}
+                  onChange={handleChange}
+                  className="block w-full  rounded-full border border-gray-300 px-5 h-[42px] mt-3 text-sm leading-tight text-gray-900 focus:border-primary focus:ring-primary"
+                >
+                  <option value="+93">+93 (Afghanistan)</option>
+                  <option value="+355">+355 (Albania)</option>
+                  <option value="+213">+213 (Algeria)</option>
+                  <option value="+54">+54 (Argentina)</option>
+                  <option value="+61">+61 (Australia)</option>
+                  <option value="+43">+43 (Austria)</option>
+                  <option value="+994">+994 (Azerbaijan)</option>
+                  <option value="+973">+973 (Bahrain)</option>
+                  <option value="+880">+880 (Bangladesh)</option>
+                  <option value="+32">+32 (Belgium)</option>
+                  <option value="+55">+55 (Brazil)</option>
+                  <option value="+1">+1 (Canada)</option>
+                  <option value="+86">+86 (China)</option>
+                  <option value="+57">+57 (Colombia)</option>
+                  <option value="+420">+420 (Czech Republic)</option>
+                  <option value="+45">+45 (Denmark)</option>
+                  <option value="+20">+20 (Egypt)</option>
+                  <option value="+358">+358 (Finland)</option>
+                  <option value="+33">+33 (France)</option>
+                  <option value="+49">+49 (Germany)</option>
+                  <option value="+30">+30 (Greece)</option>
+                  <option value="+91">+91 (India)</option>
+                  <option value="+62">+62 (Indonesia)</option>
+                  <option value="+98">+98 (Iran)</option>
+                  <option value="+964">+964 (Iraq)</option>
+                  <option value="+353">+353 (Ireland)</option>
+                  <option value="+972">+972 (Israel)</option>
+                  <option value="+39">+39 (Italy)</option>
+                  <option value="+81">+81 (Japan)</option>
+                  <option value="+962">+962 (Jordan)</option>
+                  <option value="+254">+254 (Kenya)</option>
+                  <option value="+965">+965 (Kuwait)</option>
+                  <option value="+961">+961 (Lebanon)</option>
+                  <option value="+60">+60 (Malaysia)</option>
+                  <option value="+52">+52 (Mexico)</option>
+                  <option value="+977">+977 (Nepal)</option>
+                  <option value="+31">+31 (Netherlands)</option>
+                  <option value="+64">+64 (New Zealand)</option>
+                  <option value="+234">+234 (Nigeria)</option>
+                  <option value="+47">+47 (Norway)</option>
+                  <option value="+92">+92 (Pakistan)</option>
+                  <option value="+63">+63 (Philippines)</option>
+                  <option value="+48">+48 (Poland)</option>
+                  <option value="+351">+351 (Portugal)</option>
+                  <option value="+974">+974 (Qatar)</option>
+                  <option value="+7">+7 (Russia)</option>
+                  <option value="+966">+966 (Saudi Arabia)</option>
+                  <option value="+65">+65 (Singapore)</option>
+                  <option value="+27">+27 (South Africa)</option>
+                  <option value="+82">+82 (South Korea)</option>
+                  <option value="+34">+34 (Spain)</option>
+                  <option value="+46">+46 (Sweden)</option>
+                  <option value="+41">+41 (Switzerland)</option>
+                  <option value="+66">+66 (Thailand)</option>
+                  <option value="+90">+90 (Turkey)</option>
+                  <option value="+971">+971 (UAE)</option>
+                  <option value="+44">+44 (UK)</option>
+                  <option value="+1">+1 (USA)</option>
+                  <option value="+58">+58 (Venezuela)</option>
+                  <option value="+84">+84 (Vietnam)</option>
+                </select>
+                <Input
+                  type="tel"
+                  name="phoneNumber"
+                  value={form.phoneNumber}
+                  onChange={handleChange}
+                  placeholder="Phone number"
+                  className="mt-3 flex-grow"
+                />
+              </div>
+              {errors.phoneNumber && (
+                <p className="text-xs text-red-500">{errors.phoneNumber}</p>
+              )}
+
               <div className="flex gap-2">
-              <div className="flex"  >
-                <Input
-                   type= {show ? "text" :"password" }
-                  name="password"
-                  value={form.password}
-                  onChange={handleChange}
-                  placeholder="Enter password"
-                  className="mt-3"
-                />
-                 <p className=" ml-[-6vh] " > 
-                  {show ?
-                   <Image
-                  src="eye-close.svg"
-                  width={20}
-                  height={20}
-                  alt="line"
-                  onClick={handClick}
-                  className="inline-block mb-[-6vh] cursor-pointer "
-                  />:
-                  <Image
-                  src="eye.svg"
-                  width={20}
-                  height={20}
-                  alt="line"
-                  onClick={handClick}
-                  className="inline-block mb-[-6vh] cursor-pointer "
-                  />}
-                
-                </p>
+                <div className="flex">
+                  <Input
+                    type={show ? "text" : "password"}
+                    name="password"
+                    value={form.password}
+                    onChange={handleChange}
+                    placeholder="Enter password"
+                    className="mt-3"
+                  />
+                  <p className="ml-[-37px]">
+                    {show ? (
+                      <Image
+                        src="eye-close.svg"
+                        width={20}
+                        height={20}
+                        alt="eye close"
+                        onClick={handClick}
+                        className="mt-[24px] inline-block cursor-pointer"
+                      />
+                    ) : (
+                      <Image
+                        src="eye.svg"
+                        width={20}
+                        height={20}
+                        alt="eye open"
+                        onClick={handClick}
+                        className="mt-[24px] inline-block cursor-pointer"
+                      />
+                    )}
+                  </p>
                 </div>
-                <div className="flex"  >
-                <Input
-                   type= {show2 ? "text" :"password" }
-                  name="confirmPassword"
-                  value={form.confirmPassword}
-                  onChange={handleChange}
-                  placeholder="Confirm password"
-                  className="mt-3"
-                />
-                 <p className=" ml-[-6vh] " > 
-                  {show2?
-                   <Image
-                  src="eye-close.svg"
-                  width={20}
-                  height={20}
-                  alt="line"
-                  onClick={handClick2}
-                  className="inline-block mb-[-6vh] cursor-pointer "
-                  />:
-                  <Image
-                  src="eye.svg"
-                  width={20}
-                  height={20}
-                  alt="line"
-                  onClick={handClick2}
-                  className="inline-block mb-[-6vh] cursor-pointer "
-                  />}
-                
-                </p>
+                <div className="flex">
+                  <Input
+                    type={show2 ? "text" : "password"}
+                    name="confirmPassword"
+                    value={form.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Confirm password"
+                    className="mt-3"
+                  />
+                  <p className="ml-[-37px]">
+                    {show2 ? (
+                      <Image
+                        src="eye-close.svg"
+                        width={20}
+                        height={20}
+                        alt="eye close"
+                        onClick={handClick2}
+                        className="mt-[24px] inline-block cursor-pointer"
+                      />
+                    ) : (
+                      <Image
+                        src="eye.svg"
+                        width={20}
+                        height={20}
+                        alt="eye open"
+                        onClick={handClick2}
+                        className="mt-[24px] inline-block cursor-pointer"
+                      />
+                    )}
+                  </p>
                 </div>
               </div>
-              <div className="flex gap-2">
+
+              <div className="flex gap-1">
                 <div>
                   {errors.password && (
                     <p className="text-xs text-red-500">{errors.password}</p>
@@ -457,7 +617,8 @@ function Page() {
                   )}
                 </div>
               </div>
-              <div className="mt-2 w-full text-start">
+
+              <div className="mt-1 w-full text-start">
                 <input
                   type="checkbox"
                   className="border-none outline-none"
@@ -466,9 +627,9 @@ function Page() {
                 <span className="ms-2 text-sm text-grey-primary">
                   I read and accept the{" "}
                 </span>
-                <button className="text-sm text-primary">
+                <span className="text-sm text-grey-primary">
                   Terms and Conditions
-                </button>
+                </span>
               </div>
               <OnBoardingButton
                 type="submit"
@@ -480,6 +641,7 @@ function Page() {
                 Create account
               </OnBoardingButton>
             </form>
+
             <div className="my-1 w-full text-center text-grey-primary-tint-30">
               <div className="flex items-center justify-center gap-2">
                 <Image
@@ -502,17 +664,14 @@ function Page() {
 
             {/* Google signin */}
             <SignInButton user_role={user_role} />
-
-            {/* <button className="text-md w-full rounded-full border-[1px] bg-white px-4 py-2 font-semibold text-black shadow-md">
-              <Image
-                src="google.svg"
-                width={20}
-                height={20}
-                alt="Google"
-                className="inline-block"
-              />{" "}
-              Continue with Google
-            </button> */}
+            <div className="mt-2">
+              <p className="me-1 inline-block text-xs text-grey-primary">
+                Already have an account?
+              </p>
+              <Link href={"/login"} className="text-xs text-primary underline">
+                Sign in now
+              </Link>
+            </div>
           </div>
         </div>
       </div>

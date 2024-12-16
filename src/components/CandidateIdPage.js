@@ -6,6 +6,7 @@ import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { useEffect, useState } from "react";
 
 export default function CandidateIdPage({ candidate, candidateId }) {
+
   const [candidateReport, setCandidateReport] = useState(null);
   const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
 
@@ -20,7 +21,7 @@ export default function CandidateIdPage({ candidate, candidateId }) {
       if (result) setCandidateReport(result?.data?.data);
     });
   };
-
+//// new
   useEffect(() => {
     getCandidateResult();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -39,17 +40,17 @@ export default function CandidateIdPage({ candidate, candidateId }) {
   return (
     <>
       {!candidateReport ? (
-        <CandidateEvaluateYourselfCard />
+        <CandidateEvaluateYourselfCard candidate={candidate}/>
       ) : (
         <div>
           <CandidateReportCard
             candidateReport={candidateReport}
-            handleOpenOverlay={handleOpenOverlay} // Pass the function to open overlay
+            handleOpenOverlay={handleOpenOverlay} 
           />
           {isReportOverlayOpened && (
             <ReportOverlay
               reportOverlay={isReportOverlayOpened}
-              onClose={handleCloseOverlay} // Pass the function to close overlay
+              onClose={handleCloseOverlay} 
               selectedCandidate={candidateReport}
             />
           )}

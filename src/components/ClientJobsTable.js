@@ -3,9 +3,34 @@ import { fetchClientJobs, getClientById, getJobs } from "@/lib/data-service";
 import ClientJobsRow from "./ClientJobsRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
+import { useEffect, useState } from "react";
+import EmptyScreen from "./EmptyScreen";
 
-async function ClientJobsTable({client_id}) {
-  const clientJobs = await fetchClientJobs(client_id);
+async function ClientJobsTable({ client_id }) {
+
+  const [jobs, setJobs] = useState(null);
+
+  const fetchJobs = async () => {
+    const clientJobs = await fetchClientJobs(client_id);
+
+    //console.log(candidates)
+
+    if (clientJobs?.status === 200) {
+      setJobs(clientJobs?.data)
+    }
+  }
+  //const clientJobs = await fetchClientJobs(client_id);
+
+  useEffect(() => {
+    fetchJobs();
+  }, [])
+
+  console.log("jobs", jobs)
+
+  if(jobs && jobs?.result?.length === 0){
+    return <EmptyScreen className={'h-full'}/>
+  }
+  
 
   return (
     <DashboardSection
@@ -22,10 +47,18 @@ async function ClientJobsTable({client_id}) {
           <div className="status text-center">Status</div>
           <div className="action text-center">Action</div>
         </Table.Header>
+
+        {jobs && jobs?.result.length > 0 ? (
         <Table.Body
-          data={clientJobs.data.result}
+          data={jobs?.result}
           render={(job, i) => <ClientJobsRow job={job} key={i} />}
         />
+         ) : (
+        <div >
+          <p>No data to show at the moment</p>
+        </div>
+        )}
+
       </Table>
     </DashboardSection>
   );

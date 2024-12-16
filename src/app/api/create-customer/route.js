@@ -6,12 +6,13 @@ const stripe = new Stripe('sk_test_51OfPQBCtLGKA7fQGrCJBt8ahBHMTm4H533SgJpd9FnRk
 
 export async function POST(req) {
     try {
-        const { name, email } = await req.json(); // Get the name and email from the request body
+        const { name, email, metadata } = await req.json(); // Get the name and email from the request body
 
         // Create a new customer in Stripe
         const customer = await stripe.customers.create({
             name,
             email,
+            metadata
         });
 
         // Return the created customer object

@@ -1,11 +1,14 @@
+"use client";
+
 import CustomersList from "@/components/CustomersList";
+import WithAdminAuth from "@/components/WithAdminAuth";
 
 async function Page() {
   return (
     <>
-      <CustomersList />
+        <CustomersList />
     </>
   );
 }
 
-export default Page;
+export default WithAdminAuth(Page);

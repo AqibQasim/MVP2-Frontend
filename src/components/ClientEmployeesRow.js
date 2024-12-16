@@ -19,14 +19,20 @@ function ClientEmployeesRow({ hiredCandidate }) {
         }}
       />
       <div className="skills flex items-center justify-center gap-1.5 text-center">
-        {job_postings?.skills.map((skill, i) => (
-          <SkillIconWithBg key={i} icon={skill} />
-        ))}
+        {job_postings?.skills.length > 1 ? (
+          <div className="flex" > 
+          <SkillIconWithBg icon={job_postings?.skills[0]} skill={job_postings?.skills[0]} />
+          <div className="mt-2">
+             + {job_postings?.skills.length - 1}
+          </div>
+          </div>) :   <SkillIconWithBg icon={job_postings?.skills[0]} skill={job_postings?.skills[0]} />
+          
+        }
       </div>
       <div className="experience text-center">{customer?.experience}</div>
       <div className="commit text-center"> {customer?.commitment} </div>
-      <Capsule className="status mx-auto w-max" status={customer?.status}>
-        {customer.status}
+      <Capsule className="status mx-auto w-max" status={customer?.talent_status}>
+        {customer.talent_status}
       </Capsule>
       <CapsuleLink
         className="action ml-auto"

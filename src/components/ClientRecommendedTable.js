@@ -71,6 +71,11 @@ function ClientRecommendedTable({ recommendedCandidates }) {
   const params = useParams();
   const clientId = params?.clientId;
 
+  console.log(recommendedCandidates)
+ 
+
+
+
   return (
     <DashboardSection
       className="!min-h-full"
@@ -87,13 +92,20 @@ function ClientRecommendedTable({ recommendedCandidates }) {
           <div className="job-type text-center">Job type</div>
           <div className="actions text-right">Actions</div>
         </Table.Header>
+      
+        {recommendedCandidates && recommendedCandidates.length > 0 ? (
         <Table.Body
-          data={recommendedCandidates}
+          data={recommendedCandidates.filter(v => (v.customer.talent_status === "interviewing"))}
           //   data={[]}
           render={(recommended, i) => (
             <ClientRecommendedRow recommended={recommended} key={i} />
           )}
         />
+        ) : (
+        <div >
+          <p>No data to show at the moment</p>
+        </div>
+       )}
       </Table>
     </DashboardSection>
   );

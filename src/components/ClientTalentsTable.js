@@ -3,10 +3,48 @@ import { useParams } from "next/navigation";
 import ClientTalentsRow from "./ClientTalentsRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
+import { getAllRecommendedCandidates } from "@/lib/data-service";
+import { useEffect, useState } from "react";
+import EmptyScreen from "./EmptyScreen";
 
 function ClientTalentsTable({ hiredTalents }) {
   const params = useParams();
   const clientId = params?.clientId;
+
+  console.log("params: ", clientId);
+  const filter = "accept";
+  // const { data: hiredTalents, error } = await getAllRecommendedCandidates(
+  //   clientId,
+  //   filter,
+  // );
+  // if (error) console.log("Error: getting Hired Candidates: ", error);
+
+  const [hiredCandidates, setHiredCandidates] = useState(null);
+
+  const fetchHiredCandidates = async () => {
+    const candidates = await getAllRecommendedCandidates(
+      clientId,
+      filter,
+    );
+
+    console.log(candidates)
+
+    if (candidates?.status === 200) {
+      const hired= candidates?.data?.filter(v=>v.customer.talent_status==='hired' || v.customer.talent_status==='trial')
+      setHiredCandidates(hired)
+    }
+  }
+  //const clientJobs = await fetchClientJobs(client_id);
+
+  useEffect(() => {
+    fetchHiredCandidates();
+  }, [])
+
+  console.log(hiredCandidates)
+
+  if(hiredCandidates && hiredCandidates.length === 0){
+    return <EmptyScreen className={'h-full'}/>
+  }
 
   return (
     <DashboardSection
@@ -25,10 +63,17 @@ function ClientTalentsTable({ hiredTalents }) {
           <div className="date-hire text-center">Date hire</div>
           <div className="actions text-right">Actions</div>
         </Table.Header>
+
+        {hiredCandidates && hiredCandidates.length > 0 ? (
         <Table.Body
-          data={hiredTalents}
+          data={hiredCandidates}
           render={(talent, i) => <ClientTalentsRow talent={talent} key={i} />}
         />
+      ) : (
+        <div >
+          <p>No data to show at the moment</p>
+        </div>
+      )}
       </Table>
     </DashboardSection>
   );
