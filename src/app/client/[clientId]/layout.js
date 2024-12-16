@@ -12,8 +12,6 @@ async function layout({ children, params }) {
   console.log("clientId", clientId);
   const session = await auth();
 
-
-
   //const [showResponseMessage,setShowResponseMessage]=useState(true);
   // const router = useRouter();
 

@@ -23,7 +23,7 @@ function Page() {
     email: "",
     phoneNumber: "",
     password: "",
-    countryCode: "+92",
+    countryCode: "+92", 
     confirmPassword: "",
   });
 
@@ -295,12 +295,12 @@ function Page() {
     switch (name) {
       case "firstName":
         if (!/^[A-Za-z]+$/.test(value)) {
-          errorMsg = "Invalid Firstname";
+          errorMsg = "Invalid First Name";
         }
         break;
       case "lastName":
         if (!/^[A-Za-z]+$/.test(value)) {
-          errorMsg = "Invalid Lastname";
+          errorMsg = "Invalid Last Name";
         }
         break;
       case "email":
