@@ -2,6 +2,7 @@ function Input({
   as = "input",
   type = "text",
   error = false,
+  required,
   className,
   placeholder = "",
   ...rest
@@ -25,7 +26,7 @@ function Input({
       className={`${commonClasses} ${className} ${error ? `!border-red-500` : " "}`}
       placeholder={placeholder}
       {...rest}
-      required
+      required={required}
     />
   );
 }
