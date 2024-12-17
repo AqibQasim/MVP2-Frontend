@@ -17,7 +17,7 @@ function CandidateJobsTable() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/get-job-candidates?job_status=hired-and-trial&candidate_id=${cid}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/get-job-candidates?job_status=hired-trial-interviewing&candidate_id=${cid}`);
         // if (!response.ok) {
         //   throw new Error("Network response was not ok");
         // }
