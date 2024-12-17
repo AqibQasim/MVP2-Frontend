@@ -6,6 +6,7 @@ import styles from "../styles/AddSkillForm.module.css";
 import ButtonBack from "./ButtonBack";
 import ButtonCapsule from "./ButtonCapsule";
 import Heading from "./Heading";
+import { useState } from "react";
 
 // useFormContext
 const AddSkillForm = ({
@@ -17,6 +18,8 @@ const AddSkillForm = ({
   setSkill3,
   skill4,
   setSkill4,
+  skill5,
+  setSkill5,
   level1,
   setLevel1,
   level2,
@@ -25,14 +28,17 @@ const AddSkillForm = ({
   setLevel3,
   level4,
   setLevel4,
+  level5,
+  setLevel5,
   onContinue,
   onBack,
-  error
+  error,
   // setCodingExpertise,
   // setTechStack,
   // isTestRequired,
   // setIsTestRequired,
 }) => {
+  const [incrementSkillSet, setIncrementSkillSet] = useState(3);
   // const [codingSkill, setCodingSkill] = useState("");
   // const [codingLevel, setCodingLevel] = useState("beginner");
   // const [queryIcons, setQueryIcons] = useState([]);
@@ -168,7 +174,73 @@ const AddSkillForm = ({
             </select>
           </div>
 
-          <div
+          {incrementSkillSet >= 4 && incrementSkillSet <= 5 && (
+            <div
+              className={`${styles.inputField} ${skill4 ? styles.filled : ""}`}
+            >
+              <div className="relative flex w-[80%] items-center gap-[5px]">
+                <Image
+                  className={styles.img}
+                  src={skill4.length > 1 ? getSvg(skill4) : "/skills/Award.svg"}
+                  width={iconSize}
+                  height={iconSize}
+                />
+                <input
+                  type="text"
+                  value={skill4}
+                  placeholder="Add Required Skill"
+                  onChange={(e) => setSkill4(e.target.value)}
+                />
+              </div>
+
+              <select
+                value={level4 || ""} // Fallback to empty string if level1 is undefined or null
+                onChange={(e) => setLevel4(e.target.value)}
+              >
+                <option value="" disabled>
+                  Choose level of difficulty
+                </option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="expert">Expert</option>
+              </select>
+            </div>
+          )}
+
+          {incrementSkillSet === 5 && (
+            <div
+              className={`${styles.inputField} ${skill5 ? styles.filled : ""}`}
+            >
+              <div className="relative flex w-[80%] items-center gap-[5px]">
+                <Image
+                  className={styles.img}
+                  src={skill5.length > 1 ? getSvg(skill5) : "/skills/Award.svg"}
+                  width={iconSize}
+                  height={iconSize}
+                />
+                <input
+                  type="text"
+                  value={skill5}
+                  placeholder="Add Required Skill"
+                  onChange={(e) => setSkill5(e.target.value)}
+                />
+              </div>
+
+              <select
+                value={level5 || ""} // Fallback to empty string if level1 is undefined or null
+                onChange={(e) => setLevel5(e.target.value)}
+              >
+                <option value="" disabled>
+                  Choose level of difficulty
+                </option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="expert">Expert</option>
+              </select>
+            </div>
+          )}
+
+          {/* <div
             className={`${styles.inputField} ${skill4 ? styles.filled : ""}`}
           >
             <div className="relative flex w-[80%] items-center gap-[5px]">
@@ -197,14 +269,20 @@ const AddSkillForm = ({
               <option value="intermediate">Intermediate</option>
               <option value="expert">Expert</option>
             </select>
-          </div>
-          {
-            error && (
-              <div className="flex justify-center pr-7 pt-2 text-red-500">
-                {error}
-              </div>
-            )
-          }
+          </div> */}
+          {incrementSkillSet >= 3 && incrementSkillSet < 5 && (
+            <div
+              onClick={() => setIncrementSkillSet((prev) => prev + 1)}
+              className="cursor-pointer text-primary justify-end text-end pr-8 w-full"
+            >
+              Add More
+            </div>
+          )}
+          {error && (
+            <div className="flex justify-center pr-7 pt-2 text-red-500">
+              {error}
+            </div>
+          )}
           <div className="flex justify-end pr-7 pt-2">
             <ButtonBack
               onClick={onBack}
