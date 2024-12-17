@@ -79,6 +79,12 @@ const AddSkillForm = ({
             Technologies You’ll Be Asked about
           </Heading>
         </div>
+        <button
+          onClick={onBack}
+          className="absolute right-2 top-2 text-4xl text-gray-500 hover:text-gray-700"
+        >
+          &times;
+        </button>
 
         <div className="h-[100%] w-[90%] space-y-4">
           <div

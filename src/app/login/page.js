@@ -25,9 +25,6 @@ function Login() {
   const [isForgotPasswordOpened, setIsForgotPasswordOpened] = useState(false);
   const [show, setShow] = useState(false);
 
-  
-
-
   // useEffect(() => {
   //   // console.log("Requesting notification permission...");
   //   requestNotificationPermission();
@@ -208,7 +205,6 @@ function Login() {
       }
     },
     [form, errors, user_role],
-
   );
 
   return (
@@ -280,7 +276,7 @@ function Login() {
               <p className="ml-[-37px]">
                 {show ? (
                   <Image
-                    src="eye-close.svg"
+                    src="eye.svg"
                     width={20}
                     height={20}
                     alt="line"
@@ -289,7 +285,7 @@ function Login() {
                   />
                 ) : (
                   <Image
-                    src="eye.svg"
+                    src="eye-close.svg"
                     width={20}
                     height={20}
                     alt="line"
