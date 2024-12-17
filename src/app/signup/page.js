@@ -23,9 +23,10 @@ function Page() {
     email: "",
     phoneNumber: "",
     password: "",
-    countryCode: "+92", 
+    countryCode: "+92",
     confirmPassword: "",
   });
+  const [confirmTerms, setConfirmTerms] = useState(false);
 
   const [user_role, setUserRole] = useState("client");
   const [errors, setErrors] = useState({});
@@ -417,6 +418,7 @@ function Page() {
                   type="text"
                   name="firstName"
                   value={form.firstName}
+                  error={errors.firstName}
                   onChange={handleChange}
                   placeholder="First name"
                   className="mt-3"
@@ -425,6 +427,7 @@ function Page() {
                   type="text"
                   name="lastName"
                   value={form.lastName}
+                  error={errors.lastName}
                   onChange={handleChange}
                   placeholder="Last name"
                   className="mt-3"
@@ -448,6 +451,7 @@ function Page() {
                 type="text"
                 name="email"
                 value={form.email}
+                error={errors.email}
                 onChange={handleChange}
                 placeholder="Enter email"
                 className="mt-3"
@@ -462,7 +466,7 @@ function Page() {
                   name="countryCode"
                   value={form.countryCode}
                   onChange={handleChange}
-                  className="block w-full  rounded-full border border-gray-300 px-5 h-[42px] mt-3 text-sm leading-tight text-gray-900 focus:border-primary focus:ring-primary"
+                  className="mt-3 block h-[42px] w-full rounded-full border border-gray-300 px-5 text-sm leading-tight text-gray-900 focus:border-primary focus:ring-primary"
                 >
                   <option value="+93">+93 (Afghanistan)</option>
                   <option value="+355">+355 (Albania)</option>
@@ -528,6 +532,7 @@ function Page() {
                 <Input
                   type="tel"
                   name="phoneNumber"
+                  error={errors.phoneNumber}
                   value={form.phoneNumber}
                   onChange={handleChange}
                   placeholder="Phone number"
@@ -544,6 +549,7 @@ function Page() {
                     type={show ? "text" : "password"}
                     name="password"
                     value={form.password}
+                    error={errors.password}
                     onChange={handleChange}
                     placeholder="Enter password"
                     className="mt-3"
@@ -575,6 +581,7 @@ function Page() {
                     type={show2 ? "text" : "password"}
                     name="confirmPassword"
                     value={form.confirmPassword}
+                    error={errors.confirmPassword}
                     onChange={handleChange}
                     placeholder="Confirm password"
                     className="mt-3"
@@ -622,7 +629,9 @@ function Page() {
                 <input
                   type="checkbox"
                   className="border-none outline-none"
-                  required
+                  onChange={() => setConfirmTerms((checked) => !checked)}
+                  checked={confirmTerms}
+                  name="confirmTerms"
                 />
                 <span className="ms-2 text-sm text-grey-primary">
                   I read and accept the{" "}
@@ -633,9 +642,11 @@ function Page() {
               </div>
               <OnBoardingButton
                 type="submit"
-                disabled={isFormInvalid}
+                disabled={isFormInvalid || !confirmTerms}
                 className={`${
-                  isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
+                  isFormInvalid || !confirmTerms
+                    ? "cursor-not-allowed"
+                    : "cursor-pointer"
                 }`}
               >
                 Create account
