@@ -23,7 +23,7 @@ function Page() {
     email: "",
     phoneNumber: "",
     password: "",
-    countryCode: "+92", 
+    countryCode: "+92",
     confirmPassword: "",
   });
 
@@ -227,7 +227,7 @@ function Page() {
             // User not found, proceed to send email
             const generatedotp = generateOtp();
             setotp(generatedotp);
-            console.log(generatedotp);
+            // console.log(generatedotp);
 
             const payload = {
               endpoint: "send-email",
@@ -462,7 +462,7 @@ function Page() {
                   name="countryCode"
                   value={form.countryCode}
                   onChange={handleChange}
-                  className="block w-full  rounded-full border border-gray-300 px-5 h-[42px] mt-3 text-sm leading-tight text-gray-900 focus:border-primary focus:ring-primary"
+                  className="mt-3 block h-[42px] w-full rounded-full border border-gray-300 px-5 text-sm leading-tight text-gray-900 focus:border-primary focus:ring-primary"
                 >
                   <option value="+93">+93 (Afghanistan)</option>
                   <option value="+355">+355 (Albania)</option>
@@ -551,19 +551,19 @@ function Page() {
                   <p className="ml-[-37px]">
                     {show ? (
                       <Image
-                        src="eye-close.svg"
+                        src="eye.svg"
                         width={20}
                         height={20}
-                        alt="eye close"
+                        alt="eye open"
                         onClick={handClick}
                         className="mt-[24px] inline-block cursor-pointer"
                       />
                     ) : (
                       <Image
-                        src="eye.svg"
+                        src="eye-close.svg"
                         width={20}
                         height={20}
-                        alt="eye open"
+                        alt="eye close"
                         onClick={handClick}
                         className="mt-[24px] inline-block cursor-pointer"
                       />
@@ -582,7 +582,7 @@ function Page() {
                   <p className="ml-[-37px]">
                     {show2 ? (
                       <Image
-                        src="eye-close.svg"
+                        src="eye.svg"
                         width={20}
                         height={20}
                         alt="eye close"
@@ -591,7 +591,7 @@ function Page() {
                       />
                     ) : (
                       <Image
-                        src="eye.svg"
+                        src="eye-close.svg"
                         width={20}
                         height={20}
                         alt="eye open"
