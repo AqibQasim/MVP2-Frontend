@@ -16,7 +16,7 @@ function CandidateDashboardNavLinks({ candidateId }) {
     const fetchJobs = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/get-job-candidates?job_status=hired-and-trial&candidate_id=${cid}`,
+          `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/get-job-candidates?job_status=hired-trial-interviewing&candidate_id=${cid}`,
         );
         // if (!response.ok) {
         //   throw new Error("Network response was not ok");
@@ -41,7 +41,7 @@ function CandidateDashboardNavLinks({ candidateId }) {
     };
 
     fetchJobs();
-    console.log(jobs, "payment //////")
+    console.log(jobs, "payment //////");
   }, []);
 
   const candidateDashboardLinks = [
@@ -67,14 +67,18 @@ function CandidateDashboardNavLinks({ candidateId }) {
     ...(jobs?.length >= 1
       ? [
           {
+            name: "Jobs",
+            href: `/candidate/${candidateId}/jobs`,
+            icon: <SvgIconJob className="size-6" />,
+          },
+          {
             name: "Payout",
             href: `/candidate/${candidateId}/payment`,
             icon: <SvgIconPayment className="size-6" />,
           },
         ]
       : []),
-      
-    
+
     {
       name: "Settings",
       href: `/candidate/${candidateId}/settings`,

@@ -397,7 +397,7 @@ function Page({ params }) {
         <div className="flex flex-row justify-center">
           <div className="flex flex-1 flex-col justify-start">
             <Heading xm>About</Heading>
-            <Capsule className="flex w-fit flex-wrap items-center gap-2">
+            <Capsule className="flex w-fit flex-wrap items-center gap-2" style={{ textTransform: "lowercase" }}>
               <Image src={EmailSvg} />
               {talent?.email}
             </Capsule>
