@@ -11,6 +11,7 @@ function ClientPaymentMethod({
   stripe,
   clientSecret,
   stripePromise,
+  clientCustomerIDs,
   onSelect,
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,8 +21,45 @@ function ClientPaymentMethod({
   const [selectedMethodId, setSelectedMethodId] = useState(null);
 
   useEffect(() => {
-    setSelectedMethodId(paymentMethods[0]?.id);
-  }, [paymentMethods]);
+    const fetchCustomer = async () => {
+      try {
+        const response = await fetch("/api/get-customer", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ customerId: clientCustomerIDs }), // Replace with the actual customer ID
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch customer");
+        }
+
+        const result = await response.json();
+        console.log("Data from fetch customer", result);
+        setSelectedMethodId(result?.invoice_settings?.default_payment_method);
+      } catch (error) {
+        console.error("Error fetching customer:", error);
+      }
+    };
+
+    fetchCustomer();
+    
+  }, [clientCustomerIDs]); 
+
+
+  useEffect(() => {
+
+    console.log("payments method length is: ", paymentMethods?.length )
+    if (paymentMethods.length === 1) {
+      updateDefaultPaymentMethod(
+        clientCustomerIDs,
+        paymentMethods[0]?.id,
+      );
+      setSelectedMethodId(paymentMethods[0]?.id);
+    }
+  }, [paymentMethods, clientCustomerIDs]);
+
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -36,9 +74,37 @@ function ClientPaymentMethod({
     }
   };
 
-  const handleSelectMethod = (methodId) => {
-    setSelectedMethodId(methodId);
+  const updateDefaultPaymentMethod = async (customerId, paymentMethodId) => {
+    try {
+      const response = await fetch("/api/set-default-pm", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ customerId, paymentMethodId }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Customer updated:", data);
+        
+          return data.customer;
+      } else {
+        console.error("Error updating customer:", data.error);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
+
+   const handleSelectMethod = async  (methodId) => {
+     const result = await updateDefaultPaymentMethod(
+       clientCustomerIDs,
+       methodId,
+     );
+     console.log("Settitng methodd", result?.invoice_settings?.default_payment_method);
+     setSelectedMethodId(result?.invoice_settings?.default_payment_method);
+   };
 
   useEffect(() => {
     const initializeElements = async () => {
@@ -84,7 +150,7 @@ function ClientPaymentMethod({
     if (result.error) {
       console.error(result.error.message);
     } else {
-      console.log("Payment method setup complete");
+      console.log("Payment method setup complete", result);
       // Optionally refresh payment methods list here
       handleCloseModal();
     }
@@ -96,6 +162,7 @@ function ClientPaymentMethod({
         {paymentMethods.map((method) => (
           <PaymentMethodCard
             key={method.id}
+            card_id={method.id}
             last4={method.card.last4}
             name={method.billing_details.name}
             date={`${method.card.exp_month}/${method.card.exp_year}`}

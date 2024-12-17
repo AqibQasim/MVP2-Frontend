@@ -4,6 +4,7 @@ import Table from "@/components/Table";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Modal from "./AdminJobsFormModal";
+import { createStripeAccount } from "@/utils/stripeAccount";
 
 function AdminClientsTable({ clients, totalClients, role }) {
   const path = window.location.href;
@@ -11,7 +12,7 @@ function AdminClientsTable({ clients, totalClients, role }) {
   const [jobStatus, setJobStatus] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [startIndex, setStartIndex] = useState(0);
-  const [itemsPerPage] = useState(role === "dashboard" ? 3 : 5);
+  const [itemsPerPage] = useState(10);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -142,6 +143,15 @@ Co-ventech
       }
 
       alert("Client invited successfully!");
+      createStripeAccount(
+        {
+          name: formData.companyName,
+          email: formData.email,
+        },
+        "invitation",
+        "client",
+        signupResponse
+      );
       setShowForm(false);
     } catch (error) {
       console.error(error);

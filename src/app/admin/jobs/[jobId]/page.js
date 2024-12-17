@@ -19,7 +19,7 @@ function Page({ params }) {
   const [selectedCandidateId, setSelectedCandidateId] = useState(null);
   const [candidateHourlyRate, setCandidateHourlyRate] = useState(null);
   const [error, setError] = useState(null);
-  const [hourlyRate,setHourlyRate]= useState("");
+  const [hourlyRate, setHourlyRate] = useState("");
 
   useEffect(() => {
     // Fetch the job data
@@ -50,10 +50,12 @@ function Page({ params }) {
     getRecommendedCandidates();
   }, []);
 
-  const filteredCandidates = candidates?.filter((candidate) =>
-    candidate?.customer?.name
-      ?.toLowerCase()
-      .includes(searchCandidate?.toLowerCase()),
+  const filteredCandidates = candidates?.filter(
+    (candidate) =>
+      candidate?.customer?.name
+        ?.toLowerCase()
+        .includes(searchCandidate?.toLowerCase()) &&
+      candidate?.customer?.talent_status === "open",
   );
 
   const handleAssignJob = async (e) => {
@@ -64,7 +66,7 @@ function Page({ params }) {
       customer_id: selectedCandidateId,
       job_posting_id: job?.job_posting_id,
       hourly_rate: hourlyRate,
-      candidate_hourly_rate: candidateHourlyRate
+      candidate_hourly_rate: candidateHourlyRate,
     };
 
     console.log(referClientBody);
@@ -128,7 +130,8 @@ function Page({ params }) {
           {candidateHourlyRate && (
             <>
               <label className="flex">
-                Candidate&apos;s Hourly Rate <div className="text-red-600">*</div>
+                Candidate&apos;s Hourly Rate{" "}
+                <div className="text-red-600">*</div>
               </label>
               <div>{candidateHourlyRate}</div>
             </>
@@ -138,11 +141,11 @@ function Page({ params }) {
             Your Proposed Hourly Rate <div className="text-red-600">*</div>
           </label>
           <input
-            type='text'
+            type="text"
             // name="hourlyRate"
             // id="hourlyRate"
             required
-            onChange={(e)=>setHourlyRate(e.target.value)}
+            onChange={(e) => setHourlyRate(e.target.value)}
             className="mt-2 block w-full border px-2 py-1"
           />
 

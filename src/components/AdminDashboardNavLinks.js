@@ -44,8 +44,14 @@ function AdminDashboardNavLinks() {
       icon: <SvgIconJob className="size-6" />,
     },
     {
-      name: "Payments",
+      name: "Client Payments",
       href: `/admin/payments`,
+
+      icon: <SvgIconPayment className="size-6" />,
+    },
+    {
+      name: "Candidate Payments",
+      href: `/admin/customer-payments`,
 
       icon: <SvgIconPayment className="size-6" />,
     },

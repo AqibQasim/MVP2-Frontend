@@ -10,7 +10,7 @@ function AdminJobsList({ jobs, totalJobs, role }) {
   const [jobStatus, setJobStatus] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [startIndex, setStartIndex] = useState(0);
-  const [itemsPerPage] = useState(role === "dashboard" ? 3 : 5);
+  const [itemsPerPage] = useState(10);
 
   const handleJobStatusChange = (event) => {
     setJobStatus(event.target.value);
@@ -50,7 +50,7 @@ function AdminJobsList({ jobs, totalJobs, role }) {
       paragraph="This is the list of all"
       heading="Jobs"
       href={!path.includes("/admin/jobs")&& !path.includes(`/admin/clients/`) ? `/admin/jobs` : null}
-      info={`Total Jobs: ${filteredJobs?.length || 0}`}
+      info={`Total Jobs: ${totalJobs || 0}`}
     >
       {role !== "dashboard" && (
         <div className="mb-4 flex justify-between">

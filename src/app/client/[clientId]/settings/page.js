@@ -16,7 +16,7 @@ async function Page({ params }) {
   // Fetch data when component mounts or when clientId changes
   useEffect(() => {
     fetchClient();
-  }, [fetchClient]);
+  }, [clientId]);
 
   // Memoize fetchedClient to prevent unnecessary re-renders of ClientSettings
   const memoizedClient = useMemo(() => fetchedClient, [fetchedClient]);

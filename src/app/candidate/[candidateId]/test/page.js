@@ -5,6 +5,7 @@ import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import styles from "@/styles/test.module.css";
+import TestDone from "@/components/TestDone";
 
 const Page = ({ params }) => {
   const [instructionsPopup, setInstructionsPopup] = useState(true);
@@ -12,26 +13,23 @@ const Page = ({ params }) => {
   const [skills, setSkills] = useState(null);
   const hasPreparedTest = useRef(false); // Ref to track if prepareTest has been called
   const [questions, setQuestions] = useState(null);
-  const [candidateReport, setCandidateReport] = useState(null);
   const [codingQuestion, setCodingQuestions] = useState(null);
- 
+  const [candidateReport, setCandidateReport] = useState(null);
+  const [hasCandidateTakenTestAlready, setHasCandidateTakenTestAlready] =
+    useState(false);
+  const router = useRouter();
 
- 
-  const getCandidateResult = () => {
-    const payload = {
-      endpoint: `get-customer-result?customer_id=${params.candidateId}`,
-      method: "GET",
-    };
-    mvp2ApiHelper(payload).then((result) => {
-      if (result) setCandidateReport(result?.data?.data);
-    });
+  const payload = {
+    endpoint: `get-customer-result?customer_id=${params.candidateId}`,
+    method: "GET",
   };
-//// new
+
+  const getCandidateResult = () => {};
+  //// new
   useEffect(() => {
     getCandidateResult();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
 
   const closePopup = () => {
     setInstructionsPopup(false);
@@ -87,11 +85,20 @@ const Page = ({ params }) => {
   }, [skills]);
 
   const prepareTest = useCallback(async () => {
-    mvp2ApiHelper(prepareTestpayload).then((result) => {
-      if (result.status === 200) {
-        setQuestions(result.data.message);
-        setIsLoading(false);
+    mvp2ApiHelper(payload).then((result) => {
+      console.log(result);
+      if (result?.status === 200) {
+        router?.back();
+        //setHasCandidateTakenTestAlready(true);
+      } else {
+        mvp2ApiHelper(prepareTestpayload).then((result) => {
+          if (result.status === 200) {
+            setQuestions(result.data.message);
+            setIsLoading(false);
+          }
+        });
       }
+      //if (result) router?.back();
     });
   }, [prepareTestpayload]);
 
@@ -109,14 +116,7 @@ const Page = ({ params }) => {
 
   return (
     <html lang="en">
-      
-     {candidateReport && Object.keys(candidateReport).length > 0 ? (
-        <div className="text-5xl">You have already given the test</div>
-      ) : (
- 
       <body>
-
-     
         {instructionsPopup && (
           <TestInstruction
             isLoading={isLoading}
@@ -134,12 +134,9 @@ const Page = ({ params }) => {
             codingQuestions={codingQuestion}
           />
         </div>
-   
       </body>
-    )}
     </html>
   );
 };
 
 export default Page;
-

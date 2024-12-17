@@ -11,6 +11,8 @@ import {
   getClientJobs,
   getRecommendedCandidateOfClient,
 } from "@/lib/data-service";
+import { sendNotification } from "@/utils/notification";
+import urlBase64ToUint8Array from "@/utils/urlBase64ToUint8Array";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -21,15 +23,23 @@ export default async function Page({ params }) {
   const [recommendedCandidates, setRecommendedCandidates] = useState(null);
   const [jobs, setJobs] = useState(null);
 
-  // const [client, recommendedCandidates, jobs] =
-  //   await Promise.all([
-  //     getClientById(params.clientId),
-  //     getRecommendedCandidateOfClient(params.clientId),
-  //     getClientJobs(params.clientId),
-  //   ]);
+  useEffect(() => {
+    // console.log("Requesting notification permission...");
+    requestNotificationPermission();
+  }, []);
 
-  // const { data: hiredTalents, error } = hiredCandidates;
-  // console.log(hiredTalents)
+  const requestNotificationPermission = async () => {
+    if ("Notification" in window) {
+      const isAcceptedNotification = await Notification.requestPermission();
+      if (isAcceptedNotification === "granted") {
+        sendNotification(params?.clientId,"client");
+      } else {
+        console.warn("notification permission denied");
+      }
+    } else {
+      console.error("This browser does not support notifications.");
+    }
+  };
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("MVP_CLIENT_LOGGEDIN") === "true";

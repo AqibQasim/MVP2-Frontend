@@ -20,10 +20,12 @@ function AdminCandidatesClientsHiringRow({
   const [subscriptionId, setSubcriptionId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const [clientSecret, setClientSecret] = useState(null);
 
   const autoRefresh = () => {
     router.refresh();
   };
+  }, []);
 
   //console.log(first)
   const [changeStatus, setChangeStatus] = useState({
@@ -36,9 +38,11 @@ function AdminCandidatesClientsHiringRow({
   });
   const [stripeClientId, setStripeClientId] = useState(null);
 
-  const selectedMethodId = useSelector(
-    (state) => state.payment.selectedMethodId,
-  );
+  const [selectedMethodId, setSelectedMethodId] = useState(null);
+
+  // const selectedMethodId = useSelector(
+  //   (state) => state.payment.selectedMethodId,
+  // );
 
   // const filteredClients = clients?.filter((client) =>
   //   client.name.toLowerCase().includes(searchClient.toLowerCase()),
@@ -233,8 +237,8 @@ function AdminCandidatesClientsHiringRow({
   };
 
   const handleHiring = async () => {
-    const customPrice = candidate.hourly_rate * 100 * 40;
-
+    const customPrice = (candidate.hourly_rate * 100) * 80;
+    
     try {
       // Fetch client secret for subscription
       setIsLoading(true);
@@ -382,6 +386,38 @@ function AdminCandidatesClientsHiringRow({
   }, [changeStatus]);
 
   useEffect(() => {
+          const fetchCustomer = async () => {
+             if (stripeClientId) {
+               try {
+                 const response = await fetch("/api/get-customer", {
+                   method: "POST",
+                   headers: {
+                     "Content-Type": "application/json",
+                   },
+                   body: JSON.stringify({ customerId: stripeClientId }), // Replace with the actual customer ID
+                 });
+
+                 if (!response.ok) {
+                   throw new Error("Failed to fetch customer");
+                 }
+
+                 const result = await response.json();
+                 console.log("Data from fetch customer", result);
+                 setSelectedMethodId(
+                   result?.invoice_settings?.default_payment_method,
+                 );
+               } catch (error) {
+                 console.error("Error fetching customer:", error);
+               }
+              }
+             };
+
+          fetchCustomer();
+          // console.log("Payment Data is: ", data[0]?.id
+  }, [stripeClientId]);
+
+
+  useEffect(() => {
     // console.log(changeStatus)
     handleChangeStatus();
     getClientStripe();
@@ -389,7 +425,7 @@ function AdminCandidatesClientsHiringRow({
     if (changeStatus.job_status === "hired") {
       console.log("JOB STATUS CHANGED TO ", changeStatus.job_status);
 
-      if (stripeClientId) {
+      if (stripeClientId && selectedMethodId) {
         handleSubscription();
       }
       //stripeClientId
@@ -402,7 +438,7 @@ function AdminCandidatesClientsHiringRow({
         handleCancelSubscription();
       }
     }
-  }, [changeStatus, stripeClientId]);
+  }, [changeStatus, stripeClientId, selectedMethodId]);
 
   useEffect(() => {
     if (subscriptionId) {
@@ -410,10 +446,13 @@ function AdminCandidatesClientsHiringRow({
     }
   }, [subscriptionId, changeStatus]);
 
+    
   const rowClassName =
     job?.job_status === "trial" && daysPassed > 14
       ? "bg-red-600 rounded-lg"
       : "";
+
+      
 
   return (
     <>

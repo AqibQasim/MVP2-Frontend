@@ -1,162 +1,110 @@
 "use client";
 
 import AdminCandidatesClientsHiringTable from "@/components/AdminCandidatesClientsHiringTable";
-import EmptyScreen from "@/components/EmptyScreen";
 import WithAdminAuth from "@/components/WithAdminAuth";
+import AdminJobsList from "@/components/AdminJobsList";
+import AdminClientsTable from "@/components/AdminClientsTable";
+import AdminCandidatesTable from "@/components/AdminCandidatesTable";
+import ReportOverlay from "@/components/ReportOverlay";
+import AdminStates from "@/components/AdminStates";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   fetchCandidatesJobStatus,
   getJobs,
   getClients,
   fetchRecommendedCandidates,
 } from "@/lib/data-service";
-import React, { useEffect, useMemo, useState } from "react";
-import AdminJobsList from "@/components/AdminJobsList";
-import AdminClientsTable from "@/components/AdminClientsTable";
-import AdminCandidatesTable from "@/components/AdminCandidatesTable";
-import ReportOverlay from "@/components/ReportOverlay";
-import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
-import AdminStates from "@/components/AdminStates";
+import { sendNotification } from "@/utils/notification";
 
 async function Page() {
   const [candidateJobStatus, setCandidateJobStatus] = useState(null);
-  const [dataError, setDataError] = useState(null);
   const [jobs, setJobs] = useState([]);
   const [clients, setClients] = useState([]);
   const [candidates, setCandidates] = useState([]);
   const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
-  const [selected_candidate_id, setSelectedCandidateId] = useState(null);
+  //const [selected_candidate_id, setSelectedCandidateId] = useState(null);
   const [candidateReport, setCandidateReport] = useState(null);
   const [candidateLength, setCandidateLength] = useState(null);
   const [clientLength, setClientLength] = useState(null);
   const [jobsLength, setJobsLength] = useState(null);
-  const [clientCandidateHiringLength, setClientCandidateHiringLength] =
-    useState(null);
 
-  const handleCloseOverlay = () => {
-    setIsReportOverlayOpened(false);
-    //setSuccessAcknowledge(false);
-  };
-
-  // Fetching candidate job status
-  const fetchStatus = async () => {
-    const { data, error } = await fetchCandidatesJobStatus("hired-trial-interviewing");
-
-    if (error) {
-      setDataError(error.message);
-    }
-    console.log(data)
-    setCandidateJobStatus(data);
-  };
-
-  // Fetching jobs and filtering them
-  const fetchJobs = async () => {
-    try {
-      const { data, error } = await getJobs();
-      if (error) throw new Error(error);
-
-      // Filter only 'open' jobs and take the first three
-      setJobsLength(data?.length);
-      const openJobs = data
-        ?.filter((job) => job.job_status === "open")
-        .slice(0, 3);
-      setJobs(openJobs);
-    } catch (err) {
-      setDataError(`Failed to load jobs: ${err.message}`);
-    }
-  };
-  const fetchClients = async () => {
-    try {
-      const { data, error } = await getClients();
-      if (error) throw new Error(error);
-
-      setClientLength(data?.length);
-      // Filter only 'open' jobs and take the first three
-      const showClients = data?.slice(0, 3);;
-      setClients(showClients);
-    } catch (err) {
-      setDataError(`Failed to load jobs: ${err.message}`);
-    }
-  };
-  const fetchCandidates = async () => {
-    try {
-      const { data, error } = await fetchRecommendedCandidates();
-      if (error) {
-        console.error("API error:", error); // Check if the error originates here
-        throw new Error(error);
-      }
-      setCandidateLength(data?.data?.length);
-      console.log("Data from API:", data);
-      const showCandidates = data?.data?.filter(
-        (c) => c?.customer?.talent_status === "open",
-      ).slice(0, 3);
-      console.log("Filtered candidates:", showCandidates);
-      setCandidates(showCandidates);
-    } catch (err) {
-      console.error("Failed to load candidates:", err);
-      setDataError(`Failed to load candidates: ${err.message}`);
-    }
-  };
-
-  const getCandidateResult = () => {
-    const payload = {
-      endpoint: `get-customer-result?customer_id=${selected_candidate_id}`,
-      method: "GET",
-    };
-    mvp2ApiHelper(payload).then((result) => {
-      if (result) setCandidateReport(result?.data?.data);
-    });
-  };
-
-  useEffect(() => {
-    getCandidateResult();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected_candidate_id]);
+  // const handleCloseOverlay = useCallback(() => {
+  //   setIsReportOverlayOpened(false);
+  // }, []);
 
   useEffect(() => {
     async function loadData() {
-      await fetchStatus();
-      await fetchJobs();
-      await fetchClients();
-      await fetchCandidates();
+      try {
+        const [statusData, jobsData, clientsData, candidatesData] =
+          await Promise.all([
+            fetchCandidatesJobStatus("hired-trial-interviewing"),
+            getJobs(),
+            getClients(),
+            fetchRecommendedCandidates(),
+          ]);
+
+        setCandidateJobStatus(statusData?.data || []);
+        setJobsLength(jobsData?.data?.length || 0);
+        setJobs(
+          jobsData?.data
+            ?.filter((job) => job.job_status === "open")
+            .slice(0, 3),
+        );
+        setClientLength(clientsData?.data?.length || 0);
+        setClients(clientsData?.data?.slice(0, 3));
+        setCandidateLength(candidatesData?.data?.data?.length || 0);
+        setCandidates(
+          candidatesData?.data?.data
+            ?.filter((c) => c?.customer?.talent_status === "open")
+            .slice(0, 3),
+        );
+      } catch (error) {
+        console.error("Error loading data:", error);
+      }
     }
     loadData();
+    //requestNotificationPermission();
   }, []);
 
-  console.log(candidates);
-
-  // Error or empty data case
-  // if (dataError || (candidateJobStatus?.data?.length === 0 && jobs.length === 0 && clients.length === 0)) {
-  //   return <EmptyScreen className={"h-[32.188rem]"} />;
-  // }
+  // const requestNotificationPermission = async () => {
+  //   if ("Notification" in window) {
+  //     const isAcceptedNotification = await Notification.requestPermission();
+  //     if (isAcceptedNotification === "granted") {
+  //       sendNotification(null, "candidate");
+  //     } else {
+  //       console.warn("notification permission denied");
+  //     }
+  //   } else {
+  //     console.error("This browser does not support notifications.");
+  //   }
+  // };
 
   return (
     <div className="h-fit space-y-3">
       <AdminStates />
       <AdminJobsList jobs={jobs} totalJobs={jobsLength} role="dashboard" />
-      <AdminClientsTable clients={clients} totalClients={clientLength} role="dashboard"/>
-      <div className="overflow-y-hidden">
-        <AdminCandidatesTable
-          totalCandidates={candidateLength}
-          isReportOverlayOpened={isReportOverlayOpened}
-          setIsReportOverlayOpened={setIsReportOverlayOpened}
-          setSelectedCandidateId={setSelectedCandidateId}
-          onClick={() => {
-            setIsReportOverlayOpened(true);
-          }}
-          candidates={candidates}
-          role="dashboard"
+      <AdminClientsTable
+        clients={clients}
+        totalClients={clientLength}
+        role="dashboard"
+      />
+      <AdminCandidatesTable
+        totalCandidates={candidateLength}
+        // isReportOverlayOpened={isReportOverlayOpened}
+        // setIsReportOverlayOpened={setIsReportOverlayOpened}
+        // setSelectedCandidateId={setSelectedCandidateId}
+        candidates={candidates}
+        role="dashboard"
+      />
+      {isReportOverlayOpened && (
+        <ReportOverlay
+          reportOverlay={isReportOverlayOpened}
+          onClose={handleCloseOverlay}
+          selectedCandidate={candidateReport}
         />
-
-        {isReportOverlayOpened && (
-          <ReportOverlay
-            reportOverlay={isReportOverlayOpened}
-            onClose={handleCloseOverlay}
-            selectedCandidate={candidateReport}
-          />
-        )}
-      </div>
+      )}
       <AdminCandidatesClientsHiringTable
-        totalHirings={clientCandidateHiringLength}
+        totalHirings={candidateJobStatus?.data?.length}
         candidateJobStatus={candidateJobStatus}
       />
     </div>

@@ -28,6 +28,7 @@ import ButtonCapsule from "@/components/ButtonCapsule";
 import ErrorPopup from "@/components/ErrorPopup";
 import ReportOverlay from "@/components/ReportOverlay";
 import AvailabilityDropdown from "@/components/AvailabilityDropdown";
+import CandidatePaymentHistoryTable from "@/components/CandidatePaymentHistoryTable";
 
 function Page({ params }) {
   const [talent, setTalent] = useState(null);
@@ -55,9 +56,25 @@ function Page({ params }) {
   const [budgetingError, setBudgetingError] = useState(false);
   const router = useRouter();
   const [alert, setAlert] = useState(null);
+  const [paymentHistory, setPaymentHistory] = useState(null);
   //const [error,setError]= useState(null)
 
   const customer_id = params?.candidateId;
+
+
+  const getPaymentHistory = () => {
+    const payload = {
+      endpoint: `get-hiring-payments?customer_id=${params?.candidateId}`,
+      method: "GET",
+    };
+    mvp2ApiHelper(payload)
+      .then((result) => {
+        setPaymentHistory(result?.data?.data || []);
+      })
+      .catch((error) =>
+        console.error("Error fetching payment history:", error),
+      );
+  };
 
   const handleChangeCandidateAvailabilityStatus = async (value) => {
     console.log("Selected Value:", value);
@@ -184,10 +201,12 @@ function Page({ params }) {
 
   useEffect(() => {
     fetchJobHistory();
+    getPaymentHistory();
   }, [customer_id]);
 
   useEffect(() => {
     fetchJobs();
+    
   }, [searchJob]);
 
   useEffect(() => {
@@ -423,7 +442,9 @@ function Page({ params }) {
                   icon="/icons/routing.svg"
                   name="City State: "
                   content={
-                    talent?.city + talent?.province || "No city/state given"
+                    talent?.city && talent?.province
+                      ? talent?.city + " , " + talent?.province
+                      : "No city/state given"
                   }
                 />
                 <DetailTag
@@ -471,6 +492,9 @@ function Page({ params }) {
             job_history={jobHistory}
             total_job_history={jobHistory?.length}
           />
+        )}
+        {paymentHistory && (
+          <CandidatePaymentHistoryTable paymentHistory={paymentHistory} />
         )}
       </div>
 

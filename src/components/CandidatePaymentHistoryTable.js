@@ -4,12 +4,10 @@ import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 
 function CandidatePaymentHistoryTable({paymentHistory }) {
-
- 
   
   return (
     <DashboardSection
-    paragraph={`Hey , below is your payment history`}
+    paragraph={`Hey, below is your payment history`}
     heading="Payment history"
    >  
       <Table columns="grid-cols-[1fr_1.8fr_0.5fr_0.5fr]">

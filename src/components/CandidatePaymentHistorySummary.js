@@ -17,7 +17,7 @@ function CandidatePaymentHistorySummary({
       <div className="flex h-14 flex-row justify-between items-center">
         <div>
           <p className="text-sm font-medium text-grey-primary-shade-30">
-            {`Recent Payments - ${total_hires} Hires`}
+            {`Wallet`}
           </p>
           <Heading sm>${total_payment_by_candidate} USD</Heading>
         </div>
@@ -29,9 +29,9 @@ function CandidatePaymentHistorySummary({
           View Monthly Report
         </Capsule> */}
       </div>
-      <Hr/>
+      {/* <Hr/> */}
 
-      <div className="flex h-14 flex-row justify-between items-center">
+      {/* <div className="flex h-14 flex-row justify-between items-center">
         <div>
           <p className="text-sm font-medium text-grey-primary-shade-30">
             Next Payment
@@ -45,9 +45,9 @@ function CandidatePaymentHistorySummary({
         >
           {next_payment}
         </Capsule>
-      </div>
+      </div> */}
 
-      <div className="flex h-14 flex-row justify-between items-center">
+      {/* <div className="flex h-14 flex-row justify-between items-center">
         <div>
           <p className="text-sm font-medium text-grey-primary-shade-30">
             Last Payment
@@ -60,7 +60,7 @@ function CandidatePaymentHistorySummary({
         >
           {last_payment}
         </Capsule>
-      </div>
+      </div> */}
     </div>
   );
 }

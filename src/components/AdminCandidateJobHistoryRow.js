@@ -39,7 +39,7 @@ function AdminCandidateJobHistoryRow({ job }) {
       <Capsule
         className="!mx-auto mr-auto w-max !bg-primary-tint-100"
         icon={
-          <IconWithBg job={job?.job_posting?.job_status} className="pl-4" />
+          <IconWithBg job={job?.job_status} className="pl-4" />
         }
       ></Capsule>
 

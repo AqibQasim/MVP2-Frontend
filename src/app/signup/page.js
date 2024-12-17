@@ -23,7 +23,7 @@ function Page() {
     email: "",
     phoneNumber: "",
     password: "",
-    countryCode: "+92",
+    countryCode: "+92", 
     confirmPassword: "",
   });
 
@@ -66,6 +66,10 @@ function Page() {
         return; // Do not proceed with signup if there are validation errors
       }
 
+      // Proceed with the rest of the signup process
+      const result = await mvp2ApiHelper(payload);
+      console.log("RESULT from signup: ", result?.data?.customer_id);
+
       try {
         // Call the Stripe customer creation API
         const stripeResponse = await fetch("/api/create-customer", {
@@ -76,6 +80,10 @@ function Page() {
           body: JSON.stringify({
             email: form.email,
             name: form.firstName + " " + form.lastName,
+            metadata:
+              user_role == "customer"
+                ? { customer: 1, customer_id: result?.data?.customer_id }
+                : { customer: 0, client_id: result?.data?.client_id },
           }),
         });
 
@@ -90,10 +98,6 @@ function Page() {
           stripeData.customer,
         );
 
-        // Proceed with the rest of the signup process
-        const result = await mvp2ApiHelper(payload);
-        console.log("RESULT from signup: ", result.data.status);
-
         let createAccountData;
 
         if (user_role === "client") {
@@ -106,6 +110,29 @@ function Page() {
               },
               body: JSON.stringify({
                 client_id: result.data.client_id,
+                stripe_id: stripeData.customer.id,
+              }),
+            },
+          );
+          createAccountData = await createAccountResponse.json();
+
+          if (createAccountResponse.status !== 200) {
+            throw new Error(createAccountData.error);
+          }
+          console.log(
+            "Stripe account created successfully:",
+            createAccountData,
+          );
+        } else {
+          const createAccountResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-customer-stripe-account`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                customer_id: result.data.customer_id,
                 stripe_id: stripeData.customer.id,
               }),
             },
@@ -268,12 +295,12 @@ function Page() {
     switch (name) {
       case "firstName":
         if (!/^[A-Za-z]+$/.test(value)) {
-          errorMsg = "Invalid Firstname";
+          errorMsg = "Invalid First Name";
         }
         break;
       case "lastName":
         if (!/^[A-Za-z]+$/.test(value)) {
-          errorMsg = "Invalid Lastname";
+          errorMsg = "Invalid Last Name";
         }
         break;
       case "email":

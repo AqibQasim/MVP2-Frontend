@@ -39,7 +39,9 @@ function AdminJobViewById({ job, setShowForm }) {
   const [assignedCandidates, setassignedCandidates] = useState(null);
   const [client, setClient] = useState(null);
 
+  const [selectedMethodId, setSelectedMethodId] = useState(null);
   const [subscriptionId, setSubcriptionId] = useState("");
+  const [clientSecret, setClientSecret] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -58,9 +60,9 @@ function AdminJobViewById({ job, setShowForm }) {
   });
   const [stripeClientId, setStripeClientId] = useState(null);
 
-  const selectedMethodId = useSelector(
-    (state) => state.payment.selectedMethodId,
-  );
+  // const selectedMethodId = useSelector(
+  //   (state) => state.payment.selectedMethodId,
+  // );
 
   let options = null;
 
@@ -173,7 +175,7 @@ function AdminJobViewById({ job, setShowForm }) {
   };
 
   const handleSubscription = async () => {
-    const customPrice = assignedCandidates.hourly_rate * 100 * 40;
+    const customPrice = assignedCandidates.hourly_rate * 100 * 80;
 
     try {
       setIsLoading(true);
@@ -204,7 +206,7 @@ function AdminJobViewById({ job, setShowForm }) {
   };
 
   const handleHiring = async () => {
-    const customPrice = assignedCandidates.hourly_rate * 100 * 40;
+    const customPrice = (assignedCandidates.hourly_rate * 100) * 80;
 
     try {
       // Fetch client secret for subscription
@@ -352,6 +354,35 @@ function AdminJobViewById({ job, setShowForm }) {
     handleChangeStatus();
   }, [changeStatus]);
 
+   useEffect(() => {
+     const fetchCustomer = async () => {
+      if (stripeClientId){
+        try {
+          const response = await fetch("/api/get-customer", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ customerId: clientCustomerIDs }), // Replace with the actual customer ID
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch customer");
+          }
+
+          const result = await response.json();
+          console.log("Data from fetch customer", result);
+          setSelectedMethodId(result?.invoice_settings?.default_payment_method);
+        } catch (error) {
+          console.error("Error fetching customer:", error);
+        }
+
+      }
+     };
+
+     fetchCustomer();
+   }, [stripeClientId]);
+
   useEffect(() => {
     // console.log(changeStatus)
     handleChangeStatus();
@@ -360,7 +391,7 @@ function AdminJobViewById({ job, setShowForm }) {
     if (changeStatus.job_status === "hired") {
       console.log("JOB STATUS CHANGED TO ", changeStatus.job_status);
 
-      if (stripeClientId) {
+      if (stripeClientId && selectedMethodId) {
         handleSubscription();
       }
       //stripeClientId
@@ -373,7 +404,7 @@ function AdminJobViewById({ job, setShowForm }) {
         handleCancelSubscription();
       }
     }
-  }, [changeStatus, stripeClientId]);
+  }, [changeStatus, stripeClientId, selectedMethodId]);
 
   useEffect(() => {
     if (subscriptionId) {
@@ -472,6 +503,8 @@ function AdminJobViewById({ job, setShowForm }) {
   //     },
   //     [jobQuestionLength],
   //   );
+
+
 
   return (
     <>
@@ -657,7 +690,7 @@ function AdminJobViewById({ job, setShowForm }) {
                 {" "}
                 view details{" "}
               </CapsuleLink>
-              {assignedCandidates?.talent_status !== "open" ? (
+              {assignedCandidates?.talent_status !== "open" && job?.job_status!=="closed" ? (
                 <div className="mx-3 mt-5">
                   Status : {assignedCandidates?.talent_status}
                 </div>
@@ -672,6 +705,7 @@ function AdminJobViewById({ job, setShowForm }) {
               >
                 Click here to Assign
               </div>
+              
             </div>
           )}
         </div>
