@@ -278,7 +278,7 @@ function Login() {
               <p className="ml-[-37px]">
                 {show ? (
                   <Image
-                    src="eye-close.svg"
+                    src="eye.svg"
                     width={20}
                     height={20}
                     alt="line"
@@ -287,7 +287,7 @@ function Login() {
                   />
                 ) : (
                   <Image
-                    src="eye.svg"
+                    src="eye-close.svg"
                     width={20}
                     height={20}
                     alt="line"

@@ -30,11 +30,11 @@ const ProfileForm = ({ client }) => {
   const areaCodeRef = useRef(null);
   const countryRef = useRef(null);
   const companyRef = useRef(null);
+
   const companySizeRef = useRef(null);
-  const [showForm, setShowForm]  = useState(false)
+  const [showForm, setShowForm] = useState(false);
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
-  
 
   const handClick = () => {
     setShow(!show);
@@ -73,13 +73,13 @@ const ProfileForm = ({ client }) => {
         lastName: lastNameRef.current.value,
         password: newPasswordRef.current.value,
         // email: emailRef.current.value,
-      //  password: passwordRef.current.value,
+        //  password: passwordRef.current.value,
         contact_no: phoneNumRef.current.value,
         client_location: locationRef.current.value,
         city: cityRef.current.value,
         province: provinceRef.current.value,
         area_code:
-        areaCodeRef.current?.value != "" ? areaCodeRef.current?.value : null,
+          areaCodeRef.current?.value != "" ? areaCodeRef.current?.value : null,
         country: countryRef.current.value,
         company_name: companyRef.current.value,
         company_size: companySizeRef.current.value,
@@ -100,13 +100,12 @@ const ProfileForm = ({ client }) => {
     }
   };
 
-
   const handlePasswordChange = async (e) => {
     e.preventDefault();
-  
+
     const newPassword = newPasswordRef.current.value.trim();
     const confirmPassword = confirmPasswordRef.current.value.trim();
-  
+
     // Password validation rules
     if (newPassword.length < 8) {
       setErrors((prevErrors) => ({
@@ -143,18 +142,18 @@ const ProfileForm = ({ client }) => {
       }));
       return;
     }
-  
+
     // Clear previous errors
     setErrors({});
-  
+
     const payload = {
-      endpoint: `client-profile-update/${client_id}`, 
+      endpoint: `client-profile-update/${client_id}`,
       method: "PUT",
       body: {
         password: newPassword,
       },
     };
-  
+
     try {
       const result = await mvp2ApiHelper(payload);
       if (result.status === 200) {
@@ -170,13 +169,8 @@ const ProfileForm = ({ client }) => {
       seterror(true);
     }
   };
-  
 
-
-//
-  
- 
- 
+  //
 
   return (
     <div className="">
@@ -254,22 +248,22 @@ const ProfileForm = ({ client }) => {
           <div className="col-span-2">
             <div className="flex flex-col sm:flex-row sm:space-x-4">
               <div className="flex flex-1 flex-col">
-                <b className="flex justify-between" >
+                <b className="flex justify-between">
                   <label>Password</label>
                   <span
-                  className="text-blue-700 cursor-pointer"
-                   onClick={() => setShowForm(true)}
-                   >
-            Change Password
-          </span>
+                    className="cursor-pointer text-blue-700"
+                    onClick={() => setShowForm(true)}
+                  >
+                    Change Password
+                  </span>
                 </b>
 
-                <input
-                  ref={confirmpasswordRef}
+                {/* <input
+                  ref={confirmPasswordRef}
                   type="text"
                   placeholder="Confirm Password"
                   className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
-                />
+                /> */}
               </div>
             </div>
           </div>
@@ -483,118 +477,115 @@ const ProfileForm = ({ client }) => {
           </button>
         </div> */}
       </form>
-     
-  <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
-  <form onSubmit={handlePasswordChange}>
 
-  <div className=" mt-4 grid grid-cols-4 items-start gap-4">
-          {/* Section Heading */}
-          <Heading xm className="col-span-1 mt-4">New Password:</Heading>
-          {/* Input Group */}
-          <div className="col-span-3">
-            {/* First Name and Last Name Row */}
-            <div className="flex flex-row ">
-              {/* First Name */}
-              <div className="flex flex-1 flex-col ">
-                <input
-                     type={show ? "text" : "password"}
+      <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
+        <form onSubmit={handlePasswordChange}>
+          <div className="mt-4 grid grid-cols-4 items-start gap-4">
+            {/* Section Heading */}
+            <Heading xm className="col-span-1 mt-4">
+              New Password:
+            </Heading>
+            {/* Input Group */}
+            <div className="col-span-3">
+              {/* First Name and Last Name Row */}
+              <div className="flex flex-row">
+                {/* First Name */}
+                <div className="flex flex-1 flex-col">
+                  <input
+                    type={show ? "text" : "password"}
                     placeholder="New Password"
                     ref={newPasswordRef}
-                  className="focus:ring-none mt-1  rounded-full border bg-gray-100 p-2 text-gray-900 focus:outline-none"
-                />
-             
+                    className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 text-gray-900 focus:outline-none"
+                  />
+                </div>
+                <p className="relative bottom-2 right-[30px]">
+                  {show ? (
+                    <Image
+                      src="/eye.svg"
+                      width={20}
+                      height={20}
+                      alt="eye close"
+                      onClick={handClick}
+                      className="mt-[24px] inline-block cursor-pointer"
+                    />
+                  ) : (
+                    <Image
+                      src="/eye-close.svg"
+                      width={20}
+                      height={20}
+                      alt="eye open"
+                      onClick={handClick}
+                      className="mt-[24px] inline-block cursor-pointer"
+                    />
+                  )}
+                </p>
               </div>
-              <p className="relative right-[30px] bottom-2">
-                    {show ? (
-                      <Image
-                        src="/eye-close.svg"
-                        width={20}
-                        height={20}
-                        alt="eye close"
-                        onClick={handClick}
-                        className="mt-[24px] inline-block cursor-pointer"
-                      />
-                    ) : (
-                      <Image
-                        src="/eye.svg"
-                        width={20}
-                        height={20}
-                        alt="eye open"
-                        onClick={handClick}
-                        className="mt-[24px] inline-block cursor-pointer"
-                      />
-                    )}
-                  </p>
             </div>
           </div>
-        </div>
-  <div className=" mt-4 grid grid-cols-4 items-start gap-4">
-          {/* Section Heading */}
-          <Heading xm className="col-span-1 mt-4">Confirm Password:</Heading>
-          {/* Input Group */}
-          <div className="col-span-3">
-            {/* First Name and Last Name Row */}
-            <div className="flex flex-row ">
-              {/* First Name */}
-              <div className="flex flex-1 flex-col ">
-                <input
-                   type={show2 ? "text" : "password"}
-                  placeholder="Confirm Password"
-                  ref={confirmPasswordRef}
-                  className="focus:ring-none mt-1  rounded-full border bg-gray-100 p-2 text-gray-900 focus:outline-none"
-                />
-                  
-              </div>
+          <div className="mt-4 grid grid-cols-4 items-start gap-4">
+            {/* Section Heading */}
+            <Heading xm className="col-span-1 mt-4">
+              Confirm Password:
+            </Heading>
+            {/* Input Group */}
+            <div className="col-span-3">
+              {/* First Name and Last Name Row */}
+              <div className="flex flex-row">
+                {/* First Name */}
+                <div className="flex flex-1 flex-col">
+                  <input
+                    type={show2 ? "text" : "password"}
+                    placeholder="Confirm Password"
+                    ref={confirmPasswordRef}
+                    className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 text-gray-900 focus:outline-none"
+                  />
+                </div>
 
-              <p className="relative right-[30px] bottom-2">
-                    {show2 ? (
-                      <Image
-                        src="/eye-close.svg"
-                        width={20}
-                        height={20}
-                        alt="eye close"
-                        onClick={handClick2}
-                        className="mt-[24px] inline-block cursor-pointer"
-                      />
-                    ) : (
-                      <Image
-                        src="/eye.svg"
-                        width={20}
-                        height={20}
-                        alt="eye open"
-                        onClick={handClick2}
-                        className="mt-[24px] inline-block cursor-pointer"
-                      />
-                    )}
-                  </p>
+                <p className="relative bottom-2 right-[30px]">
+                  {show2 ? (
+                    <Image
+                      src="/eye.svg"
+                      width={20}
+                      height={20}
+                      alt="eye close"
+                      onClick={handClick2}
+                      className="mt-[24px] inline-block cursor-pointer"
+                    />
+                  ) : (
+                    <Image
+                      src="/eye-close.svg"
+                      width={20}
+                      height={20}
+                      alt="eye open"
+                      onClick={handClick2}
+                      className="mt-[24px] inline-block cursor-pointer"
+                    />
+                  )}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <p className="text-red-600">{errors?.newPassword}</p>
-        <p className="text-red-600">{errors?.confirmPassword}</p>
+          <p className="text-red-600">{errors?.newPassword}</p>
+          <p className="text-red-600">{errors?.confirmPassword}</p>
 
-
-       
-    
-    <div className="flex justify-center mt-12">
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-full">
-        Save Password
-      </button>
-      <button
-        type="button"
-        onClick={() => setShowForm(false)}
-        className="ml-2 bg-gray-300 px-10 text-center py-2 rounded-full"
-      >
-        Cancel
-      </button>
-    </div>
-  </form>
-</Modal>
-
-
-       
-     
+          <div className="mt-12 flex justify-center">
+            <button
+              type="submit"
+              className="rounded-full bg-blue-500 px-4 py-2 text-white"
+            >
+              Save Password
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowForm(false)}
+              className="ml-2 rounded-full bg-gray-300 px-10 py-2 text-center"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </Modal>
 
       {sucess && (
         <ErrorPopup

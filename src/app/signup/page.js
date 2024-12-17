@@ -228,7 +228,7 @@ function Page() {
             // User not found, proceed to send email
             const generatedotp = generateOtp();
             setotp(generatedotp);
-            console.log(generatedotp);
+            // console.log(generatedotp);
 
             const payload = {
               endpoint: "send-email",
@@ -557,19 +557,19 @@ function Page() {
                   <p className="ml-[-37px]">
                     {show ? (
                       <Image
-                        src="eye-close.svg"
+                        src="eye.svg"
                         width={20}
                         height={20}
-                        alt="eye close"
+                        alt="eye open"
                         onClick={handClick}
                         className="mt-[24px] inline-block cursor-pointer"
                       />
                     ) : (
                       <Image
-                        src="eye.svg"
+                        src="eye-close.svg"
                         width={20}
                         height={20}
-                        alt="eye open"
+                        alt="eye close"
                         onClick={handClick}
                         className="mt-[24px] inline-block cursor-pointer"
                       />
@@ -589,7 +589,7 @@ function Page() {
                   <p className="ml-[-37px]">
                     {show2 ? (
                       <Image
-                        src="eye-close.svg"
+                        src="eye.svg"
                         width={20}
                         height={20}
                         alt="eye close"
@@ -598,7 +598,7 @@ function Page() {
                       />
                     ) : (
                       <Image
-                        src="eye.svg"
+                        src="eye-close.svg"
                         width={20}
                         height={20}
                         alt="eye open"
