@@ -147,14 +147,14 @@ function CandidateHeader({ candidate }) {
               <SvgIconNotification />
             </ButtonRounded>
           </div>
-          <div className="join-date float-right">
+          {/* <div className="join-date float-right">
             <p className="capitalize text-grey-primary-shade-10">
               Joined date:{" "}
               <span className="font-semibold">
                 {formatDate(candidate?.createdAt)}
               </span>
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
       <PopupModal

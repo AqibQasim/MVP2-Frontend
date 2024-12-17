@@ -176,14 +176,14 @@ function ClientHeader({ client, client_id }) {
               </div>
             )}
           </div>
-          <div className="join-date float-right">
+          {/* <div className="join-date float-right">
             <p className="capitalize text-grey-primary-shade-10">
               Joined date:{" "}
               <span className="font-semibold">
                 {formatDate(client?.createdAt)}
               </span>
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
       <PopupModal
