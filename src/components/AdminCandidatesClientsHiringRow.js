@@ -22,8 +22,9 @@ function AdminCandidatesClientsHiringRow({
   const router = useRouter();
   const [clientSecret, setClientSecret] = useState(null);
 
-  const autoRefresh = useCallback(() => {
+  const autoRefresh = () => {
     router.refresh();
+  };
   }, []);
 
   //console.log(first)
