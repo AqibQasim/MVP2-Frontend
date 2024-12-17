@@ -177,6 +177,10 @@ const CodingChild = ({
               }`}
             >
               <textarea
+                onPaste={(e) => {
+                  e.preventDefault();
+                  return false;
+                }}
                 disabled={!isAllowed}
                 onChange={(e) => setCode(e.target.value)}
                 onKeyDown={handleKeyDown}
