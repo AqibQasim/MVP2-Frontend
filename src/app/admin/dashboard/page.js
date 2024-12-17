@@ -14,6 +14,7 @@ import {
   getClients,
   fetchRecommendedCandidates,
 } from "@/lib/data-service";
+import { sendNotification } from "@/utils/notification";
 
 async function Page() {
   const [candidateJobStatus, setCandidateJobStatus] = useState(null);
@@ -62,7 +63,21 @@ async function Page() {
       }
     }
     loadData();
+    //requestNotificationPermission();
   }, []);
+
+  // const requestNotificationPermission = async () => {
+  //   if ("Notification" in window) {
+  //     const isAcceptedNotification = await Notification.requestPermission();
+  //     if (isAcceptedNotification === "granted") {
+  //       sendNotification(null, "candidate");
+  //     } else {
+  //       console.warn("notification permission denied");
+  //     }
+  //   } else {
+  //     console.error("This browser does not support notifications.");
+  //   }
+  // };
 
   return (
     <div className="h-fit space-y-3">
