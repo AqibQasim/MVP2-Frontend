@@ -22,9 +22,9 @@ function AdminCandidatesClientsHiringRow({
   const router = useRouter();
   const [clientSecret, setClientSecret] = useState(null);
 
-  const autoRefresh = useCallback(() => {
+  const autoRefresh = () => {
     router.refresh();
-  }, []);
+  };
 
   //console.log(first)
   const [changeStatus, setChangeStatus] = useState({
@@ -236,8 +236,8 @@ function AdminCandidatesClientsHiringRow({
   };
 
   const handleHiring = async () => {
-    const customPrice = (candidate.hourly_rate * 100) * 80;
-    
+    const customPrice = candidate.hourly_rate * 100 * 80;
+
     try {
       // Fetch client secret for subscription
       setIsLoading(true);
@@ -385,36 +385,33 @@ function AdminCandidatesClientsHiringRow({
   }, [changeStatus]);
 
   useEffect(() => {
-          const fetchCustomer = async () => {
-             if (stripeClientId) {
-               try {
-                 const response = await fetch("/api/get-customer", {
-                   method: "POST",
-                   headers: {
-                     "Content-Type": "application/json",
-                   },
-                   body: JSON.stringify({ customerId: stripeClientId }), // Replace with the actual customer ID
-                 });
+    const fetchCustomer = async () => {
+      if (stripeClientId) {
+        try {
+          const response = await fetch("/api/get-customer", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ customerId: stripeClientId }), // Replace with the actual customer ID
+          });
 
-                 if (!response.ok) {
-                   throw new Error("Failed to fetch customer");
-                 }
+          if (!response.ok) {
+            throw new Error("Failed to fetch customer");
+          }
 
-                 const result = await response.json();
-                 console.log("Data from fetch customer", result);
-                 setSelectedMethodId(
-                   result?.invoice_settings?.default_payment_method,
-                 );
-               } catch (error) {
-                 console.error("Error fetching customer:", error);
-               }
-              }
-             };
+          const result = await response.json();
+          console.log("Data from fetch customer", result);
+          setSelectedMethodId(result?.invoice_settings?.default_payment_method);
+        } catch (error) {
+          console.error("Error fetching customer:", error);
+        }
+      }
+    };
 
-          fetchCustomer();
-          // console.log("Payment Data is: ", data[0]?.id
+    fetchCustomer();
+    // console.log("Payment Data is: ", data[0]?.id
   }, [stripeClientId]);
-
 
   useEffect(() => {
     // console.log(changeStatus)
@@ -445,13 +442,10 @@ function AdminCandidatesClientsHiringRow({
     }
   }, [subscriptionId, changeStatus]);
 
-    
   const rowClassName =
     job?.job_status === "trial" && daysPassed > 14
       ? "bg-red-600 rounded-lg"
       : "";
-
-      
 
   return (
     <>

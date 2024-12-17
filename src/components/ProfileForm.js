@@ -48,12 +48,30 @@ const ProfileForm = ({ client }) => {
   const submitHandler = async (e) => {
     e.preventDefault();
 
+    // const newPassword = newPasswordRef.current.value;
+    // const confirmPassword = confirmpasswordRef.current.value;
+
+    // // Check for password length
+    // if (newPassword.length < 8) {
+    //   alert("Password must be at least 8 characters long.");
+    //   return;
+    // }
+
+    // // Check if passwords match
+    // if (newPassword !== confirmPassword) {
+    //   alert("New Password and Confirm Password do not match.");
+    //   return;
+    // }
+
+    // alert("Password validated successfully!");
+
     const payload = {
       endpoint: `client-profile-update/${client_id}`, // Use the client ID
       method: "PUT",
       body: {
         firstName: firstNameRef.current.value,
         lastName: lastNameRef.current.value,
+        password: newPasswordRef.current.value,
         // email: emailRef.current.value,
       //  password: passwordRef.current.value,
         contact_no: phoneNumRef.current.value,
@@ -247,12 +265,10 @@ const ProfileForm = ({ client }) => {
                 </b>
 
                 <input
-                  disabled
-                  ref={passwordRef}
-                  defaultValue={client?.password || ""}
-                  type="password"
-                  placeholder="Password"
-                  className="focus:ring-none mt-1 cursor-not-allowed rounded-full border bg-gray-100 p-2 focus:outline-none"
+                  ref={confirmpasswordRef}
+                  type="text"
+                  placeholder="Confirm Password"
+                  className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
                 />
               </div>
             </div>
