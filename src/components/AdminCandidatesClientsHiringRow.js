@@ -21,9 +21,9 @@ function AdminCandidatesClientsHiringRow({
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const autoRefresh = useCallback(() => {
+  const autoRefresh = () => {
     router.refresh();
-  },[]);
+  };
 
   //console.log(first)
   const [changeStatus, setChangeStatus] = useState({
@@ -202,8 +202,8 @@ function AdminCandidatesClientsHiringRow({
   };
 
   const handleSubscription = async () => {
-    const customPrice = ((candidate.hourly_rate * 100) * 40) * 2;
-  
+    const customPrice = candidate.hourly_rate * 100 * 40 * 2;
+
     try {
       setIsLoading(true);
       const subscriptionResponse = await fetch("/api/create-subscription", {

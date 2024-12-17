@@ -17,7 +17,8 @@ const ProfileForm = ({ client }) => {
   const firstNameRef = useRef(null);
   const lastNameRef = useRef(null);
   const emailRef = useRef(null);
-  const passwordRef = useRef(null);
+  const newPasswordRef = useRef(null);
+  const confirmpasswordRef = useRef(null);
   const locationRef = useRef(null);
   const cityRef = useRef(null);
   const phoneNumRef = useRef(null);
@@ -32,12 +33,30 @@ const ProfileForm = ({ client }) => {
   const submitHandler = async (e) => {
     e.preventDefault();
 
+    // const newPassword = newPasswordRef.current.value;
+    // const confirmPassword = confirmpasswordRef.current.value;
+
+    // // Check for password length
+    // if (newPassword.length < 8) {
+    //   alert("Password must be at least 8 characters long.");
+    //   return;
+    // }
+
+    // // Check if passwords match
+    // if (newPassword !== confirmPassword) {
+    //   alert("New Password and Confirm Password do not match.");
+    //   return;
+    // }
+
+    // alert("Password validated successfully!");
+
     const payload = {
       endpoint: `client-profile-update/${client_id}`, // Use the client ID
       method: "PUT",
       body: {
         firstName: firstNameRef.current.value,
         lastName: lastNameRef.current.value,
+        password: newPasswordRef.current.value,
         // email: emailRef.current.value,
         // password: passwordRef.current.value,
         contact_no: phoneNumRef.current.value,
@@ -142,15 +161,26 @@ const ProfileForm = ({ client }) => {
             <div className="flex flex-col sm:flex-row sm:space-x-4">
               <div className="flex flex-1 flex-col">
                 <b>
-                  <label>Password</label>
+                  <label>New Password</label>
                 </b>
                 <input
-                  disabled
-                  ref={passwordRef}
-                  defaultValue={client?.password || ""}
-                  type="password"
-                  placeholder="Password"
-                  className="focus:ring-none mt-1 cursor-not-allowed rounded-full border bg-gray-100 p-2 focus:outline-none"
+                  ref={newPasswordRef}
+                  type="text"
+                  placeholder="New Password"
+                  className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
+                />
+              </div>
+
+              {/* Last Name */}
+              <div className="flex flex-1 flex-col">
+                <b>
+                  <label>Confirm Password</label>
+                </b>
+                <input
+                  ref={confirmpasswordRef}
+                  type="text"
+                  placeholder="Confirm Password"
+                  className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
                 />
               </div>
             </div>
