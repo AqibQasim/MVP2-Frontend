@@ -230,7 +230,7 @@ function Page() {
             // User not found, proceed to send email
             const generatedotp = generateOtp();
             setotp(generatedotp);
-            // console.log(generatedotp);
+            console.log(generatedotp);
 
             const payload = {
               endpoint: "send-email",

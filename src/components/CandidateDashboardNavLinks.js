@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 function CandidateDashboardNavLinks({ candidateId }) {
   const pathname = usePathname();
   const [jobs, setJobs] = useState([]);
-  const [hasJobs, setHasJobs] = useState(false);
+  const [hasJobs, setHasJobs] = useState(null);
 
   const [loading, setLoading] = useState(true);
   const cid = candidateId;
@@ -23,7 +23,7 @@ function CandidateDashboardNavLinks({ candidateId }) {
       //   throw new Error("Network response was not ok");
       // }
       const data = await response.json();
-      console.log(data);
+      //console.log(data);
 
       let filteredData = null;
 
@@ -54,10 +54,15 @@ function CandidateDashboardNavLinks({ candidateId }) {
       let filteredData = null;
 
       if (data.status === 200) {
-        filteredData = data?.data?.filter(
-          (item) => item.customer_info.customer_id === cid,
-        );
-        setHasJobs(filteredData); // assuming the data is in the 'data' field
+        console.log("wredtfyguio ",data)
+        if(data?.data?.length>0){
+          filteredData = data?.data?.filter(
+            (item) => item?.customer_info?.customer_id === cid,
+          );
+          if(filteredData?.length>0){
+            setHasJobs(filteredData); // assuming the data is in the 'data' field
+          }
+        }
       }
     } catch (err) {
       setError(err.message);
@@ -67,8 +72,8 @@ function CandidateDashboardNavLinks({ candidateId }) {
   };
 
   useEffect(() => {
-    fetchJobs();
     fetchJobsInterviewing();
+    fetchJobs();
     console.log(jobs, "payment //////");
   }, []);
 
