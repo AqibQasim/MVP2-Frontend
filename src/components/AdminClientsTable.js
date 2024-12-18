@@ -150,7 +150,7 @@ Co-ventech
         },
         "invitation",
         "client",
-        signupResponse
+        signupResponse,
       );
       setShowForm(false);
     } catch (error) {
@@ -333,8 +333,11 @@ Co-ventech
                 }
               >
                 <div className="cursor-pointer">{client.name}</div>
-                <div className="cursor-pointer break-words text-center">
-                  {client.email}
+                <div
+                  className="cursor-pointer break-words text-center"
+                  style={{ textTransform: "lowercase" }}
+                >
+                  {client?.email?.toLowerCase()}
                 </div>
                 <div className="cursor-pointer text-center">
                   {client?.job_postings?.length}
