@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { signIn, signOut } from "./auth";
 import {
   candidateUpdateProfile,
+  clientUpdateProfile,
   createJob,
   referCandidate,
 } from "./data-service";
@@ -252,4 +253,43 @@ export async function updateCandidateProfileAction(formData) {
   revalidatePath(`/client/`);
   revalidatePath(`/candidate/${candidateId}`);
   return { message: "Candidate profile successfully updated." };
+}
+
+export async function updateClientProfileAction(formData) {
+  console.log("stuff from action");
+  const clientId = formData.get("clientId");
+  const company_name = formData.get("company_name");
+  const company_size = formData.get("company size");
+
+  console.log("clinet id from action", clientId);
+
+  console.log("log from action ", company_name);
+  // Validations
+  if (!clientId) return { error: "Valid Client id is required." };
+
+  if (!company_name || !/^[a-zA-Z\s\-]+$/.test(company_name)) {
+    return { error: "Valid company name is required." };
+  }
+
+  const updateProfileData = {
+    company_name,
+    company_size,
+  };
+
+  console.log("update profile data", updateProfileData);
+
+  // Api call
+  const { message, error } = await clientUpdateProfile(
+    updateProfileData,
+    clientId,
+  );
+  console.log("error while updating candidate profile: ", error);
+
+  if (error) {
+    return { error };
+  }
+
+  revalidatePath(`/client/`);
+  revalidatePath(`/client/${clientId}`);
+  return { message: "Client profile successfully updated." };
 }

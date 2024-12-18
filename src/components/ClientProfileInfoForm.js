@@ -1,5 +1,5 @@
 "use client";
-import { updateCandidateProfileAction } from "@/lib/actions";
+import { updateClientProfileAction } from "@/lib/actions";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import EntityCard from "./EntityCard";
@@ -7,25 +7,21 @@ import Heading from "./Heading";
 import Hr from "./Hr";
 import Input from "./Input";
 import SubmitButton from "./SubmitButton";
-import { getCandidate } from "@/lib/data-service";
 
-async function CandidateProfileInfoForm() {
+function ClientProfileInfoForm() {
   const [error, setError] = useState(null);
   const params = useParams();
-  const candidateId = params.candidateId;
-  const { data: candidate } = await getCandidate(candidateId);
+  const clientId = params.clientId;
 
   async function handleProfileUpdate(formData) {
-    const { error, message } = await updateCandidateProfileAction(formData);
+    const { error, message } = await updateClientProfileAction(formData);
+    console.log("update client profile message ", message);
     if (error) {
       console.log(error);
       return setError(error);
     }
-    if (message) return onCloseModal();
-  }
-
-  function handlepecialization(e) {
-    setSpecialization(e.target.value);
+    // if (message) return onCloseModal();
+    if (message) return;
   }
 
   return (
@@ -35,57 +31,40 @@ async function CandidateProfileInfoForm() {
       <EntityCard
         entity={{
           image: "/avatars/avatar-2.png",
-          name: candidate?.name || "Richard Feynman",
-          profession: candidate?.email || "richardfeynman@gmail.com",
+          //   name: candidate?.name || "Richard Feynman",
+          name: "Richard Feynman",
+          //   profession: candidate?.email || "richardfeynman@gmail.com",
+          profession: "richardfeynman@gmail.com",
         }}
       ></EntityCard>
       <form action={handleProfileUpdate} className="mt-6 space-y-4.5">
         <input
           type="text"
           hidden
-          name="candidateId"
-          id="candidateId"
-          value={candidateId}
-        />
-        <SelectElement
-          required
-          label="experience"
-          options={["beginner", "intermediate", "expert"]}
-        />
-        <SelectElement
-          required
-          label="commitment"
-          options={["full-time", "part-time"]}
+          name="clientId"
+          id="clientId"
+          value={clientId}
         />
         <div className="row space-y-2">
           <label
-            htmlFor="specialization"
+            htmlFor="company_name"
             className="text-sm font-medium capitalize"
           >
-            Specialization
+            Company name
           </label>
           <Input
-            id="specialization"
-            name="specialization"
-            placeholder="Back-end developer"
+            name="company_name"
+            id="company_name"
+            type="text"
             required={false}
+            placeholder="Company name"
           />
         </div>
-        <div className="row space-y-2">
-          <label
-            htmlFor="hourly_rate"
-            className="text-sm font-medium capitalize"
-          >
-            hourly rate ($)
-          </label>
-          <Input
-            name="hourly_rate"
-            id="hourly_rate"
-            type="number"
-            required={false}
-            placeholder="8"
-          />
-        </div>
+        <SelectElement
+          required
+          label="company size"
+          options={["0-15", "16-50", "51-100"]}
+        />
 
         {error ? (
           <div className="error">
@@ -106,7 +85,7 @@ async function CandidateProfileInfoForm() {
   );
 }
 
-export default CandidateProfileInfoForm;
+export default ClientProfileInfoForm;
 
 function SelectElement({ label, options, ...rest }) {
   return (
@@ -120,7 +99,7 @@ function SelectElement({ label, options, ...rest }) {
         id={label}
         name={label}
         {...rest}
-        className="block w-full rounded-[40px] border border-primary-tint-90 p-3 font-lufga text-sm font-normal capitalize"
+        className="block w-full rounded-[40px] border border-primary-tint-90 p-3 font-lufga text-sm font-normal capitalize focus:border-primary focus:!outline-none focus:ring-primary"
       >
         {options.map((option) => (
           <option key={option} value={option}>

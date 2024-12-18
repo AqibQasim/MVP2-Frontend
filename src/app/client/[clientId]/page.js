@@ -2,6 +2,7 @@
 import ClientEmployeesTable from "@/components/ClientEmployeesTable";
 import ClientEmptyScreen from "@/components/ClientEmptyScreen";
 import ClientJobsOverviewTable from "@/components/ClientJobsOverviewTable";
+import ClientProfileInfo from "@/components/ClientProfileInfo";
 import ClientRecommendationCard from "@/components/ClientRecommendationCard";
 import DashboardSection from "@/components/DashboardSection";
 import EmptyScreen from "@/components/EmptyScreen";
@@ -32,7 +33,7 @@ export default async function Page({ params }) {
     if ("Notification" in window) {
       const isAcceptedNotification = await Notification.requestPermission();
       if (isAcceptedNotification === "granted") {
-        sendNotification(params?.clientId,"client");
+        sendNotification(params?.clientId, "client");
       } else {
         console.warn("notification permission denied");
       }
@@ -62,6 +63,12 @@ export default async function Page({ params }) {
       setJobs(v);
     });
   }, []);
+
+  if (client && !client?.company_name) {
+    return <ClientProfileInfo client={client} />;
+  }
+
+  console.log("client's company name");
 
   if (
     !recommendedCandidates?.customer &&
