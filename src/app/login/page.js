@@ -256,6 +256,7 @@ function Login() {
               type="text"
               name="email"
               value={form.email}
+              error={errors.email}
               onChange={handleChange}
               placeholder="Enter your email"
               className="mt-5"
@@ -270,6 +271,7 @@ function Login() {
                 value={form.password}
                 onKeyDown={handleKeyDown} // Trigger login on Enter
                 onChange={handleChange}
+                error={errors.password}
                 placeholder="Enter your password"
                 className="mt-3"
               />
