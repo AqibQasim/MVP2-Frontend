@@ -126,7 +126,7 @@ function CandidateHeader({ candidate }) {
             <EntityCard
               sm
               entity={{
-                image: "/avatars/avatar-3.svg",
+                image: "/mvpadmin.jpg",
                 name: "Taha Khan",
                 profession: "Account Executive - AE",
               }}
