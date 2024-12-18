@@ -13,10 +13,12 @@ function CandidateEvaluateYourselfCard({ candidate }) {
   const [skill2, setSkill2] = useState("");
   const [skill3, setSkill3] = useState("");
   const [skill4, setSkill4] = useState("");
+  const [skill5, setSkill5] = useState("");
   const [level1, setLevel1] = useState("");
   const [level2, setLevel2] = useState("");
   const [level3, setLevel3] = useState("");
   const [level4, setLevel4] = useState("");
+  const [level5, setLevel5] = useState("");
   const [error, setError]= useState(null);
   const router = useRouter();
   const candidate_id = usePathname().split("/")[2];
@@ -28,8 +30,9 @@ function CandidateEvaluateYourselfCard({ candidate }) {
       { skill: skill2, level: level2 },
       { skill: skill3, level: level3 },
       { skill: skill4, level: level4 },
+      { skill: skill5, level: level5 },
     ],
-    [level1, level2, level3, level4, skill1, skill2, skill3, skill4],
+    [level1, level2, level3, level4, level5, skill1, skill2, skill3, skill4, skill5],
   );
 
   const filledSkills = useMemo(
@@ -131,6 +134,8 @@ function CandidateEvaluateYourselfCard({ candidate }) {
             setSkill3={setSkill3}
             skill4={skill4}
             setSkill4={setSkill4}
+            skill5={skill5}
+            setSkill5={setSkill5}
             level1={level1}
             setLevel1={setLevel1}
             level2={level2}
@@ -139,6 +144,8 @@ function CandidateEvaluateYourselfCard({ candidate }) {
             setLevel3={setLevel3}
             level4={level4}
             setLevel4={setLevel4}
+            level5={level5}
+            setLevel5={setLevel5}
             onContinue={handleStartAssessment}
             onBack={handleBack}
             error={error}

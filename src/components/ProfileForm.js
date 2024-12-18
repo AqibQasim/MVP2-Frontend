@@ -23,7 +23,7 @@ const ProfileForm = ({ client }) => {
   const emailRef = useRef(null);
   const newPasswordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
-  const passwordRef = useRef(null);
+  // const passwordRef = useRef(null);
   const locationRef = useRef(null);
   const cityRef = useRef(null);
   const phoneNumRef = useRef(null);
@@ -75,9 +75,9 @@ const ProfileForm = ({ client }) => {
         password: newPasswordRef?.current?.value,
         // email: emailRef.current.value,
         //  password: passwordRef.current.value,
-        contact_no: phoneNumRef.current.value,
-        client_location: locationRef.current.value,
-        city: cityRef.current.value,
+        contact_no: phoneNumRef?.current?.value,
+        client_location: locationRef?.current?.value,
+        city: cityRef?.current?.value,
         province: provinceRef.current.value,
         area_code:
           areaCodeRef.current?.value != "" ? areaCodeRef.current?.value : null,
