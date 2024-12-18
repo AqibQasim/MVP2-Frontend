@@ -10,6 +10,7 @@ import ButtonBack from "./ButtonBack";
 import "../styles/Setting.css";
 import Modal from "@/components/AdminJobsFormModal";
 import Image from "next/image";
+import { countryList } from "@/utils/cities";
 
 const ProfileForm = ({ client }) => {
   const pathname = usePathname();
@@ -22,7 +23,7 @@ const ProfileForm = ({ client }) => {
   const emailRef = useRef(null);
   const newPasswordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
-  const passwordRef = useRef(null);
+  // const passwordRef = useRef(null);
   const locationRef = useRef(null);
   const cityRef = useRef(null);
   const phoneNumRef = useRef(null);
@@ -69,14 +70,14 @@ const ProfileForm = ({ client }) => {
       endpoint: `client-profile-update/${client_id}`, // Use the client ID
       method: "PUT",
       body: {
-        firstName: firstNameRef.current.value,
-        lastName: lastNameRef.current.value,
-        password: newPasswordRef.current.value,
+        // firstName: firstNameRef.current.value,
+        // lastName: lastNameRef.current.value,
+        password: newPasswordRef?.current?.value,
         // email: emailRef.current.value,
         //  password: passwordRef.current.value,
-        contact_no: phoneNumRef.current.value,
-        client_location: locationRef.current.value,
-        city: cityRef.current.value,
+        contact_no: phoneNumRef?.current?.value,
+        client_location: locationRef?.current?.value,
+        city: cityRef?.current?.value,
         province: provinceRef.current.value,
         area_code:
           areaCodeRef.current?.value != "" ? areaCodeRef.current?.value : null,
@@ -195,8 +196,10 @@ const ProfileForm = ({ client }) => {
                   ref={firstNameRef}
                   defaultValue={client?.name?.split(" ", 2)[0] || ""}
                   type="text"
+                  disabled
                   placeholder="First Name"
-                  className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
+                  // className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
+                  className="focus:ring-none mt-1 cursor-not-allowed rounded-full border bg-gray-100 p-2 text-gray-400 focus:outline-none"
                 />
               </div>
 
@@ -206,11 +209,13 @@ const ProfileForm = ({ client }) => {
                   <label>Last Name</label>
                 </b>
                 <input
+                  disabled
                   ref={lastNameRef}
                   defaultValue={client?.name?.split(" ", 2)[1] || ""}
                   type="text"
                   placeholder="Last Name"
-                  className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
+                  // className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
+                  className="focus:ring-none mt-1 cursor-not-allowed rounded-full border bg-gray-100 p-2 text-gray-400 focus:outline-none"
                 />
               </div>
             </div>
@@ -428,13 +433,41 @@ const ProfileForm = ({ client }) => {
           <div className="col-span-2">
             <div className="flex flex-col sm:flex-row sm:space-x-4">
               <div className="flex flex-1 flex-col">
-                <input
+                <select
+                  name="country"
+                  ref={countryRef}
+                  // id="country"
+                  className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
+                >
+                  {/* <option value="" selected={client?.country}>
+                    {" "}
+                    {client?.country ? client?.country : "Select country"}{" "}
+                  </option> */}
+                  {!client?.country ? (
+                    <option value="Select country"> Select country </option>
+                  ) : null}
+                  {countryList.map((country, i) => (
+                    <option
+                      key={i}
+                      value={country}
+                      selected={
+                        client?.country &&
+                        country.toLowerCase() === client?.country?.toLowerCase()
+                          ? true
+                          : false
+                      }
+                    >
+                      {country}
+                    </option>
+                  ))}
+                </select>
+                {/* <input
                   type="text"
                   placeholder="Country"
                   ref={countryRef}
                   defaultValue={client?.country || ""}
                   className="focus:ring-none mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none"
-                />
+                /> */}
               </div>
             </div>
           </div>

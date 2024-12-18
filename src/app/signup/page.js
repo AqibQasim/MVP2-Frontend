@@ -13,6 +13,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
+import PhoneInputEl from "@/components/PhoneInputEl";
 
 function Page() {
   const router = useRouter();
@@ -26,6 +27,7 @@ function Page() {
     countryCode: "+92",
     confirmPassword: "",
   });
+  const [confirmTerms, setConfirmTerms] = useState(false);
 
   const [user_role, setUserRole] = useState("client");
   const [errors, setErrors] = useState({});
@@ -277,6 +279,15 @@ function Page() {
     validateField(name, value);
   };
 
+  function handlePhoneChange(phone) {
+    console.log("Phone hereeeeeeeeeeeeeeeeee: ", phone);
+    setForm({ ...form, phoneNumber: phone });
+    console.log(form.phoneNumber);
+
+    // Real-time validation
+    validateField("phoneNumber", phone);
+  }
+
   const isFormInvalid = useMemo(() => {
     return (
       Object.values(errors).some((err) => err !== "") ||
@@ -308,11 +319,19 @@ function Page() {
           errorMsg = "Invalid email address";
         }
         break;
+      // react-international-phone validator
+      //https://react-international-phone.vercel.app/docs/Usage/PhoneValidation/
       case "phoneNumber":
-        if (!/^\d{8,12}$/.test(value)) {
-          errorMsg = "Invalid phone number";
+        if (!/^\+?[1-9]\d{7,15}$/.test(value)) {
+          errorMsg = "Phone number must have a valid code and 8-16 digits.";
         }
         break;
+
+      // case "phoneNumber":
+      //   if (!/^\d{8,12}$/.test(value)) {
+      //     errorMsg = "Invalid phone number";
+      //   }
+      //   break;
       case "password":
         if (!/^.{8,}$/.test(value)) {
           errorMsg = "Password must be at least 8 characters";
@@ -417,6 +436,7 @@ function Page() {
                   type="text"
                   name="firstName"
                   value={form.firstName}
+                  error={errors.firstName}
                   onChange={handleChange}
                   placeholder="First name"
                   className="mt-3"
@@ -425,6 +445,7 @@ function Page() {
                   type="text"
                   name="lastName"
                   value={form.lastName}
+                  error={errors.lastName}
                   onChange={handleChange}
                   placeholder="Last name"
                   className="mt-3"
@@ -448,6 +469,7 @@ function Page() {
                 type="text"
                 name="email"
                 value={form.email}
+                error={errors.email}
                 onChange={handleChange}
                 placeholder="Enter email"
                 className="mt-3"
@@ -456,8 +478,15 @@ function Page() {
                 <p className="text-xs text-red-500">{errors.email}</p>
               )}
 
+              {/* react-internation-phone */}
+              <PhoneInputEl
+                className="mt-3"
+                phone={form.phoneNumber}
+                setPhone={handlePhoneChange}
+              />
+
               {/* Phone Number with Country Code */}
-              <div className="mt-3 flex gap-2">
+              {/* <div className="mt-3 flex gap-2">
                 <select
                   name="countryCode"
                   value={form.countryCode}
@@ -528,6 +557,7 @@ function Page() {
                 <Input
                   type="tel"
                   name="phoneNumber"
+                  error={errors.phoneNumber}
                   value={form.phoneNumber}
                   onChange={handleChange}
                   placeholder="Phone number"
@@ -536,7 +566,7 @@ function Page() {
               </div>
               {errors.phoneNumber && (
                 <p className="text-xs text-red-500">{errors.phoneNumber}</p>
-              )}
+              )} */}
 
               <div className="flex gap-2">
                 <div className="flex">
@@ -544,6 +574,7 @@ function Page() {
                     type={show ? "text" : "password"}
                     name="password"
                     value={form.password}
+                    error={errors.password}
                     onChange={handleChange}
                     placeholder="Enter password"
                     className="mt-3"
@@ -575,6 +606,7 @@ function Page() {
                     type={show2 ? "text" : "password"}
                     name="confirmPassword"
                     value={form.confirmPassword}
+                    error={errors.confirmPassword}
                     onChange={handleChange}
                     placeholder="Confirm password"
                     className="mt-3"
@@ -622,7 +654,9 @@ function Page() {
                 <input
                   type="checkbox"
                   className="border-none outline-none"
-                  required
+                  onChange={() => setConfirmTerms((checked) => !checked)}
+                  checked={confirmTerms}
+                  name="confirmTerms"
                 />
                 <span className="ms-2 text-sm text-grey-primary">
                   I read and accept the{" "}
@@ -633,9 +667,11 @@ function Page() {
               </div>
               <OnBoardingButton
                 type="submit"
-                disabled={isFormInvalid}
+                disabled={isFormInvalid || !confirmTerms}
                 className={`${
-                  isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
+                  isFormInvalid || !confirmTerms
+                    ? "cursor-not-allowed"
+                    : "cursor-pointer"
                 }`}
               >
                 Create account

@@ -14,7 +14,7 @@ async function CandidateProfileInfoForm() {
   const params = useParams();
   const candidateId = params.candidateId;
   const { data: candidate } = await getCandidate(candidateId);
-  
+
   async function handleProfileUpdate(formData) {
     const { error, message } = await updateCandidateProfileAction(formData);
     if (error) {
@@ -22,6 +22,10 @@ async function CandidateProfileInfoForm() {
       return setError(error);
     }
     if (message) return onCloseModal();
+  }
+
+  function handlepecialization(e) {
+    setSpecialization(e.target.value);
   }
 
   return (
@@ -64,6 +68,7 @@ async function CandidateProfileInfoForm() {
             id="specialization"
             name="specialization"
             placeholder="Back-end developer"
+            required={false}
           />
         </div>
         <div className="row space-y-2">
@@ -76,7 +81,8 @@ async function CandidateProfileInfoForm() {
           <Input
             name="hourly_rate"
             id="hourly_rate"
-            type="text"
+            type="number"
+            required={false}
             placeholder="8"
           />
         </div>

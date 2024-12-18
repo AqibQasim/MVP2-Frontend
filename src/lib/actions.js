@@ -201,11 +201,14 @@ export async function referCandidateToClientAction(params) {
 }
 
 export async function updateCandidateProfileAction(formData) {
+  console.log("stuff from action");
   const experience = formData.get("experience");
   const commitment = formData.get("commitment");
   const hourly_rate = formData.get("hourly_rate");
   const specialization = formData.get("specialization");
   const candidateId = formData.get("candidateId");
+
+  console.log("log from action ", specialization);
   // Validations
   if (
     !experience ||
@@ -216,12 +219,16 @@ export async function updateCandidateProfileAction(formData) {
   if (!commitment || !["full-time", "part-time"].includes(commitment.trim())) {
     return { error: "Valid commitment is required." };
   }
+  if (!specialization || !/^[a-zA-Z\s\-]+$/.test(specialization)) {
+    return {
+      error:
+        "Specialization is required and should contain only letters, spaces, or hyphens, e.g., 'Front-end Developer'.",
+    };
+  }
   if (!hourly_rate || isNaN(hourly_rate))
     return {
       error: "Valid hourly rate is required and it should be a number.",
     };
-  if (!specialization)
-    return { error: "Valid specialization rate is required." };
   if (!candidateId) return { error: "Valid candidate id is required." };
 
   const updateProfileData = {
