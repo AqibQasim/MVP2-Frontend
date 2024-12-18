@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import placeholderBlurBg from "../../public/placeholder-blur-bg.png";
 import ClientProfileInfoForm from "./ClientProfileInfoForm";
 
-function ClientProfileInfo({ client }) {
+function ClientProfileInfo({ clientName, clientEmail }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -22,7 +22,10 @@ function ClientProfileInfo({ client }) {
         <div className="flex min-h-screen items-center justify-center px-4 py-8">
           <div className="relative w-full max-w-lg rounded-4xl bg-white p-8 shadow-[0px_12px_48px_rgba(30,16,97,0.20)]">
             {/* Content */}
-            <ClientProfileInfoForm />
+            <ClientProfileInfoForm
+              clientName={clientName}
+              clientEmail={clientEmail}
+            />
           </div>
         </div>
       </div>

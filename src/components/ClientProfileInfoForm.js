@@ -8,14 +8,14 @@ import Hr from "./Hr";
 import Input from "./Input";
 import SubmitButton from "./SubmitButton";
 
-function ClientProfileInfoForm() {
+function ClientProfileInfoForm({ clientName, clientEmail }) {
   const [error, setError] = useState(null);
   const params = useParams();
   const clientId = params.clientId;
 
   async function handleProfileUpdate(formData) {
     const { error, message } = await updateClientProfileAction(formData);
-    console.log("update client profile message ", message);
+    // console.log("update client profile message ", message);
     if (error) {
       console.log(error);
       return setError(error);
@@ -31,10 +31,8 @@ function ClientProfileInfoForm() {
       <EntityCard
         entity={{
           image: "/avatars/avatar-2.png",
-          //   name: candidate?.name || "Richard Feynman",
-          name: "Richard Feynman",
-          //   profession: candidate?.email || "richardfeynman@gmail.com",
-          profession: "richardfeynman@gmail.com",
+          name: clientName || "Richard Feynman",
+          profession: clientEmail || "richardfeynman@gmail.com",
         }}
       ></EntityCard>
       <form action={handleProfileUpdate} className="mt-6 space-y-4.5">

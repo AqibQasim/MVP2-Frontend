@@ -17,7 +17,7 @@ import urlBase64ToUint8Array from "@/utils/urlBase64ToUint8Array";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default async function Page({ params }) {
+export default function Page({ params }) {
   const router = useRouter();
   const filter = "accept";
   const [client, setClient] = useState(null);
@@ -65,10 +65,13 @@ export default async function Page({ params }) {
   }, []);
 
   if (client && !client?.company_name) {
-    return <ClientProfileInfo client={client} />;
+    return (
+      <ClientProfileInfo
+        clientName={client?.name}
+        clientEmail={client?.email}
+      />
+    );
   }
-
-  console.log("client's company name");
 
   if (
     !recommendedCandidates?.customer &&
