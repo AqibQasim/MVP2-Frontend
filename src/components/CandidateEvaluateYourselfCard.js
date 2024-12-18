@@ -107,7 +107,7 @@ function CandidateEvaluateYourselfCard({ candidate }) {
           <div>
             <button
               onClick={() => setOverlayVisible(true)}
-              className="flex flex-row items-center justify-between gap-2 rounded-full bg-primary px-5 py-2 text-sm font-bold capitalize text-neutral-white"
+              className="flex flex-row items-center justify-between gap-2 rounded-full bg-primary-tint-10 hover:bg-primary px-5 py-2 text-sm font-bold capitalize text-neutral-white"
             >
               Evaluate yourself
               <Image

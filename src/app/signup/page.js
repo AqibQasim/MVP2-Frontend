@@ -34,6 +34,7 @@ function Page() {
   const [isLoading, setisLoading] = useState(false);
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
+  const allowedDomains = ["company.com", "company.org"];
 
   const handClick = () => {
     setShow(!show);
@@ -302,12 +303,25 @@ function Page() {
         if (!/^[A-Za-z]+$/.test(value)) {
           errorMsg = "Invalid Last Name";
         }
+      
         break;
-      case "email":
-        if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value)) {
-          errorMsg = "Invalid email address";
-        }
-        break;
+        case "email":
+          if (user_role === "client") {
+              if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value)) {
+                  errorMsg = "Invalid email address";
+              } else {
+                  const domain = value.split("@")[1];
+                  if (!allowedDomains.includes(domain)) {
+                      errorMsg = "Only company emails are allowed.";
+                  }
+              }
+          } else if (user_role === "customer"){
+              if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value)) {
+                  errorMsg = "Invalid email address";
+              }
+          }
+          break;
+      
       case "phoneNumber":
         if (!/^\d{8,12}$/.test(value)) {
           errorMsg = "Invalid phone number";
@@ -412,7 +426,7 @@ function Page() {
               />
             </h2>
             <form onSubmit={handleOpenOverlay}>
-              <div className="mt-1 flex gap-1">
+              <div className="mt-1 flex gap-2">
                 <Input
                   type="text"
                   name="firstName"
