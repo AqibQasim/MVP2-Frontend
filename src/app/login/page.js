@@ -8,6 +8,7 @@ import Overlay from "@/components/Overlay";
 import SignInButton from "@/components/SignInButton";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import LoaderIcon from "@/svgs/LoaderIcon";
+import urlBase64ToUint8Array from "@/utils/urlBase64ToUint8Array";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,75 +25,71 @@ function Login() {
   const [isForgotPasswordOpened, setIsForgotPasswordOpened] = useState(false);
   const [show, setShow] = useState(false);
 
-  
-
-
-  useEffect(() => {
-
-    // console.log("Requesting notification permission...");
-    requestNotificationPermission();
-  }, []);
+  // useEffect(() => {
+  //   // console.log("Requesting notification permission...");
+  //   requestNotificationPermission();
+  // }, []);
   // Request Notification Permission
-  const requestNotificationPermission = async () => {
-    if ("Notification" in window) {
-      const isAcceptedNotification = await Notification.requestPermission();
-      if (isAcceptedNotification === "granted") {
-        sendNotification();
-      } else {
-        console.warn("notification permission denied");
-      }
-    } else {
-      console.error("This browser does not support notifications.");
-    }
-  };
+  // const requestNotificationPermission = async () => {
+  //   if ("Notification" in window) {
+  //     const isAcceptedNotification = await Notification.requestPermission();
+  //     if (isAcceptedNotification === "granted") {
+  //       sendNotification();
+  //     } else {
+  //       console.warn("notification permission denied");
+  //     }
+  //   } else {
+  //     console.error("This browser does not support notifications.");
+  //   }
+  // };
   // Send a Notification
-  const sendNotification = () => {
-    // if ("Notification" in window) {
-    //   console.log("Sending notification...");
-    //   new Notification("Hello!", {
-    //     body: "This is your notification.",
-    //     //icon: "/icon.png", // Optional: Add an icon
-    //   });
-    // } else {
-    //   console.error("Notifications are not supported in this browser.");
-    // }
-    if (
-      "serviceWorker" in navigator &&
-      "PushManager" in window
-    ) {
-      navigator.serviceWorker
-        .register("/sw.js", {
-          scope: "/",
-        })
-        .then(async (swRegistration) => {
-          const existingSubscription =
-            await swRegistration.pushManager.getSubscription();
-          if (existingSubscription) {
-            // Unsubscribe if the applicationServerKey is different
-            console.log("Unsubscribing existing subscription...");
-            await existingSubscription.unsubscribe();
-          }
-          const subscription = await swRegistration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: urlBase64ToUint8Array(
-              process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
-            ),
-          });
-          console.log("Push subscription:", subscription);
-          // Send the subscription object to your backend
-          fetch(`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/subscribe`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(subscription),
-          }).then(async (res) => {
-            console.log(await res.json());
-          });
-        })
-        .catch((error) => {
-          console.error("Service Worker registration failed:", error);
-        });
-    }
-  };
+  // const sendNotification = () => {
+  //   // if ("Notification" in window) {
+  //   //   console.log("Sending notification...");
+  //   //   new Notification("Hello!", {
+  //   //     body: "This is your notification.",
+  //   //     //icon: "/icon.png", // Optional: Add an icon
+  //   //   });
+  //   // } else {
+  //   //   console.error("Notifications are not supported in this browser.");
+  //   // }
+  //   if (
+  //     "serviceWorker" in navigator &&
+  //     "PushManager" in window
+  //   ) {
+  //     navigator.serviceWorker
+  //       .register("/sw.js", {
+  //         scope: "/",
+  //       })
+  //       .then(async (swRegistration) => {
+  //         const existingSubscription =
+  //           await swRegistration.pushManager.getSubscription();
+  //         if (existingSubscription) {
+  //           // Unsubscribe if the applicationServerKey is different
+  //           console.log("Unsubscribing existing subscription...");
+  //           await existingSubscription.unsubscribe();
+  //         }
+  //         const subscription = await swRegistration.pushManager.subscribe({
+  //           userVisibleOnly: true,
+  //           applicationServerKey: urlBase64ToUint8Array(
+  //             process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+  //           ),
+  //         });
+  //         console.log("Push subscription:", subscription);
+  //         // Send the subscription object to your backend
+  //         fetch(`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/subscribe`, {
+  //           method: "POST",
+  //           headers: { "Content-Type": "application/json" },
+  //           body: JSON.stringify(subscription),
+  //         }).then(async (res) => {
+  //           console.log(await res.json());
+  //         });
+  //       })
+  //       .catch((error) => {
+  //         console.error("Service Worker registration failed:", error);
+  //       });
+  //   }
+  // };
 
   const handleCloseOverlay = () => {
     setIsForgotPasswordOpened(false);
@@ -208,7 +205,6 @@ function Login() {
       }
     },
     [form, errors, user_role],
-
   );
 
   return (
@@ -260,6 +256,7 @@ function Login() {
               type="text"
               name="email"
               value={form.email}
+              error={errors.email}
               onChange={handleChange}
               placeholder="Enter your email"
               className="mt-5"
@@ -274,13 +271,14 @@ function Login() {
                 value={form.password}
                 onKeyDown={handleKeyDown} // Trigger login on Enter
                 onChange={handleChange}
+                error={errors.password}
                 placeholder="Enter your password"
                 className="mt-3"
               />
               <p className="ml-[-37px]">
                 {show ? (
                   <Image
-                    src="eye-close.svg"
+                    src="eye.svg"
                     width={20}
                     height={20}
                     alt="line"
@@ -289,7 +287,7 @@ function Login() {
                   />
                 ) : (
                   <Image
-                    src="eye.svg"
+                    src="eye-close.svg"
                     width={20}
                     height={20}
                     alt="line"

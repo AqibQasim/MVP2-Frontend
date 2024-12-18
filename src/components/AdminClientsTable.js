@@ -150,7 +150,7 @@ Co-ventech
         },
         "invitation",
         "client",
-        signupResponse
+        signupResponse,
       );
       setShowForm(false);
     } catch (error) {
@@ -159,6 +159,72 @@ Co-ventech
     } finally {
       setLoading(false);
     }
+
+    try {
+      // Call the Stripe customer creation API
+      const stripeResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/api/create-customer`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: form.email,
+            name: form.firstName + " " + form.lastName,
+            metadata:
+              user_role == "customer"
+                ? { customer: 1, customer_id: result?.data?.customer_id }
+                : { customer: 0, client_id: result?.data?.client_id },
+          }),
+        },
+      );
+      const stripeData = await stripeResponse.json();
+      if (stripeResponse.status !== 200) {
+        throw new Error(stripeData.error);
+      }
+      console.log("Stripe customer created successfully:", stripeData.customer);
+      let createAccountData;
+      if (user_role === "client") {
+        const createAccountResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-stripe-account`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              client_id: result.data.client_id,
+              stripe_id: stripeData.customer.id,
+            }),
+          },
+        );
+        createAccountData = await createAccountResponse.json();
+        if (createAccountResponse.status !== 200) {
+          throw new Error(createAccountData.error);
+        }
+        console.log("Stripe account created successfully:", createAccountData);
+      } else {
+        const createAccountResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-customer-stripe-account`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              customer_id: result.data.customer_id,
+              stripe_id: stripeData.customer.id,
+            }),
+          },
+        );
+        createAccountData = await createAccountResponse.json();
+        if (createAccountResponse.status !== 200) {
+          throw new Error(createAccountData.error);
+        }
+        console.log("Stripe account created successfully:", createAccountData);
+      }
+    } catch (error) {}
   };
 
   const handleJobStatusChange = (event) => {
@@ -267,8 +333,11 @@ Co-ventech
                 }
               >
                 <div className="cursor-pointer">{client.name}</div>
-                <div className="cursor-pointer break-words text-center">
-                  {client.email}
+                <div
+                  className="cursor-pointer break-words text-center"
+                  style={{ textTransform: "lowercase" }}
+                >
+                  {client?.email?.toLowerCase()}
                 </div>
                 <div className="cursor-pointer text-center">
                   {client?.job_postings?.length}

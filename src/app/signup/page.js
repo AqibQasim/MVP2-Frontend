@@ -13,6 +13,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
+import PhoneInputEl from "@/components/PhoneInputEl";
 
 function Page() {
   const router = useRouter();
@@ -23,9 +24,10 @@ function Page() {
     email: "",
     phoneNumber: "",
     password: "",
-    countryCode: "+92", 
+    countryCode: "+92",
     confirmPassword: "",
   });
+  const [confirmTerms, setConfirmTerms] = useState(false);
 
   const [user_role, setUserRole] = useState("client");
   const [errors, setErrors] = useState({});
@@ -228,7 +230,7 @@ function Page() {
             // User not found, proceed to send email
             const generatedotp = generateOtp();
             setotp(generatedotp);
-            console.log(generatedotp);
+            // console.log(generatedotp);
 
             const payload = {
               endpoint: "send-email",
@@ -278,6 +280,15 @@ function Page() {
     validateField(name, value);
   };
 
+  function handlePhoneChange(phone) {
+    console.log("Phone hereeeeeeeeeeeeeeeeee: ", phone);
+    setForm({ ...form, phoneNumber: phone });
+    console.log(form.phoneNumber);
+
+    // Real-time validation
+    validateField("phoneNumber", phone);
+  }
+
   const isFormInvalid = useMemo(() => {
     return (
       Object.values(errors).some((err) => err !== "") ||
@@ -305,6 +316,7 @@ function Page() {
         }
       
         break;
+<<<<<<< HEAD
         case "email":
           if (user_role === "client") {
               if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value)) {
@@ -322,11 +334,26 @@ function Page() {
           }
           break;
       
-      case "phoneNumber":
-        if (!/^\d{8,12}$/.test(value)) {
-          errorMsg = "Invalid phone number";
+=======
+      case "email":
+        if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value)) {
+          errorMsg = "Invalid email address";
         }
         break;
+      // react-international-phone validator
+      //https://react-international-phone.vercel.app/docs/Usage/PhoneValidation/
+>>>>>>> 80550f507a02ac32954181abe36e5a2bb624eaab
+      case "phoneNumber":
+        if (!/^\+?[1-9]\d{7,15}$/.test(value)) {
+          errorMsg = "Phone number must have a valid code and 8-16 digits.";
+        }
+        break;
+
+      // case "phoneNumber":
+      //   if (!/^\d{8,12}$/.test(value)) {
+      //     errorMsg = "Invalid phone number";
+      //   }
+      //   break;
       case "password":
         if (!/^.{8,}$/.test(value)) {
           errorMsg = "Password must be at least 8 characters";
@@ -431,6 +458,7 @@ function Page() {
                   type="text"
                   name="firstName"
                   value={form.firstName}
+                  error={errors.firstName}
                   onChange={handleChange}
                   placeholder="First name"
                   className="mt-3"
@@ -439,6 +467,7 @@ function Page() {
                   type="text"
                   name="lastName"
                   value={form.lastName}
+                  error={errors.lastName}
                   onChange={handleChange}
                   placeholder="Last name"
                   className="mt-3"
@@ -462,6 +491,7 @@ function Page() {
                 type="text"
                 name="email"
                 value={form.email}
+                error={errors.email}
                 onChange={handleChange}
                 placeholder="Enter email"
                 className="mt-3"
@@ -470,13 +500,20 @@ function Page() {
                 <p className="text-xs text-red-500">{errors.email}</p>
               )}
 
+              {/* react-internation-phone */}
+              <PhoneInputEl
+                className="mt-3"
+                phone={form.phoneNumber}
+                setPhone={handlePhoneChange}
+              />
+
               {/* Phone Number with Country Code */}
-              <div className="mt-3 flex gap-2">
+              {/* <div className="mt-3 flex gap-2">
                 <select
                   name="countryCode"
                   value={form.countryCode}
                   onChange={handleChange}
-                  className="block w-full  rounded-full border border-gray-300 px-5 h-[42px] mt-3 text-sm leading-tight text-gray-900 focus:border-primary focus:ring-primary"
+                  className="mt-3 block h-[42px] w-full rounded-full border border-gray-300 px-5 text-sm leading-tight text-gray-900 focus:border-primary focus:ring-primary"
                 >
                   <option value="+93">+93 (Afghanistan)</option>
                   <option value="+355">+355 (Albania)</option>
@@ -542,6 +579,7 @@ function Page() {
                 <Input
                   type="tel"
                   name="phoneNumber"
+                  error={errors.phoneNumber}
                   value={form.phoneNumber}
                   onChange={handleChange}
                   placeholder="Phone number"
@@ -550,7 +588,7 @@ function Page() {
               </div>
               {errors.phoneNumber && (
                 <p className="text-xs text-red-500">{errors.phoneNumber}</p>
-              )}
+              )} */}
 
               <div className="flex gap-2">
                 <div className="flex">
@@ -558,6 +596,7 @@ function Page() {
                     type={show ? "text" : "password"}
                     name="password"
                     value={form.password}
+                    error={errors.password}
                     onChange={handleChange}
                     placeholder="Enter password"
                     className="mt-3"
@@ -565,19 +604,19 @@ function Page() {
                   <p className="ml-[-37px]">
                     {show ? (
                       <Image
-                        src="eye-close.svg"
+                        src="eye.svg"
                         width={20}
                         height={20}
-                        alt="eye close"
+                        alt="eye open"
                         onClick={handClick}
                         className="mt-[24px] inline-block cursor-pointer"
                       />
                     ) : (
                       <Image
-                        src="eye.svg"
+                        src="eye-close.svg"
                         width={20}
                         height={20}
-                        alt="eye open"
+                        alt="eye close"
                         onClick={handClick}
                         className="mt-[24px] inline-block cursor-pointer"
                       />
@@ -589,6 +628,7 @@ function Page() {
                     type={show2 ? "text" : "password"}
                     name="confirmPassword"
                     value={form.confirmPassword}
+                    error={errors.confirmPassword}
                     onChange={handleChange}
                     placeholder="Confirm password"
                     className="mt-3"
@@ -596,7 +636,7 @@ function Page() {
                   <p className="ml-[-37px]">
                     {show2 ? (
                       <Image
-                        src="eye-close.svg"
+                        src="eye.svg"
                         width={20}
                         height={20}
                         alt="eye close"
@@ -605,7 +645,7 @@ function Page() {
                       />
                     ) : (
                       <Image
-                        src="eye.svg"
+                        src="eye-close.svg"
                         width={20}
                         height={20}
                         alt="eye open"
@@ -636,7 +676,9 @@ function Page() {
                 <input
                   type="checkbox"
                   className="border-none outline-none"
-                  required
+                  onChange={() => setConfirmTerms((checked) => !checked)}
+                  checked={confirmTerms}
+                  name="confirmTerms"
                 />
                 <span className="ms-2 text-sm text-grey-primary">
                   I read and accept the{" "}
@@ -647,9 +689,11 @@ function Page() {
               </div>
               <OnBoardingButton
                 type="submit"
-                disabled={isFormInvalid}
+                disabled={isFormInvalid || !confirmTerms}
                 className={`${
-                  isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
+                  isFormInvalid || !confirmTerms
+                    ? "cursor-not-allowed"
+                    : "cursor-pointer"
                 }`}
               >
                 Create account

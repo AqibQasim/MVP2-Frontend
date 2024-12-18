@@ -21,17 +21,18 @@ function AdminCandidatesClientsHiringRow({
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const [clientSecret, setClientSecret] = useState(null);
+  const [paymentMethodSet, isPaymentMethodSet] = useState(false);
 
-  const autoRefresh = useCallback(() => {
+  const autoRefresh = () => {
     router.refresh();
-  }, []);
+  };
 
   //console.log(first)
   const [changeStatus, setChangeStatus] = useState({
     customer_id: null,
     job_posting_id: null,
     client_id: null,
-    job_status: job?.job_status, //'open',
+    job_status: null, //'open',
     talent_status: null, //'open',
     response_status: null, //'decline'
   });
@@ -186,22 +187,28 @@ function AdminCandidatesClientsHiringRow({
     }
   }, [payload]);
 
-  const getClientStripe = () => {
-    console.log("pASSING TO PAYLOAD ", typeof changeStatus.client_id);
+  const getClientStripe = async (client_id) => {
+    console.log("pASSING TO PAYLOAD ", client_id);
     const payload = {
-      endpoint: `get-client-stripe-account?client_id=${changeStatus.client_id}`,
+      endpoint: `get-client-stripe-account?client_id=${client_id}`,
       method: "GET",
     };
 
-    mvp2ApiHelper(payload).then((result) => {
-      //  console.log("Stripe API result: ", result.status)
+    try {
+      const result = await mvp2ApiHelper(payload);
+      console.log("Stripe API result: ", result);
       if (result.status === 200) {
         console.log("TEST 124", changeStatus);
         setStripeClientId(result.data.data.stripe_id);
+        return result.data.data.stripe_id; // Return the stripe ID
+      } else {
+        console.error(result?.data?.message);
+        return null; // Handle the error appropriately
       }
-      console.error(result?.data?.message);
-      return null; // Return null or handle the error appropriately
-    });
+    } catch (error) {
+      console.error("Error fetching Stripe client ID:", error);
+      return null;
+    }
   };
 
   const handleSubscription = async () => {
@@ -236,8 +243,8 @@ function AdminCandidatesClientsHiringRow({
   };
 
   const handleHiring = async () => {
-    const customPrice = (candidate.hourly_rate * 100) * 80;
-    
+    const customPrice = candidate.hourly_rate * 100 * 80;
+
     try {
       // Fetch client secret for subscription
       setIsLoading(true);
@@ -384,44 +391,52 @@ function AdminCandidatesClientsHiringRow({
     handleChangeStatus();
   }, [changeStatus]);
 
+  const fetchCustomer = async (stripeClientId) => {
+    if (stripeClientId) {
+      try {
+        const response = await fetch("/api/get-customer", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ customerId: stripeClientId }), // Replace with the actual customer ID
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch customer");
+        }
+
+        const result = await response.json();
+        console.log("Data from fetch customer", result);
+        setSelectedMethodId(result?.invoice_settings?.default_payment_method);
+        return result?.invoice_settings?.default_payment_method; // Return the default payment method ID
+      } catch (error) {
+        console.error("Error fetching customer:", error);
+        return null;
+      }
+    }
+    return null;
+  };
+
   useEffect(() => {
-          const fetchCustomer = async () => {
-             if (stripeClientId) {
-               try {
-                 const response = await fetch("/api/get-customer", {
-                   method: "POST",
-                   headers: {
-                     "Content-Type": "application/json",
-                   },
-                   body: JSON.stringify({ customerId: stripeClientId }), // Replace with the actual customer ID
-                 });
-
-                 if (!response.ok) {
-                   throw new Error("Failed to fetch customer");
-                 }
-
-                 const result = await response.json();
-                 console.log("Data from fetch customer", result);
-                 setSelectedMethodId(
-                   result?.invoice_settings?.default_payment_method,
-                 );
-               } catch (error) {
-                 console.error("Error fetching customer:", error);
-               }
-              }
-             };
-
-          fetchCustomer();
-          // console.log("Payment Data is: ", data[0]?.id
+    fetchCustomer();
+    // console.log("Payment Data is: ", data[0]?.id
   }, [stripeClientId]);
-
 
   useEffect(() => {
     // console.log(changeStatus)
+    const prevStatus = changeStatus?.job_status;
     handleChangeStatus();
-    getClientStripe();
+    getClientStripe(changeStatus.client_id);
 
     if (changeStatus.job_status === "hired") {
+      // if (paymentMethodSet === false) {
+      //   setChangeStatus((prevState) => ({
+      //     ...prevState,
+      //     job_status: prevStatus,
+      //   }));
+      //   alert("Client has not added their payment method yet.");
+      // }
       console.log("JOB STATUS CHANGED TO ", changeStatus.job_status);
 
       if (stripeClientId && selectedMethodId) {
@@ -437,7 +452,7 @@ function AdminCandidatesClientsHiringRow({
         handleCancelSubscription();
       }
     }
-  }, [changeStatus, stripeClientId, selectedMethodId]);
+  }, [changeStatus, stripeClientId, selectedMethodId, paymentMethodSet]);
 
   useEffect(() => {
     if (subscriptionId) {
@@ -445,13 +460,10 @@ function AdminCandidatesClientsHiringRow({
     }
   }, [subscriptionId, changeStatus]);
 
-    
   const rowClassName =
     job?.job_status === "trial" && daysPassed > 14
       ? "bg-red-600 rounded-lg"
       : "";
-
-      
 
   return (
     <>
@@ -488,32 +500,69 @@ function AdminCandidatesClientsHiringRow({
                 <ChangeStatusDropdown
                   options={options}
                   placeholder="Change Job Status"
-                  onPress={(selected_status) => {
+                  onPress={async (selected_status) => {
                     setIsLoading(true); // Start loader
 
                     let response_status = null;
 
                     if (selected_status === "open") {
                       response_status = "decline";
+                      setChangeStatus({
+                        customer_id: candidate?.customer_id,
+                        job_posting_id: job?.job_posting_id,
+                        client_id: client?.client_id,
+                        job_status: selected_status,
+                        talent_status: selected_status,
+                        response_status,
+                      });
                     } else if (
-                      selected_status === "trial" ||
                       selected_status === "hired"
                     ) {
-                      response_status = "accept";
+                      const stripeId = await getClientStripe(client?.client_id);
+                      if (stripeId) {
+                        const paymentMethodId = await fetchCustomer(stripeId);
+
+                        if (paymentMethodId) {
+                          response_status = "accept";
+                          setChangeStatus({
+                            customer_id: candidate?.customer_id,
+                            job_posting_id: job?.job_posting_id,
+                            client_id: client?.client_id,
+                            job_status: selected_status,
+                            talent_status: selected_status,
+                            response_status,
+                          });
+                        } else {
+                          alert(
+                            "Client has not added their payment method yet.",
+                          );
+                        }
+                      } else {
+                        alert("Failed to retrieve Stripe Client ID.");
+                      }
                     } else if (selected_status === "close") {
                       response_status = "close";
+                      setChangeStatus({
+                        customer_id: candidate?.customer_id,
+                        job_posting_id: job?.job_posting_id,
+                        client_id: client?.client_id,
+                        job_status: selected_status,
+                        talent_status: selected_status,
+                        response_status,
+                      });
+                    }else if(selected_status==="trial"){
+                      response_status="accept"
+                      setChangeStatus({
+                        customer_id: candidate?.customer_id,
+                        job_posting_id: job?.job_posting_id,
+                        client_id: client?.client_id,
+                        job_status: selected_status,
+                        talent_status: selected_status,
+                        response_status,
+                      });
                     }
 
-                    setChangeStatus({
-                      customer_id: candidate?.customer_id,
-                      job_posting_id: job?.job_posting_id,
-                      client_id: client?.client_id,
-                      job_status: selected_status,
-                      talent_status: selected_status,
-                      response_status,
-                    });
-
-                    // // Simulate API call delay (remove after integrating real API)
+                    // Simulate API call delay (remove after integrating real API)
                     setTimeout(() => {
                       setIsLoading(false);
                       autoRefresh();

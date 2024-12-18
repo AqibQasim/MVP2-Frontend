@@ -46,7 +46,11 @@ const SuccessModal = ({
       {/* Close button */}
       <button
         onClick={onClose}
+<<<<<<< HEAD
         className="absolute right-2 top-1 text-5xl text-gray-500 hover:text-gray-700"
+=======
+        className="absolute right-2 top-2 text-5xl text-gray-500 hover:text-gray-700"
+>>>>>>> 80550f507a02ac32954181abe36e5a2bb624eaab
       >
         &times;
       </button>
