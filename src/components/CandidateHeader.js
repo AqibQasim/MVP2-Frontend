@@ -132,7 +132,7 @@ function CandidateHeader({ candidate }) {
               }}
             />
 
-            {isCandidate && (
+            {/* {isCandidate && (
               <div>
                 <ButtonCapsule
                   ref={buttonRef}
@@ -142,7 +142,7 @@ function CandidateHeader({ candidate }) {
                   Schedule a Call
                 </ButtonCapsule>
               </div>
-            )}
+            )} */}
             <ButtonRounded>
               <SvgIconNotification />
             </ButtonRounded>

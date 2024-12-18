@@ -53,14 +53,13 @@ function Page({ params }) {
   const [editedPrice, setEditedPrice] = useState(talent?.hourly_rate);
   const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
   const [candidateReport, setCandidateReport] = useState(null);
-  const [budgetingError, setBudgetingError] = useState(false);
+  const [budgetingError, setBudgetingError] = useState("");
   const router = useRouter();
   const [alert, setAlert] = useState(null);
   const [paymentHistory, setPaymentHistory] = useState(null);
   //const [error,setError]= useState(null)
 
   const customer_id = params?.candidateId;
-
 
   const getPaymentHistory = () => {
     const payload = {
@@ -206,7 +205,6 @@ function Page({ params }) {
 
   useEffect(() => {
     fetchJobs();
-    
   }, [searchJob]);
 
   useEffect(() => {
@@ -292,15 +290,17 @@ function Page({ params }) {
   const handleReferCandidate = async () => {
     // e.preventDefault();
     if (talent?.hourly_rate >= hourlyRate) {
-      setBudgetingError(true);
+      setBudgetingError("Refferal rate should be greater than Candidates rate");
+    } else if (hourlyRate <= 3 || hourlyRate >= 300) {
+      setBudgetingError("Referral Rate should be in between 3 to 300");
     } else {
-      setBudgetingError(false);
+      setBudgetingError("");
       const referClientBody = {
         client_id: selectedClientId,
         customer_id: talent.customer_id,
         job_posting_id: selectedJobId,
         hourly_rate: hourlyRate,
-        candidate_hourly_rate: talent?.hourly_rate
+        candidate_hourly_rate: talent?.hourly_rate,
       };
 
       console.log(referClientBody);
@@ -356,8 +356,8 @@ function Page({ params }) {
               ).toLowerCase(),
             ) ? null : (
               <>
-               <div></div>
-                { formatDate(talent?.updatedAt)} - {newEndTrialDate}
+                <div></div>
+                {formatDate(talent?.updatedAt)} - {newEndTrialDate}
               </>
             )}
           </Capsule>
@@ -398,7 +398,10 @@ function Page({ params }) {
         <div className="flex flex-row justify-center">
           <div className="flex flex-1 flex-col justify-start">
             <Heading xm>About</Heading>
-            <Capsule className="flex w-fit flex-wrap items-center gap-2" style={{ textTransform: "lowercase" }}>
+            <Capsule
+              className="flex w-fit flex-wrap items-center gap-2"
+              style={{ textTransform: "lowercase" }}
+            >
               <Image src={EmailSvg} />
               {talent?.email}
             </Capsule>
@@ -595,12 +598,7 @@ function Page({ params }) {
             >
               Confirm Referral
             </button>
-            {budgetingError && (
-              <p className="text-red-500">
-                {" "}
-                Refferal rate should be greater than Candidates rate{" "}
-              </p>
-            )}
+            {budgetingError && <p className="text-red-500">{budgetingError}</p>}
             <button
               type="button"
               onClick={() => setShowForm(false)}
