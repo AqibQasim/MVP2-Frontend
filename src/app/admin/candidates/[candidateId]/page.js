@@ -61,7 +61,6 @@ function Page({ params }) {
 
   const customer_id = params?.candidateId;
 
-
   const getPaymentHistory = () => {
     const payload = {
       endpoint: `get-hiring-payments?customer_id=${params?.candidateId}`,
@@ -95,7 +94,7 @@ function Page({ params }) {
 
       if (res.status === 200) {
         console.log("Status updated successfully!");
-        router.refresh();
+        window.location.reload();
       } else {
         console.error("Status change failed:", res);
       }
@@ -188,6 +187,8 @@ function Page({ params }) {
 
         if (result.status === 200) {
           console.log("Price updated successfully!");
+          window.location.reload();
+          router?.refresh();
         } else {
           console.error("Failed to update profile.");
         }
@@ -196,6 +197,7 @@ function Page({ params }) {
       }
       setIsEditPrice(false);
       router?.refresh();
+      window.location.reload();
     }
   }, []);
 
@@ -206,7 +208,6 @@ function Page({ params }) {
 
   useEffect(() => {
     fetchJobs();
-    
   }, [searchJob]);
 
   useEffect(() => {
@@ -300,7 +301,7 @@ function Page({ params }) {
         customer_id: talent.customer_id,
         job_posting_id: selectedJobId,
         hourly_rate: hourlyRate,
-        candidate_hourly_rate: talent?.hourly_rate
+        candidate_hourly_rate: talent?.hourly_rate,
       };
 
       console.log(referClientBody);
@@ -356,8 +357,8 @@ function Page({ params }) {
               ).toLowerCase(),
             ) ? null : (
               <>
-               <div></div>
-                { formatDate(talent?.updatedAt)} - {newEndTrialDate}
+                <div></div>
+                {formatDate(talent?.updatedAt)} - {newEndTrialDate}
               </>
             )}
           </Capsule>
@@ -398,7 +399,10 @@ function Page({ params }) {
         <div className="flex flex-row justify-center">
           <div className="flex flex-1 flex-col justify-start">
             <Heading xm>About</Heading>
-            <Capsule className="flex w-fit flex-wrap items-center gap-2" style={{ textTransform: "lowercase" }}>
+            <Capsule
+              className="flex w-fit flex-wrap items-center gap-2"
+              style={{ textTransform: "lowercase" }}
+            >
               <Image src={EmailSvg} />
               {talent?.email}
             </Capsule>

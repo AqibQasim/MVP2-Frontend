@@ -4,10 +4,11 @@ import AdminJobViewById from "@/components/AdminJobViewById";
 import Modal from "@/components/AdminJobsFormModal";
 import { referCandidateToClientAction } from "@/lib/actions";
 import { fetchAdminJob, fetchRecommendedCandidates } from "@/lib/data-service";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
 function Page({ params }) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const client_id = searchParams.get("client_id");
 
@@ -81,6 +82,7 @@ function Page({ params }) {
     }
     if (message) {
       console.log("Refer Message: ", message);
+      router.refresh();
       return setShowForm(false);
     }
   };
