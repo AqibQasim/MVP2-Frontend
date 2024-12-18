@@ -1,10 +1,11 @@
+"use client";
 import React, { useRef, useState } from "react";
 import Heading from "./Heading";
 import ButtonCapsule from "./ButtonCapsule";
 import ButtonRounded from "./ButtonRounded";
 import Button from "./Button";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import ErrorPopup from "./ErrorPopup";
 import ButtonBack from "./ButtonBack";
 import "../styles/Setting.css";
@@ -13,6 +14,7 @@ import Image from "next/image";
 import { countryList } from "@/utils/cities";
 
 const ProfileForm = ({ client }) => {
+  const router = useRouter();
   const pathname = usePathname();
   const client_id = pathname.split("/")[2];
   const [sucess, setsuccess] = useState(false);
@@ -92,6 +94,8 @@ const ProfileForm = ({ client }) => {
       if (result.status === 200) {
         console.log("Client info updated successfully", result.data);
         setsuccess(true);
+        // refresh page on success
+        router.refresh();
       } else {
         console.error("Error updating client info", result?.data?.message);
         seterror(true);
