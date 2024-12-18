@@ -701,7 +701,7 @@ function AdminJobViewById({ job, setShowForm }) {
               <div>There&apos;s no assigned candidates yet</div>
               <div
                 onClick={() => setShowForm(true)}
-                className="cursor-pointer text-primary"
+                className="cursor-pointer text-primary-tint-20 hover:text-primary "
               >
                 Click here to Assign
               </div>

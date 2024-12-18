@@ -36,6 +36,7 @@ function Page() {
   const [isLoading, setisLoading] = useState(false);
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
+  const allowedDomains = ["company.com", "company.org"];
 
   const handClick = () => {
     setShow(!show);
@@ -313,7 +314,27 @@ function Page() {
         if (!/^[A-Za-z]+$/.test(value)) {
           errorMsg = "Invalid Last Name";
         }
+      
         break;
+<<<<<<< HEAD
+        case "email":
+          if (user_role === "client") {
+              if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value)) {
+                  errorMsg = "Invalid email address";
+              } else {
+                  const domain = value.split("@")[1];
+                  if (!allowedDomains.includes(domain)) {
+                      errorMsg = "Only company emails are allowed.";
+                  }
+              }
+          } else if (user_role === "customer"){
+              if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value)) {
+                  errorMsg = "Invalid email address";
+              }
+          }
+          break;
+      
+=======
       case "email":
         if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value)) {
           errorMsg = "Invalid email address";
@@ -321,6 +342,7 @@ function Page() {
         break;
       // react-international-phone validator
       //https://react-international-phone.vercel.app/docs/Usage/PhoneValidation/
+>>>>>>> 80550f507a02ac32954181abe36e5a2bb624eaab
       case "phoneNumber":
         if (!/^\+?[1-9]\d{7,15}$/.test(value)) {
           errorMsg = "Phone number must have a valid code and 8-16 digits.";
@@ -431,7 +453,7 @@ function Page() {
               />
             </h2>
             <form onSubmit={handleOpenOverlay}>
-              <div className="mt-1 flex gap-1">
+              <div className="mt-1 flex gap-2">
                 <Input
                   type="text"
                   name="firstName"

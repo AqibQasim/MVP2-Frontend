@@ -356,7 +356,8 @@ function Page({ params }) {
               ).toLowerCase(),
             ) ? null : (
               <>
-                {formatDate(talent?.updatedAt)} - {newEndTrialDate}
+               <div></div>
+                { formatDate(talent?.updatedAt)} - {newEndTrialDate}
               </>
             )}
           </Capsule>
