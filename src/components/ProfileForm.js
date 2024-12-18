@@ -329,13 +329,36 @@ const ProfileForm = ({ client }) => {
                 <b>
                   <label>Company Size</label>
                 </b>
-                <input
-                  ref={companySizeRef}
-                  defaultValue={client?.company_size || ""}
-                  type="text"
+                <select
+                  name="company_size"
+                  id="company_size"
                   placeholder="Company Size"
+                  ref={companySizeRef}
                   className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
-                />
+                >
+                  <option value="null">Company size</option>
+                  <option
+                    value="0-15"
+                    selected={client?.company_size === "0-15" ? true : false}
+                  >
+                    {" "}
+                    0-15{" "}
+                  </option>
+                  <option
+                    value="16-50"
+                    selected={client?.company_size === "16-50" ? true : false}
+                  >
+                    {" "}
+                    16-50{" "}
+                  </option>
+                  <option
+                    value="51-100"
+                    selected={client?.company_size === "51-100" ? true : false}
+                  >
+                    {" "}
+                    51-100
+                  </option>
+                </select>
               </div>
             </div>
           </div>
