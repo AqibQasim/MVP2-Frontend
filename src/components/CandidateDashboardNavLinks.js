@@ -9,38 +9,66 @@ import { useEffect, useState } from "react";
 function CandidateDashboardNavLinks({ candidateId }) {
   const pathname = usePathname();
   const [jobs, setJobs] = useState([]);
+  const [hasJobs, setHasJobs] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const cid = candidateId;
-  useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/get-job-candidates?job_status=hired-trial-interviewing&candidate_id=${cid}`,
+
+  const fetchJobs = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/get-job-candidates?job_status=hired-and-trial&candidate_id=${cid}`,
+      );
+      // if (!response.ok) {
+      //   throw new Error("Network response was not ok");
+      // }
+      const data = await response.json();
+      console.log(data);
+
+      let filteredData = null;
+
+      if (data.status === 200) {
+        filteredData = data?.data?.filter(
+          (item) => item.customer_info.customer_id === cid,
         );
-        // if (!response.ok) {
-        //   throw new Error("Network response was not ok");
-        // }
-        const data = await response.json();
-        console.log(data);
-
-        let filteredData = null;
-
-        if (data?.status === 200) {
-          filteredData = data?.data?.filter(
-            (item) => item.customer_info.customer_id === cid,
-          );
-        }
-
         setJobs(filteredData); // assuming the data is in the 'data' field
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  const fetchJobsInterviewing = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/get-job-candidates?job_status=hired-trial-interviewing&candidate_id=${cid}`,
+      );
+      // if (!response.ok) {
+      //   throw new Error("Network response was not ok");
+      // }
+      const data = await response.json();
+      console.log(data);
+
+      let filteredData = null;
+
+      if (data.status === 200) {
+        filteredData = data?.data?.filter(
+          (item) => item.customer_info.customer_id === cid,
+        );
+        setHasJobs(filteredData); // assuming the data is in the 'data' field
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchJobs();
+    fetchJobsInterviewing();
     console.log(jobs, "payment //////");
   }, []);
 
@@ -57,20 +85,25 @@ function CandidateDashboardNavLinks({ candidateId }) {
         />
       ),
     },
-    {
-      name: "Jobs",
-      href: `/candidate/${candidateId}/jobs`,
+    // {
+    //   name: "Jobs",
+    //   href: `/candidate/${candidateId}/jobs`,
 
-      icon: <SvgIconJob className="size-6" />,
-    },
+    //   icon: <SvgIconJob className="size-6" />,
+    // },
 
-    ...(jobs?.length >= 1
+    ...(hasJobs
       ? [
           {
             name: "Jobs",
             href: `/candidate/${candidateId}/jobs`,
             icon: <SvgIconJob className="size-6" />,
           },
+        ]
+      : []),
+
+    ...(jobs?.length >= 1
+      ? [
           {
             name: "Payout",
             href: `/candidate/${candidateId}/payment`,
