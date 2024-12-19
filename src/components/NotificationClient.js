@@ -183,6 +183,7 @@ function NotificationClient({ client_id }) {
       {notifications && notifications?.length > 0 ? (
         notifications?.map((notification) => (
           <ClientAlertMessage
+          notification_type={notification?.notification_type}
             key={notification?.notification_id} // Add key here using a unique identifier
             is_accepted={notification?.is_accepted}
             notification_id={notification?.notification_id}

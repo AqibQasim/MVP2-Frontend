@@ -13,7 +13,7 @@ import IconWithBg from "@/components/IconWithBg";
 //import TalentDescription from "./TalentDescription";
 import EmailSvg from "../../../../../public/icons/email.svg";
 import phone from "../../../../../public/icons/Call.png";
-import { cityTimezoneOffset } from "@/utils/cityTimezoneOffset";
+import { cityTimezoneOffset, relateCandidateTimezoneWithClientTimezone } from "@/utils/cityTimezoneOffset";
 import { formatDate } from "@/utils/utility";
 import ButtonCapsuleWhite from "@/components/ButtonCapsuleWhite";
 import Image from "next/image";
@@ -259,7 +259,7 @@ function Page({ params }) {
     {
       icon: "/icons/timer-start.svg",
       name: "Time zone",
-      content: cityTimezoneOffset(talent?.city || "No city set"),
+      content: relateCandidateTimezoneWithClientTimezone(talent?.city)//cityTimezoneOffset(talent?.city || "No city set"),
     },
     // {
     //   icon: "/icons/briefcase-tick.svg",

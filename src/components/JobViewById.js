@@ -17,7 +17,7 @@ import Skill from "@/components/Skill";
 import TagCard from "@/components/TagCard";
 import TalentDescription from "@/components/TalentDescription";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
-import { cityTimezoneOffset } from "@/utils/cityTimezoneOffset";
+import { cityTimezoneOffset, relateCandidateTimezoneWithClientTimezone } from "@/utils/cityTimezoneOffset";
 import { formatDate } from "@/utils/utility";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
@@ -167,7 +167,7 @@ function JobViewById({ job, user_role }) {
                 <TagCard
                   icon={timer_start}
                   title={"Time zone"}
-                  answer={cityTimezoneOffset(job.location)}
+                  answer={relateCandidateTimezoneWithClientTimezone(job.location)}
                 />
               </div>
             </div>
