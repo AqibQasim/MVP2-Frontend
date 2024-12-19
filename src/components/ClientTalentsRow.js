@@ -9,14 +9,26 @@ import CapsuleLink from "./CapsuleLink";
 
 function ClientTalentsRow({ talent }) {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const { client_id, job_posting_id } = talent;
   const { customer: candidate, job_postings: job } = talent;
+ 
+
+
+  const handleRowClick = () => {
+    router.push(`/client/${client_id}/talents/${candidate.customer_id}?job_posting_id=${job_posting_id}`);
+  };
 
   // console.log("SearchParams", searchParams);
 
   return (
     // <Table.Row onClick={handleRowClick}>
-    <Table.Row>
+    <div
+        className ="cursor-pointer"
+    >
+    <Table.Row
+    onClick={handleRowClick}
+    >
       <EntityCard
         entity={{
           name: candidate?.name,
@@ -49,14 +61,15 @@ function ClientTalentsRow({ talent }) {
         {formatDate(talent?.updatedAt)}
       </div>
       {/* <CapsuleLink className="ml-auto" href={`${talent.id}`}> */}
-      <CapsuleLink
+      {/* <CapsuleLink
         className="ml-auto"
         href={`/client/${client_id}/talents/${candidate.customer_id}?job_posting_id=${job_posting_id}`}
       >
         {" "}
         view talent{" "}
-      </CapsuleLink>
+      </CapsuleLink> */}
     </Table.Row>
+    </div>
   );
 }
 

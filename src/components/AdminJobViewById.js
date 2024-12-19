@@ -47,6 +47,7 @@ function AdminJobViewById({ job, setShowForm }) {
 
   const autoRefresh = () => {
     router.refresh();
+    window.location.reload();
   };
 
   //console.log(first)
@@ -206,7 +207,7 @@ function AdminJobViewById({ job, setShowForm }) {
   };
 
   const handleHiring = async () => {
-    const customPrice = (assignedCandidates.hourly_rate * 100) * 80;
+    const customPrice = assignedCandidates.hourly_rate * 100 * 80;
 
     try {
       // Fetch client secret for subscription
@@ -354,9 +355,9 @@ function AdminJobViewById({ job, setShowForm }) {
     handleChangeStatus();
   }, [changeStatus]);
 
-   useEffect(() => {
-     const fetchCustomer = async () => {
-      if (stripeClientId){
+  useEffect(() => {
+    const fetchCustomer = async () => {
+      if (stripeClientId) {
         try {
           const response = await fetch("/api/get-customer", {
             method: "POST",
@@ -376,12 +377,11 @@ function AdminJobViewById({ job, setShowForm }) {
         } catch (error) {
           console.error("Error fetching customer:", error);
         }
-
       }
-     };
+    };
 
-     fetchCustomer();
-   }, [stripeClientId]);
+    fetchCustomer();
+  }, [stripeClientId]);
 
   useEffect(() => {
     // console.log(changeStatus)
@@ -503,8 +503,6 @@ function AdminJobViewById({ job, setShowForm }) {
   //     },
   //     [jobQuestionLength],
   //   );
-
-
 
   return (
     <>
@@ -690,7 +688,8 @@ function AdminJobViewById({ job, setShowForm }) {
                 {" "}
                 view details{" "}
               </CapsuleLink>
-              {assignedCandidates?.talent_status !== "open" && job?.job_status!=="closed" ? (
+              {assignedCandidates?.talent_status !== "open" &&
+              job?.job_status !== "closed" ? (
                 <div className="mx-3 mt-5">
                   Status : {assignedCandidates?.talent_status}
                 </div>
@@ -701,11 +700,10 @@ function AdminJobViewById({ job, setShowForm }) {
               <div>There&apos;s no assigned candidates yet</div>
               <div
                 onClick={() => setShowForm(true)}
-                className="cursor-pointer text-primary-tint-20 hover:text-primary "
+                className="cursor-pointer text-primary-tint-20 hover:text-primary"
               >
                 Click here to Assign
               </div>
-              
             </div>
           )}
         </div>
