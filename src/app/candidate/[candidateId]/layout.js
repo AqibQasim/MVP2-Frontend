@@ -26,7 +26,8 @@ async function layout({ children, params }) {
     !candidate?.commitment ||
     !candidate?.hourly_rate;
 
-  if (showCandidateInformationForm) return <CandidateProfileInfo />;
+  if (showCandidateInformationForm)
+    return <CandidateProfileInfo candidate={candidate} />;
 
   console.log("candidateId here ", candidateId);
   console.log("params are : ", params);
