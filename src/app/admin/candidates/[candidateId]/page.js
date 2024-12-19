@@ -94,7 +94,7 @@ function Page({ params }) {
 
       if (res.status === 200) {
         console.log("Status updated successfully!");
-        router.refresh();
+        window.location.reload();
       } else {
         console.error("Status change failed:", res);
       }
@@ -187,6 +187,8 @@ function Page({ params }) {
 
         if (result.status === 200) {
           console.log("Price updated successfully!");
+          window.location.reload();
+          router?.refresh();
         } else {
           console.error("Failed to update profile.");
         }
@@ -195,6 +197,7 @@ function Page({ params }) {
       }
       setIsEditPrice(false);
       router?.refresh();
+      window.location.reload();
     }
   }, []);
 

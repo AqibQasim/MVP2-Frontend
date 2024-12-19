@@ -234,7 +234,8 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
                         calculateCumulativeMean(
                           selectedCandidate?.result?.technicalRating,
                           selectedCandidate?.result?.softskillRating,
-                          codingResult?.data?.result?.technicalRating,
+                          null
+                          //codingResult?.data?.result?.technicalRating,
                         ),
                       ),
                     ),
@@ -245,7 +246,8 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
                       calculateCumulativeMean(
                         selectedCandidate?.result?.technicalRating,
                         selectedCandidate?.result?.softskillRating,
-                        codingResult?.data?.result?.technicalRating,
+                        null
+                        //codingResult?.data?.result?.technicalRating,
                       ),
                     ),
                   )}
@@ -272,6 +274,8 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
                         calculateCumulativeMean(
                           selectedCandidate?.result?.technicalRating,
                           selectedCandidate?.result?.softskillRating,
+                          null
+                          //codingResult?.data?.result?.technicalRating,
                         ),
                       ),
                     ),

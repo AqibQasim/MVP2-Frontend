@@ -10,17 +10,28 @@ import SvgIconRequestInterview from "@/svgs/SvgIconRequestInterview";
 import { PopupModal, useCalendlyEventListener } from "react-calendly";
 import { useState, useEffect, useRef } from "react";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
-import { useParams } from "next/navigation";
+import { useParams,useRouter } from "next/navigation";
 import urlBase64ToUint8Array from "@/utils/urlBase64ToUint8Array";
+
 
 function ClientRecommendedRow({ recommended }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [isInterviewScheduled, setIsInterviewScheduled] = useState(false);
   const buttonRef = useRef(null);
+  
+  const router = useRouter();
   const params = useParams();
+  const client_id = params?.clientId;
+
 
   const { customer: candidate, job_postings: job } = recommended;
+
+
+  
+  const handleRowClick = () => {
+    router.push(`/client/${client_id}/talents/${candidate.customer_id}?job_posting_id=${job?.job_posting_id}`);
+  };
 
   useEffect(() => {
     // console.log("Requesting notification permission...");
@@ -176,8 +187,14 @@ function ClientRecommendedRow({ recommended }) {
 
   return (
     <>
-      <Table.Row>
-        <EntityCard
+
+       <div
+              className ="cursor-pointer"
+           >
+           <Table.Row
+           onClick={handleRowClick}
+           >
+         <EntityCard
           entity={{
             name: candidate?.name,
             profession: candidate?.specialization,
@@ -217,6 +234,7 @@ function ClientRecommendedRow({ recommended }) {
           </Capsule>
         )}
       </Table.Row>
+      </div>
 
       <PopupModal
         url="https://calendly.com/co-ventech01/30min"
