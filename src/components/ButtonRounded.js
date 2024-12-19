@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-function ButtonRounded({ className = "", children, ...rest }) {
+function ButtonRounded({ className = "", children, onPress, ...rest }) {
   // Use one and only one child component
   const clonedChild = React.isValidElement(children)
     ? React.cloneElement(children, {
@@ -10,7 +10,7 @@ function ButtonRounded({ className = "", children, ...rest }) {
     : children;
 
   return (
-    <button
+    <button onClick={onPress}
       className={`${className} svg-wrapper group rounded-full bg-grey-primary-tint-90 p-1.5 text-2xl text-grey-primary-shade-20`}
       {...rest}
     >

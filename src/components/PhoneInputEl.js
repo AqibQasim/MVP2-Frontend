@@ -3,7 +3,7 @@
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 
-function PhoneInputEl({ className, phone, setPhone }) {
+function PhoneInputEl({ className, phone, setPhone, setCountry }) {
   // const [phone, setPhone] = useState("");
 
   function handlePhoneChange() {}
@@ -18,7 +18,9 @@ function PhoneInputEl({ className, phone, setPhone }) {
         }}
         defaultCountry="pk"
         value={phone}
-        onChange={(phone) => setPhone(phone)}
+        onChange={(phone,{country}) => {
+          setCountry(country.name)
+          setPhone(phone)}}
         // value={phone}
         // onChange={(phone) => setPhone(phone)}
       />
