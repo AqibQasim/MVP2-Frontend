@@ -193,7 +193,7 @@ function Page({ params }) {
           <div className="flex-1">
             <div>
               <Heading xm>About</Heading>
-              <Capsule className="flex w-fit flex-wrap items-center gap-2">
+              <Capsule className="flex w-fit flex-wrap items-center gap-2" style={{ textTransform: "lowercase" }}>
                 <Image src={EmailSvg} />
                 {client?.email}
               </Capsule>

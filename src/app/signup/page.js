@@ -25,6 +25,7 @@ function Page() {
     phoneNumber: "",
     password: "",
     countryCode: "+92",
+    country: "",
     confirmPassword: "",
   });
   const [confirmTerms, setConfirmTerms] = useState(false);
@@ -53,7 +54,8 @@ function Page() {
         email: form.email,
         name: form.firstName + " " + form.lastName,
         password: form.password,
-        contact_no: `${form.countryCode ? form.countryCode.split(" ")[0] : ""}${form.phoneNumber}`,
+        country: form.country,
+        contact_no: `${form.phoneNumber}`,
         user_role,
         method: "signup",
       },
@@ -230,7 +232,7 @@ function Page() {
             // User not found, proceed to send email
             const generatedotp = generateOtp();
             setotp(generatedotp);
-            // console.log(generatedotp);
+            console.log(generatedotp);
 
             const payload = {
               endpoint: "send-email",
@@ -287,6 +289,15 @@ function Page() {
 
     // Real-time validation
     validateField("phoneNumber", phone);
+  }
+
+  function handleCountryChange(c) {
+    console.log("qs5ewrfdgfsofdgf", c);
+    setForm({ ...form, country:c });
+    //console.log(form.country);
+
+    // Real-time validation
+    //validateField("phoneNumber", phone);
   }
 
   const isFormInvalid = useMemo(() => {
@@ -485,6 +496,8 @@ function Page() {
                 className="mt-3"
                 phone={form.phoneNumber}
                 setPhone={handlePhoneChange}
+                setCountry={handleCountryChange}
+                  
               />
 
               {/* Phone Number with Country Code */}

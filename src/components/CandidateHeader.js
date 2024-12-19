@@ -5,6 +5,7 @@ import { formatDate } from "@/utils/utility";
 import { useState, useEffect, useRef } from "react";
 import ButtonCapsule from "./ButtonCapsule";
 import ButtonRounded from "./ButtonRounded";
+import { useRouter } from "next/navigation";
 import EntityCard from "./EntityCard";
 import { PopupModal, useCalendlyEventListener } from "react-calendly";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
@@ -17,6 +18,7 @@ function CandidateHeader({ candidate }) {
   const buttonRef = useRef(null);
   const [isCandidate, setIsCandidate] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const router = useRouter();
 
   // Options for the dropdown
   const options = [
@@ -132,7 +134,7 @@ function CandidateHeader({ candidate }) {
               }}
             />
 
-            {isCandidate && (
+            {/* {isCandidate && (
               <div>
                 <ButtonCapsule
                   ref={buttonRef}
@@ -142,8 +144,15 @@ function CandidateHeader({ candidate }) {
                   Schedule a Call
                 </ButtonCapsule>
               </div>
-            )}
-            <ButtonRounded>
+            )} */}
+
+            <ButtonRounded
+              onPress={() =>
+                router.push(
+                  `/candidate/${candidate?.customer_id}/notifications`,
+                )
+              }
+            >
               <SvgIconNotification />
             </ButtonRounded>
           </div>

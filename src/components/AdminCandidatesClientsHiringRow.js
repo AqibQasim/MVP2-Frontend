@@ -1,13 +1,10 @@
 "use client";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import SkillIconWithBg from "./SkillIconWithBg";
-import Table from "./Table";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
-import ChangeStatusDropdown from "./ChangeStatusDropdown";
-import { useSelector } from "react-redux";
 import LoaderIcon from "@/svgs/LoaderIcon";
-import Capsule from "./Capsule";
 import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import ChangeStatusDropdown from "./ChangeStatusDropdown";
+import Table from "./Table";
 
 function AdminCandidatesClientsHiringRow({
   candidate,
@@ -24,7 +21,8 @@ function AdminCandidatesClientsHiringRow({
   const [paymentMethodSet, isPaymentMethodSet] = useState(false);
 
   const autoRefresh = () => {
-    router.refresh();
+    window.location.reload();
+    // router.refresh();
   };
 
   //console.log(first)
@@ -515,9 +513,7 @@ function AdminCandidatesClientsHiringRow({
                         talent_status: selected_status,
                         response_status,
                       });
-                    } else if (
-                      selected_status === "hired"
-                    ) {
+                    } else if (selected_status === "hired") {
                       const stripeId = await getClientStripe(client?.client_id);
                       if (stripeId) {
                         const paymentMethodId = await fetchCustomer(stripeId);
@@ -550,8 +546,8 @@ function AdminCandidatesClientsHiringRow({
                         talent_status: selected_status,
                         response_status,
                       });
-                    }else if(selected_status==="trial"){
-                      response_status="accept"
+                    } else if (selected_status === "trial") {
+                      response_status = "accept";
                       setChangeStatus({
                         customer_id: candidate?.customer_id,
                         job_posting_id: job?.job_posting_id,

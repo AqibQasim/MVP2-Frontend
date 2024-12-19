@@ -1,16 +1,26 @@
 import SvgIconWork from "@/svgs/SvgIconWork";
-import { useParams } from "next/navigation";
+import { useParams,useRouter } from "next/navigation";
 import Capsule from "./Capsule";
-import CapsuleLink from "./CapsuleLink";
 import EntityCard from "./EntityCard";
 import SkillIconWithBg from "./SkillIconWithBg";
 import Table from "./Table";
 
 function ClientJobsOverviewRow({ job }) {
   const params = useParams();
+  const router = useRouter();
   const clientId = params?.clientId;
+
+  const handleRowClick = () => {
+    router.push(`/client/${clientId}/jobs/${job.job_posting_id}`);
+  };
   return (
-    <Table.Row>
+     <div
+        className ="cursor-pointer"
+        >
+      <Table.Row
+        onClick={handleRowClick}
+        >
+    
       <EntityCard
         icon={<SvgIconWork className="relative -right-[1.3px]" />}
         entity={{
@@ -36,14 +46,8 @@ function ClientJobsOverviewRow({ job }) {
       <Capsule className="status mx-auto w-max" status={job.status}>
         {job.status}
       </Capsule>
-      <CapsuleLink
-        className="action ml-auto"
-        href={`/client/${clientId}/jobs/${job.job_posting_id}`}
-      >
-        {" "}
-        view details{" "}
-      </CapsuleLink>
     </Table.Row>
+    </div>
   );
 }
 
