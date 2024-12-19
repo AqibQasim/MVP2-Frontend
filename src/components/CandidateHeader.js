@@ -18,7 +18,7 @@ function CandidateHeader({ candidate }) {
   const buttonRef = useRef(null);
   const [isCandidate, setIsCandidate] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const router= useRouter()
+  const router = useRouter();
 
   // Options for the dropdown
   const options = [
@@ -134,7 +134,7 @@ function CandidateHeader({ candidate }) {
               }}
             />
 
-            {isCandidate && (
+            {/* {isCandidate && (
               <div>
                 <ButtonCapsule
                   ref={buttonRef}
@@ -144,8 +144,15 @@ function CandidateHeader({ candidate }) {
                   Schedule a Call
                 </ButtonCapsule>
               </div>
-            )}
-            <ButtonRounded onPress={()=>router.push(`/candidate/${candidate?.customer_id}/notifications`)}>
+            )} */}
+
+            <ButtonRounded
+              onPress={() =>
+                router.push(
+                  `/candidate/${candidate?.customer_id}/notifications`,
+                )
+              }
+            >
               <SvgIconNotification />
             </ButtonRounded>
           </div>
