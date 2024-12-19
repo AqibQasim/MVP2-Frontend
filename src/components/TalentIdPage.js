@@ -122,7 +122,7 @@ function TalentIdPage({ client_id, customer_id }) {
         <div className="top flex items-center justify-start gap-3">
           {/* <ButtonBack /> */}
           <ButtonCapsuleWhite />
-          <Heading sm>Profile Overview</Heading>
+          <Heading sm>Candidate Profile </Heading>
           <Capsule className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
             {talent?.customer?.talent_status} {formatDate(talent?.updatedAt)} - {newEndTrialDate}
           </Capsule>

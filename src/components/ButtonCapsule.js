@@ -5,7 +5,7 @@ function ButtonCapsule({ className, children, onPress, id, disable=false }) {
     <button
       onClick={onPress}
       disabled={disable}
-      className={`${className} gap-4.5 inline-flex items-center justify-between rounded-[2.5rem] bg-blue-500 hover:bg-primary p-1.5 pl-5 text-sm font-bold capitalize text-neutral-white`}
+      className={`${className} gap-4.5 inline-flex items-center justify-between rounded-[2.5rem] bg-blue-700 hover:bg-primary p-1.5 pl-5 text-sm font-bold capitalize text-neutral-white`}
       id={id}
       
     >

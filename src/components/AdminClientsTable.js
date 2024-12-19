@@ -296,7 +296,7 @@ Co-ventech
                   setShowForm(true);
                   handleGenerateContent();
                 }}
-                className="hover:bg-primary-hover active:bg-primary-hover focus:ring-primary-hover rounded bg-primary-tint-20 px-8 py-2 text-base font-medium text-white transition-colors duration-300 ease-in-out hover:bg-primary focus:outline-none focus:ring focus:ring-offset-2"
+                className="hover:bg-primary-hover active:bg-primary-hover focus:ring-primary-hover rounded bg-blue-700 px-8 py-2 text-base font-medium text-white transition-colors duration-300 ease-in-out hover:bg-primary focus:outline-none focus:ring focus:ring-offset-2"
               >
                 Invite A New Client +
               </button>
