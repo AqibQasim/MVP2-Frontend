@@ -182,11 +182,6 @@ export async function referCandidateToClientAction(params) {
         "Your hourly rate can not be less than and/or equal to your proposed hourly rate",
     };
   }
-  if (hourly_rate <= 3 || hourly_rate >= 300) {
-    return {
-      error: "Hourly Rate should be in between 3 to 300",
-    };
-  }
 
   const { error, data } = await referCandidate({
     client_id,
@@ -234,11 +229,6 @@ export async function updateCandidateProfileAction(formData) {
     return {
       error: "Valid hourly rate is required and it should be a number.",
     };
-  if (hourly_rate <= 3 || hourly_rate >= 300) {
-    return {
-      error: "Hourly Rate should be in between 3 to 300",
-    };
-  }
   if (!candidateId) return { error: "Valid candidate id is required." };
 
   const updateProfileData = {
