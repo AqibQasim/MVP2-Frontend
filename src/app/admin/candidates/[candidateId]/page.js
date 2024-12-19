@@ -94,7 +94,7 @@ function Page({ params }) {
 
       if (res.status === 200) {
         console.log("Status updated successfully!");
-        router.refresh();
+        window.location.reload();
       } else {
         console.error("Status change failed:", res);
       }
