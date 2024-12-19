@@ -182,11 +182,6 @@ export async function referCandidateToClientAction(params) {
         "Your hourly rate can not be less than and/or equal to your proposed hourly rate",
     };
   }
-  if (hourly_rate <= 3 || hourly_rate >= 300) {
-    return {
-      error: "Hourly Rate should be in between 3 to 300",
-    };
-  }
 
   const { error, data } = await referCandidate({
     client_id,
@@ -209,11 +204,12 @@ export async function updateCandidateProfileAction(formData) {
   console.log("stuff from action");
   const experience = formData.get("experience");
   const commitment = formData.get("commitment");
+  const country = formData.get("country");
+  const city = formData.get("city");
   const hourly_rate = formData.get("hourly_rate");
   const specialization = formData.get("specialization");
   const candidateId = formData.get("candidateId");
 
-  console.log("log from action ", specialization);
   // Validations
   if (
     !experience ||
@@ -230,15 +226,20 @@ export async function updateCandidateProfileAction(formData) {
         "Specialization is required and should contain only letters, spaces, or hyphens, e.g., 'Front-end Developer'.",
     };
   }
+  if (!country || !/^[a-zA-Z\s\-]+$/.test(country)) {
+    return {
+      error: "Country is required.",
+    };
+  }
+  if (!city || !/^[a-zA-Z\s\-]+$/.test(city)) {
+    return {
+      error: "City is required.",
+    };
+  }
   if (!hourly_rate || isNaN(hourly_rate))
     return {
       error: "Valid hourly rate is required and it should be a number.",
     };
-  if (hourly_rate <= 3 || hourly_rate >= 300) {
-    return {
-      error: "Hourly Rate should be in between 3 to 300",
-    };
-  }
   if (!candidateId) return { error: "Valid candidate id is required." };
 
   const updateProfileData = {
@@ -246,6 +247,8 @@ export async function updateCandidateProfileAction(formData) {
     commitment,
     hourly_rate,
     specialization,
+    country,
+    city,
   };
 
   // Api call
