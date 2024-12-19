@@ -10,23 +10,60 @@ import PaymentMethodBank from "@/components/PaymentMethodBank";
 const nextPaymentDate = "20-0:00";
 
 export default function CandidateIdPaymentPage({ params }) {
-  const [paymentDetails, setPaymentDetails] = useState(null);
+  // const [paymentDetails, setPaymentDetails] = useState(null);
   const [paymentHistory, setPaymentHistory] = useState(null);
   const [customerId, setStripeAccId] = useState(null);
   const [walletBalance, setWalletBalance] = useState(0)
+  const [customer, setCustomer] = useState(null);
 
-  // Fetch payment details and payment history
-  const getPaymentDetails = () => {
-    const payload = {
-      endpoint: `get-candidate-bank-account?customer_id=${params?.candidateId}`,
-      method: "GET",
-    };
-    mvp2ApiHelper(payload)
-      .then((result) => {
-        setPaymentDetails(result?.data?.data || {});
-      })
-      .catch((error) => console.error("Error fetching payment details:", error));
+
+useEffect(() => {
+  if (!params?.candidateId) {
+    console.log("Candidate ID is not defined");
+    return;
+  }
+
+  const fetchData = async () => {
+    try {
+      if (params?.candidateId) {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/customers?customer_id=${params?.candidateId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const result = await response.json();
+        console.log("customer dATA", result?.data?.email);
+        setCustomer(result?.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
+
+  fetchData();
+}, [params?.candidateId]);
+
+  
+
+  // // Fetch payment details and payment history
+  // const getPaymentDetails = () => {
+  //   const payload = {
+  //     endpoint: `get-candidate-bank-account?customer_id=${params?.candidateId}`,
+  //     method: "GET",
+  //   };
+  //   mvp2ApiHelper(payload)
+  //     .then((result) => {
+  //       setPaymentDetails(result?.data?.data || {});
+  //     })
+  //     .catch((error) => console.error("Error fetching payment details:", error));
+  // };
 
   const getPaymentHistory = () => {
     const payload = {
@@ -42,7 +79,7 @@ export default function CandidateIdPaymentPage({ params }) {
 
   // Fetch data when component mounts or candidateId changes
   useEffect(() => {
-    getPaymentDetails();
+    // getPaymentDetails();
     getPaymentHistory();
   }, [params?.candidateId]);
 
@@ -127,18 +164,21 @@ export default function CandidateIdPaymentPage({ params }) {
 
     return (
       <>
-        {(!paymentDetails || Object.keys(paymentDetails).length === 0) ? (
+        {/* {(!paymentDetails || Object.keys(paymentDetails).length === 0) ? (
           <CandidateAddPayment />
-        ) : (
-          <div className="space-y-2">
-            <CandidatePaymentHistorySummary
-              total_payment_by_candidate={walletBalance ? -walletBalance : 0}
-              // total_hires={uniqueJobPostings}
-              // last_payment={lastPaymentDate}
-              // next_payment={`${nextPaymentDate} - 0:00`}
-            />
-    
-            <div className="flex-grow gap-8 rounded-4xl bg-neutral-white px-8 py-10">
+        ) : ( */}
+        <div className="space-y-2">
+          <CandidatePaymentHistorySummary
+            total_payment_by_candidate={walletBalance ? -walletBalance : 0}
+            walletBalance={walletBalance}
+            customerId={customerId}
+            customer={customer}
+            // total_hires={uniqueJobPostings}
+            // last_payment={lastPaymentDate}
+            // next_payment={`${nextPaymentDate} - 0:00`}
+          />
+
+          {/* <div className="flex-grow gap-8 rounded-4xl bg-neutral-white px-8 py-10">
               <Heading sm>Transaction Details</Heading>
               <p className="text-grey-primary-shade-30">
                 To change which method is preferred, edit your transaction method.
@@ -152,11 +192,11 @@ export default function CandidateIdPaymentPage({ params }) {
                   onSelect={() => console.log("Selected Payment Method")}
                 />
               </div>
-            </div>
-    
-            <CandidatePaymentHistoryTable paymentHistory={paymentHistory} />
-          </div>
-        )}
+            </div> */}
+
+          <CandidatePaymentHistoryTable paymentHistory={paymentHistory} />
+        </div>
+        {/* )} */}
       </>
     );
   }
