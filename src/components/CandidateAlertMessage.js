@@ -4,7 +4,7 @@ import ButtonCapsule from "./ButtonCapsule";
 import Capsule from "./Capsule";
 import ButtonCapsuleWhite from "./ButtonCapsuleWhite";
 
-const ClientAlertMessage = ({
+const CandidateAlertMessage = ({
   showMessage,
   notification_type,
   msgText,
@@ -55,7 +55,7 @@ const ClientAlertMessage = ({
             <SvgIconWork className="relative -right-[1.3px] mr-3" />
             <p className={"w-[30.5rem]"}>{msgText}</p>
           </div>
-          {is_accepted === null &&
+          {/* {is_accepted === null &&
             notification_id != buttonType.notification_id && (
               <div className="pr-4">
                 <ButtonCapsule onPress={onAccept} className={"w-[8rem]"}>
@@ -82,11 +82,11 @@ const ClientAlertMessage = ({
             //   <div className="text-black">Declined</div>
             // </ButtonCapsule>
             <p className="mr-4">Declined</p>
-          )}
+          )} */}
         </div>
       </div>
     </>
   );
 };
 
-export default ClientAlertMessage;
+export default CandidateAlertMessage;

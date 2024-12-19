@@ -1,5 +1,5 @@
 import SvgIconWork from "@/svgs/SvgIconWork";
-import { useParams } from "next/navigation";
+import { useParams,useRouter } from "next/navigation";
 import Capsule from "./Capsule";
 import CapsuleLink from "./CapsuleLink";
 import EntityCard from "./EntityCard";
@@ -8,10 +8,20 @@ import Table from "./Table";
 
 function ClientJobsRow({ job }) {
   console.log(job)
+  const router = useRouter();
   const params = useParams();
   const clientId = params?.clientId;
+
+  const handleRowClick = () => {
+    router.push(`/client/${clientId}/jobs/${job.job_posting_id}`);
+  };
   return (
-    <Table.Row>
+    <div
+        className ="cursor-pointer"
+    >
+    <Table.Row
+    onClick={handleRowClick}
+    >
       <EntityCard
         icon={<SvgIconWork className="relative -right-[1.3px]" />}
         entity={{
@@ -43,21 +53,9 @@ function ClientJobsRow({ job }) {
       >
         <p>{job.status}</p>
       </Capsule>
-      {/* <Capsule
-        className="mx-auto w-max !bg-primary-tint-100"
-        icon={<IconWithBg icon={<SvgIconJobStatus status="hired" />} />}
-      >
-        view talent
-      </Capsule> */}
-      {/* <CapsuleLink className="ml-auto" href={`${job.id}`}> */}
-      <CapsuleLink
-        className="ml-auto"
-        href={`/client/${clientId}/jobs/${job.job_posting_id}`}
-      >
-        {" "}
-        view details{" "}
-      </CapsuleLink>
+     
     </Table.Row>
+    </div>
   );
 }
 
