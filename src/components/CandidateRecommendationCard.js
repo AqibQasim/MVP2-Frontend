@@ -19,7 +19,7 @@ function CandidateRecommendationCard({ client = {}, handleOpenOverlay }) {
         <div className="flex items-start justify-between">
           <EntityCard
             entity={{
-              image: "/avatars/avatar-1.png",
+              image: "/avatars/avatar-2.png",
               name: "Front-end Developer",
               profession: client.name,
             }}

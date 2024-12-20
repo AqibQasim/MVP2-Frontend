@@ -44,7 +44,7 @@ function CandidateReportCard({ candidateReport, handleOpenOverlay }) {
           <div className="flex items-start justify-between">
             <EntityCard
               entity={{
-                image: "/avatars/avatar-1.png",
+                image: "/avatars/avatar-2.png",
                 name: candidateReport?.customer?.name,
                 profession: candidateReport?.customer?.specialization,
               }}
@@ -57,7 +57,11 @@ function CandidateReportCard({ candidateReport, handleOpenOverlay }) {
                 <p> {candidateReport?.customer?.job_type} </p>
               </Capsule>
               <Capsule icon={<IconWithBg icon="$" />}>
-                <p className="">{formatCurrencyNoDecimals(candidateReport?.customer?.hourly_rate)}</p>
+                <p className="">
+                  {formatCurrencyNoDecimals(
+                    candidateReport?.customer?.hourly_rate,
+                  )}
+                </p>
               </Capsule>
             </div>
           </div>
@@ -74,16 +78,13 @@ function CandidateReportCard({ candidateReport, handleOpenOverlay }) {
               <span className="h-[1px] w-2 rounded-full bg-grey-primary-tint-40"></span>
               <Skill score={score} />
             </div>
-            <ButtonCapsule
-              onPress={handleOpenOverlay}
-            >
+            <ButtonCapsule onPress={handleOpenOverlay}>
               {recommendationStatus}
             </ButtonCapsule>
             {/* ScheduleInterview */}
             {/* <ScheduleInterviewModal /> */}
           </div>
         </div>
-        
       </div>
     </>
   );

@@ -17,7 +17,7 @@ function ClientPaymentHistoryRow({ payment }) {
       <EntityCard
         icon={
           <Image
-            src={"/avatars/avatar-1.png"}
+            src={"/avatars/avatar-2.png"}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover"
@@ -29,16 +29,14 @@ function ClientPaymentHistoryRow({ payment }) {
         }}
       />
       {/* <Capsule>{payment.jobType}</Capsule> */}
-      <div className="date text-nowrap text-center">
-        {payment.date}
-      </div>
+      <div className="date text-nowrap text-center">{payment.date}</div>
       <Capsule status={payment?.status} className="status !text-center">
         <p>{payment.status}</p>
       </Capsule>
       <div className="amount text-center">{payment.amount}</div>
       <div className="amount text-center">{payment.invoice}</div>
       <Capsule
-        className="ml-auto !bg-primary-tint-100 cursor-pointer"
+        className="ml-auto cursor-pointer !bg-primary-tint-100"
         icon={<IconWithBg icon={<SvgIconDownload />} />}
         onClick={() => handleReceiptClick(payment.receipt_url)}
       >
