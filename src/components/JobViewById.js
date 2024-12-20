@@ -30,7 +30,7 @@ function JobViewById({ job, user_role }) {
 
   const fetchJob = () => {
     const payload = {
-      endpoint: `get-jobs?job_posting_id=${job?.job_posting_id}&talent_status=interviewing`,
+      endpoint: `get-jobs?job_posting_id=${job?.job_posting_id}&talent_status=${job?.job_status}`,
       method: "GET",
     };
     mvp2ApiHelper(payload).then((value) => {
@@ -64,30 +64,30 @@ function JobViewById({ job, user_role }) {
     }
   };
 
-  const createApplicationQuestions = useCallback(
-    ({ job_questions, length }) => {
-      const questions = [];
+  // const createApplicationQuestions = useCallback(
+  //   ({ job_questions, length }) => {
+  //     const questions = [];
 
-      for (let i = 0; i < length; i++) {
-        console.log(i);
-        questions.push(
-          <div
-            key={i}
-            className="flex flex-row gap-1"
-            style={{ color: "#A3A3A3" }}
-          >
-            <div className="w-4">
-              <div>{i + 1}. </div>
-            </div>
-            <div className="w-auto">{job_questions[i]}</div>
-          </div>,
-        );
-      }
+  //     for (let i = 0; i < length; i++) {
+  //       console.log(i);
+  //       questions.push(
+  //         <div
+  //           key={i}
+  //           className="flex flex-row gap-1"
+  //           style={{ color: "#A3A3A3" }}
+  //         >
+  //           <div className="w-4">
+  //             <div>{i + 1}. </div>
+  //           </div>
+  //           <div className="w-auto">{job_questions[i]}</div>
+  //         </div>,
+  //       );
+  //     }
 
-      return questions;
-    },
-    [jobQuestionLength],
-  );
+  //     return questions;
+  //   },
+  //   [jobQuestionLength],
+  // );
 
   return (
     <div className="flex flex-row gap-2">
@@ -204,7 +204,7 @@ function JobViewById({ job, user_role }) {
         <div className="flex h-auto w-auto flex-row items-center justify-between">
           <Heading className="text-[24px]">Status</Heading>
           <Capsule className="items-center text-primary-tint-20">
-            Interview in progress
+            {job?.job_status}
           </Capsule>
         </div>
         <Hr />

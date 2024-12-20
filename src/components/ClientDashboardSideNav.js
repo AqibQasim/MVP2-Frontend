@@ -7,7 +7,7 @@ const filter = "accept";
 
 async function ClientDashboardSideNav({ clientId }) {
   const [recommendedCandidates, jobs] = await Promise.all([
-    getAllRecommendedCandidates(clientId),
+    getAllRecommendedCandidates(clientId,"all","referred"),
     getClientJobs(clientId),
   ]);
   const { data: hiredTalents, error } = await getAllRecommendedCandidates(
@@ -22,7 +22,7 @@ async function ClientDashboardSideNav({ clientId }) {
         numJobs={jobs.length}
         numRecommended={
           recommendedCandidates.data?.filter(
-            (v) => v.customer.talent_status === "interviewing",
+            (v) => v.customer?.talent_status === "referred",
           )?.length
         }
         numHired={

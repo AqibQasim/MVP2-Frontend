@@ -80,15 +80,15 @@ export default async function Page({ params }) {
 
   return (
     <div className="space-y-2">
-      {recommendedCandidates?.customer &&
-        recommendedCandidates?.job_postings && (
+      {/* {recommendedCandidates?.customer &&
+        recommendedCandidates?.job_postings && ( */}
           <ClientRecommendationCard
             admin_hourly_rate={recommendedCandidates?.hourly_rate}
             client={client}
             recommendedCandidate={recommendedCandidates?.customer}
             recommendedForJob={recommendedCandidates?.job_postings}
           />
-        )}
+        {/* )} */}
       {jobs && <ClientJobsOverviewTable jobs={jobs} />}
       {<ClientEmployeesTable client_id={params?.clientId} />}
     </div>

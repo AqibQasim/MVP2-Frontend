@@ -437,6 +437,7 @@ export async function getAllRecommendedCandidates(
   job_status = null,
 ) {
   const hired = "accept";
+  console.log(clientId)
   const payload = {
     endpoint: `get-all-candidates-of-clients-job?client_id=${clientId}`,
     method: "GET",
@@ -465,6 +466,14 @@ export async function getAllRecommendedCandidates(
   }
 
   if (job_status === "interviewing") {
+    candidates = result?.data.data?.filter(
+      (candidate) =>
+        (candidate.client_response === "pending" || candidate?.client_response==="scheduled") &&
+        candidate?.customer?.talent_status === job_status,
+    );
+  }
+
+  if (job_status === "referred") {
     candidates = result?.data.data?.filter(
       (candidate) =>
         (candidate.client_response === "pending" || candidate?.client_response==="scheduled") &&

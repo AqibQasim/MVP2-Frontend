@@ -192,16 +192,18 @@ function ClientRecommendedRow({ recommended }) {
               className ="cursor-pointer"
            >
            <Table.Row
-           onClick={handleRowClick}
            >
          <EntityCard
+         onClick = {handleRowClick}
           entity={{
             name: candidate?.name,
             profession: candidate?.specialization,
             image: "/avatars/avatar-1.png",
           }}
         />
-        <div className="skills flex items-center justify-center gap-1.5 text-center">
+        <div  
+            onClick = {handleRowClick}
+           className="skills flex items-center justify-center gap-1.5 text-center">
           {job.skills.length > 1 ? (
             <>
               <SkillIconWithBg icon={job.skills[0]} skill={job.skills[0]} />
@@ -211,9 +213,15 @@ function ClientRecommendedRow({ recommended }) {
             <SkillIconWithBg icon={job.skills[0]} skill={job.skills[0]} />
           )}
         </div>
-        <div className="job-title text-center">{job.position}</div>
-        <div className="experience text-center">{candidate.experience}</div>
-        <Capsule>{candidate.commitment}</Capsule>
+        <div 
+         onClick = {handleRowClick}
+        className="job-title text-center">{job.position}</div>
+        <div 
+         onClick = {handleRowClick}
+        className="experience text-center">{candidate.experience}</div>
+        <Capsule
+         onClick = {handleRowClick}
+        >{candidate.commitment}</Capsule>
         {isInterviewScheduled ? (
           <Capsule
             className="ml-auto !bg-primary-tint-100 cursor-not-allowed"
@@ -224,7 +232,10 @@ function ClientRecommendedRow({ recommended }) {
           </Capsule>
         ) : (
           <Capsule
-            onClick={() => setIsOpen(true)}
+            onClick={() => {
+              console.log("dgyuawwifje0rgeopgneid")
+              setIsOpen(true)
+              }}
             ref={buttonRef}
             id = "root"
             className="ml-auto !bg-primary-tint-100"
