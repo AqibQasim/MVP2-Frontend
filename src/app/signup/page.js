@@ -33,8 +33,6 @@ function Page() {
   const [user_role, setUserRole] = useState("client");
   const [errors, setErrors] = useState({});
   const [termsError, setTermsError] = useState("");
-  console.log("termsError", termsError);
-  console.log("Checked?", confirmTerms);
   const [otp, setotp] = useState(null);
   const [alert, setAlert] = useState(false);
   const [isLoading, setisLoading] = useState(false);
@@ -210,7 +208,6 @@ function Page() {
     async (event) => {
       event.preventDefault();
       setTermsError("");
-      console.log("Confirm terms s", confirmTerms);
       if (!confirmTerms)
         return setTermsError(
           "Please accept the Terms of Service and Privacy Policy to proceed.",
