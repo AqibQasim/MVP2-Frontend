@@ -2,6 +2,7 @@
 import ClientEmployeesTable from "@/components/ClientEmployeesTable";
 import ClientEmptyScreen from "@/components/ClientEmptyScreen";
 import ClientJobsOverviewTable from "@/components/ClientJobsOverviewTable";
+import ClientProfileInfo from "@/components/ClientProfileInfo";
 import ClientRecommendationCard from "@/components/ClientRecommendationCard";
 import DashboardSection from "@/components/DashboardSection";
 import EmptyScreen from "@/components/EmptyScreen";
@@ -16,7 +17,7 @@ import urlBase64ToUint8Array from "@/utils/urlBase64ToUint8Array";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default async function Page({ params }) {
+export default function Page({ params }) {
   const router = useRouter();
   const filter = "accept";
   const [client, setClient] = useState(null);
@@ -32,7 +33,7 @@ export default async function Page({ params }) {
     if ("Notification" in window) {
       const isAcceptedNotification = await Notification.requestPermission();
       if (isAcceptedNotification === "granted") {
-        sendNotification(params?.clientId,"client");
+        sendNotification(params?.clientId, "client");
       } else {
         console.warn("notification permission denied");
       }
@@ -62,6 +63,20 @@ export default async function Page({ params }) {
       setJobs(v?.slice(0, 3));
     });
   }, []);
+
+  if (
+    (client && !client?.company_name) ||
+    !client?.company_size ||
+    !client?.country ||
+    !client?.city
+  ) {
+    return (
+      <ClientProfileInfo
+        clientName={client?.name}
+        clientEmail={client?.email}
+      />
+    );
+  }
 
   if (
     !recommendedCandidates?.customer &&

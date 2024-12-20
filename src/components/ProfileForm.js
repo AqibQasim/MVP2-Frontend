@@ -1,10 +1,11 @@
+"use client";
 import React, { useRef, useState } from "react";
 import Heading from "./Heading";
 import ButtonCapsule from "./ButtonCapsule";
 import ButtonRounded from "./ButtonRounded";
 import Button from "./Button";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import ErrorPopup from "./ErrorPopup";
 import ButtonBack from "./ButtonBack";
 import "../styles/Setting.css";
@@ -13,6 +14,7 @@ import Image from "next/image";
 import { countryList } from "@/utils/cities";
 
 const ProfileForm = ({ client }) => {
+  const router = useRouter();
   const pathname = usePathname();
   const client_id = pathname.split("/")[2];
   const [sucess, setsuccess] = useState(false);
@@ -92,6 +94,8 @@ const ProfileForm = ({ client }) => {
       if (result.status === 200) {
         console.log("Client info updated successfully", result.data);
         setsuccess(true);
+        // refresh page on success
+        router.refresh();
       } else {
         console.error("Error updating client info", result?.data?.message);
         seterror(true);
@@ -329,13 +333,36 @@ const ProfileForm = ({ client }) => {
                 <b>
                   <label>Company Size</label>
                 </b>
-                <input
-                  ref={companySizeRef}
-                  defaultValue={client?.company_size || ""}
-                  type="text"
+                <select
+                  name="company_size"
+                  id="company_size"
                   placeholder="Company Size"
+                  ref={companySizeRef}
                   className="mt-1 rounded-full border bg-gray-100 p-2 focus:outline-none focus:ring-2"
-                />
+                >
+                  <option value="null">Company size</option>
+                  <option
+                    value="0-15"
+                    selected={client?.company_size === "0-15" ? true : false}
+                  >
+                    {" "}
+                    0-15{" "}
+                  </option>
+                  <option
+                    value="16-50"
+                    selected={client?.company_size === "16-50" ? true : false}
+                  >
+                    {" "}
+                    16-50{" "}
+                  </option>
+                  <option
+                    value="51-100"
+                    selected={client?.company_size === "51-100" ? true : false}
+                  >
+                    {" "}
+                    51-100
+                  </option>
+                </select>
               </div>
             </div>
           </div>
