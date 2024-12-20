@@ -1,8 +1,12 @@
 "use client";
 
+import { relateCandidateTimezoneWithClientTimezone } from "@/utils/cityTimezoneOffset";
+import { formatDate } from "@/utils/utility";
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import ButtonBack from "./ButtonBack";
+import EmailSvg from "../../public/icons/email.svg";
+import ButtonCapsuleWhite from "./ButtonCapsuleWhite";
 import Capsule from "./Capsule";
 import ClientPaymentHistoryTable from "./ClientPaymentHistoryTable";
 import DetailTag from "./DetailTag";
@@ -10,12 +14,6 @@ import EntityCard from "./EntityCard";
 import Heading from "./Heading";
 import Hr from "./Hr";
 import IconWithBg from "./IconWithBg";
-import TalentDescription from "./TalentDescription";
-import EmailSvg from '../../public/icons/email.svg'
-import { cityTimezoneOffset, relateCandidateTimezoneWithClientTimezone } from "@/utils/cityTimezoneOffset";
-import { formatDate } from "@/utils/utility";
-import ButtonCapsuleWhite from "./ButtonCapsuleWhite";
-import Image from "next/image";
 import Skill from "./Skill";
 
 function TalentIdPage({ client_id, customer_id }) {
@@ -82,7 +80,9 @@ function TalentIdPage({ client_id, customer_id }) {
     {
       icon: "/icons/timer-start.svg",
       name: "Time zone",
-      content: relateCandidateTimezoneWithClientTimezone(talent?.customer?.city)//cityTimezoneOffset(talent?.customer?.city || "No city set"),
+      content: relateCandidateTimezoneWithClientTimezone(
+        talent?.customer?.city,
+      ), //cityTimezoneOffset(talent?.customer?.city || "No city set"),
     },
     {
       icon: "/icons/briefcase-tick.svg",
@@ -97,23 +97,27 @@ function TalentIdPage({ client_id, customer_id }) {
   ];
 
   function parseDateString(dateString) {
-    const [day, month, year] = dateString.split(' ');
-    const monthIndex = new Date(Date.parse(month +" 1, 2024")).getMonth(); // Convert month name to index
+    const [day, month, year] = dateString.split(" ");
+    const monthIndex = new Date(Date.parse(month + " 1, 2024")).getMonth(); // Convert month name to index
     return new Date(year, monthIndex, day);
   }
-  
+
   // Your formatted date string
   let endTrialDate = formatDate(talent?.updatedAt);
-  
+
   // Parse the date string into a Date object
   let parsedDate = parseDateString(endTrialDate);
-  
+
   // Add 14 days
   parsedDate.setDate(parsedDate.getDate() + 14);
-  
+
   // Format the new date
-  let newEndTrialDate = parsedDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-  
+  let newEndTrialDate = parsedDate.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+
   return (
     <>
       <div
@@ -124,14 +128,15 @@ function TalentIdPage({ client_id, customer_id }) {
           <ButtonCapsuleWhite />
           <Heading sm>Candidate Profile </Heading>
           <Capsule className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
-            {talent?.customer?.talent_status} {formatDate(talent?.updatedAt)} - {newEndTrialDate}
+            {talent?.customer?.talent_status} {formatDate(talent?.updatedAt)} -{" "}
+            {newEndTrialDate}
           </Capsule>
         </div>
         <Hr />
         <div className="mini-profile flex items-center justify-start">
           <EntityCard
             entity={{
-              image: "/avatars/avatar-1.png",
+              image: "/avatars/avatar-2.png",
               name: talent.customer.name,
               profession: talent.customer.specialization,
             }}
@@ -147,21 +152,25 @@ function TalentIdPage({ client_id, customer_id }) {
         /> */}
 
         <div className="flex flex-row justify-center">
-          <div className="justify-start flex-1 flex flex-col">
+          <div className="flex flex-1 flex-col justify-start">
             <Heading xm>About</Heading>
-            <Capsule className="w-fit flex items-center gap-2" style={{ textTransform: "lowercase" }}>
+            <Capsule
+              className="flex w-fit items-center gap-2"
+              style={{ textTransform: "lowercase" }}
+            >
               <Image src={EmailSvg} />
               {talent?.customer?.email}
             </Capsule>
 
-            <div className="text-grey-primary-shade-20">
-              Top Skills
-            </div>
+            <div className="text-grey-primary-shade-20">Top Skills</div>
             <div className="flex items-start gap-1.5">
               {talent.customer.expertise.map((skill, i) => (
                 <>
-                  <Skill key={i} skill={skill.skill} className="!bg-neutral-white" />
-
+                  <Skill
+                    key={i}
+                    skill={skill.skill}
+                    className="!bg-neutral-white"
+                  />
                 </>
               ))}
             </div>
@@ -170,12 +179,26 @@ function TalentIdPage({ client_id, customer_id }) {
             <Heading xm>Address</Heading>
             <div className="flex items-start gap-1.5">
               <div>
-                <DetailTag icon="/icons/address.svg" name="Address: " content={talent?.customer?.customer_location || "No address"}/>
-                <DetailTag icon="/icons/routing.svg" name="City State: " content={(talent?.customer?.city + talent.customer?.province) || "No city/state given"}/>
-                <DetailTag icon="/icons/location.svg" name="Address: " content={talent?.customer?.area_code || "No area code given"}/>
+                <DetailTag
+                  icon="/icons/address.svg"
+                  name="Address: "
+                  content={talent?.customer?.customer_location || "No address"}
+                />
+                <DetailTag
+                  icon="/icons/routing.svg"
+                  name="City State: "
+                  content={
+                    talent?.customer?.city + talent.customer?.province ||
+                    "No city/state given"
+                  }
+                />
+                <DetailTag
+                  icon="/icons/location.svg"
+                  name="Address: "
+                  content={talent?.customer?.area_code || "No area code given"}
+                />
               </div>
             </div>
-
           </div>
           <div className="gap-4">
             <Heading xm>Job Information</Heading>
