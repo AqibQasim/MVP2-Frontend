@@ -13,7 +13,10 @@ import IconWithBg from "@/components/IconWithBg";
 //import TalentDescription from "./TalentDescription";
 import EmailSvg from "../../../../../public/icons/email.svg";
 import phone from "../../../../../public/icons/Call.png";
-import { cityTimezoneOffset, relateCandidateTimezoneWithClientTimezone } from "@/utils/cityTimezoneOffset";
+import {
+  cityTimezoneOffset,
+  relateCandidateTimezoneWithClientTimezone,
+} from "@/utils/cityTimezoneOffset";
 import { formatDate } from "@/utils/utility";
 import ButtonCapsuleWhite from "@/components/ButtonCapsuleWhite";
 import Image from "next/image";
@@ -53,7 +56,7 @@ function Page({ params }) {
   const [editedPrice, setEditedPrice] = useState(talent?.hourly_rate);
   const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
   const [candidateReport, setCandidateReport] = useState(null);
-  const [budgetingError, setBudgetingError] = useState("");
+  const [budgetingError, setBudgetingError] = useState(false);
   const router = useRouter();
   const [alert, setAlert] = useState(null);
   const [paymentHistory, setPaymentHistory] = useState(null);
@@ -259,7 +262,7 @@ function Page({ params }) {
     {
       icon: "/icons/timer-start.svg",
       name: "Time zone",
-      content: relateCandidateTimezoneWithClientTimezone(talent?.city)//cityTimezoneOffset(talent?.city || "No city set"),
+      content: relateCandidateTimezoneWithClientTimezone(talent?.city), //cityTimezoneOffset(talent?.city || "No city set"),
     },
     // {
     //   icon: "/icons/briefcase-tick.svg",
@@ -293,11 +296,9 @@ function Page({ params }) {
   const handleReferCandidate = async () => {
     // e.preventDefault();
     if (talent?.hourly_rate >= hourlyRate) {
-      setBudgetingError("Refferal rate should be greater than Candidates rate");
-    } else if (hourlyRate <= 3 || hourlyRate >= 300) {
-      setBudgetingError("Referral Rate should be in between 3 to 300");
+      setBudgetingError(true);
     } else {
-      setBudgetingError("");
+      setBudgetingError(false);
       const referClientBody = {
         client_id: selectedClientId,
         customer_id: talent.customer_id,
@@ -369,7 +370,7 @@ function Page({ params }) {
         <div className="mini-profile flex items-center justify-between">
           <EntityCard
             entity={{
-              image: "/avatars/avatar-1.png",
+              image: "/avatars/avatar-2.png",
               name: talent?.name,
               profession: talent?.specialization,
             }}
@@ -601,7 +602,12 @@ function Page({ params }) {
             >
               Confirm Referral
             </button>
-            {budgetingError && <p className="text-red-500">{budgetingError}</p>}
+            {budgetingError && (
+              <p className="text-red-500">
+                {" "}
+                Refferal rate should be greater than Candidates rate{" "}
+              </p>
+            )}
             <button
               type="button"
               onClick={() => setShowForm(false)}

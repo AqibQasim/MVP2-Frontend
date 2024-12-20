@@ -10,27 +10,25 @@ import SvgIconRequestInterview from "@/svgs/SvgIconRequestInterview";
 import { PopupModal, useCalendlyEventListener } from "react-calendly";
 import { useState, useEffect, useRef } from "react";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
-import { useParams,useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import urlBase64ToUint8Array from "@/utils/urlBase64ToUint8Array";
-
 
 function ClientRecommendedRow({ recommended }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [isInterviewScheduled, setIsInterviewScheduled] = useState(false);
   const buttonRef = useRef(null);
-  
+
   const router = useRouter();
   const params = useParams();
   const client_id = params?.clientId;
 
-
   const { customer: candidate, job_postings: job } = recommended;
 
-
-  
   const handleRowClick = () => {
-    router.push(`/client/${client_id}/talents/${candidate.customer_id}?job_posting_id=${job?.job_posting_id}`);
+    router.push(
+      `/client/${client_id}/talents/${candidate.customer_id}?job_posting_id=${job?.job_posting_id}`,
+    );
   };
 
   useEffect(() => {
@@ -89,7 +87,6 @@ function ClientRecommendedRow({ recommended }) {
     }
   };
 
-
   const checkInterviewStatus = () => {
     const payload = {
       endpoint: `check-interview-status?customer_id=${candidate?.customer_id}&client_id=${params?.clientId}&job_posting_id=${job?.job_posting_id}`,
@@ -99,17 +96,14 @@ function ClientRecommendedRow({ recommended }) {
       if (result?.data?.data?.is_scheduled) {
         setIsInterviewScheduled(true);
       } else {
-        setIsInterviewScheduled(false); 
+        setIsInterviewScheduled(false);
       }
     });
   };
- 
-
 
   useEffect(() => {
     checkInterviewStatus();
   }, []);
-
 
   const getEventDetails = async (eventUri) => {
     try {
@@ -149,7 +143,7 @@ function ClientRecommendedRow({ recommended }) {
                 interview_time: data?.resource?.start_time,
                 job_posting_id: job?.job_posting_id,
                 client_id: params?.clientId,
-                subscription
+                subscription,
               },
             };
             console.log(payload);
@@ -164,7 +158,7 @@ function ClientRecommendedRow({ recommended }) {
             console.error("Service Worker registration failed:", error);
           });
       }
-     
+
       // Access the date and time from the response, e.g., data.start_time
     } catch (error) {
       console.error("Error fetching event details:", error);
@@ -184,56 +178,51 @@ function ClientRecommendedRow({ recommended }) {
   }, []);
   if (!isMounted) return null;
 
-
   return (
     <>
-
-       <div
-              className ="cursor-pointer"
-           >
-           <Table.Row
-           onClick={handleRowClick}
-           >
-         <EntityCard
-          entity={{
-            name: candidate?.name,
-            profession: candidate?.specialization,
-            image: "/avatars/avatar-1.png",
-          }}
-        />
-        <div className="skills flex items-center justify-center gap-1.5 text-center">
-          {job.skills.length > 1 ? (
-            <>
+      <div className="cursor-pointer">
+        <Table.Row onClick={handleRowClick}>
+          <EntityCard
+            entity={{
+              name: candidate?.name,
+              profession: candidate?.specialization,
+              image: "/avatars/avatar-2.png",
+            }}
+          />
+          <div className="skills flex items-center justify-center gap-1.5 text-center">
+            {job.skills.length > 1 ? (
+              <>
+                <SkillIconWithBg icon={job.skills[0]} skill={job.skills[0]} />
+                <div className="text-sm text-gray-500">
+                  +{job.skills.length - 1}
+                </div>
+              </>
+            ) : (
               <SkillIconWithBg icon={job.skills[0]} skill={job.skills[0]} />
-              <div className="text-sm text-gray-500">+{job.skills.length - 1}</div>
-            </>
+            )}
+          </div>
+          <div className="job-title text-center">{job.position}</div>
+          <div className="experience text-center">{candidate.experience}</div>
+          <Capsule>{candidate.commitment}</Capsule>
+          {isInterviewScheduled ? (
+            <Capsule
+              className="ml-auto cursor-not-allowed !bg-primary-tint-100"
+              icon={<IconWithBg icon={<SvgIconRequestInterview />} />}
+            >
+              Schedule Interview
+            </Capsule>
           ) : (
-            <SkillIconWithBg icon={job.skills[0]} skill={job.skills[0]} />
+            <Capsule
+              onClick={() => setIsOpen(true)}
+              ref={buttonRef}
+              id="root"
+              className="ml-auto !bg-primary-tint-100"
+              icon={<IconWithBg icon={<SvgIconRequestInterview />} />}
+            >
+              Schedule Interview
+            </Capsule>
           )}
-        </div>
-        <div className="job-title text-center">{job.position}</div>
-        <div className="experience text-center">{candidate.experience}</div>
-        <Capsule>{candidate.commitment}</Capsule>
-        {isInterviewScheduled ? (
-          <Capsule
-            className="ml-auto !bg-primary-tint-100 cursor-not-allowed"
-            icon={<IconWithBg icon={<SvgIconRequestInterview />} />}
-          >
-            
-            Schedule Interview
-          </Capsule>
-        ) : (
-          <Capsule
-            onClick={() => setIsOpen(true)}
-            ref={buttonRef}
-            id = "root"
-            className="ml-auto !bg-primary-tint-100"
-            icon={<IconWithBg icon={<SvgIconRequestInterview />} />}
-          >
-            Schedule Interview
-          </Capsule>
-        )}
-      </Table.Row>
+        </Table.Row>
       </div>
 
       <PopupModal

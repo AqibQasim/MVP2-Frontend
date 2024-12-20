@@ -19,7 +19,7 @@ function AdminClientCandidatesRow({ candidate, score, onClick, jobName }) {
             entity={{
               name: candidate?.name,
               profession: candidate?.specialization,
-              image: "/avatars/avatar-1.png",
+              image: "/avatars/avatar-2.png",
             }}
           />
         </div>
@@ -27,21 +27,27 @@ function AdminClientCandidatesRow({ candidate, score, onClick, jobName }) {
           {jobName}
         </div>
 
-        <div
-         className= "flex-col  skills flex items-center justify-center gap-1 text-center">
-            {candidate?.expertise?.length > 1 ? (
-              <div className="flex ">
-             <SkillIconWithBg icon={candidate.expertise[0].skill} skill={candidate.expertise[0].skill} />
-             <div className="text-sm text-gray-500 mt-2">
-              +{candidate.expertise.length - 1}
+        <div className="skills flex flex-col items-center justify-center gap-1 text-center">
+          {candidate?.expertise?.length > 1 ? (
+            <div className="flex">
+              <SkillIconWithBg
+                icon={candidate.expertise[0].skill}
+                skill={candidate.expertise[0].skill}
+              />
+              <div className="mt-2 text-sm text-gray-500">
+                +{candidate.expertise.length - 1}
               </div>
-              </div>
-            )
-          : (
-          <span> <SkillIconWithBg icon={candidate.expertise[0].skill} skill={candidate.expertise[0].skill}/></span>
-        )}
-       </div>
-       
+            </div>
+          ) : (
+            <span>
+              {" "}
+              <SkillIconWithBg
+                icon={candidate.expertise[0].skill}
+                skill={candidate.expertise[0].skill}
+              />
+            </span>
+          )}
+        </div>
 
         {/* <div className="experience flex justify-center text-center">
           {candidate?.hourly_rate || 0}
@@ -70,8 +76,6 @@ function AdminClientCandidatesRow({ candidate, score, onClick, jobName }) {
           view talent{" "}
         </CapsuleLink>
       </Table.Row>
-
-      
     </>
   );
 }

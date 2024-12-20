@@ -96,6 +96,52 @@ function ClientRecommendationCard({
       if (result.status === 200) {
         console.log("Interview has been scheduled");
       }
+
+      // if ("serviceWorker" in navigator && "PushManager" in window) {
+      //   navigator.serviceWorker
+      //     .register("/sw.js", {
+      //       scope: "/",
+      //     })
+      //     .then(async (swRegistration) => {
+      //       const existingSubscription =
+      //         await swRegistration.pushManager.getSubscription();
+      //       if (existingSubscription) {
+      //         // Unsubscribe if the applicationServerKey is different
+      //         console.log("Unsubscribing existing subscription...");
+      //         await existingSubscription.unsubscribe();
+      //       }
+      //       const subscription = await swRegistration.pushManager.subscribe({
+      //         userVisibleOnly: true,
+      //         applicationServerKey: urlBase64ToUint8Array(
+      //           process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+      //         ),
+      //       });
+      //       const payload = {
+      //         endpoint: "schedule-interview",
+      //         method: "POST",
+      //         body: {
+      //           customer_id: recommendedCandidate?.customer_id,
+      //           interview_date: data?.resource?.start_time,
+      //           interview_time: data?.resource?.start_time,
+      //           job_posting_id: recommendedForJob?.job_posting_id,
+      //           client_id: params?.clientId,
+      //           subscription
+      //         },
+      //       };
+      //       console.log(payload);
+      //       const result = await mvp2ApiHelper(payload);
+      //       if (result.status === 200) {
+      //         console.log("Interview has been scheduled");
+      //       }
+      //       console.log("Push subscription:", subscription);
+      //       // Send the subscription object to your backend
+      //     })
+      //     .catch((error) => {
+      //       console.error("Service Worker registration failed:", error);
+      //     });
+      // }
+
+      // Access the date and time from the response, e.g., data.start_time
     } catch (error) {
       console.error("Error fetching event details:", error);
     }
