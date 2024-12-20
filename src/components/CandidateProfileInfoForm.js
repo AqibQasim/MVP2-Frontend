@@ -1,5 +1,6 @@
 "use client";
 import { updateCandidateProfileAction } from "@/lib/actions";
+import { citiesList, countryList } from "@/utils/cities";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import EntityCard from "./EntityCard";
@@ -7,13 +8,13 @@ import Heading from "./Heading";
 import Hr from "./Hr";
 import Input from "./Input";
 import SubmitButton from "./SubmitButton";
-import { getCandidate } from "@/lib/data-service";
 
-async function CandidateProfileInfoForm() {
+function CandidateProfileInfoForm({ candidate }) {
   const [error, setError] = useState(null);
+  const [tempCountry, setTempCountry] = useState("");
   const params = useParams();
   const candidateId = params.candidateId;
-  const { data: candidate } = await getCandidate(candidateId);
+  // const { data: candidate } = await getCandidate(candidateId);
 
   async function handleProfileUpdate(formData) {
     const { error, message } = await updateCandidateProfileAction(formData);
@@ -56,6 +57,19 @@ async function CandidateProfileInfoForm() {
           required
           label="commitment"
           options={["full-time", "part-time"]}
+        />
+        <SelectElement
+          required
+          label="country"
+          placeholder={"Select country"}
+          options={countryList}
+          onChange={(e) => setTempCountry(e.target.value)}
+        />
+        <SelectElement
+          disabled={!tempCountry}
+          required
+          label="city"
+          options={tempCountry ? citiesList[tempCountry] || ["Empty"] : []}
         />
         <div className="row space-y-2">
           <label
@@ -108,7 +122,7 @@ async function CandidateProfileInfoForm() {
 
 export default CandidateProfileInfoForm;
 
-function SelectElement({ label, options, ...rest }) {
+function SelectElement({ label, options, placeholder, ...rest }) {
   return (
     <div className="row space-y-2">
       {label ? (
@@ -122,6 +136,11 @@ function SelectElement({ label, options, ...rest }) {
         {...rest}
         className="block w-full rounded-[40px] border border-primary-tint-90 p-3 font-lufga text-sm font-normal capitalize"
       >
+        {placeholder ? (
+          <option selected value={placeholder}>
+            {placeholder}
+          </option>
+        ) : null}
         {options.map((option) => (
           <option key={option} value={option}>
             {option}
