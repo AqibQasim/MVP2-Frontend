@@ -33,6 +33,8 @@ function Page() {
   const [user_role, setUserRole] = useState("client");
   const [errors, setErrors] = useState({});
   const [termsError, setTermsError] = useState("");
+  console.log("termsError", termsError);
+  console.log("Checked?", confirmTerms);
   const [otp, setotp] = useState(null);
   const [alert, setAlert] = useState(false);
   const [isLoading, setisLoading] = useState(false);
@@ -207,10 +209,12 @@ function Page() {
   const handleOpenOverlay = useCallback(
     async (event) => {
       event.preventDefault();
-      // if (confirmTerms === false)
-      //   return setTermsError(
-      //     "Please accept the Terms of Service and Privacy Policy to proceed.",
-      //   );
+      setTermsError("");
+      console.log("Confirm terms s", confirmTerms);
+      if (!confirmTerms)
+        return setTermsError(
+          "Please accept the Terms of Service and Privacy Policy to proceed.",
+        );
 
       if (Object.values(errors).every((err) => err === "")) {
         try {
@@ -265,15 +269,8 @@ function Page() {
         }
       }
     },
-    [errors, form.email, user_role], // dependencies
+    [errors, form.email, user_role, confirmTerms],
   );
-
-  // const handleOpenOverlay = (event) => {
-  //   event.preventDefault();
-  //   if (Object.values(errors).every((err) => err === "")) {
-  //     setOverlayVisible(true);
-  //   }
-  // };
 
   const handleCloseOverlay = () => {
     setOverlayVisible(false);
@@ -303,11 +300,6 @@ function Page() {
 
     // Real-time validation
     //validateField("phoneNumber", phone);
-  }
-
-  function handleConfirmTerm() {
-    setTermsError("");
-    setConfirmTerms((checked) => !checked);
   }
 
   const isFormInvalid = useMemo(() => {
@@ -678,7 +670,10 @@ function Page() {
                 <input
                   type="checkbox"
                   className="border-none outline-none"
-                  onChange={handleConfirmTerm}
+                  onChange={() => {
+                    setTermsError("");
+                    setConfirmTerms((checked) => !checked);
+                  }}
                   checked={confirmTerms}
                   name="confirmTerms"
                 />
