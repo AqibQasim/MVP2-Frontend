@@ -199,7 +199,7 @@ function ClientRecommendationCard({
       //       console.error("Service Worker registration failed:", error);
       //     });
       // }
-     
+
       // Access the date and time from the response, e.g., data.start_time
     } catch (error) {
       console.error("Error fetching event details:", error);
@@ -231,7 +231,7 @@ function ClientRecommendationCard({
           <div className="flex items-start justify-between">
             <EntityCard
               entity={{
-                image: "/avatars/avatar-1.png",
+                image: "/avatars/avatar-2.png",
                 name: recommendedCandidate?.name,
                 profession: recommendedCandidate?.specialization,
               }}

@@ -7,7 +7,7 @@ function EntityCard({
   lg = false,
   icon = false,
   entity = {
-    image: "/avatars/avatar-1.png",
+    image: "/avatars/avatar-2.png",
     name: "John Doe",
     profession: "",
   },
@@ -37,7 +37,7 @@ function EntityCard({
           {entity.name}
         </p>
         {entity.profession && (
-          <p className="text-sm font-medium text-[14px] text-grey-primary-shade-30">
+          <p className="text-[14px] text-sm font-medium text-grey-primary-shade-30">
             {entity.profession}
           </p>
         )}

@@ -35,7 +35,7 @@ function CandidateProfileInfoForm({ candidate }) {
       <Hr />
       <EntityCard
         entity={{
-          image: "/avatars/avatar-1.png",
+          image: "/avatars/avatar-2.png",
           name: candidate?.name || "Richard Feynman",
           profession: candidate?.email || "richardfeynman@gmail.com",
         }}

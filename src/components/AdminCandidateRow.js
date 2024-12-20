@@ -86,78 +86,74 @@ function AdminCandidateRow({ candidate, score }) {
 
   return (
     <>
-    <div  className = "cursor-pointer"  >
-      <Table.Row
-        className = "cursor-pointer"
-         onClick={() => router.push(`/admin/candidates/${candidate?.customer_id}`)}
-      >
-        <div  
-          className="cursor-pointer text-start">
-          <EntityCard
-            entity={{
-              name: candidate?.name,
-              profession: candidate?.specialization,
-              image: "/avatars/avatar-1.png",
-            }}
-          />
-        </div>
-
-        <div className="skills flex flex-col items-center justify-center gap-1 text-center ">
-          {candidate?.expertise?.length > 1 ? (
-            <div className="flex">
-              <SkillIconWithBg
-                icon={candidate.expertise[0].skill}
-                skill={candidate.expertise[0].skill}
-              />
-              <div className="mt-2 text-sm text-gray-500">
-                +{candidate.expertise.length - 1}
-              </div>
-            </div>
-          ) : (
-            <span>
-              {" "}
-              <SkillIconWithBg
-                icon={candidate.expertise[0].skill}
-                skill={candidate.expertise[0].skill}
-              />
-            </span>
-          )}
-        </div>
-
-        <div className="experience flex justify-center text-center">
-          {candidate?.hourly_rate || 0}$
-        </div>
-        <div className="experience flex justify-center text-center">
-          { candidate?.admin_hourly_rate || 0}$
-        </div>
-
-        
-
-        <div className="experience text-center">
-          {candidate?.experience || "No experience"}
-        </div>
-        <Capsule>{candidate?.commitment || "No job type"}</Capsule>
-
-        <div className="experience text-center">{score}/10</div>
-
-      
-
-        <Capsule
-          className="status mx-auto w-max"
-          status={getCandidateStatus(
-            candidate?.talent_status,
-            candidate?.status,
-          )}
+      <div className="cursor-pointer">
+        <Table.Row
+          className="cursor-pointer"
+          onClick={() =>
+            router.push(`/admin/candidates/${candidate?.customer_id}`)
+          }
         >
-          {getCandidateStatus(candidate?.talent_status, candidate?.status)}
-          {/* {candidate?.talent_status === "open" && candidate?.status==="active"  ? "Avaliable"            
+          <div className="cursor-pointer text-start">
+            <EntityCard
+              entity={{
+                name: candidate?.name,
+                profession: candidate?.specialization,
+                image: "/avatars/avatar-2.png",
+              }}
+            />
+          </div>
+
+          <div className="skills flex flex-col items-center justify-center gap-1 text-center">
+            {candidate?.expertise?.length > 1 ? (
+              <div className="flex">
+                <SkillIconWithBg
+                  icon={candidate.expertise[0].skill}
+                  skill={candidate.expertise[0].skill}
+                />
+                <div className="mt-2 text-sm text-gray-500">
+                  +{candidate.expertise.length - 1}
+                </div>
+              </div>
+            ) : (
+              <span>
+                {" "}
+                <SkillIconWithBg
+                  icon={candidate.expertise[0].skill}
+                  skill={candidate.expertise[0].skill}
+                />
+              </span>
+            )}
+          </div>
+
+          <div className="experience flex justify-center text-center">
+            {candidate?.hourly_rate || 0}$
+          </div>
+          <div className="experience flex justify-center text-center">
+            {candidate?.admin_hourly_rate || 0}$
+          </div>
+
+          <div className="experience text-center">
+            {candidate?.experience || "No experience"}
+          </div>
+          <Capsule>{candidate?.commitment || "No job type"}</Capsule>
+
+          <div className="experience text-center">{score}/10</div>
+
+          <Capsule
+            className="status mx-auto w-max"
+            status={getCandidateStatus(
+              candidate?.talent_status,
+              candidate?.status,
+            )}
+          >
+            {getCandidateStatus(candidate?.talent_status, candidate?.status)}
+            {/* {candidate?.talent_status === "open" && candidate?.status==="active"  ? "Avaliable"            
             :  candidate?.talent_status?.toLowerCase() === "open" && candidate?.status==="in-active" ? "Un-Avaliable"
             :   candidate?.talent_status } */}
-        </Capsule>
+          </Capsule>
 
-       
-        {/* Button to open form */}
-        {/* <button onClick={() => {
+          {/* Button to open form */}
+          {/* <button onClick={() => {
           if (candidate?.talent_status === "open") {
             setShowForm(true)
           }
@@ -169,7 +165,7 @@ function AdminCandidateRow({ candidate, score }) {
             <div className={(candidate?.talent_status !== "open") ? `text-[grey] cursor-not-allowed` : null}>Refer to Client</div>
           </Capsule>
         </button> */}
-      </Table.Row>
+        </Table.Row>
       </div>
 
       {/* <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
