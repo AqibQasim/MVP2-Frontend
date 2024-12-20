@@ -60,7 +60,7 @@ export default function Page({ params }) {
       setRecommendedCandidates(v);
     });
     getClientJobs(params.clientId).then((v) => {
-      setJobs(v);
+      setJobs(v?.slice(0, 3));
     });
   }, []);
 

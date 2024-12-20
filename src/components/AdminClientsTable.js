@@ -90,7 +90,7 @@ Co-ventech
 
     try {
       // Call Signup API
-      const signupResponse = await fetch(
+      const signupResponse2 = await fetch(
         `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/signup`,
         {
           method: "POST",
@@ -101,10 +101,15 @@ Co-ventech
         },
       );
 
-      if (!signupResponse.ok) {
+      
+
+
+      if (!signupResponse2.ok) {
         throw new Error("Failed to sign up the client.");
       }
 
+
+      const signupResponse = await signupResponse2.json();
       // Update the content with the correct password before sending the email
       const updatedContent = `Hey ${formData.companyName || "Company Name"},
   
@@ -142,40 +147,32 @@ Co-ventech
         throw new Error("Failed to send the invitation email.");
       }
 
-      alert("Client invited successfully!");
-      createStripeAccount(
-        {
-          name: formData.companyName,
-          email: formData.email,
-        },
-        "invitation",
-        "client",
-        signupResponse,
-      );
-      setShowForm(false);
-    } catch (error) {
-      console.error(error);
-      alert("Email with this account already created");
-    } finally {
-      setLoading(false);
-    }
+     
+      // createStripeAccount(
+      //   {
+      //     name: formData.companyName,
+      //     email: formData.email,
+      //   },
+      //   "invitation",
+      //   "client",
+      //   signupResponse,
+      // );
 
-    try {
-      // Call the Stripe customer creation API
+      console.log("SIGN UP RESSSPONSEE ", signupResponse?.client_id)
       const stripeResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/api/create-customer`,
+        `/api/create-customer`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: form.email,
-            name: form.firstName + " " + form.lastName,
-            metadata:
-              user_role == "customer"
-                ? { customer: 1, customer_id: result?.data?.customer_id }
-                : { customer: 0, client_id: result?.data?.client_id },
+            email: formData?.email,
+            name: formData?.companyName,
+            metadata: {
+              customer: 0,
+              client_id: signupResponse?.client_id,
+            },
           }),
         },
       );
@@ -185,46 +182,37 @@ Co-ventech
       }
       console.log("Stripe customer created successfully:", stripeData.customer);
       let createAccountData;
-      if (user_role === "client") {
-        const createAccountResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-stripe-account`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              client_id: result.data.client_id,
-              stripe_id: stripeData.customer.id,
-            }),
+
+      const createAccountResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-stripe-account`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-        );
-        createAccountData = await createAccountResponse.json();
-        if (createAccountResponse.status !== 200) {
-          throw new Error(createAccountData.error);
-        }
-        console.log("Stripe account created successfully:", createAccountData);
-      } else {
-        const createAccountResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-customer-stripe-account`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              customer_id: result.data.customer_id,
-              stripe_id: stripeData.customer.id,
-            }),
-          },
-        );
-        createAccountData = await createAccountResponse.json();
-        if (createAccountResponse.status !== 200) {
-          throw new Error(createAccountData.error);
-        }
-        console.log("Stripe account created successfully:", createAccountData);
+          body: JSON.stringify({
+            client_id: signupResponse?.client_id,
+            stripe_id: stripeData?.customer?.id,
+          }),
+        },
+      );
+      createAccountData = await createAccountResponse.json();
+      if (createAccountResponse.status !== 200) {
+        throw new Error(createAccountData.error);
       }
-    } catch (error) {}
+      console.log("Stripe account created successfully:", createAccountData);
+
+      setShowForm(false);
+
+       alert("Client invited successfully!");
+    } catch (error) {
+      console.error(error);
+      alert("Email with this account already created");
+    } finally {
+      setLoading(false);
+    }
+
+
   };
 
   const handleJobStatusChange = (event) => {
@@ -296,7 +284,7 @@ Co-ventech
                   setShowForm(true);
                   handleGenerateContent();
                 }}
-                className="hover:bg-primary-hover active:bg-primary-hover focus:ring-primary-hover rounded bg-primary-tint-20 hover:bg-primary px-8 py-2 text-base font-medium text-white transition-colors duration-300 ease-in-out focus:outline-none focus:ring focus:ring-offset-2"
+                className="hover:bg-primary-hover active:bg-primary-hover focus:ring-primary-hover rounded bg-blue-700 px-8 py-2 text-base font-medium text-white transition-colors duration-300 ease-in-out hover:bg-primary focus:outline-none focus:ring focus:ring-offset-2"
               >
                 Invite A New Client +
               </button>

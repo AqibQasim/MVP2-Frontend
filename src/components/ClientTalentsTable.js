@@ -4,7 +4,7 @@ import ClientTalentsRow from "./ClientTalentsRow";
 import DashboardSection from "./DashboardSection";
 import Table from "./Table";
 import { getAllRecommendedCandidates } from "@/lib/data-service";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import EmptyScreen from "./EmptyScreen";
 
 function ClientTalentsTable({ hiredTalents }) {
@@ -20,6 +20,8 @@ function ClientTalentsTable({ hiredTalents }) {
   // if (error) console.log("Error: getting Hired Candidates: ", error);
 
   const [hiredCandidates, setHiredCandidates] = useState(null);
+  const [startIndex, setStartIndex] = useState(0);
+  const [itemsPerPage] = useState(10);
 
   const fetchHiredCandidates = async () => {
     const candidates = await getAllRecommendedCandidates(
@@ -40,7 +42,25 @@ function ClientTalentsTable({ hiredTalents }) {
     fetchHiredCandidates();
   }, [])
 
-  console.log(hiredCandidates)
+  console.log(hiredCandidates);
+
+ 
+
+  const onNext = useCallback(() => {
+    setStartIndex((prevIndex) =>
+      Math.min(prevIndex + itemsPerPage, hiredCandidates?.length),
+    );
+  }, [hiredCandidates?.length, itemsPerPage]);
+
+  const onPrev = useCallback(() => {
+    setStartIndex((prevIndex) => Math.max(prevIndex - itemsPerPage, 0));
+  }, [itemsPerPage]);
+
+ 
+  const paginatedCandidates = hiredCandidates?.slice(
+    startIndex,
+    startIndex + itemsPerPage,
+  );
 
   if(hiredCandidates && hiredCandidates.length === 0){
     return <EmptyScreen className={'h-full'}/>
@@ -53,7 +73,7 @@ function ClientTalentsTable({ hiredTalents }) {
       heading="Talents"
       href={`/client/${clientId}/talents`}
     >
-      <Table columns="grid-cols-[1.2fr_0.7fr_0.8fr_5.7rem_6.5rem_6.5rem_9.5rem]">
+      <Table columns="grid-cols-[1.2fr_1fr_1fr_5.7rem_6.5rem_6.5rem]">
         <Table.Header>
           <div className="info">Info</div>
           <div className="skills text-center">Skills</div>
@@ -61,19 +81,26 @@ function ClientTalentsTable({ hiredTalents }) {
           <div className="experience text-center">Experience</div>
           <div className="job-type text-center">Job type</div>
           <div className="date-hire text-center">Date hire</div>
-          <div className="actions text-right">Actions</div>
         </Table.Header>
 
         {hiredCandidates && hiredCandidates.length > 0 ? (
         <Table.Body
-          data={hiredCandidates}
+          data={paginatedCandidates}
           render={(talent, i) => <ClientTalentsRow talent={talent} key={i} />}
         />
+        
       ) : (
         <div >
           <p>No data to show at the moment</p>
         </div>
       )}
+      <Table.Footer
+                      data={hiredCandidates}
+                      startIndex={startIndex + 1}
+                      endIndex={Math.min(startIndex + itemsPerPage, hiredCandidates?.length)}
+                      onNext={onNext}
+                      onPrevious={onPrev}
+                    />
       </Table>
     </DashboardSection>
   );

@@ -1,4 +1,4 @@
-import { useParams } from "next/navigation";
+import { useParams,useRouter } from "next/navigation";
 import Capsule from "./Capsule";
 import CapsuleLink from "./CapsuleLink";
 import EntityCard from "./EntityCard";
@@ -9,8 +9,19 @@ function ClientEmployeesRow({ hiredCandidate }) {
   const { customer_id, customer, job_postings } = hiredCandidate;
   const params = useParams();
   const clientId = params?.clientId;
+  const router = useRouter();
+
+  const handleRowClick = () => {
+    router.push(`/client/${clientId}/talents/${customer_id}?job_posting_id=${job_postings.job_posting_id}`);
+  };
   return (
-    <Table.Row>
+    <div
+       className ="cursor-pointer"
+      >
+       <Table.Row
+            onClick={handleRowClick}
+            >
+ 
       <EntityCard
         entity={{
           image: "/avatars/avatar-1.png",
@@ -34,14 +45,9 @@ function ClientEmployeesRow({ hiredCandidate }) {
       <Capsule className="status mx-auto w-max" status={customer?.talent_status}>
         {customer.talent_status}
       </Capsule>
-      <CapsuleLink
-        className="action ml-auto"
-        href={`/client/${clientId}/talents/${customer_id}?job_posting_id=${job_postings.job_posting_id}`}
-      >
-        {" "}
-        view details{" "}
-      </CapsuleLink>
+     
     </Table.Row>
+    </div>
   );
 }
 

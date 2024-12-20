@@ -12,7 +12,7 @@ import Hr from "./Hr";
 import IconWithBg from "./IconWithBg";
 import TalentDescription from "./TalentDescription";
 import EmailSvg from '../../public/icons/email.svg'
-import { cityTimezoneOffset } from "@/utils/cityTimezoneOffset";
+import { cityTimezoneOffset, relateCandidateTimezoneWithClientTimezone } from "@/utils/cityTimezoneOffset";
 import { formatDate } from "@/utils/utility";
 import ButtonCapsuleWhite from "./ButtonCapsuleWhite";
 import Image from "next/image";
@@ -82,7 +82,7 @@ function TalentIdPage({ client_id, customer_id }) {
     {
       icon: "/icons/timer-start.svg",
       name: "Time zone",
-      content: cityTimezoneOffset(talent?.customer?.city || "No city set"),
+      content: relateCandidateTimezoneWithClientTimezone(talent?.customer?.city)//cityTimezoneOffset(talent?.customer?.city || "No city set"),
     },
     {
       icon: "/icons/briefcase-tick.svg",
@@ -122,7 +122,7 @@ function TalentIdPage({ client_id, customer_id }) {
         <div className="top flex items-center justify-start gap-3">
           {/* <ButtonBack /> */}
           <ButtonCapsuleWhite />
-          <Heading sm>Profile Overview</Heading>
+          <Heading sm>Candidate Profile </Heading>
           <Capsule className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
             {talent?.customer?.talent_status} {formatDate(talent?.updatedAt)} - {newEndTrialDate}
           </Capsule>
@@ -149,7 +149,7 @@ function TalentIdPage({ client_id, customer_id }) {
         <div className="flex flex-row justify-center">
           <div className="justify-start flex-1 flex flex-col">
             <Heading xm>About</Heading>
-            <Capsule className="w-fit flex items-center gap-2">
+            <Capsule className="w-fit flex items-center gap-2" style={{ textTransform: "lowercase" }}>
               <Image src={EmailSvg} />
               {talent?.customer?.email}
             </Capsule>
