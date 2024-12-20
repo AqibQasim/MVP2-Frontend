@@ -4,16 +4,16 @@ import Heading from "@/components/Heading";
 import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
 import Overlay from "@/components/Overlay";
+import PhoneInputEl from "@/components/PhoneInputEl";
 import SignInButton from "@/components/SignInButton";
 import SuccessModal from "@/components/SuccessModal";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { revalidate } from "@/lib/data-service";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
-import Link from "next/link";
-import PhoneInputEl from "@/components/PhoneInputEl";
 
 function Page() {
   const router = useRouter();
@@ -32,6 +32,7 @@ function Page() {
 
   const [user_role, setUserRole] = useState("client");
   const [errors, setErrors] = useState({});
+  const [termsError, setTermsError] = useState("");
   const [otp, setotp] = useState(null);
   const [alert, setAlert] = useState(false);
   const [isLoading, setisLoading] = useState(false);
@@ -206,6 +207,11 @@ function Page() {
   const handleOpenOverlay = useCallback(
     async (event) => {
       event.preventDefault();
+      setTermsError("");
+      if (confirmTerms === false)
+        return setTermsError(
+          "Please accept the Terms of Service and Privacy Policy to proceed.",
+        );
 
       if (Object.values(errors).every((err) => err === "")) {
         try {
@@ -293,11 +299,16 @@ function Page() {
 
   function handleCountryChange(c) {
     console.log("qs5ewrfdgfsofdgf", c);
-    setForm({ ...form, country:c });
+    setForm({ ...form, country: c });
     //console.log(form.country);
 
     // Real-time validation
     //validateField("phoneNumber", phone);
+  }
+
+  function handleConfirmTerm() {
+    setTermsError("");
+    setConfirmTerms((checked) => !checked);
   }
 
   const isFormInvalid = useMemo(() => {
@@ -325,7 +336,7 @@ function Page() {
         if (!/^[A-Za-z]+$/.test(value)) {
           errorMsg = "Invalid Last Name";
         }
-      
+
         break;
       case "email":
         if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value)) {
@@ -497,7 +508,6 @@ function Page() {
                 phone={form.phoneNumber}
                 setPhone={handlePhoneChange}
                 setCountry={handleCountryChange}
-                  
               />
 
               {/* Phone Number with Country Code */}
@@ -669,7 +679,7 @@ function Page() {
                 <input
                   type="checkbox"
                   className="border-none outline-none"
-                  onChange={() => setConfirmTerms((checked) => !checked)}
+                  onChange={handleConfirmTerm}
                   checked={confirmTerms}
                   name="confirmTerms"
                 />
@@ -679,14 +689,15 @@ function Page() {
                 <span className="text-sm text-grey-primary">
                   Terms and Conditions
                 </span>
+                {termsError && (
+                  <p className="text-xs text-red-500">{termsError}</p>
+                )}
               </div>
               <OnBoardingButton
                 type="submit"
-                disabled={isFormInvalid || !confirmTerms}
+                disabled={isFormInvalid}
                 className={`${
-                  isFormInvalid || !confirmTerms
-                    ? "cursor-not-allowed"
-                    : "cursor-pointer"
+                  isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
                 }`}
               >
                 Create account
