@@ -1,16 +1,20 @@
 "use client";
 
 import JobViewById from "@/components/JobViewById";
-import { getJobs } from "@/lib/data-service";
+import { getCandidateById, getJobs } from "@/lib/data-service";
 import { useParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function Page() {
   const params = useParams();
   //const candidateId = params.candidateId; // Ensure this is correctly being received
   const jobPostingId = params.jobId; // Ensure this is correctly being received
-  console.log(jobPostingId)
+  const customer_id = params.candidateId;
+  console.log(jobPostingId);
   const [fetchedJob, setFetchedJob] = useState(null);
+  const [candidate, setCandidate] = useState(null);
+
+  console.log("CANDIDATE HERE?", candidate?.city);
 
   useEffect(() => {
     async function fetchJobData() {
@@ -38,13 +42,38 @@ function Page() {
     }
   }, [jobPostingId]);
 
+  useEffect(() => {
+    if (!customer_id || candidate?.customer_id) return;
+
+    async function fetchCandidate() {
+      try {
+        const { data: candidate } = await getCandidateById(customer_id);
+
+        console.log("candidate??", candidate);
+
+        if (candidate) {
+          setCandidate(candidate);
+        } else {
+          console.error("Candidate not found");
+        }
+      } catch (error) {
+        console.error("Failed to fetch candidate data", error);
+      }
+    }
+    fetchCandidate();
+  }, []);
+
   if (!fetchedJob) {
     return <div>Loading...</div>;
   }
 
   return (
     <div>
-      <JobViewById user_role={'customer'} job={fetchedJob} />
+      <JobViewById
+        candidateCity={candidate?.city}
+        user_role={"customer"}
+        job={fetchedJob}
+      />
     </div>
   );
 }

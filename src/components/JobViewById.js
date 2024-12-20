@@ -17,12 +17,12 @@ import Skill from "@/components/Skill";
 import TagCard from "@/components/TagCard";
 import TalentDescription from "@/components/TalentDescription";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
-import { cityTimezoneOffset, relateCandidateTimezoneWithClientTimezone } from "@/utils/cityTimezoneOffset";
+import { calculateTimeZoneOffset } from "@/utils/cityTimezoneOffset";
 import { formatDate } from "@/utils/utility";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-function JobViewById({ job, user_role }) {
+function JobViewById({ candidateCity, job, user_role }) {
   const [isShowMoreEnabled, setIsShowMoreEnabled] = useState(false);
   const [isReadMoreEnabled, setIsReadMoreEnabled] = useState(false);
   const [jobQuestionLength, setJobQuestionLength] = useState(1);
@@ -123,7 +123,7 @@ function JobViewById({ job, user_role }) {
                 <TagCard
                   icon={note_add}
                   title={"Est. Length"}
-                  answer={job.project_length} 
+                  answer={job.project_length}
                 />
 
                 <TagCard
@@ -167,7 +167,11 @@ function JobViewById({ job, user_role }) {
                 <TagCard
                   icon={timer_start}
                   title={"Time zone"}
-                  answer={relateCandidateTimezoneWithClientTimezone(job.location)}
+                  answer={calculateTimeZoneOffset(
+                    candidateCity,
+                    job?.client?.city,
+                  )}
+                  // answer={relateCandidateTimezoneWithClientTimezone(job.location)}
                 />
               </div>
             </div>
@@ -197,39 +201,37 @@ function JobViewById({ job, user_role }) {
           )} */}
         </div>
       </div>
-      {
-        user_role==='client'&&
-      
-      <div className="w-[23.375rem] items-center justify-center rounded-[36px] bg-white p-3">
-        <div className="flex h-auto w-auto flex-row items-center justify-between">
-          <Heading className="text-[24px]">Status</Heading>
-          <Capsule className="items-center text-primary-tint-20">
-            {job?.job_status}
-          </Capsule>
-        </div>
-        <Hr />
-        {interviewingCandidates && (
-          <div className="mb-3 w-full gap-3 rounded-xl">
-            <div className="flex flex-1 flex-row items-center justify-between border-[1px] border-[#F9F8FC]">
-              <EntityCard
-                entity={{
-                  name: interviewingCandidates?.name,
-                  profession: interviewingCandidates?.specialization,
-                  image: "/avatars/avatar-1.png",
-                }}
-              />
-            </div>
-            <div className="skills flex items-center gap-1.5 text-center">
-              {interviewingCandidates?.expertise?.map((skill, i) => (
-                <>
-                  <Skill key={i} skill={skill?.skill} />
-                </>
-              ))}
-            </div>
+      {user_role === "client" && (
+        <div className="w-[23.375rem] items-center justify-center rounded-[36px] bg-white p-3">
+          <div className="flex h-auto w-auto flex-row items-center justify-between">
+            <Heading className="text-[24px]">Status</Heading>
+            <Capsule className="items-center text-primary-tint-20">
+              {job?.job_status}
+            </Capsule>
           </div>
-        )}
-      </div>
-      }
+          <Hr />
+          {interviewingCandidates && (
+            <div className="mb-3 w-full gap-3 rounded-xl">
+              <div className="flex flex-1 flex-row items-center justify-between border-[1px] border-[#F9F8FC]">
+                <EntityCard
+                  entity={{
+                    name: interviewingCandidates?.name,
+                    profession: interviewingCandidates?.specialization,
+                    image: "/avatars/avatar-1.png",
+                  }}
+                />
+              </div>
+              <div className="skills flex items-center gap-1.5 text-center">
+                {interviewingCandidates?.expertise?.map((skill, i) => (
+                  <>
+                    <Skill key={i} skill={skill?.skill} />
+                  </>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
