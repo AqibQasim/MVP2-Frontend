@@ -224,9 +224,9 @@ function ClientRecommendationCard({
       paragraph={`Hey ${client?.name}, here's your new`}
       heading="Recommendations"
     >
-      {!recommendedCandidate?.name ? (
+      {/* {!recommendedCandidate?.name ? (
         <p>No data to show</p>
-      ) : (
+      ) : ( */}
         <div className="scheduleCallBtn space-y-4">
           <div className="flex items-start justify-between">
             <EntityCard
@@ -294,7 +294,7 @@ function ClientRecommendationCard({
             />
           </div>
         </div>
-      )}
+      {/* )} */}
     </DashboardSection>
   );
 }

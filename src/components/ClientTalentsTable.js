@@ -24,27 +24,26 @@ function ClientTalentsTable({ hiredTalents }) {
   const [itemsPerPage] = useState(10);
 
   const fetchHiredCandidates = async () => {
-    const candidates = await getAllRecommendedCandidates(
-      clientId,
-      filter,
-    );
+    const candidates = await getAllRecommendedCandidates(clientId, filter);
 
-    console.log(candidates)
+    console.log(candidates);
 
     if (candidates?.status === 200) {
-      const hired= candidates?.data?.filter(v=>v.customer.talent_status==='hired' || v.customer.talent_status==='trial')
-      setHiredCandidates(hired)
+      const hired = candidates?.data?.filter(
+        (v) =>
+          v.customer.talent_status === "hired" ||
+          v.customer.talent_status === "trial",
+      );
+      setHiredCandidates(hired);
     }
-  }
+  };
   //const clientJobs = await fetchClientJobs(client_id);
 
   useEffect(() => {
     fetchHiredCandidates();
-  }, [])
+  }, []);
 
   console.log(hiredCandidates);
-
- 
 
   const onNext = useCallback(() => {
     setStartIndex((prevIndex) =>
@@ -56,14 +55,13 @@ function ClientTalentsTable({ hiredTalents }) {
     setStartIndex((prevIndex) => Math.max(prevIndex - itemsPerPage, 0));
   }, [itemsPerPage]);
 
- 
   const paginatedCandidates = hiredCandidates?.slice(
     startIndex,
     startIndex + itemsPerPage,
   );
 
-  if(hiredCandidates && hiredCandidates.length === 0){
-    return <EmptyScreen className={'h-full'}/>
+  if (hiredCandidates && hiredCandidates.length === 0) {
+    return <EmptyScreen className={"h-full"} />;
   }
 
   return (
@@ -84,23 +82,25 @@ function ClientTalentsTable({ hiredTalents }) {
         </Table.Header>
 
         {hiredCandidates && hiredCandidates.length > 0 ? (
-        <Table.Body
-          data={paginatedCandidates}
-          render={(talent, i) => <ClientTalentsRow talent={talent} key={i} />}
+          <Table.Body
+            data={paginatedCandidates}
+            render={(talent, i) => <ClientTalentsRow talent={talent} key={i} />}
+          />
+        ) : (
+          <div>
+            <p>No data to show at the moment</p>
+          </div>
+        )}
+        <Table.Footer
+          data={hiredCandidates}
+          startIndex={startIndex + 1}
+          endIndex={Math.min(
+            startIndex + itemsPerPage,
+            hiredCandidates?.length,
+          )}
+          onNext={onNext}
+          onPrevious={onPrev}
         />
-        
-      ) : (
-        <div >
-          <p>No data to show at the moment</p>
-        </div>
-      )}
-      <Table.Footer
-                      data={hiredCandidates}
-                      startIndex={startIndex + 1}
-                      endIndex={Math.min(startIndex + itemsPerPage, hiredCandidates?.length)}
-                      onNext={onNext}
-                      onPrevious={onPrev}
-                    />
       </Table>
     </DashboardSection>
   );

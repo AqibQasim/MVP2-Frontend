@@ -6,7 +6,7 @@ async function Page({ params }) {
   const clientId = params.clientId;
   console.log("params: ", clientId);
   const { data: recommendedCandidatesForJobs, error } =
-    await getAllRecommendedCandidates(clientId, "all", "interviewing");
+    await getAllRecommendedCandidates(clientId, "all", "referred");
 
   if (error) console.log("Error: getting recommeneded Candidates: ", error);
   if (error)
