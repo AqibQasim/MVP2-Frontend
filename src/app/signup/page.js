@@ -207,11 +207,10 @@ function Page() {
   const handleOpenOverlay = useCallback(
     async (event) => {
       event.preventDefault();
-      setTermsError("");
-      if (confirmTerms === false)
-        return setTermsError(
-          "Please accept the Terms of Service and Privacy Policy to proceed.",
-        );
+      // if (confirmTerms === false)
+      //   return setTermsError(
+      //     "Please accept the Terms of Service and Privacy Policy to proceed.",
+      //   );
 
       if (Object.values(errors).every((err) => err === "")) {
         try {
