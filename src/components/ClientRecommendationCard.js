@@ -25,6 +25,7 @@ function ClientRecommendationCard({
   const [interviewTime, setInterviewTime] = useState(null);
   const [score, setScore] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+
   const buttonRef = useRef(null);
 
   const params = useParams();
@@ -179,6 +180,7 @@ function ClientRecommendationCard({
   }, [scheduleInterview, interviewTime]);
 
   useEffect(() => {
+    getCandidateResult();
     setIsMounted(true);
   }, []);
 
