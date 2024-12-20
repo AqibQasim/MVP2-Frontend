@@ -2,6 +2,7 @@ import Image from "next/image";
 import PropTypes from "prop-types";
 
 function EntityCard({
+  onClick,
   sm = false,
   lg = false,
   icon = false,
@@ -15,7 +16,7 @@ function EntityCard({
   const textSizeClass = lg ? "text-lg" : sm ? "text-base" : "text-sm";
 
   return (
-    <div className="entity flex items-center justify-start gap-2">
+    <div className="entity flex items-center justify-start gap-2" onClick={onClick}>
       <div
         className={`relative ${sizeClass} ${icon ? "!bg-primary-tint-100 p-3.5" : ""} overflow-hidden rounded-full bg-bg-avatar`}
       >

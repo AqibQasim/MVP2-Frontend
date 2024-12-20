@@ -43,7 +43,7 @@ function CandidateDashboardNavLinks({ candidateId }) {
   const fetchJobsInterviewing = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/get-job-candidates?job_status=hired-trial-interviewing&candidate_id=${cid}`,
+        `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/get-job-candidates?job_status=hired-trial-referred-interviewing&candidate_id=${cid}`,
       );
       // if (!response.ok) {
       //   throw new Error("Network response was not ok");

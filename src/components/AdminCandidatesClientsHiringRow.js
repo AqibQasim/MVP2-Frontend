@@ -98,6 +98,16 @@ function AdminCandidatesClientsHiringRow({
 
   let options = null;
 
+  // if (job?.job_status === "referred") {
+  //   options = [
+  //     { value: "open", label: "Open" },
+  //     //{ valie: "interviewing", label: "Interviewing" },
+  //     { value: "trial", label: "Trial" },
+  //     { value: "hired", label: "Hired" },
+  //     { value: "close", label: "Close" },
+  //   ];
+  // }
+
   if (job?.job_status === "interviewing") {
     options = [
       { value: "open", label: "Open" },

@@ -180,49 +180,64 @@ function ClientRecommendedRow({ recommended }) {
 
   return (
     <>
-      <div className="cursor-pointer">
-        <Table.Row onClick={handleRowClick}>
-          <EntityCard
-            entity={{
-              name: candidate?.name,
-              profession: candidate?.specialization,
-              image: "/avatars/avatar-2.png",
-            }}
-          />
-          <div className="skills flex items-center justify-center gap-1.5 text-center">
-            {job.skills.length > 1 ? (
-              <>
-                <SkillIconWithBg icon={job.skills[0]} skill={job.skills[0]} />
-                <div className="text-sm text-gray-500">
-                  +{job.skills.length - 1}
-                </div>
-              </>
-            ) : (
+
+       <div
+              className ="cursor-pointer"
+           >
+           <Table.Row
+           >
+         <EntityCard
+         onClick = {handleRowClick}
+          entity={{
+            name: candidate?.name,
+            profession: candidate?.specialization,
+            image: "/avatars/avatar-1.png",
+          }}
+        />
+        <div  
+            onClick = {handleRowClick}
+           className="skills flex items-center justify-center gap-1.5 text-center">
+          {job.skills.length > 1 ? (
+            <>
               <SkillIconWithBg icon={job.skills[0]} skill={job.skills[0]} />
-            )}
-          </div>
-          <div className="job-title text-center">{job.position}</div>
-          <div className="experience text-center">{candidate.experience}</div>
-          <Capsule>{candidate.commitment}</Capsule>
-          {isInterviewScheduled ? (
-            <Capsule
-              className="ml-auto cursor-not-allowed !bg-primary-tint-100"
-              icon={<IconWithBg icon={<SvgIconRequestInterview />} />}
-            >
-              Schedule Interview
-            </Capsule>
+              <div className="text-sm text-gray-500">+{job.skills.length - 1}</div>
+            </>
           ) : (
-            <Capsule
-              onClick={() => setIsOpen(true)}
-              ref={buttonRef}
-              id="root"
-              className="ml-auto !bg-primary-tint-100"
-              icon={<IconWithBg icon={<SvgIconRequestInterview />} />}
-            >
-              Schedule Interview
-            </Capsule>
+            <SkillIconWithBg icon={job.skills[0]} skill={job.skills[0]} />
           )}
-        </Table.Row>
+        </div>
+        <div 
+         onClick = {handleRowClick}
+        className="job-title text-center">{job.position}</div>
+        <div 
+         onClick = {handleRowClick}
+        className="experience text-center">{candidate.experience}</div>
+        <Capsule
+         onClick = {handleRowClick}
+        >{candidate.commitment}</Capsule>
+        {isInterviewScheduled ? (
+          <Capsule
+            className="ml-auto !bg-primary-tint-100 cursor-not-allowed"
+            icon={<IconWithBg icon={<SvgIconRequestInterview />} />}
+          >
+            
+            Schedule Interview
+          </Capsule>
+        ) : (
+          <Capsule
+            onClick={() => {
+              console.log("dgyuawwifje0rgeopgneid")
+              setIsOpen(true)
+              }}
+            ref={buttonRef}
+            id = "root"
+            className="ml-auto !bg-primary-tint-100"
+            icon={<IconWithBg icon={<SvgIconRequestInterview />} />}
+          >
+            Schedule Interview
+          </Capsule>
+        )}
+      </Table.Row>
       </div>
 
       <PopupModal
