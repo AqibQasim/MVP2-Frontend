@@ -64,7 +64,12 @@ export default function Page({ params }) {
     });
   }, []);
 
-  if (client && !client?.company_name) {
+  if (
+    (client && !client?.company_name) ||
+    !client?.company_size ||
+    !client?.country ||
+    !client?.city
+  ) {
     return (
       <ClientProfileInfo
         clientName={client?.name}

@@ -497,10 +497,7 @@ export async function clientUpdateProfile(profileData, client_id) {
   const payload = {
     endpoint: `client-profile-update/${client_id}`, // Use the client ID
     method: "PUT",
-    body: {
-      company_name,
-      company_size,
-    },
+    body: profileData,
   };
 
   const result = await mvp2ApiHelper(payload);

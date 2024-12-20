@@ -1,5 +1,6 @@
 "use client";
 import { updateClientProfileAction } from "@/lib/actions";
+import { citiesList, countryList } from "@/utils/cities";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import EntityCard from "./EntityCard";
@@ -9,9 +10,10 @@ import Input from "./Input";
 import SubmitButton from "./SubmitButton";
 
 function ClientProfileInfoForm({ clientName, clientEmail }) {
-  const [error, setError] = useState(null);
   const params = useParams();
   const clientId = params.clientId;
+  const [error, setError] = useState(null);
+  const [tempCountry, setTempCountry] = useState("");
 
   async function handleProfileUpdate(formData) {
     const { error, message } = await updateClientProfileAction(formData);
@@ -63,6 +65,19 @@ function ClientProfileInfoForm({ clientName, clientEmail }) {
           label="company size"
           options={["0-15", "16-50", "51-100"]}
         />
+        <SelectElement
+          required
+          label="country"
+          placeholder={"Select country"}
+          options={countryList}
+          onChange={(e) => setTempCountry(e.target.value)}
+        />
+        <SelectElement
+          disabled={!tempCountry}
+          required
+          label="city"
+          options={tempCountry ? citiesList[tempCountry] || ["Empty"] : []}
+        />
 
         {error ? (
           <div className="error">
@@ -85,7 +100,7 @@ function ClientProfileInfoForm({ clientName, clientEmail }) {
 
 export default ClientProfileInfoForm;
 
-function SelectElement({ label, options, ...rest }) {
+function SelectElement({ label, options, placeholder, ...rest }) {
   return (
     <div className="row space-y-2">
       {label ? (
@@ -99,6 +114,11 @@ function SelectElement({ label, options, ...rest }) {
         {...rest}
         className="block w-full rounded-[40px] border border-primary-tint-90 p-3 font-lufga text-sm font-normal capitalize focus:border-primary focus:!outline-none focus:ring-primary"
       >
+        {placeholder ? (
+          <option selected value={placeholder}>
+            {placeholder}
+          </option>
+        ) : null}
         {options.map((option) => (
           <option key={option} value={option}>
             {option}

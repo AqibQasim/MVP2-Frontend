@@ -273,20 +273,37 @@ export async function updateClientProfileAction(formData) {
   const clientId = formData.get("clientId");
   const company_name = formData.get("company_name");
   const company_size = formData.get("company size");
+  const country = formData.get("country");
+  const city = formData.get("city");
 
-  console.log("clinet id from action", clientId);
-
-  console.log("log from action ", company_name);
   // Validations
   if (!clientId) return { error: "Valid Client id is required." };
 
   if (!company_name || !/^[a-zA-Z\s\-]+$/.test(company_name)) {
     return { error: "Valid company name is required." };
   }
+  if (
+    !company_size ||
+    !["0-15", "16-50", "51-100"].includes(company_size.trim())
+  ) {
+    return { error: "Valid company size is required." };
+  }
+  if (!country || !/^[a-zA-Z\s\-]+$/.test(country)) {
+    return {
+      error: "Country is required.",
+    };
+  }
+  if (!city || !/^[a-zA-Z\s\-]+$/.test(city)) {
+    return {
+      error: "City is required.",
+    };
+  }
 
   const updateProfileData = {
     company_name,
     company_size,
+    country,
+    city,
   };
 
   console.log("update profile data", updateProfileData);
