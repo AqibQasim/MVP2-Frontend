@@ -154,13 +154,13 @@ function TalentIdPage({ client_id, customer_id }) {
         <div className="flex flex-row justify-center">
           <div className="flex flex-1 flex-col justify-start">
             <Heading xm>About</Heading>
-            <Capsule
+            {/* <Capsule
               className="flex w-fit items-center gap-2"
               style={{ textTransform: "lowercase" }}
             >
               <Image src={EmailSvg} />
               {talent?.customer?.email}
-            </Capsule>
+            </Capsule> */}
 
             <div className="text-grey-primary-shade-20">Top Skills</div>
             <div className="flex items-start gap-1.5">
