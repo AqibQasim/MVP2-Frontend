@@ -188,7 +188,7 @@ function TalentIdPage({ client_id, customer_id }) {
                   icon="/icons/routing.svg"
                   name="City State: "
                   content={
-                    talent?.customer?.city + talent.customer?.province ||
+                    talent?.customer?.city ||
                     "No city/state given"
                   }
                 />
