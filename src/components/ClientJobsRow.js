@@ -26,7 +26,7 @@ function ClientJobsRow({ job }) {
         icon={<SvgIconWork className="relative -right-[1.3px]" />}
         entity={{
           name: job?.position,
-          profession: job?.specialization || 'No specialization'
+          //profession: job?.specialization || 'No specialization'
         }}
       />
       

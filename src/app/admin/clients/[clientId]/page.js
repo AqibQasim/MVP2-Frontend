@@ -236,7 +236,7 @@ function Page({ params }) {
                   icon="/icons/routing.svg"
                   name="City State: "
                   content={
-                    client?.city + client?.province || "No city/state given"
+                    client?.city || "No city/state given"
                   }
                 />
                 <DetailTag
