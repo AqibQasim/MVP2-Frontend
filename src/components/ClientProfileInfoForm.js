@@ -17,7 +17,7 @@ function ClientProfileInfoForm({ clientName, clientEmail }) {
 
   async function handleProfileUpdate(formData) {
     const { error, message } = await updateClientProfileAction(formData);
-    // console.log("update client profile message ", message);
+
     if (error) {
       console.log(error);
       return setError(error);

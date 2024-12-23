@@ -279,9 +279,9 @@ export async function updateClientProfileAction(formData) {
   // Validations
   if (!clientId) return { error: "Valid Client id is required." };
 
-  if (!company_name || !/^[a-zA-Z\s\-]+$/.test(company_name)) {
-    return { error: "Valid company name is required." };
-  }
+  // if (!company_name || !/^[a-zA-Z\s\-]+$/.test(company_name)) {
+  //   return { error: "Valid company name is required." };
+  // }
   if (
     !company_size ||
     !["0-15", "16-50", "51-100"].includes(company_size.trim())
