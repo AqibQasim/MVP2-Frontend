@@ -102,13 +102,15 @@ export default function Page({ params }) {
 
   return (
     <div className="space-y-2">
-      <ClientRecommendationCard
-        admin_hourly_rate={recommendedCandidates?.hourly_rate}
-        client={client}
-        scheduleInterview={recommendedCandidates?.client_response}
-        recommendedCandidate={recommendedCandidates?.customer}
-        recommendedForJob={recommendedCandidates?.job_postings}
-      />
+      {recommendedCandidates?.customer && (
+        <ClientRecommendationCard
+          admin_hourly_rate={recommendedCandidates?.hourly_rate}
+          client={client}
+          scheduleInterview={recommendedCandidates?.client_response}
+          recommendedCandidate={recommendedCandidates?.customer}
+          recommendedForJob={recommendedCandidates?.job_postings}
+        />
+      )}
       {jobs && <ClientJobsOverviewTable jobs={jobs} />}
       {<ClientEmployeesTable client_id={params?.clientId} />}
     </div>
