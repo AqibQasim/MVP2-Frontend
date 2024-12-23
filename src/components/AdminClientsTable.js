@@ -117,7 +117,7 @@ Co-ventech
   
   Email: ${formData.email || "Client email"}
   Password: ${password}
-  You can log in and explore the platform here: https://app.co-ventech.com/login.
+  You can log in and explore the platform here: https://app.co-ventech.com/change-password/${formData?.email}.
   We’re confident you’ll love the features and benefits our product offers.
   
   If you have any questions or need assistance, feel free to reach out to us at support@co-ventech.com.
