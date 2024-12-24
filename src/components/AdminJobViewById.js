@@ -16,7 +16,10 @@ import Skill from "@/components/Skill";
 import TagCard from "@/components/TagCard";
 import TalentDescription from "@/components/TalentDescription";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
-import { cityTimezoneOffset, relateCandidateTimezoneWithClientTimezone } from "@/utils/cityTimezoneOffset";
+import {
+  cityTimezoneOffset,
+  relateCandidateTimezoneWithClientTimezone,
+} from "@/utils/cityTimezoneOffset";
 import { formatDate } from "@/utils/utility";
 import { getClientById } from "@/lib/data-service";
 import Image from "next/image";
@@ -739,7 +742,7 @@ const fetchCustomer = async (stripeClientId) => {
                     entity={{
                       name: assignedCandidates?.name,
                       profession: assignedCandidates?.specialization,
-                      image: "/avatars/avatar-1.png",
+                      image: "/avatars/avatar-2.png",
                     }}
                   />
                 </div>

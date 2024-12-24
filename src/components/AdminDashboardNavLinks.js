@@ -1,6 +1,7 @@
 "use client";
 import SvgIconDashboard from "@/svgs/SvgIconDashboard";
 import SvgIconJob from "@/svgs/SvgIconJob";
+import SvgIconNotification from "@/svgs/SvgIconNotification";
 import SvgIconPayment from "@/svgs/SvgIconPayment";
 import SvgIconSettings from "@/svgs/SvgIconSettings";
 import Link from "next/link";
@@ -54,6 +55,12 @@ function AdminDashboardNavLinks() {
       href: `/admin/customer-payments`,
 
       icon: <SvgIconPayment className="size-6" />,
+    },
+    {
+      name: "Notifications",
+      href: `/admin/notifications`,
+
+      icon: <SvgIconNotification className="size-6" />,
     },
   ];
 

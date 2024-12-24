@@ -65,7 +65,7 @@ const ClientAlertMessage = ({
                   onPress={onReject}
                   className={"ml-2 w-[8rem] bg-slate-100"}
                 >
-                  <div className="text-black">Decline</div>
+                  <div className="text-black">Refer me another candidate</div>
                 </ButtonCapsule>
               </div>
             )}
@@ -81,7 +81,7 @@ const ClientAlertMessage = ({
             // <ButtonCapsule className={"ml-2 w-[8rem] bg-slate-100"}>
             //   <div className="text-black">Declined</div>
             // </ButtonCapsule>
-            <p className="mr-4">Declined</p>
+            <p className="mr-4">Requested</p>
           )}
         </div>
       </div>

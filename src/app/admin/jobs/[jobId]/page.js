@@ -56,7 +56,7 @@ function Page({ params }) {
       candidate?.customer?.name
         ?.toLowerCase()
         .includes(searchCandidate?.toLowerCase()) &&
-      candidate?.customer?.talent_status === "open",
+      candidate?.customer?.talent_status === "open" && candidate?.customer?.status==="active",
   );
 
   const handleAssignJob = async (e) => {

@@ -2,11 +2,12 @@ import Image from "next/image";
 import PropTypes from "prop-types";
 
 function EntityCard({
+  onClick,
   sm = false,
   lg = false,
   icon = false,
   entity = {
-    image: "/avatars/avatar-1.png",
+    image: "/avatars/avatar-2.png",
     name: "John Doe",
     profession: "",
   },
@@ -15,7 +16,7 @@ function EntityCard({
   const textSizeClass = lg ? "text-lg" : sm ? "text-base" : "text-sm";
 
   return (
-    <div className="entity flex items-center justify-start gap-2">
+    <div className="entity flex items-center justify-start gap-2" onClick={onClick}>
       <div
         className={`relative ${sizeClass} ${icon ? "!bg-primary-tint-100 p-3.5" : ""} overflow-hidden rounded-full bg-bg-avatar`}
       >
@@ -36,7 +37,7 @@ function EntityCard({
           {entity.name}
         </p>
         {entity.profession && (
-          <p className="text-sm font-medium text-[14px] text-grey-primary-shade-30">
+          <p className="text-[14px] text-sm font-medium text-grey-primary-shade-30">
             {entity.profession}
           </p>
         )}

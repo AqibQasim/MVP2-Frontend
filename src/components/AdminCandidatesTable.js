@@ -19,23 +19,42 @@ function AdminCandidatesTable({ totalCandidates, candidates, role }) {
 
   console.log("Candidates:", candidates);
 
-  const filteredCandidates = candidates
-    .filter(
-      (candidate) =>
-        !talentStatus ||
-        getCandidateStatus(
-          candidate?.customer?.talent_status,
-          candidate?.customer?.status,
-        ).toLowerCase() === talentStatus,
-    )
-    .filter(
-      (candidate) =>
-        !searchTerm ||
-        (typeof candidate.customer?.name === "string" &&
-          candidate.customer?.name
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())),
-    );
+  const filteredCandidates =
+    role !== "dashboard"
+      ? candidates
+          .filter(
+            (candidate) =>
+              !talentStatus ||
+              getCandidateStatus(
+                candidate?.customer?.talent_status,
+                candidate?.customer?.status,
+              ).toLowerCase() === talentStatus,
+          )
+          .filter(
+            (candidate) =>
+              !searchTerm ||
+              (typeof candidate.customer?.name === "string" &&
+                candidate.customer?.name
+                  .toLowerCase()
+                  .includes(searchTerm.toLowerCase())),
+          )
+      : candidates
+          .filter(
+            (candidate) =>
+              //!talentStatus ||
+              getCandidateStatus(
+                candidate?.customer?.talent_status,
+                candidate?.customer?.status,
+              ).toLowerCase() === "Available".toLowerCase(),
+          )
+          .filter(
+            (candidate) =>
+              !searchTerm ||
+              (typeof candidate.customer?.name === "string" &&
+                candidate.customer?.name
+                  .toLowerCase()
+                  .includes(searchTerm.toLowerCase())),
+          );
 
   const onNext = useCallback(() => {
     setStartIndex((prevIndex) =>

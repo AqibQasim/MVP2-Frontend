@@ -73,15 +73,15 @@ function Page({ params }) {
     };
   }, [client_id]);
 
-   function convertUnixToDate(unixTimestamp) {
-     const milliseconds = unixTimestamp * 1000; // Convert seconds to milliseconds
-     const dateObject = new Date(milliseconds);
+  function convertUnixToDate(unixTimestamp) {
+    const milliseconds = unixTimestamp * 1000; // Convert seconds to milliseconds
+    const dateObject = new Date(milliseconds);
 
-     // Define options for toLocaleDateString
-     const options = { day: "numeric", month: "long", year: "numeric" };
+    // Define options for toLocaleDateString
+    const options = { day: "numeric", month: "long", year: "numeric" };
 
-     return dateObject.toLocaleDateString("en-GB", options); // Format as a human-readable date string
-   }
+    return dateObject.toLocaleDateString("en-GB", options); // Format as a human-readable date string
+  }
 
   async function getClientStripe(clientId) {
     const payload = {
@@ -174,7 +174,7 @@ function Page({ params }) {
         <div className="mini-profile flex items-center justify-start">
           <EntityCard
             entity={{
-              image: "/avatars/avatar-1.png",
+              image: "/avatars/avatar-2.png",
               name: client?.name,
               //   profession: talent?.specialization,
             }}
@@ -193,7 +193,10 @@ function Page({ params }) {
           <div className="flex-1">
             <div>
               <Heading xm>About</Heading>
-              <Capsule className="flex w-fit flex-wrap items-center gap-2" style={{ textTransform: "lowercase" }}>
+              <Capsule
+                className="flex w-fit flex-wrap items-center gap-2"
+                style={{ textTransform: "lowercase" }}
+              >
                 <Image src={EmailSvg} />
                 {client?.email}
               </Capsule>
@@ -233,7 +236,7 @@ function Page({ params }) {
                   icon="/icons/routing.svg"
                   name="City State: "
                   content={
-                    client?.city + client?.province || "No city/state given"
+                    client?.city || "No city/state given"
                   }
                 />
                 <DetailTag
@@ -275,11 +278,10 @@ function Page({ params }) {
             </div>
           </div>
           <div className="space-y-4">
-              <ClientPaymentHistoryTable
-                client_id={client_id}
-                paymentHistory={clientCharges}
-              />
-          
+            <ClientPaymentHistoryTable
+              client_id={client_id}
+              paymentHistory={clientCharges}
+            />
           </div>
         </div>
       </div>

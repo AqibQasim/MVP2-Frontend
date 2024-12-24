@@ -113,7 +113,7 @@ Co-ventech
   
   Email: ${formData.email || "Client email"}
   Password: ${password}
-  You can log in and explore the platform here: https://app.co-ventech.com/login.
+  You can log in and explore the platform here: https://app.co-ventech.com/change-password/${formData?.email}.
   We’re confident you’ll love the features and benefits our product offers.
   
   If you have any questions or need assistance, feel free to reach out to us at support@co-ventech.com.
@@ -280,7 +280,7 @@ Co-ventech
                   setShowForm(true);
                   handleGenerateContent();
                 }}
-                className="hover:bg-primary-hover active:bg-primary-hover focus:ring-primary-hover rounded bg-primary-tint-20 hover:bg-primary px-8 py-2 text-base font-medium text-white transition-colors duration-300 ease-in-out focus:outline-none focus:ring focus:ring-offset-2"
+                className="hover:bg-primary-hover active:bg-primary-hover focus:ring-primary-hover rounded bg-blue-700 px-8 py-2 text-base font-medium text-white transition-colors duration-300 ease-in-out hover:bg-primary focus:outline-none focus:ring focus:ring-offset-2"
               >
                 Invite A New Client +
               </button>

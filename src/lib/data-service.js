@@ -437,6 +437,7 @@ export async function getAllRecommendedCandidates(
   job_status = null,
 ) {
   const hired = "accept";
+  console.log(clientId)
   const payload = {
     endpoint: `get-all-candidates-of-clients-job?client_id=${clientId}`,
     method: "GET",
@@ -467,6 +468,15 @@ export async function getAllRecommendedCandidates(
   if (job_status === "interviewing") {
     candidates = result?.data.data?.filter(
       (candidate) =>
+        (candidate.client_response === "pending" ||
+          candidate?.client_response === "scheduled") &&
+        candidate?.customer?.talent_status === job_status,
+    );
+  }
+
+  if (job_status === "referred") {
+    candidates = result?.data.data?.filter(
+      (candidate) =>
         (candidate.client_response === "pending" || candidate?.client_response==="scheduled") &&
         candidate?.customer?.talent_status === job_status,
     );
@@ -489,4 +499,24 @@ export async function fetchCandidatesJobStatus(job_status) {
   }
 
   return { data: null, error: result.data.message };
+}
+
+export async function clientUpdateProfile(profileData, client_id) {
+  const { company_name, company_size } = profileData;
+  const payload = {
+    endpoint: `client-profile-update/${client_id}`, // Use the client ID
+    method: "PUT",
+    body: profileData,
+  };
+
+  const result = await mvp2ApiHelper(payload);
+  console.log("result on client profile update", result);
+  if (result.status !== 200) {
+    console.error(result?.data?.message);
+    return { data: null, error: result?.data?.message };
+  }
+  return {
+    message: result?.data?.message,
+    error: null,
+  };
 }
