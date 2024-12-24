@@ -186,7 +186,7 @@ function AdminJobViewById({ job, setShowForm }) {
   };
 
   const handleSubscription = async () => {
-    const customPrice = assignedCandidates.hourly_rate * 100 * 80;
+    const customPrice = job?.hourly_rate * 100 * 80;
 
     try {
       setIsLoading(true);
@@ -217,7 +217,7 @@ function AdminJobViewById({ job, setShowForm }) {
   };
 
   const handleHiring = async () => {
-    const customPrice = assignedCandidates.hourly_rate * 100 * 80;
+    const customPrice = job?.hourly_rate * 100 * 80;
 
     try {
       // Fetch client secret for subscription
@@ -246,6 +246,7 @@ function AdminJobViewById({ job, setShowForm }) {
       }
 
       setIsLoading(false);
+      autoRefresh();
 
       const { clientSecret } = await subscriptionResponse.json();
       //setClientSecret(clientSecret);
@@ -353,6 +354,7 @@ function AdminJobViewById({ job, setShowForm }) {
         const deleteResult = await deleteResponse.json();
         console.log("Subscription deleted successfully:", deleteResult);
         setIsLoading(false);
+        autoRefresh();
       } else {
         setIsLoading(false);
         console.log("No subscriptions found to delete");

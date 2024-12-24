@@ -21,8 +21,8 @@ function AdminCandidatesClientsHiringRow({
   const [paymentMethodSet, isPaymentMethodSet] = useState(false);
 
   const autoRefresh = () => {
-    window.location.reload();
-    // router.refresh();
+    // window.location.reload();
+    router.refresh();
   };
 
   //console.log(first)
@@ -220,7 +220,7 @@ function AdminCandidatesClientsHiringRow({
   };
 
   const handleSubscription = async () => {
-    const customPrice = candidate.hourly_rate * 100 * 40 * 2;
+    const customPrice = job?.hourly_rate * 100 * 40 * 2;
 
     try {
       setIsLoading(true);
@@ -251,7 +251,7 @@ function AdminCandidatesClientsHiringRow({
   };
 
   const handleHiring = async () => {
-    const customPrice = candidate.hourly_rate * 100 * 80;
+    const customPrice = job?.hourly_rate * 100 * 80;
 
     try {
       // Fetch client secret for subscription
@@ -278,6 +278,9 @@ function AdminCandidatesClientsHiringRow({
         setIsLoading(false);
         throw new Error(`HTTP error! status: ${subscriptionResponse.status}`);
       }
+
+      setIsLoading(false);
+      autoRefresh()
 
       const { clientSecret } = await subscriptionResponse.json();
       //setClientSecret(clientSecret);
@@ -385,6 +388,7 @@ function AdminCandidatesClientsHiringRow({
         const deleteResult = await deleteResponse.json();
         console.log("Subscription deleted successfully:", deleteResult);
         setIsLoading(false);
+        autoRefresh()
       } else {
         setIsLoading(false);
         console.log("No subscriptions found to delete");
@@ -569,10 +573,10 @@ function AdminCandidatesClientsHiringRow({
                     }
 
                     // Simulate API call delay (remove after integrating real API)
-                    setTimeout(() => {
-                      setIsLoading(false);
-                      autoRefresh();
-                    }, 1000);
+                    // setTimeout(() => {
+                    //   setIsLoading(false);
+                    //   autoRefresh();
+                    // }, 1000);
                   }}
                   className="text-sm font-bold"
                 />
