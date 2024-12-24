@@ -95,7 +95,7 @@ function Page({ params }) {
         <p>Loading job details...</p>
       )}
       <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
-        <h3 className="mb-4 text-xl font-semibold">
+          <h3 className="mb-4 text-xl font-semibold">
           Assign {job?.position} to Candidate
         </h3>
         <form onSubmit={handleAssignJob}>

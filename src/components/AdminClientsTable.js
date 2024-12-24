@@ -100,10 +100,6 @@ Co-ventech
           body: JSON.stringify(signupBody),
         },
       );
-
-      
-
-
       if (!signupResponse2.ok) {
         throw new Error("Failed to sign up the client.");
       }
