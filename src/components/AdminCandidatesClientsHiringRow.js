@@ -280,7 +280,7 @@ function AdminCandidatesClientsHiringRow({
       }
 
       setIsLoading(false);
-      autoRefresh()
+      // autoRefresh()
 
       const { clientSecret } = await subscriptionResponse.json();
       //setClientSecret(clientSecret);
@@ -388,7 +388,7 @@ function AdminCandidatesClientsHiringRow({
         const deleteResult = await deleteResponse.json();
         console.log("Subscription deleted successfully:", deleteResult);
         setIsLoading(false);
-        autoRefresh()
+        // autoRefresh()
       } else {
         setIsLoading(false);
         console.log("No subscriptions found to delete");
