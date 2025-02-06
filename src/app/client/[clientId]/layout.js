@@ -4,27 +4,11 @@ import { getClientById } from "@/lib/data-service";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 
 import { auth } from "@/lib/auth";
-import ClientAlertMessage from "@/components/ClientAlertMessage";
-import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 
 async function layout({ children, params }) {
   const clientId = params.clientId;
   console.log("clientId", clientId);
   const session = await auth();
-
-  //const [showResponseMessage,setShowResponseMessage]=useState(true);
-  // const router = useRouter();
-
-  // useEffect(() => {
-  //   // Check if user is logged in
-  //   const isLoggedIn = localStorage.getItem("MVP_CLIENT_LOGGEDIN");
-
-  //   // If not logged in, redirect to login Page
-  //   if (!isLoggedIn) {
-  //     // router.push("/login");
-  //     window.location.href("/login");
-  //   }
-  // }, [router]);
 
   const client = await getClientById(clientId);
 

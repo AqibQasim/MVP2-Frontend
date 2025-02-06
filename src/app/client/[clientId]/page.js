@@ -5,15 +5,12 @@ import ClientJobsOverviewTable from "@/components/ClientJobsOverviewTable";
 import ClientProfileInfo from "@/components/ClientProfileInfo";
 import ClientRecommendationCard from "@/components/ClientRecommendationCard";
 import DashboardSection from "@/components/DashboardSection";
-import EmptyScreen from "@/components/EmptyScreen";
 import {
-  getAllRecommendedCandidates,
   getClientById,
   getClientJobs,
   getRecommendedCandidateOfClient,
 } from "@/lib/data-service";
 import { sendNotification } from "@/utils/notification";
-import urlBase64ToUint8Array from "@/utils/urlBase64ToUint8Array";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -23,6 +20,7 @@ export default function Page({ params }) {
   const [client, setClient] = useState(null);
   const [recommendedCandidates, setRecommendedCandidates] = useState(null);
   const [jobs, setJobs] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // console.log("Requesting notification permission...");
@@ -53,15 +51,28 @@ export default function Page({ params }) {
   }, [router]);
 
   useEffect(() => {
-    getClientById(params.clientId).then((v) => {
-      setClient(v);
-    });
-    getRecommendedCandidateOfClient(params.clientId).then((v) => {
-      setRecommendedCandidates(v);
-    });
-    getClientJobs(params.clientId).then((v) => {
-      setJobs(v?.slice(0, 3));
-    });
+    const fetchData = async () => {
+      setIsLoading(true);
+
+      try {
+        const clientData = await getClientById(params.clientId);
+        setClient(clientData);
+
+        const recommendedData = await getRecommendedCandidateOfClient(
+          params.clientId,
+        );
+        setRecommendedCandidates(recommendedData);
+
+        const jobsData = await getClientJobs(params.clientId);
+        setJobs(jobsData?.slice(0, 3));
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -70,6 +81,13 @@ export default function Page({ params }) {
       recommendedCandidates?.client_response,
     );
   }, [recommendedCandidates]);
+
+  if (isLoading)
+    return (
+      <div className="flex size-full items-center justify-center">
+        <p> Loading.. </p>
+      </div>
+    );
 
   if (
     (client && !client?.company_name) ||
@@ -99,6 +117,8 @@ export default function Page({ params }) {
       </DashboardSection>
     );
   }
+
+  console.log("this loader", isLoading);
 
   return (
     <div className="space-y-2">
