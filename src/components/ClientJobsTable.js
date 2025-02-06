@@ -1,34 +1,39 @@
 "use client";
-import { fetchClientJobs, getClientById, getJobs } from "@/lib/data-service";
+import { fetchClientJobs } from "@/lib/data-service";
+import { useCallback, useEffect, useState } from "react";
 import ClientJobsRow from "./ClientJobsRow";
 import DashboardSection from "./DashboardSection";
-import Table from "./Table";
-import { useEffect, useState,useCallback } from "react";
 import EmptyScreen from "./EmptyScreen";
+import Table from "./Table";
 
-async function ClientJobsTable({ client_id }) {
-
+function ClientJobsTable({ client_id }) {
   const [jobs, setJobs] = useState(null);
   const [startIndex, setStartIndex] = useState(0);
-  const [itemsPerPage] = useState(10);
-
-  const fetchJobs = async () => {
-    const clientJobs = await fetchClientJobs(client_id);
-
-    //console.log(candidates)
-
-    if (clientJobs?.status === 200) {
-      setJobs(clientJobs?.data)
-    }
-  }
-  //const clientJobs = await fetchClientJobs(client_id);
+  const [isLoading, setIsLoading] = useState(true);
+  const itemsPerPage = 10;
 
   useEffect(() => {
-    fetchJobs();
-  }, [])
+    const fetchJobs = async () => {
+      try {
+        const clientJobs = await fetchClientJobs(client_id);
+        if (clientJobs?.status === 200) {
+          setJobs(clientJobs.data);
+        }
+      } catch (error) {
+        console.error("Error fetching client jobs:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (client_id) {
+      fetchJobs();
+    }
+  }, [client_id]);
+
   const onNext = useCallback(() => {
     setStartIndex((prevIndex) =>
-      Math.min(prevIndex + itemsPerPage, jobs?.result?.length),
+      Math.min(prevIndex + itemsPerPage, jobs?.result?.length || 0),
     );
   }, [jobs?.result?.length, itemsPerPage]);
 
@@ -36,18 +41,22 @@ async function ClientJobsTable({ client_id }) {
     setStartIndex((prevIndex) => Math.max(prevIndex - itemsPerPage, 0));
   }, [itemsPerPage]);
 
- 
   const paginatedJobs = jobs?.result?.slice(
     startIndex,
     startIndex + itemsPerPage,
   );
 
-  console.log("jobs", jobs)
-
-  if(jobs && jobs?.result?.length === 0){
-    return <EmptyScreen className={'h-full'}/>
+  if (isLoading) {
+    return (
+      <div className="flex size-full items-center justify-center">
+        <div className="loader2"></div>
+      </div>
+    );
   }
-  
+
+  if (jobs?.result?.length === 0) {
+    return <EmptyScreen className="h-full" />;
+  }
 
   return (
     <DashboardSection
@@ -64,23 +73,24 @@ async function ClientJobsTable({ client_id }) {
           <div className="status text-center">Status</div>
         </Table.Header>
 
-        {jobs && jobs?.result.length > 0 ? (
-        <Table.Body
-          data={paginatedJobs}
-          render={(job, i) => <ClientJobsRow job={job} key={i} />}
-        />
-         ) : (
-        <div >
-          <p>No data to show at the moment</p>
-        </div>
+        {paginatedJobs?.length > 0 ? (
+          <Table.Body
+            data={paginatedJobs}
+            render={(job, i) => <ClientJobsRow job={job} key={i} />}
+          />
+        ) : (
+          <div>
+            <p>No data to show at the moment</p>
+          </div>
         )}
-          <Table.Footer
-                             data={jobs?.result}
-                             startIndex={startIndex + 1}
-                             endIndex={Math.min(startIndex + itemsPerPage, jobs?.result?.length)}
-                             onNext={onNext}
-                             onPrevious={onPrev}
-                           />
+
+        <Table.Footer
+          data={jobs?.result}
+          startIndex={startIndex + 1}
+          endIndex={Math.min(startIndex + itemsPerPage, jobs?.result?.length)}
+          onNext={onNext}
+          onPrevious={onPrev}
+        />
       </Table>
     </DashboardSection>
   );

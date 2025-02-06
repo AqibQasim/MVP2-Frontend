@@ -20,25 +20,33 @@ export default function Page({ params }) {
   const [client, setClient] = useState(null);
   const [recommendedCandidates, setRecommendedCandidates] = useState(null);
   const [jobs, setJobs] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingNotification, setIsLoadingNotification] = useState(true);
 
   useEffect(() => {
-    // console.log("Requesting notification permission...");
-    requestNotificationPermission();
-  }, []);
+    const requestNotificationPermission = async () => {
+      setIsLoadingNotification(true);
 
-  const requestNotificationPermission = async () => {
-    if ("Notification" in window) {
-      const isAcceptedNotification = await Notification.requestPermission();
-      if (isAcceptedNotification === "granted") {
-        sendNotification(params?.clientId, "client");
-      } else {
-        console.warn("notification permission denied");
+      try {
+        if ("Notification" in window) {
+          const isAcceptedNotification = await Notification.requestPermission();
+          if (isAcceptedNotification === "granted") {
+            sendNotification(params?.clientId, "client");
+          } else {
+            console.warn("Notification permission denied");
+          }
+        } else {
+          console.error("This browser does not support notifications.");
+        }
+      } catch (error) {
+        console.error("Error requesting notification permission:", error);
+      } finally {
+        setIsLoadingNotification(false);
       }
-    } else {
-      console.error("This browser does not support notifications.");
-    }
-  };
+    };
+
+    requestNotificationPermission();
+  }, [params?.clientId]);
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("MVP_CLIENT_LOGGEDIN") === "true";
@@ -73,16 +81,9 @@ export default function Page({ params }) {
     };
 
     fetchData();
-  }, []);
+  }, [params.clientId]);
 
-  useEffect(() => {
-    console.log(
-      "recommended Candidates are this:",
-      recommendedCandidates?.client_response,
-    );
-  }, [recommendedCandidates]);
-
-  if (isLoading)
+  if (isLoading || isLoadingNotification)
     return (
       <div className="flex size-full items-center justify-center">
         <div class="loader2"></div>
@@ -117,8 +118,6 @@ export default function Page({ params }) {
       </DashboardSection>
     );
   }
-
-  console.log("this loader", isLoading);
 
   return (
     <div className="space-y-2">

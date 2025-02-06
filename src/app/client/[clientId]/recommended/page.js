@@ -4,38 +4,59 @@ import EmptyScreen from "@/components/EmptyScreen";
 import { getAllRecommendedCandidates } from "@/lib/data-service";
 import { useEffect, useState } from "react";
 
-async function Page({ params }) {
+function Page({ params }) {
   const clientId = params.clientId;
   console.log("params: ", clientId);
-  const [recommendedCandidatesForJobs, setRecommendedCandidatesForJobs] = useState(null)
-  const [error,setError] = useState(null);
 
-  const fetchAllRecommendedCandidates = async () => {
-    const { data: recCand, err } =
-    await getAllRecommendedCandidates(clientId, "all", "referred");
-    //if (error) console.log("Error: getting recommeneded Candidates: ", error);
-    if (err)
-      setError ('Error: getting recommeneded Candidates: ', err);
-    else setRecommendedCandidatesForJobs(recCand);
-  }
+  const [recommendedCandidatesForJobs, setRecommendedCandidatesForJobs] =
+    useState(null);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(()=>{
+  useEffect(() => {
+    const fetchAllRecommendedCandidates = async () => {
+      try {
+        const { data: recCand, err } = await getAllRecommendedCandidates(
+          clientId,
+          "all",
+          "referred",
+        );
+
+        if (err) {
+          setError("Error: getting recommended Candidates: ", err);
+        } else {
+          setRecommendedCandidatesForJobs(recCand);
+        }
+      } catch (error) {
+        console.error(
+          "Unexpected error fetching recommended candidates:",
+          error,
+        );
+        setError("Unexpected error occurred.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     fetchAllRecommendedCandidates();
-  },[clientId])
+  }, [clientId]);
 
-  // const { data: recommendedCandidatesForJobs, error } =
-  //   await getAllRecommendedCandidates(clientId, "all", "referred");
+  if (isLoading)
+    return (
+      <div className="flex size-full items-center justify-center">
+        <div className="loader2"></div>
+      </div>
+    );
 
-  //if (error) console.log("Error: getting recommeneded Candidates: ", error);
   if (error)
     return (
       <>
-        <h1>Error: getting recommeneded Candidates</h1> <p> {error} </p>
+        <h1>Error: getting recommended Candidates</h1> <p> {error} </p>
       </>
     );
 
-  if(recommendedCandidatesForJobs && recommendedCandidatesForJobs?.length===0){
-      return <EmptyScreen className={'h-full'}/>
+  if (recommendedCandidatesForJobs?.length === 0) {
+    return <EmptyScreen className={"h-full"} />;
   }
 
   return (

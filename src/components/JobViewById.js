@@ -25,34 +25,39 @@ import { formatDate } from "@/utils/utility";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 
-function JobViewById({ job, user_role }) {
+function JobViewById({ job, user_role, className = "" }) {
   const [isShowMoreEnabled, setIsShowMoreEnabled] = useState(false);
   const [isReadMoreEnabled, setIsReadMoreEnabled] = useState(false);
   const [jobQuestionLength, setJobQuestionLength] = useState(1);
   const [interviewingCandidates, setInterviewingCandidates] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const fetchJob = () => {
-    const payload = {
-      endpoint: `get-jobs?job_posting_id=${job?.job_posting_id}&talent_status=${job?.job_status}`,
-      method: "GET",
-    };
-    mvp2ApiHelper(payload).then((value) => {
-      //console.log(value)
+  const fetchJob = async () => {
+    setIsLoading(true);
+
+    try {
+      const payload = {
+        endpoint: `get-jobs?job_posting_id=${job?.job_posting_id}&talent_status=${job?.job_status}`,
+        method: "GET",
+      };
+
+      const value = await mvp2ApiHelper(payload);
+
       if (value.status === 200) {
         setInterviewingCandidates(value?.data?.data);
       }
-    });
+    } catch (error) {
+      console.error("Error fetching job:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
     if (user_role === "client") {
       fetchJob();
     }
-  }, []);
-
-  useEffect(() => {
-    console.log(interviewingCandidates);
-  }, [interviewingCandidates]);
+  }, [user_role]);
 
   const handleShowMore = () => {
     setIsShowMoreEnabled((value) => !value);
@@ -92,8 +97,15 @@ function JobViewById({ job, user_role }) {
   //   [jobQuestionLength],
   // );
 
+  if (isLoading)
+    return (
+      <div className="flex size-full items-center justify-center">
+        <div class="loader2"></div>
+      </div>
+    );
+
   return (
-    <div className="flex flex-row gap-2">
+    <div className={`${className} flex flex-row gap-2`}>
       <div className="flex-1 rounded-3xl bg-white p-4">
         <div className="w-auto">
           <div className="flex flex-row justify-between">
@@ -202,39 +214,37 @@ function JobViewById({ job, user_role }) {
           )} */}
         </div>
       </div>
-      {
-        user_role==='client'&&
-      
-      <div className="w-[23.375rem] items-center justify-center rounded-[36px] bg-white p-3">
-        <div className="flex h-auto w-auto flex-row items-center justify-between">
-          <Heading className="text-[24px]">Status</Heading>
-          <Capsule className="items-center text-primary-tint-20">
-            {job?.job_status}
-          </Capsule>
-        </div>
-        <Hr />
-        {interviewingCandidates && (
-          <div className="mb-3 w-full gap-3 rounded-xl">
-            <div className="flex flex-1 flex-row items-center justify-between border-[1px] border-[#F9F8FC]">
-              <EntityCard
-                entity={{
-                  name: interviewingCandidates?.name,
-                  profession: interviewingCandidates?.specialization,
-                  image: "/avatars/avatar-1.png",
-                }}
-              />
-            </div>
-            <div className="skills flex items-center gap-1.5 text-center">
-              {interviewingCandidates?.expertise?.map((skill, i) => (
-                <>
-                  <Skill key={i} skill={skill?.skill} />
-                </>
-              ))}
-            </div>
+      {user_role === "client" && (
+        <div className="w-[23.375rem] items-center justify-center rounded-[36px] bg-white p-3">
+          <div className="flex h-auto w-auto flex-row items-center justify-between">
+            <Heading className="text-[24px]">Status</Heading>
+            <Capsule className="items-center text-primary-tint-20">
+              {job?.job_status}
+            </Capsule>
           </div>
-        )}
-      </div>
-      }
+          <Hr />
+          {interviewingCandidates && (
+            <div className="mb-3 w-full gap-3 rounded-xl">
+              <div className="flex flex-1 flex-row items-center justify-between border-[1px] border-[#F9F8FC]">
+                <EntityCard
+                  entity={{
+                    name: interviewingCandidates?.name,
+                    profession: interviewingCandidates?.specialization,
+                    image: "/avatars/avatar-1.png",
+                  }}
+                />
+              </div>
+              <div className="skills flex items-center gap-1.5 text-center">
+                {interviewingCandidates?.expertise?.map((skill, i) => (
+                  <>
+                    <Skill key={i} skill={skill?.skill} />
+                  </>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

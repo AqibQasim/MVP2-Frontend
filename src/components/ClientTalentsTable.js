@@ -1,49 +1,44 @@
 "use client";
+import { getAllRecommendedCandidates } from "@/lib/data-service";
 import { useParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import ClientTalentsRow from "./ClientTalentsRow";
 import DashboardSection from "./DashboardSection";
-import Table from "./Table";
-import { getAllRecommendedCandidates } from "@/lib/data-service";
-import { useEffect, useState, useCallback } from "react";
 import EmptyScreen from "./EmptyScreen";
+import Table from "./Table";
 
 function ClientTalentsTable({ hiredTalents }) {
   const params = useParams();
   const clientId = params?.clientId;
 
-  console.log("params: ", clientId);
   const filter = "accept";
-  // const { data: hiredTalents, error } = await getAllRecommendedCandidates(
-  //   clientId,
-  //   filter,
-  // );
-  // if (error) console.log("Error: getting Hired Candidates: ", error);
 
   const [hiredCandidates, setHiredCandidates] = useState(null);
   const [startIndex, setStartIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const [itemsPerPage] = useState(10);
 
   const fetchHiredCandidates = async () => {
-    const candidates = await getAllRecommendedCandidates(clientId, filter);
-
-    console.log(candidates);
-
-    if (candidates?.status === 200) {
-      const hired = candidates?.data?.filter(
-        (v) =>
-          v.customer.talent_status === "hired" ||
-          v.customer.talent_status === "trial",
-      );
-      setHiredCandidates(hired);
+    try {
+      const candidates = await getAllRecommendedCandidates(clientId, filter);
+      if (candidates?.status === 200) {
+        const hired = candidates?.data?.filter(
+          (v) =>
+            v.customer.talent_status === "hired" ||
+            v.customer.talent_status === "trial",
+        );
+        setHiredCandidates(hired);
+      }
+    } catch (error) {
+      console.error("Error fetching hired candidates:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
-  //const clientJobs = await fetchClientJobs(client_id);
 
   useEffect(() => {
     fetchHiredCandidates();
-  }, []);
-
-  console.log(hiredCandidates);
+  }, [clientId]);
 
   const onNext = useCallback(() => {
     setStartIndex((prevIndex) =>
@@ -59,6 +54,14 @@ function ClientTalentsTable({ hiredTalents }) {
     startIndex,
     startIndex + itemsPerPage,
   );
+
+  if (isLoading) {
+    return (
+      <div className="flex size-full items-center justify-center">
+        <div className="loader2"></div>
+      </div>
+    );
+  }
 
   if (hiredCandidates && hiredCandidates.length === 0) {
     return <EmptyScreen className={"h-full"} />;
@@ -91,6 +94,7 @@ function ClientTalentsTable({ hiredTalents }) {
             <p>No data to show at the moment</p>
           </div>
         )}
+
         <Table.Footer
           data={hiredCandidates}
           startIndex={startIndex + 1}
