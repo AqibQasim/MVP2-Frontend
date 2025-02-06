@@ -85,7 +85,7 @@ export default function Page({ params }) {
   if (isLoading)
     return (
       <div className="flex size-full items-center justify-center">
-        <p> Loading.. </p>
+        <div class="loader2"></div>
       </div>
     );
 
