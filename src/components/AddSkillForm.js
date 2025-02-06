@@ -57,7 +57,7 @@ const AddSkillForm = ({
       <div className="flex w-full flex-col items-center justify-center gap-8">
         <div className="w-full justify-start">
           <Heading className="!font-medium">
-            Technologies You’ll Be Asked about
+          Add your skill
           </Heading>
         </div>
         <button

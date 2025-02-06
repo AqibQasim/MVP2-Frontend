@@ -688,7 +688,9 @@ const QuestionBox = ({
         {/*top container*/}
         {isLoading ? (
           <>
-            <div className={styles.loader}></div>
+           <div className="flex size-full items-center justify-center">
+           <div class="loader2"></div>
+           </div>
             {isGeneratingResult && (
               <div className={styles.generatingResultText}>
                 Please wait, it might take some time, AI is generating your

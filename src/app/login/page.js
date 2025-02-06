@@ -12,6 +12,11 @@ import urlBase64ToUint8Array from "@/utils/urlBase64ToUint8Array";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
 import Link from "next/link";
+import { Pagination, Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
+
 import { useRouter } from "next/navigation";
 import { useState, useMemo, useCallback, useEffect } from "react";
 
@@ -210,14 +215,60 @@ function Login() {
   return (
     <>
       <div className={`flex ${PAGE_HEIGHT_FIX} gap-2`}>
-        <div className="flex flex-[1.4] flex-col   rounded-[36px] bg-white">
-          <div className="m-6 "  > <Image src="/logo.svg" width={100} height={25} alt="MVP 2 Logo" /></div>
+      <div className="flex flex-[1.4] flex-col rounded-[36px] bg-white relative overflow-hidden">
+  {/* Gradient Overlay at Top */}
+  
+
+  {/* Logo */}
+  <div className="mx-7 mt-6 mb-2 z-20">
+    <Image src="/logo.svg" width={120} height={30} alt="MVP 2 Logo" />
+  </div>
+
+  {/* Swiper Section */}
+  <div className="absolute top-0 left-0 w-full  h-48 bg-gradient-to-b from-white from-15% z-10"></div>
+  <Swiper
+    modules={[Pagination]}
+    spaceBetween={30}
+    slidesPerView={1}
+    loop={true}
+    pagination={{ clickable: true, el: '.swiper-pagination' }}
+    className="relative w-full h-auto"
+  >
+    {["login-page1.png", "login-page2.png", "login-page3.png"].map(
+      (img, idx) => (
+        <SwiperSlide key={idx} className="flex justify-center items-center">
           
-          {/* <Heading className="text-5xl font-extrabold text-primary">
-            Interactive <span className="gradient-text">Illustration</span>
-          </Heading> */}
-        </div>
-        <div className="flex w-[33rem] flex-col items-start justify-start overflow-y-auto rounded-[36px] bg-white">
+          <Image
+            src={`/${img}`}
+            alt={`Login Image ${idx + 1}`}
+            width={900}
+            height={500}
+            className="rounded-lg object-cover w-full h-[500]"
+          />
+         
+        </SwiperSlide>
+      )
+    )}
+  </Swiper>
+
+  {/* Gradient Overlay at Bottom */}
+  <div className="absolute bottom-0 left-0 w-full  h-36 bg-gradient-to-t from-white from-15% z-10"></div>
+
+  {/* Text Section with Pagination Dots */}
+  <div className="text-center px-6 relative z-20">
+    <h2 className="text-3xl mx-auto mt-4 font-extrabold text-gray-900 leading-tight">
+      Where Top Talent Meets Leading <br></br>Companies
+    </h2>
+    <p className="mt-3 mb-12 text-gray-500 text-sm w-[80%] mx-auto">
+      Unlock a world of skilled engineers and innovative companies. Co-Vental
+      bridges the gap between top-tier talent and businesses looking to build
+      the future.
+    </p>
+    {/* Pagination Dots */}
+    <div className="swiper-pagination mt-24"></div>
+  </div>
+</div>
+        <div className="flex w-[35rem] flex-col items-start justify-start overflow-y-auto rounded-[36px] bg-white">
           <div className="flex w-full justify-end space-y-2 p-5">
             <div className="flex gap-2">
               <button

@@ -115,7 +115,7 @@ function AdminCreateAJobForm({ clientId, closeModal }) {
 
         <div className="mb-4">
           <label htmlFor="commitment" className="block text-gray-700">
-            Commitment
+          availablity
           </label>
           <select
             id="commitment"
