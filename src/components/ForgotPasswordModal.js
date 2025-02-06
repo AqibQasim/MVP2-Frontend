@@ -165,7 +165,7 @@ const ForgotPasswordModal = ({
       if (Object.values(error).every((err) => err === "")) {
         const generatedotp = generateOtp();
         setotp(generatedotp);
-        console.log(generatedotp);
+        
 
         const payload = {
           endpoint: "send-email",

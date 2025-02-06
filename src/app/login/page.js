@@ -210,14 +210,15 @@ function Login() {
   return (
     <>
       <div className={`flex ${PAGE_HEIGHT_FIX} gap-2`}>
-        <div className="flex flex-[1.4] flex-col items-center justify-center rounded-[36px] bg-white">
-          <Heading className="text-5xl font-extrabold text-primary">
+        <div className="flex flex-[1.4] flex-col   rounded-[36px] bg-white">
+          <div className="m-6 "  > <Image src="/logo.svg" width={100} height={25} alt="MVP 2 Logo" /></div>
+          
+          {/* <Heading className="text-5xl font-extrabold text-primary">
             Interactive <span className="gradient-text">Illustration</span>
-          </Heading>
+          </Heading> */}
         </div>
         <div className="flex w-[33rem] flex-col items-start justify-start overflow-y-auto rounded-[36px] bg-white">
-          <div className="flex w-full justify-between space-y-2 p-5">
-            <Image src="/logo.svg" width={100} height={25} alt="MVP 2 Logo" />
+          <div className="flex w-full justify-end space-y-2 p-5">
             <div className="flex gap-2">
               <button
                 onClick={(e) => {
@@ -235,7 +236,7 @@ function Login() {
                 }}
                 className={`rounded-full border-[1px] ${user_role === "customer" ? "border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]" : "bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]"}`}
               >
-                Freelancer
+                Talent
               </button>
             </div>
           </div>

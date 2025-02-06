@@ -63,7 +63,7 @@ function ClientProfileInfoForm({ clientName, clientEmail }) {
         <SelectElement
           required
           label="company size"
-          options={["0-15", "16-50", "51-100"]}
+          options={["1-10", "11-50", "50+"]}
         />
         <SelectElement
           required

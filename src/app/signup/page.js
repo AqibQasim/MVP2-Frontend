@@ -238,7 +238,7 @@ function Page() {
             // User not found, proceed to send email
             const generatedotp = generateOtp();
             setotp(generatedotp);
-            console.log(generatedotp);
+            
 
             const payload = {
               endpoint: "send-email",
@@ -401,14 +401,15 @@ function Page() {
     <>
       <div className={`flex ${PAGE_HEIGHT_FIX} gap-2`}>
         <div className="flex flex-[1.4] flex-col items-center justify-center rounded-[36px] bg-white">
+           <Image src="/logo.svg" width={100} height={25} alt="MVP 2 Logo" />
           <Heading className="text-5xl font-extrabold text-primary">
+
             Interactive <span className="gradient-text">Illustration</span>
           </Heading>
         </div>
 
         <div className="flex w-[33rem] flex-col items-start justify-start rounded-[36px] bg-white">
-          <div className="flex w-full justify-between space-y-1 p-5">
-            <Image src="/logo.svg" width={100} height={25} alt="MVP 2 Logo" />
+          <div className="flex w-full justify-end space-y-1 p-5">
             <div className="flex gap-2">
               <button
                 onClick={(e) => {
@@ -426,7 +427,7 @@ function Page() {
                 }}
                 className={`rounded-full border-[1px] ${user_role === "customer" ? "border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]" : "bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]"}`}
               >
-                Freelancer
+                Talent
               </button>
             </div>
           </div>
