@@ -22,7 +22,10 @@ function AdminCandidatesClientsHiringRow({
 
   const autoRefresh = () => {
     // window.location.reload();
-    router.refresh();
+    setTimeout(() => {
+      router.refresh();
+    }, 3000)
+    
   };
 
   //console.log(first)
