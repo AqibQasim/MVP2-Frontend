@@ -14,9 +14,9 @@ const TestInstruction = ({
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20 backdrop-blur-sm">
         {isLoading ? (
           <>
-           <div className="flex size-full items-center justify-center">
+          
             <div class="loader2"></div>
-            </div>
+            
             <h2 className="text-center">
               Assessment is being prepared, make sure to read all the
               instructions before starting it!

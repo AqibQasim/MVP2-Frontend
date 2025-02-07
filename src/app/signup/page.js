@@ -432,7 +432,7 @@ function Page() {
                 alt={`Login Image ${idx + 1}`}
                 width={900}
                 height={500}
-                className="rounded-lg object-cover w-full h-[500]"
+                className="rounded-lg object-cover w-full h-[650]"
               />
              
             </SwiperSlide>
