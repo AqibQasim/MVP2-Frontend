@@ -414,7 +414,7 @@ function Page() {
       </div>
     
       {/* Swiper Section */}
-      <div className="absolute top-0 left-0 w-full  h-48 bg-gradient-to-b from-white from-15% z-10"></div>
+      <div className="absolute top-0 left-0 w-full  h-44 bg-gradient-to-b from-white from-15% z-10"></div>
       <Swiper
         modules={[Pagination]}
         spaceBetween={30}
@@ -441,7 +441,7 @@ function Page() {
       </Swiper>
     
       {/* Gradient Overlay at Bottom */}
-      <div className="absolute bottom-0 left-0 w-full  h-36 bg-gradient-to-t from-white from-15% z-10"></div>
+      <div className="absolute bottom-0 left-0 w-full  h-[310px] bg-gradient-to-t from-white from-15% z-10"></div>
     
       {/* Text Section with Pagination Dots */}
       <div className="text-center px-6 relative z-20">
@@ -646,7 +646,7 @@ function Page() {
                   <p className="ml-[-37px]">
                     {show ? (
                       <Image
-                        src="eye.svg"
+                        src="eye-close.svg"
                         width={20}
                         height={20}
                         alt="eye open"
@@ -655,7 +655,7 @@ function Page() {
                       />
                     ) : (
                       <Image
-                        src="eye-close.svg"
+                        src="eye.svg"
                         width={20}
                         height={20}
                         alt="eye close"
@@ -678,7 +678,7 @@ function Page() {
                   <p className="ml-[-37px]">
                     {show2 ? (
                       <Image
-                        src="eye.svg"
+                        src="eye-close.svg"
                         width={20}
                         height={20}
                         alt="eye close"
@@ -687,7 +687,7 @@ function Page() {
                       />
                     ) : (
                       <Image
-                        src="eye-close.svg"
+                        src="eye.svg"
                         width={20}
                         height={20}
                         alt="eye open"
