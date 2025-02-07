@@ -1,9 +1,10 @@
 import Heading from "./Heading";
+import Image from "next/image";
 
 function Logo() {
   return (
     <div className="flex items-center justify-start gap-2">
-      {/* icon */}
+      {/* icon
       <svg
         className="!size-9"
         width="36"
@@ -20,8 +21,9 @@ function Logo() {
         />
       </svg>
       <Heading toxm className="!text-primary">
-        Singularity
-      </Heading>
+        CovenTal
+      </Heading> */}
+       <Image src="/logo.svg" width={140} height={40} alt="MVP 2 Logo" />
     </div>
   );
 }
