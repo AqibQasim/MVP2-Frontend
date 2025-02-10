@@ -45,7 +45,9 @@ function CandidateJobsTable() {
   }, []); // Empty dependency array means this effect runs once on mount
 
   if (loading) {
-    return <div>Loading...</div>; // You can customize your loading indicator
+    return <div className="flex size-full items-center justify-center">
+         <div class="loader2"></div>
+          </div>; // You can customize your loading indicator
   }
 
   if (error) {

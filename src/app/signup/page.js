@@ -14,6 +14,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
+import { Pagination, Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
 
 function Page() {
   const router = useRouter();
@@ -238,7 +242,7 @@ function Page() {
             // User not found, proceed to send email
             const generatedotp = generateOtp();
             setotp(generatedotp);
-            console.log(generatedotp);
+            
 
             const payload = {
               endpoint: "send-email",
@@ -400,15 +404,62 @@ function Page() {
   return (
     <>
       <div className={`flex ${PAGE_HEIGHT_FIX} gap-2`}>
-        <div className="flex flex-[1.4] flex-col items-center justify-center rounded-[36px] bg-white">
-          <Heading className="text-5xl font-extrabold text-primary">
-            Interactive <span className="gradient-text">Illustration</span>
-          </Heading>
-        </div>
+      <div className="flex flex-[1.4] flex-col rounded-[36px] bg-white relative overflow-hidden">
+      {/* Gradient Overlay at Top */}
+      
+    
+      {/* Logo */}
+      <div className="mx-7 mt-6 mb-2 z-20">
+        <Image src="/logo.svg" width={120} height={30} alt="MVP 2 Logo" />
+      </div>
+    
+      {/* Swiper Section */}
+      <div className="absolute top-0 left-0 w-full  h-44 bg-gradient-to-b from-white from-15% z-10"></div>
+      <Swiper
+        modules={[Pagination]}
+        spaceBetween={30}
+        slidesPerView={1}
+        loop={true}
+        pagination={{ clickable: true, el: '.swiper-pagination' }}
+        className="relative w-full h-auto"
+      >
+        {["login-page1.png", "login-page2.png", "login-page3.png"].map(
+          (img, idx) => (
+            <SwiperSlide key={idx} className="flex justify-center items-center">
+              
+              <Image
+                src={`/${img}`}
+                alt={`Login Image ${idx + 1}`}
+                width={900}
+                height={500}
+                className="rounded-lg object-cover w-full h-[650]"
+              />
+             
+            </SwiperSlide>
+          )
+        )}
+      </Swiper>
+    
+      {/* Gradient Overlay at Bottom */}
+      <div className="absolute bottom-0 left-0 w-full  h-[310px] bg-gradient-to-t from-white from-15% z-10"></div>
+    
+      {/* Text Section with Pagination Dots */}
+      <div className="text-center px-6 relative z-20">
+        <h2 className="text-3xl mx-auto mt-4 font-extrabold text-gray-900 leading-tight">
+          Where Top Talent Meets Leading <br></br>Companies
+        </h2>
+        <p className="mt-3 mb-12 text-gray-500 text-sm w-[80%] mx-auto">
+          Unlock a world of skilled engineers and innovative companies. Co-Vental
+          bridges the gap between top-tier talent and businesses looking to build
+          the future.
+        </p>
+        {/* Pagination Dots */}
+        <div className="swiper-pagination mt-24"></div>
+      </div>
+    </div>
 
-        <div className="flex w-[33rem] flex-col items-start justify-start rounded-[36px] bg-white">
-          <div className="flex w-full justify-between space-y-1 p-5">
-            <Image src="/logo.svg" width={100} height={25} alt="MVP 2 Logo" />
+        <div className="flex w-[35rem] flex-col items-start justify-start rounded-[36px] bg-white">
+          <div className="flex w-full justify-end space-y-1 p-5">
             <div className="flex gap-2">
               <button
                 onClick={(e) => {
@@ -426,7 +477,7 @@ function Page() {
                 }}
                 className={`rounded-full border-[1px] ${user_role === "customer" ? "border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]" : "bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]"}`}
               >
-                Freelancer
+                Talent
               </button>
             </div>
           </div>
@@ -595,7 +646,7 @@ function Page() {
                   <p className="ml-[-37px]">
                     {show ? (
                       <Image
-                        src="eye.svg"
+                        src="eye-close.svg"
                         width={20}
                         height={20}
                         alt="eye open"
@@ -604,7 +655,7 @@ function Page() {
                       />
                     ) : (
                       <Image
-                        src="eye-close.svg"
+                        src="eye.svg"
                         width={20}
                         height={20}
                         alt="eye close"
@@ -627,7 +678,7 @@ function Page() {
                   <p className="ml-[-37px]">
                     {show2 ? (
                       <Image
-                        src="eye.svg"
+                        src="eye-close.svg"
                         width={20}
                         height={20}
                         alt="eye close"
@@ -636,7 +687,7 @@ function Page() {
                       />
                     ) : (
                       <Image
-                        src="eye-close.svg"
+                        src="eye.svg"
                         width={20}
                         height={20}
                         alt="eye open"

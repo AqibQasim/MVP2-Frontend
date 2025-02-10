@@ -33,6 +33,7 @@ import ReportOverlay from "@/components/ReportOverlay";
 import AvailabilityDropdown from "@/components/AvailabilityDropdown";
 import CandidatePaymentHistoryTable from "@/components/CandidatePaymentHistoryTable";
 
+
 function Page({ params }) {
   const [talent, setTalent] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -238,7 +239,9 @@ function Page({ params }) {
     };
   }, [customer_id]);
 
-  if (!talent) return <div>Loading...</div>;
+  if (!talent) return <div className="flex size-full items-center justify-center">
+                      <div class="loader2"></div>
+                    </div>;
   const commit = `${talent?.commitment} (${talent?.commitment === "full-time" ? "40" : "20"} hrs/wk)`;
   const showPaymentHistory = talent?.client_response === "accept";
 

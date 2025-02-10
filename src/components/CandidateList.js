@@ -578,7 +578,9 @@ function CustomersList() {
         <div className="max-h-[80vh] w-full gap-4 overflow-y-auto rounded-[24px] bg-neutral-white p-6">
           {/* <h2>Client Payment History</h2> */}
           {loading ? (
-            <p>Loading...</p>
+            <div className="flex size-full items-center justify-center">
+            <div class="loader2"></div>
+             </div>
           ) : (
             <ul className="flex flex-col gap-3">
               <li className="grid grid-cols-6 text-start">
@@ -727,7 +729,9 @@ function CustomersList() {
             <p>Status: {customerDetails[0].status}</p>*/}
             </div>
           ) : (
-            <div>Loading...</div>
+            <div className="flex size-full items-center justify-center">
+            <div class="loader2"></div>
+            </div>
           )}
         </div>
       </Modal>
@@ -769,7 +773,9 @@ function CustomersList() {
               <div>No data Found...</div>
             )
           ) : (
-            <div>Loading...</div>
+            <div className="flex size-full items-center justify-center">
+           <div class="loader2"></div>
+          </div>
           )}
         </div>
       </Modal>

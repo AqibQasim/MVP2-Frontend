@@ -50,8 +50,10 @@ function AdminJobViewById({ job, setShowForm }) {
   const router = useRouter();
 
   const autoRefresh = () => {
-    router.refresh();
     // window.location.reload();
+    setTimeout(() => {
+      router.refresh();
+    }, 3000);
   };
 
   //console.log(first)
@@ -629,7 +631,7 @@ const fetchCustomer = async (stripeClientId) => {
                         }));
 
                         setIsLoading(false);
-                        autoRefresh();
+                        // autoRefresh();
                       }}
                     />
                   ) : null}

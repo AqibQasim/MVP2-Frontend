@@ -1,8 +1,8 @@
 function Loading() {
   return (
-    <div className="h-view flex w-full items-center justify-center">
-      <p>Getting Candidate...</p>
-    </div>
+    <div className="flex h-dvh w-full items-center justify-center">
+    <div class="loader2">loading...</div>
+  </div>
   );
 }
 

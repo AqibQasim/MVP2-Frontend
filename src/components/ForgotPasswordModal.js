@@ -12,6 +12,7 @@ import { candidateUpdateProfile } from "@/lib/data-service";
 import { useRouter } from "next/navigation";
 import LoaderIcon from "@/svgs/LoaderIcon";
 
+
 const ForgotPasswordModal = ({
   imgSrc,
   //mainHeading,
@@ -37,6 +38,16 @@ const ForgotPasswordModal = ({
   const [loadingPassword, setLoadingPassword] = useState(false);
   const [password, setPassword] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState(null);
+  const [show, setShow] = useState(false);
+  const [show2, setShow2] = useState(false);
+
+
+  const handClick = () => {
+    setShow(!show);
+  };
+  const handClick2 = () => {
+    setShow2(!show2);
+  };
 
   const handlePasswordReset = async () => {
     setLoadingPassword(true);
@@ -165,7 +176,7 @@ const ForgotPasswordModal = ({
       if (Object.values(error).every((err) => err === "")) {
         const generatedotp = generateOtp();
         setotp(generatedotp);
-        console.log(generatedotp);
+        console.log("otp",generatedotp)
 
         const payload = {
           endpoint: "send-email",
@@ -315,8 +326,9 @@ const ForgotPasswordModal = ({
 
           {popupState === "reset-password" && (
             <div>
+            <div className="flex">
               <Input
-                type="password"
+                type={show ? "text" : "password"}
                 name="password"
                 placeholder={"Password"}
                 className="mt-5 py-3 text-start"
@@ -326,13 +338,36 @@ const ForgotPasswordModal = ({
                   validateField(name, value);
                 }}
               />
+                <p className="ml-[-37px] mt-3">
+                              {show ? (
+                                <Image
+                                  src="eye-close.svg"
+                                  width={20}
+                                  height={20}
+                                  alt="line"
+                                  onClick={handClick}
+                                  className="mt-[24px] inline-block cursor-pointer"
+                                />
+                              ) : (
+                                <Image
+                                  src="eye.svg"
+                                  width={20}
+                                  height={20}
+                                  alt="line"
+                                  onClick={handClick}
+                                  className="mt-[24px] inline-block cursor-pointer"
+                                />
+                              )}
+                            </p>
+                            </div  >
               <div>
                 {errors.password && (
                   <p className="text-xs text-red-500">{errors.password}</p>
                 )}
-              </div>
+              </div  >
+              <div className="flex" >
               <Input
-                type="password"
+                 type={show2 ? "text" : "password"}
                 name="confirmPassword"
                 placeholder={"Confirm Password"}
                 className="mt-5 py-3 text-start"
@@ -342,6 +377,28 @@ const ForgotPasswordModal = ({
                   validateField(name, value);
                 }}
               />
+               <p className="ml-[-37px] mt-3">
+                                  {show2 ? (
+                                    <Image
+                                      src="eye-close.svg"
+                                      width={20}
+                                      height={20}
+                                      alt="eye close"
+                                      onClick={handClick2}
+                                      className="mt-[24px] inline-block cursor-pointer"
+                                    />
+                                  ) : (
+                                    <Image
+                                      src="eye.svg"
+                                      width={20}
+                                      height={20}
+                                      alt="eye open"
+                                      onClick={handClick2}
+                                      className="mt-[24px] inline-block cursor-pointer"
+                                    />
+                                  )}
+                                </p>
+                                </div>
               <div>
                 {errors.confirmPassword && (
                   <p className="text-xs text-red-500">

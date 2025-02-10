@@ -92,7 +92,9 @@ function Page({ params }) {
       {job ? (
         <AdminJobViewById setShowForm={setShowForm} job={job} />
       ) : (
-        <p>Loading job details...</p>
+        <div className="flex size-full items-center justify-center">
+        <div class="loader2"></div>
+       </div>
       )}
       <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
           <h3 className="mb-4 text-xl font-semibold">

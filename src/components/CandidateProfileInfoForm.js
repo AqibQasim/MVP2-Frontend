@@ -90,7 +90,7 @@ function CandidateProfileInfoForm({ candidate }) {
             htmlFor="hourly_rate"
             className="text-sm font-medium capitalize"
           >
-            hourly rate ($)
+           what&apos;s your hourly rate ($)
           </label>
           <Input
             name="hourly_rate"

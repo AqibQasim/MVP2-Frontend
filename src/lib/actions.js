@@ -284,7 +284,7 @@ export async function updateClientProfileAction(formData) {
   // }
   if (
     !company_size ||
-    !["0-15", "16-50", "51-100"].includes(company_size.trim())
+    !["1-10", "11-50", "50+"].includes(company_size.trim())
   ) {
     return { error: "Valid company size is required." };
   }

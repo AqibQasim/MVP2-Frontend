@@ -39,7 +39,9 @@ function Page() {
   }, [jobPostingId]);
 
   if (!fetchedJob) {
-    return <div>Loading...</div>;
+    return <div className="flex size-full items-center justify-center">
+           <div class="loader2"></div>
+           </div>;
   }
 
   return (
