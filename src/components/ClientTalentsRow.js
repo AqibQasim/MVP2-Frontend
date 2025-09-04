@@ -8,7 +8,6 @@ import Table from "./Table";
 import CapsuleLink from "./CapsuleLink";
 
 function ClientTalentsRow({ talent }) {
-  const searchParams = useSearchParams();
   const router = useRouter();
   const { client_id, job_posting_id } = talent;
   const { customer: candidate, job_postings: job } = talent;

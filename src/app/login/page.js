@@ -17,16 +17,18 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useMemo, useCallback, useEffect } from "react";
 
 function Login() {
+
+  const params= useSearchParams();
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
   const router = useRouter();
   const [alert, setalert] = useState(false);
   const [isLoading, setisLoading] = useState(false);
-  const [user_role, setUserRole] = useState("client");
+  const [user_role, setUserRole] = useState(params?.get("role")||"client");
   const [isForgotPasswordOpened, setIsForgotPasswordOpened] = useState(false);
   const [show, setShow] = useState(false);
 
@@ -403,7 +405,7 @@ function Login() {
               <p className="me-1 inline-block text-xs text-grey-primary">
                 Don’t have an account?
               </p>
-              <Link href={"/signup"} className="text-xs text-primary underline">
+              <Link href={`/signup?role=${user_role}`} className="text-xs text-primary underline">
                 Sign up now
               </Link>
             </div>
