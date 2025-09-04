@@ -1,4 +1,3 @@
-import { createUserGoogle } from "@/lib/data-service";
 
 async function Home() {
   // await createUserGoogle({
