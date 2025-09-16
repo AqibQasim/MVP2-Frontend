@@ -428,8 +428,8 @@ function Page({ params }) {
           <Heading xm>Work Experience</Heading>
 
           {
-            talent?.work_experience?.map(exp => (
-              <Experience {...exp} />
+            talent?.work_experience?.map((exp,index) => (
+              <Experience key={index?.toString()} {...exp} />
             ))
           }
           
@@ -439,8 +439,8 @@ function Page({ params }) {
           <Heading xm>Education</Heading>
 
           {
-            talent?.education?.map(edu => (
-              <Education {...edu} />
+            talent?.education?.map((edu,index) => (
+              <Education key={index?.toString()} {...edu} />
             ))
           }
           
