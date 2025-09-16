@@ -26,8 +26,8 @@ function Education({ ...props }) {
                     <div className='flex flex-wrap gap-x-5'>
 
                         {
-                            props?.skills?.map(skill => (
-                                <Skill className='!text-xs font-normal border flex flex-wrap' skill={skill} />
+                            props?.skills?.map((skill,index) => (
+                                <Skill key={index?.toString()} className='!text-xs font-normal border flex flex-wrap' skill={skill} />
                             ))
                         }
                     </div>
