@@ -74,6 +74,7 @@ const ProfileForm = ({ client }) => {
       body: {
         // firstName: firstNameRef.current.value,
         // lastName: lastNameRef.current.value,
+        name: firstNameRef?.current.value + ' ' + lastNameRef?.current.value,
         password: newPasswordRef?.current?.value,
         // email: emailRef.current.value,
         //  password: passwordRef.current.value,
@@ -479,7 +480,7 @@ const ProfileForm = ({ client }) => {
                       value={country}
                       selected={
                         client?.country &&
-                        country.toLowerCase() === client?.country?.toLowerCase()
+                          country.toLowerCase() === client?.country?.toLowerCase()
                           ? true
                           : false
                       }

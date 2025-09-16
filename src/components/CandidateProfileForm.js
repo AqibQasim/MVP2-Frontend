@@ -36,8 +36,7 @@ const CandidateProfileForm = ({ candidate }) => {
       endpoint: `profile-info-update/${candidate?.data?.customer_id}`,
       method: "PUT",
       body: {
-        firstName: firstNameRef?.current.value,
-        lastName: lastNameRef?.current.value,
+        name: firstNameRef?.current.value+' '+lastNameRef?.current.value,
         customer_location: streetAddressRef?.current.value,
         city: cityRef?.current.value,
         province: stateRef?.current.value,
