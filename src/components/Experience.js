@@ -20,8 +20,8 @@ function Experience({ ...props }) {
                 <div className='flex !items-start flex-col gap-y-2 pt-5'>
                     Tasks:
                     {
-                        props?.tasks?.map(task => (
-                            <div className='!text-xs font-normal'>{task}</div>
+                        props?.tasks?.map((task,index) => (
+                            <div key={index?.toString()} className='!text-xs font-normal'>{task}</div>
                         ))
                     }
                 </div>
@@ -31,8 +31,8 @@ function Experience({ ...props }) {
                     <div className='flex flex-wrap gap-x-5'>
 
                         {
-                            props?.industries?.map(task => (
-                                <Capsule className='!text-xs font-normal border flex flex-wrap'>{task}</Capsule>
+                            props?.industries?.map((task,index) => (
+                                <Capsule key={index?.toString()} className='!text-xs font-normal border flex flex-wrap'>{task}</Capsule>
                             ))
                         }
                     </div>
@@ -43,8 +43,8 @@ function Experience({ ...props }) {
                     <div className='flex flex-wrap gap-x-5'>
 
                         {
-                            props?.skills?.map(skill => (
-                                <Skill className='!text-xs font-normal border flex flex-wrap' skill={skill} />
+                            props?.skills?.map((skill,index) => (
+                                <Skill key={index?.toString()} className='!text-xs font-normal border flex flex-wrap' skill={skill} />
                             ))
                         }
                     </div>
