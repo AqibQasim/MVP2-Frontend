@@ -13,7 +13,7 @@ import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import { Pagination, Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -22,6 +22,11 @@ import "swiper/css/pagination";
 function Page() {
   const router = useRouter();
   const params = useSearchParams();
+
+  // Set page title
+  useEffect(() => {
+    document.title = "CoVental | Pool of the top talent";
+  }, []);
 
   const [isOverlayVisible, setOverlayVisible] = useState(false);
   const [form, setForm] = useState({
