@@ -32,6 +32,11 @@ function Login() {
   const [isForgotPasswordOpened, setIsForgotPasswordOpened] = useState(false);
   const [show, setShow] = useState(false);
 
+  // Set page title
+  useEffect(() => {
+    document.title = "CoVental | Pool of the top talent";
+  }, []);
+
   // useEffect(() => {
   //   // console.log("Requesting notification permission...");
   //   requestNotificationPermission();
