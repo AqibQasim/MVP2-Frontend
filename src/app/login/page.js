@@ -32,6 +32,11 @@ function Login() {
   const [isForgotPasswordOpened, setIsForgotPasswordOpened] = useState(false);
   const [show, setShow] = useState(false);
 
+  // Set page title
+  useEffect(() => {
+    document.title = "CoVental | Pool of the top talent";
+  }, []);
+
   // useEffect(() => {
   //   // console.log("Requesting notification permission...");
   //   requestNotificationPermission();
@@ -223,7 +228,7 @@ function Login() {
 
   {/* Logo */}
   <div className="mx-7 mt-6 mb-2 z-20">
-    <Image src="/logo.svg" width={120} height={30} alt="MVP 2 Logo" />
+    <Image src="/co-ventech-logo.png" width={120} height={30} alt="CoVentech Logo" />
   </div>
 
   {/* Swiper Section */}
@@ -271,7 +276,11 @@ function Login() {
   </div>
 </div>
         <div className="flex w-[35rem] flex-col items-start justify-start overflow-y-auto rounded-[36px] bg-white">
-          <div className="flex w-full justify-end space-y-2 p-5">
+          {/* Logo */}
+          <div className="w-full flex justify-start pr-10 p-5 pb-4">
+            <Image src="/logo.svg" width={120} height={30} alt="CoVental Logo" />
+          </div>
+          <div className="flex w-full justify-end space-y-2 px-5 pb-5 -mt-10">
             <div className="flex gap-2">
               <button
                 onClick={(e) => {

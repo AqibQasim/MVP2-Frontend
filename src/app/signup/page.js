@@ -13,7 +13,7 @@ import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import { Pagination, Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -22,6 +22,11 @@ import "swiper/css/pagination";
 function Page() {
   const router = useRouter();
   const params = useSearchParams();
+
+  // Set page title
+  useEffect(() => {
+    document.title = "CoVental | Pool of the top talent";
+  }, []);
 
   const [isOverlayVisible, setOverlayVisible] = useState(false);
   const [form, setForm] = useState({
@@ -412,7 +417,7 @@ function Page() {
 
           {/* Logo */}
           <div className="mx-7 mt-6 mb-2 z-20">
-            <Image src="/logo.svg" width={120} height={30} alt="MVP 2 Logo" />
+            <Image src="/co-ventech-logo.png" width={120} height={30} alt="CoVentech Logo" />
           </div>
 
           {/* Swiper Section */}
@@ -461,7 +466,11 @@ function Page() {
         </div>
 
         <div className="flex w-[35rem] flex-col items-start justify-start rounded-[36px] bg-white">
-          <div className="flex w-full justify-end space-y-1 p-5">
+          {/* Logo */}
+          <div className="w-full flex justify-start pr-10 p-5 pb-4">
+            <Image src="/logo.svg" width={120} height={30} alt="CoVental Logo" />
+          </div>
+          <div className="flex w-full justify-end space-y-1 px-5 pb-5 -mt-10">
             <div className="flex gap-2">
               <button
                 onClick={(e) => {
