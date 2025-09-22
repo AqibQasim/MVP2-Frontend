@@ -410,15 +410,14 @@ function Page() {
 
   return (
     <>
+      {/* CoVentech logo in top left corner */}
+      <div className="fixed top-4 left-4 z-[9999]">
+        <Image src="/cooventechlogo.png" width={140} height={35} alt="CoVentech Logo" />
+      </div>
       <div className={`flex ${PAGE_HEIGHT_FIX} gap-2`}>
         <div className="flex flex-[1.4] flex-col rounded-[36px] bg-white relative overflow-hidden">
           {/* Gradient Overlay at Top */}
 
-
-          {/* Logo */}
-          <div className="mx-7 mt-6 mb-2 z-20">
-            <Image src="/co-ventech-logo.png" width={140} height={35} alt="CoVentech Logo" />
-          </div>
 
           {/* Swiper Section */}
           <div className="absolute top-0 left-0 w-full  h-44 bg-gradient-to-b from-white from-15% z-10"></div>
