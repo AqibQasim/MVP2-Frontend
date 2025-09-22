@@ -153,7 +153,7 @@ function AdminCandidateRow({ candidate, score }) {
             :   candidate?.talent_status } */}
           </Capsule>
           <ButtonCapsule onPress={async () => {
-            await navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}profile/${candidate?.customer_id}`);
+            await navigator.clipboard.writeText(`${process.env.NEXTAUTH_URL}profile/${candidate?.customer_id}`);
           }}>Copy</ButtonCapsule>
 
           {/* Button to open form */}
