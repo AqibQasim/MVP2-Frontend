@@ -417,7 +417,7 @@ function Page() {
 
           {/* Logo */}
           <div className="mx-7 mt-6 mb-2 z-20">
-            <Image src="/co-ventech-logo.png" width={120} height={30} alt="CoVentech Logo" />
+            <Image src="/co-ventech-logo.png" width={140} height={35} alt="CoVentech Logo" />
           </div>
 
           {/* Swiper Section */}
