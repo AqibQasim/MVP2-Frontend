@@ -26,6 +26,7 @@ import ReportOverlay from "@/components/ReportOverlay";
 import Experience from "@/components/Experience";
 import IconWithBg from "@/components/IconWithBg";
 import Education from "@/components/Education";
+import Certifications from "@/components/Certifications";
 
 
 function Page({ params }) {
@@ -441,6 +442,17 @@ function Page({ params }) {
           {
             talent?.education?.map((edu,index) => (
               <Education key={index?.toString()} {...edu} />
+            ))
+          }
+          
+        </div>
+
+        <div className="flex self-center w-full h-auto flex-col gap-y-4">
+          <Heading xm>Certifications</Heading>
+
+          {
+            talent?.certifications?.map((cert,index) => (
+              <Certifications key={index?.toString()} {...cert} />
             ))
           }
           

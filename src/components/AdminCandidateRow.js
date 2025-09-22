@@ -10,6 +10,7 @@ import SkillIconWithBg from "./SkillIconWithBg";
 import Table from "./Table";
 import getCandidateStatus from "@/utils/getCandidateStatus";
 import { useRouter } from "next/navigation";
+import ButtonCapsule from "./ButtonCapsule";
 
 function AdminCandidateRow({ candidate, score }) {
   const [showForm, setShowForm] = useState(false);
@@ -26,13 +27,13 @@ function AdminCandidateRow({ candidate, score }) {
 
   const router = useRouter();
 
-  const filteredClients = clients?.filter((client) =>
-    client.name.toLowerCase().includes(searchClient.toLowerCase()),
-  );
+  // const filteredClients = clients?.filter((client) =>
+  //   client.name.toLowerCase().includes(searchClient.toLowerCase()),
+  // );
 
-  const filteredJobs = jobs?.filter((job) =>
-    job.position.toLowerCase().includes(searchJob.toLowerCase()),
-  );
+  // const filteredJobs = jobs?.filter((job) =>
+  //   job.position.toLowerCase().includes(searchJob.toLowerCase()),
+  // );
 
   const fetchClients = useCallback(async () => {
     const f = await getClients();
@@ -151,6 +152,9 @@ function AdminCandidateRow({ candidate, score }) {
             :  candidate?.talent_status?.toLowerCase() === "open" && candidate?.status==="in-active" ? "Un-Avaliable"
             :   candidate?.talent_status } */}
           </Capsule>
+          <ButtonCapsule onPress={async () => {
+            await navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}profile/${candidate?.customer_id}`);
+          }}>Copy</ButtonCapsule>
 
           {/* Button to open form */}
           {/* <button onClick={() => {

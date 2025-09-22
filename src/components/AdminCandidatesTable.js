@@ -22,39 +22,39 @@ function AdminCandidatesTable({ totalCandidates, candidates, role }) {
   const filteredCandidates =
     role !== "dashboard"
       ? candidates
-          .filter(
-            (candidate) =>
-              !talentStatus ||
-              getCandidateStatus(
-                candidate?.customer?.talent_status,
-                candidate?.customer?.status,
-              ).toLowerCase() === talentStatus,
-          )
-          .filter(
-            (candidate) =>
-              !searchTerm ||
-              (typeof candidate.customer?.name === "string" &&
-                candidate.customer?.name
-                  .toLowerCase()
-                  .includes(searchTerm.toLowerCase())),
-          )
+        .filter(
+          (candidate) =>
+            !talentStatus ||
+            getCandidateStatus(
+              candidate?.customer?.talent_status,
+              candidate?.customer?.status,
+            ).toLowerCase() === talentStatus,
+        )
+        .filter(
+          (candidate) =>
+            !searchTerm ||
+            (typeof candidate.customer?.name === "string" &&
+              candidate.customer?.name
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase())),
+        )
       : candidates
-          .filter(
-            (candidate) =>
-              //!talentStatus ||
-              getCandidateStatus(
-                candidate?.customer?.talent_status,
-                candidate?.customer?.status,
-              ).toLowerCase() === "Available".toLowerCase(),
-          )
-          .filter(
-            (candidate) =>
-              !searchTerm ||
-              (typeof candidate.customer?.name === "string" &&
-                candidate.customer?.name
-                  .toLowerCase()
-                  .includes(searchTerm.toLowerCase())),
-          );
+        .filter(
+          (candidate) =>
+            //!talentStatus ||
+            getCandidateStatus(
+              candidate?.customer?.talent_status,
+              candidate?.customer?.status,
+            ).toLowerCase() === "Available".toLowerCase(),
+        )
+        .filter(
+          (candidate) =>
+            !searchTerm ||
+            (typeof candidate.customer?.name === "string" &&
+              candidate.customer?.name
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase())),
+        );
 
   const onNext = useCallback(() => {
     setStartIndex((prevIndex) =>
@@ -114,9 +114,9 @@ function AdminCandidatesTable({ totalCandidates, candidates, role }) {
         </div>
       )}
 
-      <Table columns="grid-cols-[1fr_5.7rem_4rem_4rem_6.5rem_4.5rem_4.1rem_7.4rem]">
+      <Table columns="grid-cols-[1fr_5.7rem_4rem_4rem_6.5rem_4.5rem_4.1rem_7.4rem_7.4rem]">
         <Table.Header>
-          <div className="info text-start"> Candidate-Info</div>
+          <div className="info text-start"> Candidate Info</div>
           <div className="skills text-center">Skills</div>
           <div className="skills text-center">Hourly Rate</div>
           <div className="skills text-center">Referred Rate</div>
@@ -124,6 +124,8 @@ function AdminCandidatesTable({ totalCandidates, candidates, role }) {
           <div className="job-type text-center">Job type</div>
           <div className="score text-center">Score</div>
           <div className="talent-status text-center">Talent Status</div>
+          <div className="talent-status text-center">Share</div>
+
         </Table.Header>
         {/* Make the body container scrollable */}
         <div className="min-h-fit overflow-x-hidden overflow-y-hidden">
