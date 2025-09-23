@@ -409,12 +409,12 @@ function Page() {
   );
 
   return (
-    <>
+    <div className="h-screen overflow-hidden">
       {/* CoVentech logo in top left corner */}
       <div className="absolute top-4 left-4 z-[9999]">
         <Image src="/cooventechlogo.png" width={140} height={35} alt="CoVentech Logo" />
       </div>
-      <div className={`flex ${PAGE_HEIGHT_FIX} gap-2`}>
+      <div className={`flex h-screen gap-2`}>
         <div className="flex flex-[1.4] flex-col rounded-[36px] bg-white relative overflow-hidden">
           {/* Gradient Overlay at Top */}
 
@@ -464,7 +464,7 @@ function Page() {
           </div>
         </div>
 
-        <div className="flex w-[35rem] flex-col items-start justify-start rounded-[36px] bg-white h-full overflow-hidden">
+        <div className="flex w-[35rem] flex-col items-start justify-start rounded-[36px] bg-white h-screen overflow-hidden">
           {/* Logo */}
           <div className="w-full flex justify-start pr-10 p-5 pb-2">
             <Image src="/logo.svg" width={120} height={30} alt="CoVental Logo" />
@@ -491,7 +491,7 @@ function Page() {
               </button>
             </div>
           </div>
-          <div className="mx-auto mt-1 w-8/12 flex-grow overflow-y-auto">
+          <div className="mx-auto mt-1 w-8/12 flex-1 overflow-y-auto px-2">
             <h2 className="text-start font-lufga text-base">
               A sentence of perks and encouragement for{" "}
               <span className="gradient-text">freelancer.</span>
@@ -813,7 +813,7 @@ function Page() {
           onClose={() => setAlert(false)}
         />
       )}
-    </>
+    </div>
   );
 }
 
