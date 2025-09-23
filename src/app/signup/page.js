@@ -409,7 +409,7 @@ function Page() {
   );
 
   return (
-    <div className="h-screen overflow-hidden">
+    <div className="h-screen overflow-hidden" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
       {/* CoVentech logo in top left corner */}
       <div className="absolute top-4 left-4 z-[9999]">
         <Image src="/cooventechlogo.png" width={140} height={35} alt="CoVentech Logo" />
@@ -491,7 +491,7 @@ function Page() {
               </button>
             </div>
           </div>
-          <div className="mx-auto mt-1 w-8/12 flex-1 overflow-y-auto px-2">
+          <div className="mx-auto mt-1 w-8/12 flex-1 overflow-hidden px-2">
             <h2 className="text-start font-lufga text-base">
               A sentence of perks and encouragement for{" "}
               <span className="gradient-text">freelancer.</span>
