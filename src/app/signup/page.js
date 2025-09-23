@@ -464,19 +464,19 @@ function Page() {
           </div>
         </div>
 
-        <div className="flex w-[35rem] flex-col items-start justify-start rounded-[36px] bg-white">
+        <div className="flex w-[35rem] flex-col items-start justify-start rounded-[36px] bg-white h-full overflow-hidden">
           {/* Logo */}
-          <div className="w-full flex justify-start pr-10 p-5 pb-4">
+          <div className="w-full flex justify-start pr-10 p-5 pb-2">
             <Image src="/logo.svg" width={120} height={30} alt="CoVental Logo" />
           </div>
-          <div className="flex w-full justify-end space-y-1 px-5 pb-5 -mt-10">
+          <div className="flex w-full justify-end space-y-1 px-5 pb-3 -mt-8">
             <div className="flex gap-2">
               <button
                 onClick={(e) => {
                   //e.preventDefault();
                   setUserRole("client");
                 }}
-                className={`rounded-full border-[1px] ${user_role === "client" ? "border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]" : "bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]"}`}
+                className={`rounded-full border-[1px] ${user_role === "client" ? "border-primary bg-primary-tint-100 px-6 py-1.5 text-[#070416]" : "bg-primary-tint-100 px-6 py-1.5 text-[#ACA6C8]"}`}
               >
                 Client
               </button>
@@ -485,20 +485,20 @@ function Page() {
                   //e.preventDefault();
                   setUserRole("customer");
                 }}
-                className={`rounded-full border-[1px] ${user_role === "customer" ? "border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]" : "bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]"}`}
+                className={`rounded-full border-[1px] ${user_role === "customer" ? "border-primary bg-primary-tint-100 px-6 py-1.5 text-[#070416]" : "bg-primary-tint-100 px-6 py-1.5 text-[#ACA6C8]"}`}
               >
                 Talent
               </button>
             </div>
           </div>
-          <div className="mx-auto mt-1 w-8/12 flex-grow">
-            <h2 className="text-start font-lufga text-lg">
+          <div className="mx-auto mt-1 w-8/12 flex-grow overflow-y-auto">
+            <h2 className="text-start font-lufga text-base">
               A sentence of perks and encouragement for{" "}
               <span className="gradient-text">freelancer.</span>
               <Image
                 src="/icons/clients_emoji.png"
-                width={60}
-                height={60}
+                width={50}
+                height={50}
                 alt="Clients Emoji"
                 className="inline-block"
               />
@@ -512,7 +512,7 @@ function Page() {
                   error={errors.firstName}
                   onChange={handleChange}
                   placeholder="First name"
-                  className="mt-3"
+                  className="mt-2"
                 />
                 <Input
                   type="text"
@@ -521,7 +521,7 @@ function Page() {
                   error={errors.lastName}
                   onChange={handleChange}
                   placeholder="Last name"
-                  className="mt-3"
+                  className="mt-2"
                 />
               </div>
 
@@ -545,7 +545,7 @@ function Page() {
                 error={errors.email}
                 onChange={handleChange}
                 placeholder="Enter email"
-                className="mt-3"
+                className="mt-2"
               />
               {errors.email && (
                 <p className="text-xs text-red-500">{errors.email}</p>
@@ -553,7 +553,7 @@ function Page() {
 
               {/* react-internation-phone */}
               <PhoneInputEl
-                className="mt-3"
+                className="mt-2"
                 phone={form.phoneNumber}
                 setPhone={handlePhoneChange}
                 setCountry={handleCountryChange}
@@ -651,7 +651,7 @@ function Page() {
                     error={errors.password}
                     onChange={handleChange}
                     placeholder="Enter password"
-                    className="mt-3"
+                    className="mt-2"
                   />
                   <p className="ml-[-37px]">
                     {show ? (
@@ -661,7 +661,7 @@ function Page() {
                         height={20}
                         alt="eye open"
                         onClick={handClick}
-                        className="mt-[24px] inline-block cursor-pointer"
+                        className="mt-[20px] inline-block cursor-pointer"
                       />
                     ) : (
                       <Image
@@ -670,7 +670,7 @@ function Page() {
                         height={20}
                         alt="eye close"
                         onClick={handClick}
-                        className="mt-[24px] inline-block cursor-pointer"
+                        className="mt-[20px] inline-block cursor-pointer"
                       />
                     )}
                   </p>
@@ -683,7 +683,7 @@ function Page() {
                     error={errors.confirmPassword}
                     onChange={handleChange}
                     placeholder="Confirm password"
-                    className="mt-3"
+                    className="mt-2"
                   />
                   <p className="ml-[-37px]">
                     {show2 ? (
@@ -693,7 +693,7 @@ function Page() {
                         height={20}
                         alt="eye close"
                         onClick={handClick2}
-                        className="mt-[24px] inline-block cursor-pointer"
+                        className="mt-[20px] inline-block cursor-pointer"
                       />
                     ) : (
                       <Image
@@ -702,7 +702,7 @@ function Page() {
                         height={20}
                         alt="eye open"
                         onClick={handClick2}
-                        className="mt-[24px] inline-block cursor-pointer"
+                        className="mt-[20px] inline-block cursor-pointer"
                       />
                     )}
                   </p>
