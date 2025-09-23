@@ -22,13 +22,13 @@ import { useState, useMemo, useCallback, useEffect } from "react";
 
 function Login() {
 
-  const params= useSearchParams();
+  const params = useSearchParams();
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
   const router = useRouter();
   const [alert, setalert] = useState(false);
   const [isLoading, setisLoading] = useState(false);
-  const [user_role, setUserRole] = useState(params?.get("role")||"client");
+  const [user_role, setUserRole] = useState(params?.get("role") || "client");
   const [isForgotPasswordOpened, setIsForgotPasswordOpened] = useState(false);
   const [show, setShow] = useState(false);
 
@@ -220,60 +220,60 @@ function Login() {
   );
 
   return (
-    <div className="h-screen overflow-hidden" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
+    <div className="h-screen overflow-hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
       {/* CoVentech logo in top left corner */}
-      <div className="absolute top-4 left-4 z-[9999]">
-        <Image src="/cooventechlogo.png" width={140} height={35} alt="CoVentech Logo" />
-      </div>
       <div className={`flex h-screen gap-2`}>
-      <div className="flex flex-[1.4] flex-col rounded-[36px] bg-white relative overflow-hidden">
-  {/* Gradient Overlay at Top */}
-  
+        <div className="flex flex-[1.4] flex-col rounded-[36px] bg-white relative overflow-hidden">
+          <div className="absolute top-4 left-4 z-[9999]">
+            <Image src="/cooventechlogo.png" width={135} height={35} alt="CoVentech Logo" />
+          </div>
+          {/* Gradient Overlay at Top */}
 
-  {/* Swiper Section */}
-  <div className="absolute top-0 left-0 w-full  h-44 bg-gradient-to-b from-white from-15% z-10"></div>
-  <Swiper
-    modules={[Pagination]}
-    spaceBetween={30}
-    slidesPerView={1}
-    loop={true}
-    pagination={{ clickable: true, el: '.swiper-pagination' }}
-    className="relative w-full h-auto"
-  >
-    {["login-page1.png", "login-page2.png", "login-page3.png"].map(
-      (img, idx) => (
-        <SwiperSlide key={idx} className="flex justify-center items-center">
-          
-          <Image
-            src={`/${img}`}
-            alt={`Login Image ${idx + 1}`}
-            width={900}
-            height={500}
-            className="rounded-lg object-cover w-full h-[650]"
-          />
-         
-        </SwiperSlide>
-      )
-    )}
-  </Swiper>
 
-  {/* Gradient Overlay at Bottom */}
-  <div className="absolute bottom-0 left-0 w-full  h-[310px] bg-gradient-to-t from-white from-15% z-10"></div>
+          {/* Swiper Section */}
+          <div className="absolute top-0 left-0 w-full h-44 bg-gradient-to-b from-white from-15% z-10"></div>
+          <Swiper
+            modules={[Pagination]}
+            spaceBetween={30}
+            slidesPerView={1}
+            loop={true}
+            pagination={{ clickable: true, el: '.swiper-pagination' }}
+            className="relative w-full h-auto"
+          >
+            {["login-page1.png", "login-page2.png", "login-page3.png"].map(
+              (img, idx) => (
+                <SwiperSlide key={idx} className="flex justify-center items-center">
 
-  {/* Text Section with Pagination Dots */}
-  <div className="text-center px-6 relative z-20">
-    <h2 className="text-3xl mx-auto mt-4 font-extrabold text-gray-900 leading-tight">
-      Where Top Talent Meets Leading <br></br>Companies
-    </h2>
-    <p className="mt-3 mb-12 text-gray-500 text-sm w-[80%] mx-auto">
-      Unlock a world of skilled engineers and innovative companies. Co-Vental
-      bridges the gap between top-tier talent and businesses looking to build
-      the future.
-    </p>
-    {/* Pagination Dots */}
-    <div className="swiper-pagination mt-24"></div>
-  </div>
-</div>
+                  <Image
+                    src={`/${img}`}
+                    alt={`Login Image ${idx + 1}`}
+                    width={900}
+                    height={500}
+                    className="rounded-lg object-cover w-full h-[650]"
+                  />
+
+                </SwiperSlide>
+              )
+            )}
+          </Swiper>
+
+          {/* Gradient Overlay at Bottom */}
+          <div className="absolute bottom-0 left-0 w-full  h-[310px] bg-gradient-to-t from-white from-15% z-10"></div>
+
+          {/* Text Section with Pagination Dots */}
+          <div className="text-center px-6 relative z-20">
+            <h2 className="text-3xl mx-auto mt-4 font-extrabold text-gray-900 leading-tight">
+              Where Top Talent Meets Leading <br></br>Companies
+            </h2>
+            <p className="mt-3 mb-12 text-gray-500 text-sm w-[80%] mx-auto">
+              Unlock a world of skilled engineers and innovative companies. Co-Vental
+              bridges the gap between top-tier talent and businesses looking to build
+              the future.
+            </p>
+            {/* Pagination Dots */}
+            <div className="swiper-pagination mt-24"></div>
+          </div>
+        </div>
         <div className="flex w-[35rem] flex-col items-start justify-start h-screen overflow-hidden rounded-[36px] bg-white">
           {/* Logo */}
           <div className="w-full flex justify-start pr-10 p-5 pb-2">
@@ -374,9 +374,8 @@ function Login() {
             <OnBoardingButton
               onClick={handleLogin}
               disabled={isFormInvalid}
-              className={`${
-                isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
-              }`}
+              className={`${isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
+                }`}
             >
               {isLoading ? (
                 <div className="flex items-center">
@@ -451,7 +450,7 @@ function Login() {
             //buttonText={"Verify email"}
             onBoarding={true}
             containsOtp={true}
-            //signupHandler={handleSignup}
+          //signupHandler={handleSignup}
           />
         </Overlay>
       )}

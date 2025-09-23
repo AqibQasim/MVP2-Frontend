@@ -41,7 +41,7 @@ function Page() {
   });
   const [confirmTerms, setConfirmTerms] = useState(false);
 
-  const [user_role, setUserRole] = useState(params?.get("role")||"client");
+  const [user_role, setUserRole] = useState(params?.get("role") || "client");
   const [errors, setErrors] = useState({});
   const [termsError, setTermsError] = useState("");
   const [otp, setotp] = useState(null);
@@ -409,13 +409,13 @@ function Page() {
   );
 
   return (
-    <div className="h-screen overflow-hidden" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
+    <div className="h-screen overflow-hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
       {/* CoVentech logo in top left corner */}
-      <div className="absolute top-4 left-4 z-[9999]">
-        <Image src="/cooventechlogo.png" width={140} height={35} alt="CoVentech Logo" />
-      </div>
       <div className={`flex h-screen gap-2`}>
         <div className="flex flex-[1.4] flex-col rounded-[36px] bg-white relative overflow-hidden">
+          <div className="absolute top-4 left-4 z-[9999]">
+            <Image src="/cooventechlogo.png" width={135} height={35} alt="CoVentech Logo" />
+          </div>
           {/* Gradient Overlay at Top */}
 
 
