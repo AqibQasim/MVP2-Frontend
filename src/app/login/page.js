@@ -220,12 +220,12 @@ function Login() {
   );
 
   return (
-    <>
+    <div className="h-screen overflow-hidden">
       {/* CoVentech logo in top left corner */}
       <div className="absolute top-4 left-4 z-[9999]">
         <Image src="/cooventechlogo.png" width={140} height={35} alt="CoVentech Logo" />
       </div>
-      <div className={`flex ${PAGE_HEIGHT_FIX} gap-2`}>
+      <div className={`flex h-screen gap-2`}>
       <div className="flex flex-[1.4] flex-col rounded-[36px] bg-white relative overflow-hidden">
   {/* Gradient Overlay at Top */}
   
@@ -274,19 +274,19 @@ function Login() {
     <div className="swiper-pagination mt-24"></div>
   </div>
 </div>
-        <div className="flex w-[35rem] flex-col items-start justify-start overflow-y-auto rounded-[36px] bg-white">
+        <div className="flex w-[35rem] flex-col items-start justify-start h-screen overflow-hidden rounded-[36px] bg-white">
           {/* Logo */}
-          <div className="w-full flex justify-start pr-10 p-5 pb-4">
+          <div className="w-full flex justify-start pr-10 p-5 pb-2">
             <Image src="/logo.svg" width={120} height={30} alt="CoVental Logo" />
           </div>
-          <div className="flex w-full justify-end space-y-2 px-5 pb-5 -mt-10">
+          <div className="flex w-full justify-end space-y-2 px-5 pb-3 -mt-8">
             <div className="flex gap-2">
               <button
                 onClick={(e) => {
                   //e.preventDefault();
                   setUserRole("client");
                 }}
-                className={`rounded-full border-[1px] ${user_role === "client" ? "border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]" : "bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]"}`}
+                className={`rounded-full border-[1px] ${user_role === "client" ? "border-primary bg-primary-tint-100 px-6 py-1.5 text-[#070416]" : "bg-primary-tint-100 px-6 py-1.5 text-[#ACA6C8]"}`}
               >
                 Client
               </button>
@@ -295,20 +295,20 @@ function Login() {
                   //e.preventDefault();
                   setUserRole("customer");
                 }}
-                className={`rounded-full border-[1px] ${user_role === "customer" ? "border-primary bg-primary-tint-100 px-7 py-2 text-[#070416]" : "bg-primary-tint-100 px-7 py-2 text-[#ACA6C8]"}`}
+                className={`rounded-full border-[1px] ${user_role === "customer" ? "border-primary bg-primary-tint-100 px-6 py-1.5 text-[#070416]" : "bg-primary-tint-100 px-6 py-1.5 text-[#ACA6C8]"}`}
               >
                 Talent
               </button>
             </div>
           </div>
-          <div className="mx-auto mt-3 w-8/12 flex-grow">
-            <h2 className="text-start font-lufga text-2xl">
+          <div className="mx-auto mt-2 w-8/12 flex-1 overflow-y-auto px-2">
+            <h2 className="text-start font-lufga text-lg">
               A sentence of perks and encouragement for{" "}
               <span className="gradient-text">freelancer.</span>
               <Image
                 src="/icons/clients_emoji.png"
-                width={100}
-                height={100}
+                width={80}
+                height={80}
                 alt="Clients Emoji"
                 className="inline-block"
               />
@@ -321,7 +321,7 @@ function Login() {
               error={errors.email}
               onChange={handleChange}
               placeholder="Enter your email"
-              className="mt-5"
+              className="mt-2"
             />
             {errors.email && (
               <p className="text-xs text-red-500">{errors.email}</p>
@@ -335,7 +335,7 @@ function Login() {
                 onChange={handleChange}
                 error={errors.password}
                 placeholder="Enter your password"
-                className="mt-3"
+                className="mt-2"
               />
               <p className="ml-[-37px]">
                 {show ? (
@@ -345,7 +345,7 @@ function Login() {
                     height={20}
                     alt="line"
                     onClick={handClick}
-                    className="mt-[24px] inline-block cursor-pointer"
+                    className="mt-[20px] inline-block cursor-pointer"
                   />
                 ) : (
                   <Image
@@ -354,7 +354,7 @@ function Login() {
                     height={20}
                     alt="line"
                     onClick={handClick}
-                    className="mt-[24px] inline-block cursor-pointer"
+                    className="mt-[20px] inline-block cursor-pointer"
                   />
                 )}
               </p>
@@ -462,7 +462,7 @@ function Login() {
           onClose={() => setalert(false)}
         />
       )}
-    </>
+    </div>
   );
 }
 export default Login;
