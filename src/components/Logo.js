@@ -6,7 +6,7 @@ function Logo() {
     <div className="flex items-center justify-between w-full">
       {/* CoVentech logo on the left */}
       <Image 
-        src="/co-ventech-logo.png" 
+        src="/cooventechlogo.png" 
         width={140} 
         height={35} 
         alt="CoVentech Logo" 
