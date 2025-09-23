@@ -411,7 +411,7 @@ function Page() {
   return (
     <>
       {/* CoVentech logo in top left corner */}
-      <div className="fixed top-4 left-4 z-[9999]">
+      <div className="absolute top-4 left-4 z-[9999]">
         <Image src="/cooventechlogo.png" width={140} height={35} alt="CoVentech Logo" />
       </div>
       <div className={`flex ${PAGE_HEIGHT_FIX} gap-2`}>
