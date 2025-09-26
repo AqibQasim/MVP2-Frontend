@@ -99,55 +99,54 @@ function Login() {
   const handleLogin = useCallback(
     async (event) => {
       event.preventDefault();
-      console.log("Login button clicked!");
-      console.log("Form data:", form);
-      console.log("User role:", user_role);
 
       setisLoading(true); // Start loading
 
-      // Simple validation
-      if (!form.email || !form.password) {
-        console.log("Missing email or password");
-        setisLoading(false);
+      // Validate all fields before submission
+      if (!form.email || !form.password || errors.email || errors.password) {
+        setisLoading(false); // Stop loading if validation fails
         return;
       }
 
-      console.log("Payload:", payload);
+      console.log(payload);
       const result = await mvp2ApiHelper(payload);
-      console.log("API Result:", result);
+      console.log(result);
 
-      if (result.status === 200 && result.data) {
-        localStorage.setItem("MVP_CLIENT_LOGGEDIN", true);
+      if (result.status === 200) {
+        const Authenticated = true;
+        if (Authenticated) {
+          localStorage.setItem("MVP_CLIENT_LOGGEDIN", true);
 
-        const handleRouteChangeComplete = () => {
-          setisLoading(false); // Stop loading when route change completes
-        };
+          const now = new Date();
+          now.setTime(now.getTime() + 60 * 60 * 60 * 10 + 36000000); // 36000000 ms = 10 hours
+          const expires = now.toUTCString();
 
-        router.events = router.events || {};
-        router.events.on = router.events.on || (() => { });
-        router.events.off = router.events.off || (() => { });
+          const token = result.data.token;
+          document.cookie = `credentialLoginToken=${token}; expires=${expires}; path=/;`;
 
-        const cleanup = () => {
-          router.events.off("routeChangeComplete", handleRouteChangeComplete);
-        };
+          // Handle navigation loading
+          const handleRouteChangeComplete = () => {
+            setisLoading(false); // Stop loading when navigation is complete
+            router.events.off("routeChangeComplete", handleRouteChangeComplete);
+          };
 
-        router?.events?.on("routeChangeComplete", handleRouteChangeComplete);
+          router?.events?.on("routeChangeComplete", handleRouteChangeComplete);
 
-        const isLoggedIn =
-          localStorage.getItem("MVP_CLIENT_LOGGEDIN") === "true";
+          const isLoggedIn =
+            localStorage.getItem("MVP_CLIENT_LOGGEDIN") === "true";
 
-        if (user_role === "customer") {
-          router.push(`/candidate/${result.data.id}`);
-        } else {
-          router.push(`/client/${result.data.id}`);
+          if (user_role === "customer") {
+            router.push(`/candidate/${result.data.id}`);
+          } else {
+            router.push(`/client/${result.data.id}`);
+          }
         }
       } else {
-        console.log("Login failed:", result);
         setisLoading(false);
         setalert(true);
       }
     },
-    [form, errors, user_role, payload, router],
+    [form, errors, user_role],
   );
 
   return (
