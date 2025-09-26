@@ -445,7 +445,7 @@ function Page() {
             <div>
               <div className="flex gap-2">
                 <PhoneInputEl
-                  className="w-full rounded-full border border-gray-300 px-5 py-3 text-sm leading-tight text-gray-900 focus:border-primary focus:ring-primary bg-white"
+                  className="w-full rounded-full border border-gray-300 px-6 py-4 text-sm leading-tight text-gray-900 focus:border-primary focus:ring-primary bg-white flex items-center"
                   phone={form.phoneNumber}
                   setPhone={(phone) => setForm({ ...form, phoneNumber: phone })}
                   setCountry={(country) => setForm({ ...form, country: country })}

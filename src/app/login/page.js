@@ -161,7 +161,7 @@ function Login() {
 
       {/* Login Form Container - Centered */}
       <div className="flex-1 flex items-center justify-center px-6">
-        <div className="bg-white shadow-lg p-8 w-full max-w-md rounded-2xl">
+  <div className="bg-white shadow-lg p-8 w-full max-w-md rounded-2xl">
           <div className="text-center mb-8">
             <h1 className="text-2xl font-semibold text-gray-900 mb-2">Login</h1>
           </div>

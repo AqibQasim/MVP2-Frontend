@@ -410,7 +410,7 @@ function Page() {
 			</div>
 			{/* Signup Form Container - Centered */}
 			<div className="flex-1 flex items-center justify-center px-6">
-	<div className="bg-white shadow-lg p-8 w-full max-w-md rounded-2xl">
+	<div className="bg-white shadow-lg p-8 w-full max-w-md">
 					<div className="text-center mb-6">
 						<h1 className="text-2xl font-semibold text-gray-900 mb-2">Create account</h1>
 					</div>
