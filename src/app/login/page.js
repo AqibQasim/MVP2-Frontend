@@ -24,7 +24,7 @@ function Login() {
   const router = useRouter();
   const [alert, setalert] = useState(false);
   const [isLoading, setisLoading] = useState(false);
-    const [user_role, setUserRole] = useState("client");
+  const [user_role, setUserRole] = useState("client");
   const [isForgotPasswordOpened, setIsForgotPasswordOpened] = useState(false);
   const [show, setShow] = useState(false);
 
@@ -124,8 +124,8 @@ function Login() {
         };
 
         router.events = router.events || {};
-        router.events.on = router.events.on || (() => {});
-        router.events.off = router.events.off || (() => {});
+        router.events.on = router.events.on || (() => { });
+        router.events.off = router.events.off || (() => { });
 
         const cleanup = () => {
           router.events.off("routeChangeComplete", handleRouteChangeComplete);
@@ -151,7 +151,7 @@ function Login() {
   );
 
   return (
-  <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header with logo */}
       <div className="flex justify-between items-center p-6">
         {/* CoVentech logo in top left corner */}
@@ -167,7 +167,7 @@ function Login() {
             <h1 className="text-2xl font-semibold text-gray-900 mb-2">Login</h1>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-4">
+          <div className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm text-gray-600 mb-2">
                 Enter email address
@@ -233,7 +233,7 @@ function Login() {
             </div>
 
             <button
-              type="submit"
+              onClick={handleLogin}
               disabled={isLoading}
               className={`w-full rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-colors py-3 px-6 text-base font-semibold ${isLoading ? "cursor-not-allowed" : "cursor-pointer"}`}
             >
@@ -267,7 +267,7 @@ function Login() {
                 Register
               </button>
             </div>
-          </form>
+          </div>
         </div>
       </div>
 
