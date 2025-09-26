@@ -367,7 +367,7 @@ function Page() {
 	);
 	let confirmationtext = (
 		<>
-			Your account is currently under review. Soon you'll receive an email on{" "}
+			Your account is currently under review. Soon you&apos;ll receive an email on{" "}
 			<span className="font-semibold"> {form.email} </span> upon approval
 		</>
 	);

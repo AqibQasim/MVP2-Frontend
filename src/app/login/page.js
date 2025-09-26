@@ -258,7 +258,7 @@ function Login() {
             {/* Google signin */}
             <SignInButton user_role={user_role} />
             <div className="text-center mt-6">
-              <span className="block mb-2 text-gray-600 text-sm">Don't have an account?</span>
+              <span className="block mb-2 text-gray-600 text-sm">Don&apos;t have an account?</span>
               <button
                 type="button"
                 className="inline-block rounded-lg border border-blue-600 text-blue-600 px-6 py-2 font-medium hover:bg-blue-50 transition-colors"
