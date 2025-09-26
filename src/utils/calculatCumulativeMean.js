@@ -18,6 +18,6 @@ export const calculateCumulativeMean = (val1, val2, val3) => {
     }
 
     if (count === 0) return 0;
-
-    return (total / count).toFixed(1); // Round the final result to one decimal place
+    console.log(total / count)
+    return (total / count)?.toFixed(1); // Round the final result to one decimal place
 };
