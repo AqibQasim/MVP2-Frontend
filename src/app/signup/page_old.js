@@ -1,0 +1,820 @@
+"use client";
+import ErrorPopup from "@/components/ErrorPopup";
+import Heading from "@/components/Heading";
+import Input from "@/components/Input";
+import OnBoardingButton from "@/components/OnBoardingButton";
+import Overlay from "@/components/Overlay";
+import PhoneInputEl from "@/components/PhoneInputEl";
+import SignInButton from "@/components/SignInButton";
+import SuccessModal from "@/components/SuccessModal";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
+import { revalidate } from "@/lib/data-service";
+import { PAGE_HEIGHT_FIX } from "@/utils/utility";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useMemo, useState, useEffect } from "react";
+import { Pagination, Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
+
+function Page() {
+  const router = useRouter();
+  const params = useSearchParams();
+
+  // Set page title
+  useEffect(() => {
+    document.title = "CoVental | Pool of the top talent";
+  }, []);
+
+  const [isOverlayVisible, setOverlayVisible] = useState(false);
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    password: "",
+    countryCode: "+92",
+    country: "",
+    confirmPassword: "",
+  });
+  const [confirmTerms, setConfirmTerms] = useState(false);
+
+  const [user_role, setUserRole] = useState(params?.get("role") || "client");
+  const [errors, setErrors] = useState({});
+  const [termsError, setTermsError] = useState("");
+  const [otp, setotp] = useState(null);
+  const [alert, setAlert] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
+  const [show, setShow] = useState(false);
+  const [show2, setShow2] = useState(false);
+  const allowedDomains = ["company.com", "company.org"];
+
+  const handClick = () => {
+    setShow(!show);
+  };
+  const handClick2 = () => {
+    setShow2(!show2);
+  };
+
+  const payload = useMemo(
+    () => ({
+      endpoint: "signup",
+      method: "POST",
+      body: {
+        email: form.email,
+        name: form.firstName + " " + form.lastName,
+        password: form.password,
+        country: form.country,
+        contact_no: `${form.phoneNumber}`,
+        user_role,
+        method: "signup",
+      },
+    }),
+    [form, user_role],
+  );
+
+  const handleSignup = useCallback(
+    async (event) => {
+      event.preventDefault();
+      setisLoading(true);
+      if (Object.values(errors).some((err) => err !== "")) {
+        return; // Do not proceed with signup if there are validation errors
+      }
+
+      // Proceed with the rest of the signup process
+      const result = await mvp2ApiHelper(payload);
+      console.log("RESULT from signup: ", result?.data?.customer_id);
+
+      try {
+        // Call the Stripe customer creation API
+        const stripeResponse = await fetch("/api/create-customer", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: form.email,
+            name: form.firstName + " " + form.lastName,
+            metadata:
+              user_role == "customer"
+                ? { customer: 1, customer_id: result?.data?.customer_id }
+                : { customer: 0, client_id: result?.data?.client_id },
+          }),
+        });
+
+        const stripeData = await stripeResponse.json();
+
+        if (stripeResponse.status !== 200) {
+          throw new Error(stripeData.error);
+        }
+
+        console.log(
+          "Stripe customer created successfully:",
+          stripeData.customer,
+        );
+
+        let createAccountData;
+
+        if (user_role === "client") {
+          const createAccountResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-stripe-account`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                client_id: result.data.client_id,
+                stripe_id: stripeData.customer.id,
+              }),
+            },
+          );
+          createAccountData = await createAccountResponse.json();
+
+          if (createAccountResponse.status !== 200) {
+            throw new Error(createAccountData.error);
+          }
+          console.log(
+            "Stripe account created successfully:",
+            createAccountData,
+          );
+        } else {
+          const createAccountResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-customer-stripe-account`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                customer_id: result.data.customer_id,
+                stripe_id: stripeData.customer.id,
+              }),
+            },
+          );
+          createAccountData = await createAccountResponse.json();
+
+          if (createAccountResponse.status !== 200) {
+            throw new Error(createAccountData.error);
+          }
+          console.log(
+            "Stripe account created successfully:",
+            createAccountData,
+          );
+        }
+        if (result.data.status === 200) {
+          console.log("Signed up successfully");
+          setOverlayVisible(false);
+          setisLoading(false);
+          const revalidatePathOnSignup = `/admin/${user_role === "client" ? "clients" : "candidates"}`;
+          await revalidate(revalidatePathOnSignup);
+
+          const Authenticated = true;
+          if (Authenticated) {
+            localStorage.setItem("MVP_CLIENT_LOGGEDIN", true);
+
+            const now = new Date();
+            now.setTime(now.getTime() + 60 * 60 * 60 * 10 + 36000000); // 36000000 ms = 10 hours
+            const expires = now.toUTCString();
+
+            const token = result.data.token;
+            document.cookie = `credentialLoginToken=${token}; expires=${expires}; path=/;`;
+
+            // Handle navigation loading
+            // const handleRouteChangeComplete = () => {
+            //   setisLoading(false); // Stop loading when navigation is complete
+            //   router.events.off(
+            //     "routeChangeComplete",
+            //     handleRouteChangeComplete,
+            //   );
+            // };
+
+            // router?.events?.on(
+            //   "routeChangeComplete",
+            //   handleRouteChangeComplete,
+            // );
+
+            if (user_role === "customer") {
+              router.push(`/candidate/${result.data.customer_id}`);
+            } else {
+              router.push(`/client/${result.data.client_id}`);
+            }
+          }
+          // router.push("/login");
+        } else {
+          console.error("Error during signup:", error);
+        }
+      } catch (error) {
+        console.error("Error during signup:", error);
+      }
+    },
+    [payload, errors, user_role, isOverlayVisible, form],
+  );
+
+  const generateOtp = () => Math.floor(100000 + Math.random() * 900000);
+
+  const handleOpenOverlay = useCallback(
+    async (event) => {
+      event.preventDefault();
+      setTermsError("");
+      if (!confirmTerms)
+        return setTermsError(
+          "Please accept the Terms of Service and Privacy Policy to proceed.",
+        );
+
+      if (Object.values(errors).every((err) => err === "")) {
+        try {
+          // Determine the correct API based on user_role
+          let apiUrl = "";
+          if (user_role === "client") {
+            apiUrl = `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/client-by-email?email=${form.email}`;
+          } else if (user_role === "customer") {
+            apiUrl = `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/customer-by-email?email=${form.email}`;
+          } else {
+            console.error("Unknown user role");
+            return;
+          }
+
+          const checkUserResponse = await fetch(apiUrl, { method: "GET" });
+
+          if (checkUserResponse.status === 200) {
+            console.log("User exists, not sending OTP");
+            setAlert(true);
+            return;
+          }
+
+          if (checkUserResponse.status === 404) {
+            // User not found, proceed to send email
+            const generatedotp = generateOtp();
+            setotp(generatedotp);
+
+
+            const payload = {
+              endpoint: "send-email",
+              method: "POST",
+              body: {
+                to: form.email, // Using form.email for the recipient
+                subject: "OTP",
+                text: `Your OTP code is: ${generatedotp}`, // Include the generated OTP
+              },
+            };
+
+            const result = await mvp2ApiHelper(payload);
+
+            if (result.status === 200) {
+              console.log("Email sent successfully");
+              setOverlayVisible(true);
+            } else {
+              console.log("Failed to send email");
+            }
+          } else {
+            console.error("Error checking user existence");
+          }
+        } catch (error) {
+          console.error("Error checking user existence: ", error);
+        }
+      }
+    },
+    [errors, form.email, user_role, confirmTerms],
+  );
+
+  const handleCloseOverlay = () => {
+    setOverlayVisible(false);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+
+    // Real-time validation
+    validateField(name, value);
+  };
+
+  function handlePhoneChange(phone) {
+    console.log("Phone hereeeeeeeeeeeeeeeeee: ", phone);
+    setForm({ ...form, phoneNumber: phone });
+    console.log(form.phoneNumber);
+
+    // Real-time validation
+    validateField("phoneNumber", phone);
+  }
+
+  function handleCountryChange(c) {
+    console.log("qs5ewrfdgfsofdgf", c);
+    setForm({ ...form, country: c });
+    //console.log(form.country);
+
+    // Real-time validation
+    //validateField("phoneNumber", phone);
+  }
+
+  const isFormInvalid = useMemo(() => {
+    return (
+      Object.values(errors).some((err) => err !== "") ||
+      !form.firstName ||
+      !form.lastName ||
+      !form.email ||
+      !form.phoneNumber ||
+      !form.password ||
+      !form.confirmPassword
+    );
+  }, [errors, form]);
+
+  const validateField = (name, value) => {
+    let errorMsg = "";
+
+    switch (name) {
+      case "firstName":
+        if (!/^[A-Za-z]+$/.test(value)) {
+          errorMsg = "Invalid First Name";
+        }
+        break;
+      case "lastName":
+        if (!/^[A-Za-z]+$/.test(value)) {
+          errorMsg = "Invalid Last Name";
+        }
+
+        break;
+      case "email":
+        if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value)) {
+          errorMsg = "Invalid email address";
+        }
+        break;
+      // react-international-phone validator
+      //https://react-international-phone.vercel.app/docs/Usage/PhoneValidation/
+      case "phoneNumber":
+        if (!/^\+?[1-9]\d{7,15}$/.test(value)) {
+          errorMsg = "Phone number must have a valid code and 8-16 digits.";
+        }
+        break;
+
+      // case "phoneNumber":
+      //   if (!/^\d{8,12}$/.test(value)) {
+      //     errorMsg = "Invalid phone number";
+      //   }
+      //   break;
+      case "password":
+        if (!/^.{8,}$/.test(value)) {
+          errorMsg = "Password must be at least 8 characters";
+        } else if (form.confirmPassword && value !== form.confirmPassword) {
+          setErrors((prev) => ({
+            ...prev,
+            confirmPassword: "Passwords do not match",
+          }));
+        } else {
+          setErrors((prev) => ({ ...prev, confirmPassword: "" }));
+        }
+        break;
+      case "confirmPassword":
+        if (value !== form.password) {
+          errorMsg = "Passwords do not match";
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMsg }));
+  };
+
+  const mainHeading = (
+    <span>
+      Enter verification{" "}
+      <span
+        style={{
+          backgroundImage: "linear-gradient(to right, #4624E0, white)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          display: "inline",
+        }}
+      >
+        Code.
+      </span>
+    </span>
+  );
+  let text = (
+    <>
+      We&apos;ve sent a code to{" "}
+      <span className="font-semibold">{form.email}</span>
+    </>
+  );
+  let confirmationtext = (
+    <>
+      Your account is currently under review. Soon you’ll receive an email on{" "}
+      <span className="font-semibold"> {form.email} </span> upon approval
+    </>
+  );
+
+  return (
+    <div className="h-screen overflow-hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      {/* CoVentech logo in top left corner */}
+      <div className={`flex h-screen gap-2`}>
+        <div className="flex flex-[1.4] flex-col rounded-[36px] bg-white relative overflow-hidden">
+          <div className="absolute top-4 left-4 z-[9999]">
+            <Image src="/cooventechlogo.png" width={135} height={35} alt="CoVentech Logo" />
+          </div>
+          {/* Gradient Overlay at Top */}
+
+
+          {/* Swiper Section */}
+          <div className="absolute top-0 left-0 w-full  h-44 bg-gradient-to-b from-white from-15% z-10"></div>
+          <Swiper
+            modules={[Pagination]}
+            spaceBetween={30}
+            slidesPerView={1}
+            loop={true}
+            pagination={{ clickable: true, el: '.swiper-pagination' }}
+            className="relative w-full h-auto"
+          >
+            {["login-page1.png", "login-page2.png", "login-page3.png"].map(
+              (img, idx) => (
+                <SwiperSlide key={idx} className="flex justify-center items-center">
+
+                  <Image
+                    src={`/${img}`}
+                    alt={`Login Image ${idx + 1}`}
+                    width={900}
+                    height={500}
+                    className="rounded-lg object-cover w-full h-[650]"
+                  />
+
+                </SwiperSlide>
+              )
+            )}
+          </Swiper>
+
+          {/* Gradient Overlay at Bottom */}
+          <div className="absolute bottom-0 left-0 w-full  h-[310px] bg-gradient-to-t from-white from-15% z-10"></div>
+
+          {/* Text Section with Pagination Dots */}
+          <div className="text-center px-6 relative z-20">
+            <h2 className="text-3xl mx-auto mt-4 font-extrabold text-gray-900 leading-tight">
+              Where Top Talent Meets Leading <br></br>Companies
+            </h2>
+            <p className="mt-3 mb-12 text-gray-500 text-sm w-[80%] mx-auto">
+              Unlock a world of skilled engineers and innovative companies. Co-Vental
+              bridges the gap between top-tier talent and businesses looking to build
+              the future.
+            </p>
+            {/* Pagination Dots */}
+            <div className="swiper-pagination mt-24"></div>
+          </div>
+        </div>
+
+        <div className="flex w-[35rem] flex-col items-start justify-start rounded-[36px] bg-white h-screen overflow-hidden">
+          {/* Logo */}
+          <div className="w-full flex justify-start pr-10 p-5 pb-2">
+            <Image src="/logo.svg" width={120} height={30} alt="CoVental Logo" />
+          </div>
+          <div className="flex w-full justify-end space-y-1 px-5 pb-3 -mt-8">
+            <div className="flex gap-2">
+              <button
+                onClick={(e) => {
+                  //e.preventDefault();
+                  setUserRole("client");
+                }}
+                className={`rounded-full border-[1px] ${user_role === "client" ? "border-primary bg-primary-tint-100 px-6 py-1.5 text-[#070416]" : "bg-primary-tint-100 px-6 py-1.5 text-[#ACA6C8]"}`}
+              >
+                Client
+              </button>
+              <button
+                onClick={(e) => {
+                  //e.preventDefault();
+                  setUserRole("customer");
+                }}
+                className={`rounded-full border-[1px] ${user_role === "customer" ? "border-primary bg-primary-tint-100 px-6 py-1.5 text-[#070416]" : "bg-primary-tint-100 px-6 py-1.5 text-[#ACA6C8]"}`}
+              >
+                Talent
+              </button>
+            </div>
+          </div>
+          <div className="mx-auto mt-1 w-8/12 flex-1 overflow-hidden px-2">
+            <h2 className="text-start font-lufga text-base">
+              A sentence of perks and encouragement for{" "}
+              <span className="gradient-text">freelancer.</span>
+              <Image
+                src="/icons/clients_emoji.png"
+                width={50}
+                height={50}
+                alt="Clients Emoji"
+                className="inline-block"
+              />
+            </h2>
+            <form onSubmit={handleOpenOverlay}>
+              <div className="mt-1 flex gap-2">
+                <Input
+                  type="text"
+                  name="firstName"
+                  value={form.firstName}
+                  error={errors.firstName}
+                  onChange={handleChange}
+                  placeholder="First name"
+                  className="mt-2"
+                />
+                <Input
+                  type="text"
+                  name="lastName"
+                  value={form.lastName}
+                  error={errors.lastName}
+                  onChange={handleChange}
+                  placeholder="Last name"
+                  className="mt-2"
+                />
+              </div>
+
+              <div className="flex gap-1">
+                <div>
+                  {errors.firstName && (
+                    <p className="text-xs text-red-500">{errors.firstName}</p>
+                  )}
+                </div>
+                <div>
+                  {errors.lastName && (
+                    <p className="text-xs text-red-500">{errors.lastName}</p>
+                  )}
+                </div>
+              </div>
+
+              <Input
+                type="text"
+                name="email"
+                value={form.email}
+                error={errors.email}
+                onChange={handleChange}
+                placeholder="Enter email"
+                className="mt-2"
+              />
+              {errors.email && (
+                <p className="text-xs text-red-500">{errors.email}</p>
+              )}
+
+              {/* react-internation-phone */}
+              <PhoneInputEl
+                className="mt-2"
+                phone={form.phoneNumber}
+                setPhone={handlePhoneChange}
+                setCountry={handleCountryChange}
+              />
+
+              {/* Phone Number with Country Code */}
+              {/* <div className="mt-3 flex gap-2">
+                <select
+                  name="countryCode"
+                  value={form.countryCode}
+                  onChange={handleChange}
+                  className="mt-3 block h-[42px] w-full rounded-full border border-gray-300 px-5 text-sm leading-tight text-gray-900 focus:border-primary focus:ring-primary"
+                >
+                  <option value="+93">+93 (Afghanistan)</option>
+                  <option value="+355">+355 (Albania)</option>
+                  <option value="+213">+213 (Algeria)</option>
+                  <option value="+54">+54 (Argentina)</option>
+                  <option value="+61">+61 (Australia)</option>
+                  <option value="+43">+43 (Austria)</option>
+                  <option value="+994">+994 (Azerbaijan)</option>
+                  <option value="+973">+973 (Bahrain)</option>
+                  <option value="+880">+880 (Bangladesh)</option>
+                  <option value="+32">+32 (Belgium)</option>
+                  <option value="+55">+55 (Brazil)</option>
+                  <option value="+1">+1 (Canada)</option>
+                  <option value="+86">+86 (China)</option>
+                  <option value="+57">+57 (Colombia)</option>
+                  <option value="+420">+420 (Czech Republic)</option>
+                  <option value="+45">+45 (Denmark)</option>
+                  <option value="+20">+20 (Egypt)</option>
+                  <option value="+358">+358 (Finland)</option>
+                  <option value="+33">+33 (France)</option>
+                  <option value="+49">+49 (Germany)</option>
+                  <option value="+30">+30 (Greece)</option>
+                  <option value="+91">+91 (India)</option>
+                  <option value="+62">+62 (Indonesia)</option>
+                  <option value="+98">+98 (Iran)</option>
+                  <option value="+964">+964 (Iraq)</option>
+                  <option value="+353">+353 (Ireland)</option>
+                  <option value="+972">+972 (Israel)</option>
+                  <option value="+39">+39 (Italy)</option>
+                  <option value="+81">+81 (Japan)</option>
+                  <option value="+962">+962 (Jordan)</option>
+                  <option value="+254">+254 (Kenya)</option>
+                  <option value="+965">+965 (Kuwait)</option>
+                  <option value="+961">+961 (Lebanon)</option>
+                  <option value="+60">+60 (Malaysia)</option>
+                  <option value="+52">+52 (Mexico)</option>
+                  <option value="+977">+977 (Nepal)</option>
+                  <option value="+31">+31 (Netherlands)</option>
+                  <option value="+64">+64 (New Zealand)</option>
+                  <option value="+234">+234 (Nigeria)</option>
+                  <option value="+47">+47 (Norway)</option>
+                  <option value="+92">+92 (Pakistan)</option>
+                  <option value="+63">+63 (Philippines)</option>
+                  <option value="+48">+48 (Poland)</option>
+                  <option value="+351">+351 (Portugal)</option>
+                  <option value="+974">+974 (Qatar)</option>
+                  <option value="+7">+7 (Russia)</option>
+                  <option value="+966">+966 (Saudi Arabia)</option>
+                  <option value="+65">+65 (Singapore)</option>
+                  <option value="+27">+27 (South Africa)</option>
+                  <option value="+82">+82 (South Korea)</option>
+                  <option value="+34">+34 (Spain)</option>
+                  <option value="+46">+46 (Sweden)</option>
+                  <option value="+41">+41 (Switzerland)</option>
+                  <option value="+66">+66 (Thailand)</option>
+                  <option value="+90">+90 (Turkey)</option>
+                  <option value="+971">+971 (UAE)</option>
+                  <option value="+44">+44 (UK)</option>
+                  <option value="+1">+1 (USA)</option>
+                  <option value="+58">+58 (Venezuela)</option>
+                  <option value="+84">+84 (Vietnam)</option>
+                </select>
+                <Input
+                  type="tel"
+                  name="phoneNumber"
+                  error={errors.phoneNumber}
+                  value={form.phoneNumber}
+                  onChange={handleChange}
+                  placeholder="Phone number"
+                  className="mt-3 flex-grow"
+                />
+              </div>
+              {errors.phoneNumber && (
+                <p className="text-xs text-red-500">{errors.phoneNumber}</p>
+              )} */}
+
+              <div className="flex gap-2">
+                <div className="flex">
+                  <Input
+                    type={show ? "text" : "password"}
+                    name="password"
+                    value={form.password}
+                    error={errors.password}
+                    onChange={handleChange}
+                    placeholder="Enter password"
+                    className="mt-2"
+                  />
+                  <p className="ml-[-37px]">
+                    {show ? (
+                      <Image
+                        src="eye-close.svg"
+                        width={20}
+                        height={20}
+                        alt="eye open"
+                        onClick={handClick}
+                        className="mt-[20px] inline-block cursor-pointer"
+                      />
+                    ) : (
+                      <Image
+                        src="eye.svg"
+                        width={20}
+                        height={20}
+                        alt="eye close"
+                        onClick={handClick}
+                        className="mt-[20px] inline-block cursor-pointer"
+                      />
+                    )}
+                  </p>
+                </div>
+                <div className="flex">
+                  <Input
+                    type={show2 ? "text" : "password"}
+                    name="confirmPassword"
+                    value={form.confirmPassword}
+                    error={errors.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Confirm password"
+                    className="mt-2"
+                  />
+                  <p className="ml-[-37px]">
+                    {show2 ? (
+                      <Image
+                        src="eye-close.svg"
+                        width={20}
+                        height={20}
+                        alt="eye close"
+                        onClick={handClick2}
+                        className="mt-[20px] inline-block cursor-pointer"
+                      />
+                    ) : (
+                      <Image
+                        src="eye.svg"
+                        width={20}
+                        height={20}
+                        alt="eye open"
+                        onClick={handClick2}
+                        className="mt-[20px] inline-block cursor-pointer"
+                      />
+                    )}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-1">
+                <div>
+                  {errors.password && (
+                    <p className="text-xs text-red-500">{errors.password}</p>
+                  )}
+                </div>
+                <div>
+                  {errors.confirmPassword && (
+                    <p className="text-xs text-red-500">
+                      {errors.confirmPassword}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="mt-1 w-full text-start">
+                <input
+                  type="checkbox"
+                  className="border-none outline-none"
+                  onChange={() => {
+                    setTermsError("");
+                    setConfirmTerms((checked) => !checked);
+                  }}
+                  checked={confirmTerms}
+                  name="confirmTerms"
+                />
+                <span className="ms-2 text-sm text-grey-primary">
+                  I read and accept the{" "}
+                </span>
+                <span className="text-sm text-grey-primary">
+                  Terms and Conditions
+                </span>
+                {termsError && (
+                  <p className="text-xs text-red-500">{termsError}</p>
+                )}
+              </div>
+              <OnBoardingButton
+                type="submit"
+                disabled={isFormInvalid}
+                className={`${isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
+                  }`}
+              >
+                Create account
+              </OnBoardingButton>
+            </form>
+
+            <div className="my-1 w-full text-center text-grey-primary-tint-30">
+              <div className="flex items-center justify-center gap-2">
+                <Image
+                  src="line.svg"
+                  width={20}
+                  height={20}
+                  alt="line"
+                  className="inline-block"
+                />
+                <span>Or</span>
+                <Image
+                  src="line.svg"
+                  width={20}
+                  height={20}
+                  alt="line"
+                  className="inline-block"
+                />
+              </div>
+            </div>
+
+            {/* Google signin */}
+            <SignInButton user_role={user_role} />
+            <div className="mt-2">
+              <p className="me-1 inline-block text-xs text-grey-primary">
+                Already have an account?
+              </p>
+              <Link href={`/login?role=${user_role}`} className="text-xs text-primary underline">
+                Sign in now
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {isOverlayVisible && (
+        <Overlay isVisible={isOverlayVisible} closeoverlay={handleCloseOverlay}>
+          <SuccessModal
+            onClose={handleCloseOverlay}
+            imgSrc="/Message.png"
+            mainHeading={mainHeading}
+            text={text}
+            confirmationtext={confirmationtext}
+            buttonText={"Verify email"}
+            onBoarding={true}
+            containsOtp={true}
+            otp={otp}
+            isLoading={isLoading}
+            signupHandler={handleSignup}
+          />
+        </Overlay>
+      )}
+      {alert && (
+        <ErrorPopup
+          message="Account Already Exist"
+          type="error"
+          onClose={() => setAlert(false)}
+        />
+      )}
+    </div>
+  );
+}
+
+export default Page;

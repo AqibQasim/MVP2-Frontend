@@ -1,16 +1,9 @@
-import Link from "next/link";
-
-function NotFound() {
+"use client";
+export default function NotFound() {
   return (
-    <main className="mt-4 space-y-6 text-center">
-      <h1 className="text-3xl font-semibold">
-        This Page could not be found :(
-      </h1>
-      <Link href="/" className="inline-block px-6 py-3 text-lg">
-        Go back home
-      </Link>
-    </main>
+    <div className="min-h-screen flex flex-col items-center justify-center">
+      <h1 className="text-2xl font-bold text-red-600 mb-4">Page not found</h1>
+      <p className="text-gray-700">The page could not be loaded. Please check the URL or contact support.</p>
+    </div>
   );
 }
-
-export default NotFound;

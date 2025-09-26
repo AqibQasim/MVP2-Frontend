@@ -12,10 +12,6 @@ import urlBase64ToUint8Array from "@/utils/urlBase64ToUint8Array";
 import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
 import Link from "next/link";
-import { Pagination, Autoplay } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/pagination";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useMemo, useCallback, useEffect } from "react";
@@ -28,7 +24,7 @@ function Login() {
   const router = useRouter();
   const [alert, setalert] = useState(false);
   const [isLoading, setisLoading] = useState(false);
-  const [user_role, setUserRole] = useState(params?.get("role") || "client");
+    const [user_role, setUserRole] = useState("client");
   const [isForgotPasswordOpened, setIsForgotPasswordOpened] = useState(false);
   const [show, setShow] = useState(false);
 
@@ -36,72 +32,6 @@ function Login() {
   useEffect(() => {
     document.title = "CoVental | Pool of the top talent";
   }, []);
-
-  // useEffect(() => {
-  //   // console.log("Requesting notification permission...");
-  //   requestNotificationPermission();
-  // }, []);
-  // Request Notification Permission
-  // const requestNotificationPermission = async () => {
-  //   if ("Notification" in window) {
-  //     const isAcceptedNotification = await Notification.requestPermission();
-  //     if (isAcceptedNotification === "granted") {
-  //       sendNotification();
-  //     } else {
-  //       console.warn("notification permission denied");
-  //     }
-  //   } else {
-  //     console.error("This browser does not support notifications.");
-  //   }
-  // };
-  // Send a Notification
-  // const sendNotification = () => {
-  //   // if ("Notification" in window) {
-  //   //   console.log("Sending notification...");
-  //   //   new Notification("Hello!", {
-  //   //     body: "This is your notification.",
-  //   //     //icon: "/icon.png", // Optional: Add an icon
-  //   //   });
-  //   // } else {
-  //   //   console.error("Notifications are not supported in this browser.");
-  //   // }
-  //   if (
-  //     "serviceWorker" in navigator &&
-  //     "PushManager" in window
-  //   ) {
-  //     navigator.serviceWorker
-  //       .register("/sw.js", {
-  //         scope: "/",
-  //       })
-  //       .then(async (swRegistration) => {
-  //         const existingSubscription =
-  //           await swRegistration.pushManager.getSubscription();
-  //         if (existingSubscription) {
-  //           // Unsubscribe if the applicationServerKey is different
-  //           console.log("Unsubscribing existing subscription...");
-  //           await existingSubscription.unsubscribe();
-  //         }
-  //         const subscription = await swRegistration.pushManager.subscribe({
-  //           userVisibleOnly: true,
-  //           applicationServerKey: urlBase64ToUint8Array(
-  //             process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
-  //           ),
-  //         });
-  //         console.log("Push subscription:", subscription);
-  //         // Send the subscription object to your backend
-  //         fetch(`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/subscribe`, {
-  //           method: "POST",
-  //           headers: { "Content-Type": "application/json" },
-  //           body: JSON.stringify(subscription),
-  //         }).then(async (res) => {
-  //           console.log(await res.json());
-  //         });
-  //       })
-  //       .catch((error) => {
-  //         console.error("Service Worker registration failed:", error);
-  //       });
-  //   }
-  // };
 
   const handleCloseOverlay = () => {
     setIsForgotPasswordOpened(false);
@@ -169,270 +99,179 @@ function Login() {
   const handleLogin = useCallback(
     async (event) => {
       event.preventDefault();
+      console.log("Login button clicked!");
+      console.log("Form data:", form);
+      console.log("User role:", user_role);
 
       setisLoading(true); // Start loading
 
-      // Validate all fields before submission
-      if (!form.email || !form.password || errors.email || errors.password) {
-        setisLoading(false); // Stop loading if validation fails
+      // Simple validation
+      if (!form.email || !form.password) {
+        console.log("Missing email or password");
+        setisLoading(false);
         return;
       }
 
-      console.log(payload);
+      console.log("Payload:", payload);
       const result = await mvp2ApiHelper(payload);
-      console.log(result);
+      console.log("API Result:", result);
 
-      if (result.status === 200) {
-        const Authenticated = true;
-        if (Authenticated) {
-          localStorage.setItem("MVP_CLIENT_LOGGEDIN", true);
+      if (result.status === 200 && result.data) {
+        localStorage.setItem("MVP_CLIENT_LOGGEDIN", true);
 
-          const now = new Date();
-          now.setTime(now.getTime() + 60 * 60 * 60 * 10 + 36000000); // 36000000 ms = 10 hours
-          const expires = now.toUTCString();
+        const handleRouteChangeComplete = () => {
+          setisLoading(false); // Stop loading when route change completes
+        };
 
-          const token = result.data.token;
-          document.cookie = `credentialLoginToken=${token}; expires=${expires}; path=/;`;
+        router.events = router.events || {};
+        router.events.on = router.events.on || (() => {});
+        router.events.off = router.events.off || (() => {});
 
-          // Handle navigation loading
-          const handleRouteChangeComplete = () => {
-            setisLoading(false); // Stop loading when navigation is complete
-            router.events.off("routeChangeComplete", handleRouteChangeComplete);
-          };
+        const cleanup = () => {
+          router.events.off("routeChangeComplete", handleRouteChangeComplete);
+        };
 
-          router?.events?.on("routeChangeComplete", handleRouteChangeComplete);
+        router?.events?.on("routeChangeComplete", handleRouteChangeComplete);
 
-          const isLoggedIn =
-            localStorage.getItem("MVP_CLIENT_LOGGEDIN") === "true";
+        const isLoggedIn =
+          localStorage.getItem("MVP_CLIENT_LOGGEDIN") === "true";
 
-          if (user_role === "customer") {
-            router.push(`/candidate/${result.data.id}`);
-          } else {
-            router.push(`/client/${result.data.id}`);
-          }
+        if (user_role === "customer") {
+          router.push(`/candidate/${result.data.id}`);
+        } else {
+          router.push(`/client/${result.data.id}`);
         }
       } else {
+        console.log("Login failed:", result);
         setisLoading(false);
         setalert(true);
       }
     },
-    [form, errors, user_role],
+    [form, errors, user_role, payload, router],
   );
 
   return (
-    <div className="h-screen overflow-hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-      {/* CoVentech logo in top left corner */}
-      <div className={`flex h-screen gap-2`}>
-        <div className="flex flex-[1.4] flex-col rounded-[36px] bg-white relative overflow-hidden">
-          <div className="absolute top-4 left-4 z-[9999]">
-            <Image src="/cooventechlogo.png" width={135} height={35} alt="CoVentech Logo" />
-          </div>
-          {/* Gradient Overlay at Top */}
-
-
-          {/* Swiper Section */}
-          <div className="absolute top-0 left-0 w-full h-44 bg-gradient-to-b from-white from-15% z-10"></div>
-          <Swiper
-            modules={[Pagination]}
-            spaceBetween={30}
-            slidesPerView={1}
-            loop={true}
-            pagination={{ clickable: true, el: '.swiper-pagination' }}
-            className="relative w-full h-auto"
-          >
-            {["login-page1.png", "login-page2.png", "login-page3.png"].map(
-              (img, idx) => (
-                <SwiperSlide key={idx} className="flex justify-center items-center">
-
-                  <Image
-                    src={`/${img}`}
-                    alt={`Login Image ${idx + 1}`}
-                    width={900}
-                    height={500}
-                    className="rounded-lg object-cover w-full h-[650]"
-                  />
-
-                </SwiperSlide>
-              )
-            )}
-          </Swiper>
-
-          {/* Gradient Overlay at Bottom */}
-          <div className="absolute bottom-0 left-0 w-full  h-[310px] bg-gradient-to-t from-white from-15% z-10"></div>
-
-          {/* Text Section with Pagination Dots */}
-          <div className="text-center px-6 relative z-20">
-            <h2 className="text-3xl mx-auto mt-4 font-extrabold text-gray-900 leading-tight">
-              Where Top Talent Meets Leading <br></br>Companies
-            </h2>
-            <p className="mt-3 mb-12 text-gray-500 text-sm w-[80%] mx-auto">
-              Unlock a world of skilled engineers and innovative companies. Co-Vental
-              bridges the gap between top-tier talent and businesses looking to build
-              the future.
-            </p>
-            {/* Pagination Dots */}
-            <div className="swiper-pagination mt-24"></div>
-          </div>
+  <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* Header with logo */}
+      <div className="flex justify-between items-center p-6">
+        {/* CoVentech logo in top left corner */}
+        <div>
+          <Image src="/cooventechlogo.png" width={135} height={35} alt="CoVentech Logo" />
         </div>
-        <div className="flex w-[35rem] flex-col items-start justify-start h-screen overflow-hidden rounded-[36px] bg-white">
-          {/* Logo */}
-          <div className="w-full flex justify-start pr-10 p-5 pb-2">
-            <Image src="/logo.svg" width={120} height={30} alt="CoVental Logo" />
-          </div>
-          <div className="flex w-full justify-end space-y-2 px-5 pb-3 -mt-8">
-            <div className="flex gap-2">
-              <button
-                onClick={(e) => {
-                  //e.preventDefault();
-                  setUserRole("client");
-                }}
-                className={`rounded-full border-[1px] ${user_role === "client" ? "border-primary bg-primary-tint-100 px-6 py-1.5 text-[#070416]" : "bg-primary-tint-100 px-6 py-1.5 text-[#ACA6C8]"}`}
-              >
-                Client
-              </button>
-              <button
-                onClick={(e) => {
-                  //e.preventDefault();
-                  setUserRole("customer");
-                }}
-                className={`rounded-full border-[1px] ${user_role === "customer" ? "border-primary bg-primary-tint-100 px-6 py-1.5 text-[#070416]" : "bg-primary-tint-100 px-6 py-1.5 text-[#ACA6C8]"}`}
-              >
-                Talent
-              </button>
-            </div>
-          </div>
-          <div className="mx-auto mt-2 w-8/12 flex-1 overflow-hidden px-2">
-            <h2 className="text-start font-lufga text-lg">
-              A sentence of perks and encouragement for{" "}
-              <span className="gradient-text">freelancer.</span>
-              <Image
-                src="/icons/clients_emoji.png"
-                width={80}
-                height={80}
-                alt="Clients Emoji"
-                className="inline-block"
-              />
-            </h2>
+      </div>
 
-            <Input
-              type="text"
-              name="email"
-              value={form.email}
-              error={errors.email}
-              onChange={handleChange}
-              placeholder="Enter your email"
-              className="mt-2"
-            />
-            {errors.email && (
-              <p className="text-xs text-red-500">{errors.email}</p>
-            )}
-            <div className="flex">
+      {/* Login Form Container - Centered */}
+      <div className="flex-1 flex items-center justify-center px-6">
+        <div className="bg-white shadow-lg p-8 w-full max-w-md rounded-2xl">
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-semibold text-gray-900 mb-2">Login</h1>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-sm text-gray-600 mb-2">
+                Enter email address
+              </label>
               <Input
-                type={show ? "text" : "password"}
-                name="password"
-                value={form.password}
-                onKeyDown={handleKeyDown} // Trigger login on Enter
+                type="email"
+                name="email"
+                id="email"
+                value={form.email}
+                error={errors.email}
                 onChange={handleChange}
-                error={errors.password}
-                placeholder="Enter your password"
-                className="mt-2"
+                placeholder="Email address"
+                className="w-full"
               />
-              <p className="ml-[-37px]">
-                {show ? (
-                  <Image
-                    src="eye-close.svg"
-                    width={20}
-                    height={20}
-                    alt="line"
-                    onClick={handClick}
-                    className="mt-[20px] inline-block cursor-pointer"
-                  />
-                ) : (
-                  <Image
-                    src="eye.svg"
-                    width={20}
-                    height={20}
-                    alt="line"
-                    onClick={handClick}
-                    className="mt-[20px] inline-block cursor-pointer"
-                  />
-                )}
-              </p>
+              {errors.email && (
+                <p className="text-xs text-red-500 mt-1">{errors.email}</p>
+              )}
             </div>
-            {errors.password && (
-              <p className="text-xs text-red-500">{errors.password}</p>
-            )}
 
-            <div className="mt-2 w-full text-right">
+            <div>
+              <label htmlFor="password" className="block text-sm text-gray-600 mb-2">
+                Enter your password
+              </label>
+              <div className="relative">
+                <Input
+                  type={show ? "text" : "password"}
+                  name="password"
+                  id="password"
+                  value={form.password}
+                  onKeyDown={handleKeyDown}
+                  onChange={handleChange}
+                  error={errors.password}
+                  placeholder="Your password"
+                  className="w-full pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={handClick}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                >
+                  <Image
+                    src={show ? "/eye-close.svg" : "/eye.svg"}
+                    width={20}
+                    height={20}
+                    alt="toggle password visibility"
+                    className="cursor-pointer"
+                  />
+                </button>
+              </div>
+              {errors.password && (
+                <p className="text-xs text-red-500 mt-1">{errors.password}</p>
+              )}
+            </div>
+
+            <div className="text-right">
               <button
+                type="button"
                 onClick={() => setIsForgotPasswordOpened(true)}
-                className="text-sm text-primary"
+                className="text-sm text-blue-600 hover:underline"
               >
                 Forgot Password?
               </button>
             </div>
-            <OnBoardingButton
-              onClick={handleLogin}
-              disabled={isFormInvalid}
-              className={`${isFormInvalid ? "cursor-not-allowed" : "cursor-pointer"
-                }`}
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className={`w-full rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-colors py-3 px-6 text-base font-semibold ${isLoading ? "cursor-not-allowed" : "cursor-pointer"}`}
             >
               {isLoading ? (
-                <div className="flex items-center">
+                <div className="flex items-center justify-center">
                   <LoaderIcon />
-                  <span className="ml-2">Logging in...</span>
+                  <span className="ml-2" style={{ fontSize: '18px' }}>Logging in...</span>
                 </div>
               ) : (
-                "Login to proceed"
+                "Continue"
               )}
-            </OnBoardingButton>
-            <div className="my-1 w-full text-center text-grey-primary-tint-30">
-              <div className="flex items-center justify-center gap-2">
-                <Image
-                  src="line.svg"
-                  width={20}
-                  height={20}
-                  alt="line"
-                  className="inline-block"
-                />
-                <span>Or</span>
-                <Image
-                  src="line.svg"
-                  width={20}
-                  height={20}
-                  alt="line"
-                  className="inline-block"
-                />
+            </button>
+
+            <div className="text-center text-gray-500 text-sm">
+              <div className="flex items-center justify-center gap-3 my-4">
+                <div className="flex-1 h-px bg-gray-300"></div>
+                <span>or</span>
+                <div className="flex-1 h-px bg-gray-300"></div>
               </div>
             </div>
+
             {/* Google signin */}
             <SignInButton user_role={user_role} />
-            {/* ---- */}
-            <div className="mt-2">
-              <p className="me-1 inline-block text-xs text-grey-primary">
-                Don’t have an account?
-              </p>
-              <Link href={`/signup?role=${user_role}`} className="text-xs text-primary underline">
-                Sign up now
-              </Link>
+            <div className="text-center mt-6">
+              <span className="block mb-2 text-gray-600 text-sm">Don't have an account?</span>
+              <button
+                type="button"
+                className="inline-block rounded-lg border border-blue-600 text-blue-600 px-6 py-2 font-medium hover:bg-blue-50 transition-colors"
+                onClick={() => router.push('/signup?role=' + user_role)}
+              >
+                Register
+              </button>
             </div>
-          </div>
-
-          <div className="align-end mt-auto px-7 py-5 text-start text-xs text-grey-primary">
-            <Image
-              src="icons/info_icon.svg"
-              width={14}
-              height={14}
-              alt="info icon"
-              className="inline-block"
-            />
-            <p className="ms-1 inline-block">
-              You’re registering as client, but you can also switch to
-              freelancer later from settings.
-            </p>
-          </div>
+          </form>
         </div>
       </div>
+
+      {/* Modals */}
       {isForgotPasswordOpened && (
         <Overlay
           width={"27.813rem"}
@@ -444,20 +283,15 @@ function Login() {
             user_role={user_role}
             onClose={handleCloseOverlay}
             imgSrc="/Message.png"
-            // mainHeading={mainHeading}
-            // text={text}
-            // confirmationtext={confirmationtext}
-            //buttonText={"Verify email"}
             onBoarding={true}
             containsOtp={true}
-          //signupHandler={handleSignup}
           />
         </Overlay>
       )}
       {alert && (
         <ErrorPopup
           message="Incorrect email or password"
-          type="error" // Can be 'success', 'error', 'warning', 'info'
+          type="error"
           onClose={() => setalert(false)}
         />
       )}
