@@ -196,7 +196,7 @@ function Page() {
 
       // Check password match
       if (form.password !== form.confirmPassword) {
-        console.log("Passwords don't match");
+        console.log("Passwords don&apos;t match");
         setisLoading(false);
         return;
       }
