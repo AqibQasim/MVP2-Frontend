@@ -153,8 +153,8 @@ function Login() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header with logo */}
       <div className="flex justify-between items-center p-6">
-        {/* CoVentech logo in top left corner */}
-        <div>
+  {/* CoVentech logo in top left corner, slightly up */}
+  <div className="absolute left-8 top-6">
           <Image src="/cooventechlogo.png" width={135} height={35} alt="CoVentech Logo" />
         </div>
       </div>
