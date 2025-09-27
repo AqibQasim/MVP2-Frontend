@@ -125,40 +125,14 @@ function Login() {
 		<div className="min-h-screen bg-gray-50 flex flex-col">
 			{/* Header with logo and role buttons */}
 			<div className="flex justify-between items-center p-6">
-				<div>
-					<Image src="/cooventechlogo.png" width={135} height={35} alt="CoVentech Logo" />
-				</div>
-				<div className="flex gap-2">
-					<button
-						onClick={(e) => {
-							setUserRole("client");
-						}}
-						className={`rounded-full border px-6 py-2 text-sm font-medium transition-colors ${
-							user_role === "client"
-								? "border-blue-600 bg-blue-50 text-blue-600"
-								: "border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
-						}`}
-					>
-						Client
-					</button>
-					<button
-						onClick={(e) => {
-							setUserRole("customer");
-						}}
-						className={`rounded-full border px-6 py-2 text-sm font-medium transition-colors ${
-							user_role === "customer"
-								? "border-blue-600 bg-blue-50 text-blue-600"
-								: "border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
-						}`}
-					>
-						Talent
-					</button>
-				</div>
+						<div>
+							<Image src="/cooventechlogo.png" width={135} height={35} alt="CoVentech Logo" />
+						</div>
 			</div>
 			<div className="flex-1 flex items-center justify-center px-6">
 				<div className="bg-white shadow-lg p-8 w-full max-w-md">
 					<div className="text-center mb-8">
-						<h1 className="text-2xl font-semibold text-gray-900 mb-2">Login</h1>
+						<h1 className="text-3xl font-semibold text-gray-900 mb-2">Talent login</h1>
 					</div>
 					<form onSubmit={handleLogin} className="space-y-4">
 						<div>

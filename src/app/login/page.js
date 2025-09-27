@@ -162,14 +162,14 @@ function Login() {
       {/* Login Form Container - Centered */}
       <div className="flex-1 flex items-center justify-center px-6">
   <div className="bg-white shadow-lg p-8 w-full max-w-md rounded-2xl">
-          <div className="text-center mb-8">
-            <h1 className="text-2xl font-semibold text-gray-900 mb-2">Login</h1>
+          <div className="text-center mb-10">
+            <h1 className="text-3xl font-semibold text-gray-900 mb-2">Talent login</h1>
           </div>
 
           <div className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm text-gray-600 mb-2">
-                Enter email address
+                Enter your email address
               </label>
               <Input
                 type="email"
@@ -199,7 +199,7 @@ function Login() {
                   onKeyDown={handleKeyDown}
                   onChange={handleChange}
                   error={errors.password}
-                  placeholder="Your password"
+                  placeholder="Password"
                   className="w-full pr-10"
                 />
                 <button
@@ -256,11 +256,12 @@ function Login() {
 
             {/* Google signin */}
             <SignInButton user_role={user_role} />
-            <div className="text-center mt-6">
-              <span className="block mb-2 text-gray-600 text-sm">Don&apos;t have an account?</span>
+            <div className="flex justify-center items-center mt-6 text-sm text-gray-600">
+              <span>Don&apos;t have an account? </span>
               <button
                 type="button"
-                className="inline-block rounded-lg border border-blue-600 text-blue-600 px-6 py-2 font-medium hover:bg-blue-50 transition-colors"
+                className="ml-1 text-blue-600 underline bg-transparent border-none p-0 font-medium cursor-pointer hover:text-blue-800"
+                style={{ boxShadow: "none" }}
                 onClick={() => router.push('/signup?role=' + user_role)}
               >
                 Register

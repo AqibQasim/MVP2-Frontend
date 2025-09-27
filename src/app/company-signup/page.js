@@ -1,3 +1,4 @@
+// Company signup page, identical to signup
 "use client";
 import ErrorPopup from "@/components/ErrorPopup";
 import Heading from "@/components/Heading";
@@ -19,7 +20,6 @@ function Page() {
   const router = useRouter();
   const params = useSearchParams();
 
-  // Set page title
   useEffect(() => {
     document.title = "CoVental | Pool of the top talent";
   }, []);
@@ -36,8 +36,7 @@ function Page() {
     confirmPassword: "",
   });
   const [confirmTerms, setConfirmTerms] = useState(false);
-
-  const [user_role, setUserRole] = useState(params?.get("role") || "client");
+  const [user_role, setUserRole] = useState("client");
   const [errors, setErrors] = useState({});
   const [termsError, setTermsError] = useState("");
   const [otp, setotp] = useState(null);
@@ -62,7 +61,7 @@ function Page() {
         email: form.email,
         name: form.firstName + " " + form.lastName,
         password: form.password,
-        country: form.country || "Pakistan", // Default country
+        country: form.country || "Pakistan",
         contact_no: `${form.countryCode}${form.phoneNumber}`,
         user_role,
         method: "signup",
@@ -75,23 +74,14 @@ function Page() {
     async (event) => {
       event.preventDefault();
       setisLoading(true);
-
-      // Validate all fields
       if (Object.values(errors).some((err) => err !== "")) {
-        return; // Do not proceed with signup if there are validation errors
+        return;
       }
-
-      // Proceed with the rest of the signup process
       const result = await mvp2ApiHelper(payload);
-      console.log("RESULT from signup: ", result?.data?.customer_id);
-
       try {
-        // Call the Stripe customer creation API
         const stripeResponse = await fetch("/api/create-customer", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             email: form.email,
             name: form.firstName + " " + form.lastName,
@@ -101,23 +91,15 @@ function Page() {
                 : { customer: 0, client_id: result?.data?.client_id },
           }),
         });
-
-        if (!stripeResponse.ok) {
-          throw new Error("Failed to create Stripe customer");
-        }
-
+        if (!stripeResponse.ok) throw new Error("Failed to create Stripe customer");
         const stripeData = await stripeResponse.json();
-        console.log("Stripe customer created successfully:", stripeData);
-
         let createAccountData;
         if (user_role === "client") {
           const createAccountResponse = await fetch(
             `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-client-stripe-account`,
             {
               method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
+              headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 client_id: result.data.client_id,
                 stripe_id: stripeData.customer.id,
@@ -125,22 +107,13 @@ function Page() {
             },
           );
           createAccountData = await createAccountResponse.json();
-
-          if (createAccountResponse.status !== 200) {
-            throw new Error(createAccountData.error);
-          }
-          console.log(
-            "Stripe account created successfully:",
-            createAccountData,
-          );
+          if (createAccountResponse.status !== 200) throw new Error(createAccountData.error);
         } else {
           const createAccountResponse = await fetch(
             `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-customer-stripe-account`,
             {
               method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
+              headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 customer_id: result.data.customer_id,
                 stripe_id: stripeData.customer.id,
@@ -148,25 +121,15 @@ function Page() {
             },
           );
           createAccountData = await createAccountResponse.json();
-
-          if (createAccountResponse.status !== 200) {
-            throw new Error(createAccountData.error);
-          }
-          console.log(
-            "Stripe account created successfully:",
-            createAccountData,
-          );
+          if (createAccountResponse.status !== 200) throw new Error(createAccountData.error);
         }
         if (result.data.status === 200) {
-          console.log("Signed up successfully");
           setOverlayVisible(false);
           setisLoading(false);
           const revalidatePathOnSignup = `/admin/${user_role === "client" ? "clients" : "candidates"}`;
           revalidate(revalidatePathOnSignup);
-          console.log("revalidating: ", revalidatePathOnSignup);
         }
       } catch (error) {
-        console.error("Error during signup process:", error);
         setisLoading(false);
       }
     },
@@ -176,65 +139,33 @@ function Page() {
   const handleOpenOverlay = useCallback(
     async (event) => {
       event.preventDefault();
-      console.log("Signup form submitted!");
-      console.log("Form data:", form);
-      console.log("Confirm terms:", confirmTerms);
-
       if (!confirmTerms) {
         setTermsError("Please accept the terms and conditions");
         return;
       }
-
       setisLoading(true);
-
-      // Check if all required fields are filled
       if (!form.firstName || !form.lastName || !form.email || !form.phoneNumber || !form.password || !form.confirmPassword) {
-        console.log("Missing required fields");
         setisLoading(false);
         return;
       }
-
-      // Check password match
       if (form.password !== form.confirmPassword) {
-        console.log("Passwords don&apos;t match");
         setisLoading(false);
         return;
       }
-
       try {
-        // Determine the correct API based on user_role
-        let apiUrl = "";
-        if (user_role === "client") {
-          apiUrl = `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/client-by-email?email=${form.email}`;
-        } else if (user_role === "customer") {
-          apiUrl = `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/customer-by-email?email=${form.email}`;
-        } else {
-          console.error("Unknown user role");
-          setisLoading(false);
-          return;
-        }
-
-        console.log("Checking if user exists at:", apiUrl);
+        let apiUrl = `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/client-by-email?email=${form.email}`;
         const checkUserResponse = await fetch(apiUrl, { method: "GET" });
-
         if (checkUserResponse.status === 200) {
-          console.log("User exists, not sending OTP");
           setAlert(true);
           setisLoading(false);
           return;
         }
-
         if (checkUserResponse.status === 404) {
-          // User not found, proceed to send email
-          console.log("User not found, proceed to send email");
-
           const emailPayload = {
             to: form.email,
             subject: "Email Verification",
             text: "Please verify your email address",
           };
-
-          console.log("Sending email with payload:", emailPayload);
           const emailResponse = await fetch(
             `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/send-email`,
             {
@@ -243,23 +174,18 @@ function Page() {
               body: JSON.stringify(emailPayload),
             },
           );
-
           if (emailResponse.ok) {
             const emailData = await emailResponse.json();
-            console.log("Email sent successfully:", emailData);
             setotp(emailData.otp);
             setOverlayVisible(true);
             setisLoading(false);
           } else {
-            console.error("Failed to send email");
             setisLoading(false);
           }
         } else {
-          console.error("Unexpected response:", checkUserResponse.status);
           setisLoading(false);
         }
       } catch (error) {
-        console.error("Error:", error);
         setisLoading(false);
       }
     },
@@ -273,8 +199,6 @@ function Page() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
-
-    // Real-time validation
     validateField(name, value);
   };
 
@@ -292,7 +216,6 @@ function Page() {
 
   const validateField = (name, value) => {
     let errorMsg = "";
-
     switch (name) {
       case "firstName":
         if (!/^[A-Za-z\s]{2,}$/.test(value)) {
@@ -318,17 +241,10 @@ function Page() {
         if (!/^.{8,}$/.test(value)) {
           errorMsg = "Password must be at least 8 characters long";
         }
-        // Also revalidate confirm password if password changes
         if (form.confirmPassword && form.confirmPassword !== value) {
-          setErrors((prevErrors) => ({ 
-            ...prevErrors, 
-            confirmPassword: "Passwords do not match" 
-          }));
+          setErrors((prevErrors) => ({ ...prevErrors, confirmPassword: "Passwords do not match" }));
         } else if (form.confirmPassword && form.confirmPassword === value) {
-          setErrors((prevErrors) => ({ 
-            ...prevErrors, 
-            confirmPassword: "" 
-          }));
+          setErrors((prevErrors) => ({ ...prevErrors, confirmPassword: "" }));
         }
         break;
       case "confirmPassword":
@@ -339,7 +255,6 @@ function Page() {
       default:
         break;
     }
-
     setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMsg }));
   };
 
@@ -374,21 +289,17 @@ function Page() {
 
   return (
   <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Header with logo and role buttons */}
+      {/* Header with logo */}
       <div className="flex justify-between items-center p-6">
-  {/* CoVentech logo in top left corner, slightly up */}
-  <div className="absolute left-8 top-6">
+        <div className="absolute left-8 top-6">
           <Image src="/cooventechlogo.png" width={135} height={35} alt="CoVentech Logo" />
         </div>
       </div>
-
-      {/* Signup Form Container - Centered */}
       <div className="flex-1 flex items-center justify-center px-6">
-  <div className="bg-white shadow-lg p-8 w-full max-w-md rounded-2xl">
+        <div className="bg-white shadow-lg p-8 w-full max-w-md rounded-2xl">
           <div className="text-center mb-6">
-            <h1 className="text-3xl font-semibold text-gray-900 mb-2">Talent Register</h1>
+            <h1 className="text-3xl font-semibold text-gray-900 mb-2">Company Register</h1>
           </div>
-
           <form onSubmit={handleOpenOverlay} className="space-y-3">
             {/* First Name and Last Name */}
             <div className="flex gap-3">
@@ -423,7 +334,6 @@ function Page() {
                 )}
               </div>
             </div>
-
             {/* Email */}
             <div>
               <Input
@@ -440,7 +350,6 @@ function Page() {
                 <p className="text-xs text-red-500 mt-1">{errors.email}</p>
               )}
             </div>
-
             {/* Phone Number */}
             <div>
               <div className="flex gap-2">
@@ -455,7 +364,6 @@ function Page() {
                 <p className="text-xs text-red-500 mt-1">{errors.phoneNumber}</p>
               )}
             </div>
-
             {/* Password */}
             <div>
               <div className="relative">
@@ -487,7 +395,6 @@ function Page() {
                 <p className="text-xs text-red-500 mt-1">{errors.password}</p>
               )}
             </div>
-
             {/* Confirm Password */}
             <div>
               <div className="relative">
@@ -519,7 +426,6 @@ function Page() {
                 <p className="text-xs text-red-500 mt-1">{errors.confirmPassword}</p>
               )}
             </div>
-
             {/* Terms and Conditions */}
             <div className="flex items-start gap-2">
               <input
@@ -543,7 +449,6 @@ function Page() {
             {termsError && (
               <p className="text-xs text-red-500">{termsError}</p>
             )}
-
             <OnBoardingButton
               type="submit"
               disabled={!confirmTerms || isLoading}
@@ -558,7 +463,6 @@ function Page() {
                 "Create account"
               )}
             </OnBoardingButton>
-
             <div className="text-center text-gray-500 text-sm">
               <div className="flex items-center justify-center gap-3 my-3">
                 <div className="flex-1 h-px bg-gray-300"></div>
@@ -566,11 +470,7 @@ function Page() {
                 <div className="flex-1 h-px bg-gray-300"></div>
               </div>
             </div>
-
-            {/* Google signin */}
             <SignInButton user_role={user_role} />
-            
-            {/* Already have an account */}
             <div className="text-center mt-4">
               <p className="text-sm text-gray-600">
                 Already have an account?{" "}
@@ -582,8 +482,6 @@ function Page() {
           </form>
         </div>
       </div>
-
-      {/* Modals */}
       {isOverlayVisible && (
         <Overlay isVisible={isOverlayVisible} closeoverlay={handleCloseOverlay}>
           <SuccessModal
