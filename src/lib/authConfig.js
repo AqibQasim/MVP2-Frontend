@@ -51,10 +51,30 @@ export const authConfig = {
         : null;
 
       if (isAuthenticated && (loginPage || signupPage)) {
-        const redirectPath = user
-          ? googleUserRedirectPath
-          : credentialUserRedirectPath;
-        return NextResponse.redirect(new URL(redirectPath, request.url));
+        // Ensure company users (role: 'client') are redirected to their dashboard
+        let redirectPath = null;
+        if (user) {
+          if (user.user_role === "client" && user.client_id) {
+            redirectPath = `/client/${user.client_id}`;
+          } else if (user.user_role === "customer" && user.customer_id) {
+            redirectPath = `/candidate/${user.customer_id}`;
+          } else {
+            redirectPath = googleUserRedirectPath;
+          }
+        } else if (credentialUser) {
+          if (credentialUser.user_role === "client" && credentialUser.id) {
+            redirectPath = `/client/${credentialUser.id}`;
+          } else if (credentialUser.user_role === "customer" && credentialUser.id) {
+            redirectPath = `/candidate/${credentialUser.id}`;
+          } else {
+            redirectPath = credentialUserRedirectPath;
+          }
+        }
+        if (redirectPath) {
+          return NextResponse.redirect(new URL(redirectPath, request.url));
+        }
+        // fallback: stay on login page if no valid redirect
+        return NextResponse.redirect(new URL("/login", request.url));
       }
 
       // NOT AUTHENTICATED

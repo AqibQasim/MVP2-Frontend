@@ -139,19 +139,28 @@ function Page() {
   const handleOpenOverlay = useCallback(
     async (event) => {
       event.preventDefault();
+      let hasError = false;
+      if (!form.firstName || form.firstName.trim() === "") {
+        setErrors((prev) => ({ ...prev, firstName: "Name is required" }));
+        hasError = true;
+      }
       if (!confirmTerms) {
         setTermsError("Please accept the terms and conditions");
-        return;
+        hasError = true;
       }
-      setisLoading(true);
-      if (!form.firstName || !form.lastName || !form.email || !form.phoneNumber || !form.password || !form.confirmPassword) {
+      if (!form.email || !form.phoneNumber || !form.password || !form.confirmPassword) {
         setisLoading(false);
-        return;
+        hasError = true;
       }
       if (form.password !== form.confirmPassword) {
         setisLoading(false);
+        hasError = true;
+      }
+      if (hasError) {
+        setisLoading(false);
         return;
       }
+      setisLoading(true);
       try {
         let apiUrl = `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/client-by-email?email=${form.email}`;
         const checkUserResponse = await fetch(apiUrl, { method: "GET" });
@@ -199,7 +208,12 @@ function Page() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
-    validateField(name, value);
+    // Only validate on change, but don't clear error if field is still empty
+    if (name === "firstName" && (!value || value.trim() === "")) {
+      setErrors((prev) => ({ ...prev, firstName: "Name is required" }));
+    } else {
+      validateField(name, value);
+    }
   };
 
   const isFormInvalid = useMemo(() => {
@@ -218,7 +232,9 @@ function Page() {
     let errorMsg = "";
     switch (name) {
       case "firstName":
-        if (!/^[A-Za-z\s]{2,}$/.test(value)) {
+        if (!value || value.trim() === "") {
+          errorMsg = "Name is required";
+        } else if (!/^[A-Za-z\s]{2,}$/.test(value)) {
           errorMsg = "First name must be at least 2 characters and contain only letters";
         }
         break;
@@ -301,6 +317,18 @@ function Page() {
             <h1 className="text-3xl font-semibold text-gray-900 mb-2">Company Register</h1>
           </div>
           <form onSubmit={handleOpenOverlay} className="space-y-3">
+            {/* Company Name */}
+            <div>
+              <Input
+                type="text"
+                name="companyName"
+                id="companyName"
+                value={form.companyName || ""}
+                onChange={handleChange}
+                placeholder="Enter Company Name"
+                className="w-full"
+              />
+            </div>
             {/* First Name and Last Name */}
             <div className="flex gap-3">
               <div className="flex-1">
@@ -343,7 +371,7 @@ function Page() {
                 value={form.email}
                 error={errors.email}
                 onChange={handleChange}
-                placeholder="Enter email"
+                placeholder="Enter email address"
                 className="w-full"
               />
               {errors.email && (
@@ -472,12 +500,12 @@ function Page() {
             </div>
             <SignInButton user_role={user_role} />
             <div className="text-center mt-4">
-              <p className="text-sm text-gray-600">
-                Already have an account?{" "}
-                <Link href={`/login?role=${user_role}`} className="text-blue-600 hover:underline">
-                  Sign in now
-                </Link>
-              </p>
+                <p className="text-sm text-gray-600">
+                  Already have an account?{" "}
+                  <Link href="/company-login" className="text-blue-600 hover:underline">
+                    Login 
+                  </Link>
+                </p>
             </div>
           </form>
         </div>

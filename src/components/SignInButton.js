@@ -13,7 +13,7 @@ function   SignInButton({ user_role }) {
           alt="google Logo"
           className="inline-block"
         />
-        Sign in with Google
+        Continue with Google
       </button>
     </form>
   );

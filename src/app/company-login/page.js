@@ -81,7 +81,7 @@ function Login() {
 					 </div>
 				 </div>
 				 <div className="flex-1 flex flex-col items-center justify-center px-6">
-					 <div className="bg-white shadow-lg p-8 w-full max-w-md">
+					   <div className="bg-white shadow-lg p-8 w-full max-w-md rounded-2xl">
 						 <div className="text-center mb-8">
 							 <h1 className="text-3xl font-semibold text-gray-900 mb-2">Company login</h1>
 						 </div>
