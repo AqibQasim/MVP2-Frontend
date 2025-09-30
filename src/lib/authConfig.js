@@ -39,6 +39,7 @@ export const authConfig = {
 
       const url = request?.nextUrl;
       const pathname = url?.pathname;
+      console.log("PATHNAME: ", pathname)
       const isAuthenticated = user || credentialUser?.id;
       const loginPage = pathname === "/login";
       const clientLoginPage = pathname === "/company-login"
@@ -75,13 +76,17 @@ export const authConfig = {
           return NextResponse.redirect(new URL(redirectPath, request.url));
         }
         // fallback: stay on login page if no valid redirect
-        return NextResponse.redirect(new URL("/login", request.url));
+        return NextResponse.redirect(new URL(pathname, request.url));
       }
 
       // NOT AUTHENTICATED
       if (!isAuthenticated) {
-        console.log("User not authenticated");
-        return false;
+        const publicRoutes = ["/login", "/company-login", "/signup"];
+        if (publicRoutes.includes(pathname)) {
+          return true; // allow unauthenticated users on public/login pages
+        }
+        console.log("User not authenticated, redirecting to login");
+        return false; // this will trigger the redirect to /login
       }
 
       // Client/Candidate route protection
@@ -142,7 +147,7 @@ export const authConfig = {
 
         if (clientRoute) {
           if (!isClient || (visitedId && isImposter)) {
-            return NextResponse.redirect(new URL("/login", request.url));
+            return NextResponse.redirect(new URL("/company-login", request.url));
           }
           if (pathname === "/client" && credentialUserId) {
             return NextResponse.redirect(
@@ -289,7 +294,7 @@ export const authConfig = {
     },
   },
   pages: {
-    signIn: "/login",
+    signIn: "/login" || "/company-login",
   },
 };
 

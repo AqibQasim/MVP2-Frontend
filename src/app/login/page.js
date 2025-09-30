@@ -1,17 +1,12 @@
 "use client";
 import ErrorPopup from "@/components/ErrorPopup";
 import ForgotPasswordModal from "@/components/ForgotPasswordModal";
-import Heading from "@/components/Heading";
 import Input from "@/components/Input";
-import OnBoardingButton from "@/components/OnBoardingButton";
 import Overlay from "@/components/Overlay";
 import SignInButton from "@/components/SignInButton";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import LoaderIcon from "@/svgs/LoaderIcon";
-import urlBase64ToUint8Array from "@/utils/urlBase64ToUint8Array";
-import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
-import Link from "next/link";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useMemo, useCallback, useEffect } from "react";
