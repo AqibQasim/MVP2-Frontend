@@ -594,22 +594,22 @@ function Page() {
               </div>
             </div>
 
-            {/* Google signin */}
-            <SignInButton user_role={user_role} />
-
-            {/* Already have an account */}
-            <div className="mt-4 text-center">
-              <p className="text-sm text-gray-600">
-                Already have an account?{" "}
-                <Link
-                  href={`/login?role=${user_role}`}
-                  className="text-blue-600 hover:underline"
-                >
-                  Login
-                </Link>
-              </p>
-            </div>
           </form>
+          {/* Google signin */}
+          <SignInButton user_role={user_role} />
+
+          {/* Already have an account */}
+          <div className="mt-4 text-center">
+            <p className="text-sm text-gray-600">
+              Already have an account?{" "}
+              <Link
+                href={`/login?role=${user_role}`}
+                className="text-blue-600 hover:underline"
+              >
+                Login
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
 
