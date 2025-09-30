@@ -4,6 +4,7 @@ import ForgotPasswordModal from "@/components/ForgotPasswordModal";
 import Input from "@/components/Input";
 import Overlay from "@/components/Overlay";
 import SignInButton from "@/components/SignInButton";
+import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import LoaderIcon from "@/svgs/LoaderIcon";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -31,37 +32,45 @@ function Login() {
       setisLoading(false);
       return;
     }
-    try {
+    //try {
       //Replace with your actual login API call
       //Example:
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: form.email,
-            password: form.password,
-            user_role: "client",
-            method: "login",
-          }),
-        },
-      );
-      if (res.ok) {
-        setTimeout(() => {
-          setisLoading(false);
-          router.push("/client/"); // or your dashboard route
-        }, 1000);
-      }else{
+      const res = await mvp2ApiHelper({
+        endpoint: 'login',
+        method: 'POST',
+        body: {
+          email: form.email,
+          password: form.password,
+          user_role: "client",
+          method: "login",
+        }
+      });
 
+      if (res.status === 200) {
+        localStorage.setItem("MVP_CLIENT_LOGGEDIN", true);
+
+        const now = new Date();
+        now.setTime(now.getTime() + 60 * 60 * 60 * 10 + 36000000); // 36000000 ms = 10 hours
+        const expires = now.toUTCString();
+
+        const token = res?.data?.token;
+        document.cookie = `credentialLoginToken=${token}; expires=${expires}; path=/;`;
+        setisLoading(false);
+        router.push(`/client/${res?.data?.id}`);
+      } 
+      else {
+        setisLoading(false)
+        setTimeout(() => {
+          setalert(true);
+        }, 1000);
       }
       // For now, just simulate success
-    } catch (err) {
-      setisLoading(false);
-      setalert(true);
-    }
+    //} 
+    // catch (err) {
+    //   console.log("CATCHHH NBLOCKKKKK")
+    //   setisLoading(false);
+    //   setalert(true);
+    // }
   };
 
   const handleChange = (e) => {
