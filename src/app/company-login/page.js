@@ -38,15 +38,28 @@ function Login() {
 			return;
 		}
 		try {
-			// Replace with your actual login API call
-			// Example:
-			// const res = await fetch('/api/login', { ... })
-			// if (res.ok) { ... }
+			//Replace with your actual login API call
+			//Example:
+			const res = await fetch(`${process.env.NEXT_PUBLIC_API_REMOTE_URL}/login`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					email: form.email,
+					password: form.password,
+					user_role: "client",
+					method:"login"
+				})
+			 })
+			if (res.ok) {
+				console.log(res.body)
+				setTimeout(() => {
+					setisLoading(false);
+					router.push("/client/"); // or your dashboard route
+				}, 1000);
+			 }
 			// For now, just simulate success
-			setTimeout(() => {
-				setisLoading(false);
-				router.push("/admin/clients"); // or your dashboard route
-			}, 1000);
 		} catch (err) {
 			setisLoading(false);
 			setalert(true);

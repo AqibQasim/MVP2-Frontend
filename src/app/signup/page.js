@@ -14,6 +14,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState, useEffect } from "react";
+import { generateOtp } from "@/utils/generateOtp";
 
 function Page() {
   const router = useRouter();
@@ -173,6 +174,7 @@ function Page() {
     [form, errors, user_role],
   );
 
+
   const handleOpenOverlay = useCallback(
     async (event) => {
       event.preventDefault();
@@ -188,7 +190,14 @@ function Page() {
       setisLoading(true);
 
       // Check if all required fields are filled
-      if (!form.firstName || !form.lastName || !form.email || !form.phoneNumber || !form.password || !form.confirmPassword) {
+      if (
+        !form.firstName ||
+        !form.lastName ||
+        !form.email ||
+        !form.phoneNumber ||
+        !form.password ||
+        !form.confirmPassword
+      ) {
         console.log("Missing required fields");
         setisLoading(false);
         return;
@@ -228,10 +237,13 @@ function Page() {
           // User not found, proceed to send email
           console.log("User not found, proceed to send email");
 
+          const generatedotp = generateOtp();
+          setotp(generatedotp);
+
           const emailPayload = {
             to: form.email,
             subject: "Email Verification",
-            text: "Please verify your email address",
+            text: `Your OTP code is: ${generatedotp}`, // Include the generated OTP
           };
 
           console.log("Sending email with payload:", emailPayload);
@@ -296,12 +308,14 @@ function Page() {
     switch (name) {
       case "firstName":
         if (!/^[A-Za-z\s]{2,}$/.test(value)) {
-          errorMsg = "First name must be at least 2 characters and contain only letters";
+          errorMsg =
+            "First name must be at least 2 characters and contain only letters";
         }
         break;
       case "lastName":
         if (!/^[A-Za-z\s]{2,}$/.test(value)) {
-          errorMsg = "Last name must be at least 2 characters and contain only letters";
+          errorMsg =
+            "Last name must be at least 2 characters and contain only letters";
         }
         break;
       case "email":
@@ -320,14 +334,14 @@ function Page() {
         }
         // Also revalidate confirm password if password changes
         if (form.confirmPassword && form.confirmPassword !== value) {
-          setErrors((prevErrors) => ({ 
-            ...prevErrors, 
-            confirmPassword: "Passwords do not match" 
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            confirmPassword: "Passwords do not match",
           }));
         } else if (form.confirmPassword && form.confirmPassword === value) {
-          setErrors((prevErrors) => ({ 
-            ...prevErrors, 
-            confirmPassword: "" 
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            confirmPassword: "",
           }));
         }
         break;
@@ -367,26 +381,33 @@ function Page() {
   );
   let confirmationtext = (
     <>
-      Your account is currently under review. Soon you&apos;ll receive an email on{" "}
-      <span className="font-semibold"> {form.email} </span> upon approval
+      Your account is currently under review. Soon you&apos;ll receive an email
+      on <span className="font-semibold"> {form.email} </span> upon approval
     </>
   );
 
   return (
-  <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="flex min-h-screen flex-col bg-gray-50">
       {/* Header with logo and role buttons */}
-      <div className="flex justify-between items-center p-6">
-  {/* CoVentech logo in top left corner, slightly up */}
-  <div className="absolute left-8 top-6">
-          <Image src="/cooventechlogo.png" width={135} height={35} alt="CoVentech Logo" />
+      <div className="flex items-center justify-between p-6">
+        {/* CoVentech logo in top left corner, slightly up */}
+        <div className="absolute left-8 top-6">
+          <Image
+            src="/cooventechlogo.png"
+            width={135}
+            height={35}
+            alt="CoVentech Logo"
+          />
         </div>
       </div>
 
       {/* Signup Form Container - Centered */}
-      <div className="flex-1 flex items-center justify-center px-6">
-  <div className="bg-white shadow-lg p-8 w-full max-w-md rounded-2xl">
-          <div className="text-center mb-6">
-            <h1 className="text-3xl font-semibold text-gray-900 mb-2">Talent Register</h1>
+      <div className="flex flex-1 items-center justify-center px-6">
+        <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
+          <div className="mb-6 text-center">
+            <h1 className="mb-2 text-3xl font-semibold text-gray-900">
+              Talent Register
+            </h1>
           </div>
 
           <form onSubmit={handleOpenOverlay} className="space-y-3">
@@ -404,7 +425,9 @@ function Page() {
                   className="w-full"
                 />
                 {errors.firstName && (
-                  <p className="text-xs text-red-500 mt-1">{errors.firstName}</p>
+                  <p className="mt-1 text-xs text-red-500">
+                    {errors.firstName}
+                  </p>
                 )}
               </div>
               <div className="flex-1">
@@ -419,7 +442,7 @@ function Page() {
                   className="w-full"
                 />
                 {errors.lastName && (
-                  <p className="text-xs text-red-500 mt-1">{errors.lastName}</p>
+                  <p className="mt-1 text-xs text-red-500">{errors.lastName}</p>
                 )}
               </div>
             </div>
@@ -437,7 +460,7 @@ function Page() {
                 className="w-full"
               />
               {errors.email && (
-                <p className="text-xs text-red-500 mt-1">{errors.email}</p>
+                <p className="mt-1 text-xs text-red-500">{errors.email}</p>
               )}
             </div>
 
@@ -445,14 +468,18 @@ function Page() {
             <div>
               <div className="flex gap-2">
                 <PhoneInputEl
-                  className="w-full rounded-full border border-gray-300 px-6 py-4 text-sm leading-tight text-gray-900 focus:border-primary focus:ring-primary bg-white flex items-center"
+                  className="flex w-full items-center rounded-full border border-gray-300 bg-white px-6 py-4 text-sm leading-tight text-gray-900 focus:border-primary focus:ring-primary"
                   phone={form.phoneNumber}
                   setPhone={(phone) => setForm({ ...form, phoneNumber: phone })}
-                  setCountry={(country) => setForm({ ...form, country: country })}
+                  setCountry={(country) =>
+                    setForm({ ...form, country: country })
+                  }
                 />
               </div>
               {errors.phoneNumber && (
-                <p className="text-xs text-red-500 mt-1">{errors.phoneNumber}</p>
+                <p className="mt-1 text-xs text-red-500">
+                  {errors.phoneNumber}
+                </p>
               )}
             </div>
 
@@ -472,7 +499,7 @@ function Page() {
                 <button
                   type="button"
                   onClick={handClick}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 transform"
                 >
                   <Image
                     src={show ? "/eye-close.svg" : "/eye.svg"}
@@ -484,7 +511,7 @@ function Page() {
                 </button>
               </div>
               {errors.password && (
-                <p className="text-xs text-red-500 mt-1">{errors.password}</p>
+                <p className="mt-1 text-xs text-red-500">{errors.password}</p>
               )}
             </div>
 
@@ -504,7 +531,7 @@ function Page() {
                 <button
                   type="button"
                   onClick={handClick2}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 transform"
                 >
                   <Image
                     src={show2 ? "/eye-close.svg" : "/eye.svg"}
@@ -516,7 +543,9 @@ function Page() {
                 </button>
               </div>
               {errors.confirmPassword && (
-                <p className="text-xs text-red-500 mt-1">{errors.confirmPassword}</p>
+                <p className="mt-1 text-xs text-red-500">
+                  {errors.confirmPassword}
+                </p>
               )}
             </div>
 
@@ -540,9 +569,7 @@ function Page() {
                 </Link>
               </label>
             </div>
-            {termsError && (
-              <p className="text-xs text-red-500">{termsError}</p>
-            )}
+            {termsError && <p className="text-xs text-red-500">{termsError}</p>}
 
             <OnBoardingButton
               type="submit"
@@ -551,7 +578,7 @@ function Page() {
             >
               {isLoading ? (
                 <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
                   <span className="ml-2">Creating account...</span>
                 </div>
               ) : (
@@ -559,22 +586,25 @@ function Page() {
               )}
             </OnBoardingButton>
 
-            <div className="text-center text-gray-500 text-sm">
-              <div className="flex items-center justify-center gap-3 my-3">
-                <div className="flex-1 h-px bg-gray-300"></div>
+            <div className="text-center text-sm text-gray-500">
+              <div className="my-3 flex items-center justify-center gap-3">
+                <div className="h-px flex-1 bg-gray-300"></div>
                 <span>or</span>
-                <div className="flex-1 h-px bg-gray-300"></div>
+                <div className="h-px flex-1 bg-gray-300"></div>
               </div>
             </div>
 
             {/* Google signin */}
             <SignInButton user_role={user_role} />
-            
+
             {/* Already have an account */}
-            <div className="text-center mt-4">
+            <div className="mt-4 text-center">
               <p className="text-sm text-gray-600">
                 Already have an account?{" "}
-                <Link href={`/login?role=${user_role}`} className="text-blue-600 hover:underline">
+                <Link
+                  href={`/login?role=${user_role}`}
+                  className="text-blue-600 hover:underline"
+                >
                   Login
                 </Link>
               </p>
