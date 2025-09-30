@@ -1,9 +1,12 @@
 "use client"; // This makes it a client component
 import SvgIconLogout from "@/svgs/SvgIconLogout";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function ClientLogout({ className }) {
   const router = useRouter();
+  const params= useSearchParams();
+
+  console.log("PARAMMMMSSS: ",params)
 
   const handleLogout = () => {
     // Clear localStorage and redirect to login

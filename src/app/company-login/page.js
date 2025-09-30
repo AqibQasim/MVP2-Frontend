@@ -50,11 +50,12 @@ function Login() {
         },
       );
       if (res.ok) {
-        console.log(res.body);
         setTimeout(() => {
           setisLoading(false);
           router.push("/client/"); // or your dashboard route
         }, 1000);
+      }else{
+
       }
       // For now, just simulate success
     } catch (err) {

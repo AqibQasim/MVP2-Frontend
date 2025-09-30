@@ -1,6 +1,13 @@
+"use client";
 import { signOutAction } from "@/lib/actions";
 import SvgIconLogout from "@/svgs/SvgIconLogout";
+import { useSearchParams } from "next/navigation";
 function GoogleLogout({ className }) {
+
+  const params = useSearchParams();
+
+  console.log("PARAMMMMSSS: ", params)
+
   return (
     <form action={signOutAction}>
       <button
