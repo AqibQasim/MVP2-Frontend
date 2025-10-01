@@ -16,7 +16,7 @@ function CandidateDashboardSideNav({ candidateId }) {
       <div className="mb-24">
         {" "}
         {/* Adds margin from the bottom */}
-        <Logout />
+        <Logout userRole={"customer"}/>
       </div>
     </div>
   );

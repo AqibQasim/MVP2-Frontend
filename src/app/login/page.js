@@ -63,14 +63,6 @@ function Login() {
     setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMsg }));
   };
 
-  const isFormInvalid = useMemo(() => {
-    return (
-      Object.values(errors).some((err) => err !== "") ||
-      !form.email ||
-      !form.password
-    );
-  }, [errors, form]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prevForm) => ({ ...prevForm, [name]: value }));
@@ -84,7 +76,7 @@ function Login() {
       body: {
         email: form.email,
         password: form.password,
-        user_role,
+        user_role: "customer",
         method: "login",
       },
     }),
@@ -127,14 +119,11 @@ function Login() {
 
           router?.events?.on("routeChangeComplete", handleRouteChangeComplete);
 
-          const isLoggedIn =
-            localStorage.getItem("MVP_CLIENT_LOGGEDIN") === "true";
+          // const isLoggedIn =
+          //   localStorage.getItem("MVP_CLIENT_LOGGEDIN") === "true";
 
-          if (user_role === "customer") {
-            router.push(`/candidate/${result.data.id}`);
-          } else {
-            router.push(`/client/${result.data.id}`);
-          }
+          router.push(`/candidate/${result.data.id}`);
+
         }
       } else {
         setisLoading(false);
@@ -148,15 +137,15 @@ function Login() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header with logo */}
       <div className="flex justify-between items-center p-6">
-  {/* CoVentech logo in top left corner, slightly up */}
-  <div className="absolute left-8 top-6">
+        {/* CoVentech logo in top left corner, slightly up */}
+        <div className="absolute left-8 top-6">
           <Image src="/cooventechlogo.png" width={135} height={35} alt="CoVentech Logo" />
         </div>
       </div>
 
       {/* Login Form Container - Centered */}
       <div className="flex-1 flex items-center justify-center px-6">
-  <div className="bg-white shadow-lg p-8 w-full max-w-md rounded-2xl">
+        <div className="bg-white shadow-lg p-8 w-full max-w-md rounded-2xl">
           <div className="text-center mb-10">
             <h1 className="text-3xl font-semibold text-gray-900 mb-2">Talent login</h1>
           </div>
@@ -250,7 +239,7 @@ function Login() {
             </div>
 
             {/* Google signin */}
-            <SignInButton user_role={user_role} />
+            <SignInButton user_role={"customer"} />
             <div className="flex justify-center items-center mt-6 text-sm text-gray-600">
               <span>Don&apos;t have an account? </span>
               <button
