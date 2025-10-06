@@ -87,12 +87,14 @@ function Login() {
       {/* Header with logo */}
       <div className="flex items-center justify-between p-6">
         <div>
-          <Image
-            src="/cooventechlogo.png"
-            width={135}
-            height={35}
-            alt="CoVentech Logo"
-          />
+          <a href="https://www.co-ventech.com/" target="_blank" rel="noopener noreferrer" className="cursor-pointer">
+            <Image
+              src="/cooventechlogo.png"
+              width={135}
+              height={35}
+              alt="CoVentech Logo"
+            />
+          </a>
         </div>
       </div>
       <div className="flex flex-1 flex-col items-center justify-center px-6">

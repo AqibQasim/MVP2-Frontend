@@ -378,7 +378,9 @@ function Page() {
 			<div className="flex justify-between items-center p-6">
 				{/* CoVentech logo in top left corner */}
 				<div>
-					<Image src="/cooventechlogo.png" width={135} height={35} alt="CoVentech Logo" />
+					<a href="https://www.co-ventech.com/" target="_blank" rel="noopener noreferrer" className="cursor-pointer">
+						<Image src="/cooventechlogo.png" width={135} height={35} alt="CoVentech Logo" />
+					</a>
 				</div>
 				{/* Role Selection Buttons in top right */}
 				<div className="flex gap-2">

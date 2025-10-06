@@ -392,12 +392,14 @@ function Page() {
       <div className="flex items-center justify-between p-6">
         {/* CoVentech logo in top left corner, slightly up */}
         <div className="absolute left-8 top-6">
-          <Image
-            src="/cooventechlogo.png"
-            width={135}
-            height={35}
-            alt="CoVentech Logo"
-          />
+          <a href="https://www.co-ventech.com/" target="_blank" rel="noopener noreferrer" className="cursor-pointer">
+            <Image
+              src="/cooventechlogo.png"
+              width={135}
+              height={35}
+              alt="CoVentech Logo"
+            />
+          </a>
         </div>
       </div>
 

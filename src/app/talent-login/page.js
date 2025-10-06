@@ -126,7 +126,9 @@ function Login() {
 			{/* Header with logo and role buttons */}
 			<div className="flex justify-between items-center p-6">
 						<div>
-							<Image src="/cooventechlogo.png" width={135} height={35} alt="CoVentech Logo" />
+							<a href="https://www.co-ventech.com/" target="_blank" rel="noopener noreferrer" className="cursor-pointer">
+								<Image src="/cooventechlogo.png" width={135} height={35} alt="CoVentech Logo" />
+							</a>
 						</div>
 			</div>
 			<div className="flex-1 flex items-center justify-center px-6">
