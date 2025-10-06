@@ -11,7 +11,7 @@ const AuthCheck = ({ children }) => {
     const isLoggedIn = localStorage.getItem("MVP_CLIENT_LOGGEDIN");
 
     if (!isLoggedIn) {
-      router.push("/login");
+      router.push("/talent-login");
     } else {
       setIsAuth(true); // Only render children if authenticated
     }

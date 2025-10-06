@@ -46,7 +46,7 @@ export async function signOutAction(userRole) {
     name: "authjs.session-token",
   });
 
-  await signOut({ redirectTo: userRole === "client" ? "/company-login" : "/login" });
+  await signOut({ redirectTo: userRole === "client" ? "/company-login" : "/talent-login" });
 }
 
 export async function createAJobAction(formData) {

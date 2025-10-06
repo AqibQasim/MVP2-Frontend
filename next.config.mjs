@@ -5,7 +5,7 @@ const nextConfig = {
     return [
       {
         source: '/', //home page of app.co-ventech.com
-        destination: '/login',
+        destination: '/talent-login',
         permanent: true, // or false for temporary
       },
     ];

@@ -16,7 +16,7 @@ export default function ClientLogout({ className, userRole }) {
     if(userRole==="client"){
       router.replace('/company-login')
     }else{
-      router.replace('/login')
+      router.replace('/talent-login')
     }
   };
 

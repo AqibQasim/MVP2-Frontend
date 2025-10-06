@@ -590,7 +590,7 @@ function Page() {
 						<div className="text-center mt-4">
 							<p className="text-sm text-gray-600">
 								Already have an account?{" "}
-								<Link href={`/login?role=${user_role}`} className="text-blue-600 hover:underline">
+								<Link href="/talent-login" className="text-blue-600 hover:underline">
 									Login
 								</Link>
 							</p>

@@ -29,8 +29,8 @@ async function Page({ params }) {
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("MVP_CLIENT_LOGGEDIN") === "true";
 
-    if (!isLoggedIn && router.pathname !== "/login") {
-      router.replace("/login");
+    if (!isLoggedIn && router.pathname !== "/talent-login") {
+      router.replace("/talent-login");
     }
   }, [router]);
   //const candidates = await getCandidates();

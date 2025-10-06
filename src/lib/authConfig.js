@@ -41,7 +41,7 @@ export const authConfig = {
       const pathname = url?.pathname;
       console.log("PATHNAME: ", pathname)
       const isAuthenticated = user || credentialUser?.id;
-      const loginPage = pathname === "/login";
+      const loginPage = pathname === "/talent-login";
       const clientLoginPage = pathname === "/company-login"
       const signupPage = pathname === "/signup";
       const googleUserRedirectPath = user
@@ -81,12 +81,12 @@ export const authConfig = {
 
       // NOT AUTHENTICATED
       if (!isAuthenticated) {
-        const publicRoutes = ["/login", "/company-login", "/signup"];
+        const publicRoutes = ["/talent-login", "/company-login", "/signup"];
         if (publicRoutes.includes(pathname)) {
           return true; // allow unauthenticated users on public/login pages
         }
-        console.log("User not authenticated, redirecting to login");
-        return false; // this will trigger the redirect to /login
+        console.log("User not authenticated, redirecting to talent login");
+        return false; // this will trigger the redirect to /talent-login
       }
 
       // Client/Candidate route protection
@@ -107,7 +107,7 @@ export const authConfig = {
 
         if (candidateRoute) {
           if (!isCandidate || (visitedId && isImposter)) {
-            return NextResponse.redirect(new URL("/login", request.url));
+            return NextResponse.redirect(new URL("/talent-login", request.url));
           }
           if (pathname === "/candidate" && currentUserId) {
             return NextResponse.redirect(
@@ -119,7 +119,7 @@ export const authConfig = {
         if (clientRoute) {
           const isClient = googleUserRole === "client";
           if (!isClient || (visitedId && isImposter)) {
-            return NextResponse.redirect(new URL("/login", request.url));
+            return NextResponse.redirect(new URL("/company-login", request.url));
           }
           if (pathname === "/client" && currentUserId) {
             return NextResponse.redirect(
@@ -136,7 +136,7 @@ export const authConfig = {
 
         if (candidateRoute) {
           if (!isCandidate || (visitedId && isImposter)) {
-            return NextResponse.redirect(new URL("/login", request.url));
+            return NextResponse.redirect(new URL("/talent-login", request.url));
           }
           if (pathname === "/candidate" && credentialUserId) {
             return NextResponse.redirect(
@@ -294,7 +294,7 @@ export const authConfig = {
     },
   },
   pages: {
-    signIn: "/login" || "/company-login",
+    signIn: "/talent-login",
   },
 };
 

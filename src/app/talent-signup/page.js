@@ -605,7 +605,7 @@ function Page() {
             <p className="text-sm text-gray-600">
               Already have an account?{" "}
               <Link
-                href={`/login?role=${user_role}`}
+                href="/talent-login"
                 className="text-blue-600 hover:underline"
               >
                 Login

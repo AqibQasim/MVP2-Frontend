@@ -43,9 +43,9 @@ export default function Page({ params }) {
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("MVP_CLIENT_LOGGEDIN") === "true";
 
-    if (!isLoggedIn && router.pathname !== "/login") {
-      router.replace("/login");
-    } else if (isLoggedIn && router.pathname === "/login") {
+    if (!isLoggedIn && router.pathname !== "/company-login") {
+      router.replace("/company-login");
+    } else if (isLoggedIn && router.pathname === "/company-login") {
       router.replace(`/client/${params.clientId}`);
     }
   }, [router]);
