@@ -28,11 +28,10 @@ export async function signInAction(formData) {
   });
 }
 
-export async function signOutAction(formData) {
-  const user_role = formData.get("user_role");
+export async function signOutAction(userRole) {
   cookies().delete({
     name: "user_role",
-    value: user_role,
+    value: userRole==="client"?userRole:"customer",
   });
 
   // cookies().delete({
@@ -47,7 +46,7 @@ export async function signOutAction(formData) {
     name: "authjs.session-token",
   });
 
-  await signOut({ redirectTo: "/login" });
+  await signOut({ redirectTo: userRole === "client" ? "/company-login" : "/login" });
 }
 
 export async function createAJobAction(formData) {

@@ -225,7 +225,7 @@ function Login() {
 							<button
 								type="button"
 								className="inline-block rounded-lg border border-blue-600 text-blue-600 px-6 py-2 font-medium hover:bg-blue-50 transition-colors"
-								onClick={() => router.push('/signup?role=' + user_role)}
+								onClick={() => router.push('/talent-signup?role=' + user_role)}
 							>
 								Register
 							</button>
