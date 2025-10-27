@@ -23,7 +23,7 @@ function Login() {
 	const router = useRouter();
 	const [alert, setalert] = useState(false);
 	const [isLoading, setisLoading] = useState(false);
-	const [user_role, setUserRole] = useState("client");
+	const user_role ="freelancer";
 	const [isForgotPasswordOpened, setIsForgotPasswordOpened] = useState(false);
 	const [show, setShow] = useState(false);
 
