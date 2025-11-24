@@ -10,15 +10,24 @@ function EntityCard({
     image: "/avatars/avatar-2.png",
     name: "John Doe",
     profession: "",
+    membership: "",
   },
 }) {
   const sizeClass = lg ? "size-20" : sm ? "size-9" : "size-12";
   const textSizeClass = lg ? "text-lg" : sm ? "text-base" : "text-sm";
+  const membershipDate =
+    entity?.membership && !isNaN(new Date(entity.membership))
+      ? new Date(entity.membership).toLocaleDateString("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        })
+      : null;
 
   return (
     <div className="entity flex items-center justify-start gap-2" onClick={onClick}>
       <div
-        className={`relative ${sizeClass} ${icon ? "!bg-primary-tint-100 p-3.5" : ""} overflow-hidden rounded-full bg-bg-avatar`}
+        className={`relative ${sizeClass} ${icon ? "!bg-primary-tint-100 p-3.5" : ""} overflow-hidden rounded-full bg-bg-avatar -mt-3.5`}
       >
         {!icon ? (
           <Image
@@ -33,14 +42,22 @@ function EntityCard({
         )}
       </div>
       <div className="names">
-        <p className={`font-lufga ${textSizeClass} text-[15px] font-medium`}>
-          {entity.name}
-        </p>
+        <div className="flex items-center gap-2">
+          <p className={`font-lufga ${textSizeClass} text-[15px] font-medium`}>
+            {entity.name}
+          </p>
+          <Image src="/verifcation.png" alt="Verified" width={16} height={16} />
+        </div>
         {entity.profession && (
           <p className="text-[14px] text-sm font-medium text-grey-primary-shade-30">
             {entity.profession}
           </p>
         )}
+        {membershipDate && (
+          <p className="text-[13px] text-sm font-medium text-grey-primary-shade-30">
+            CovenTal member since {membershipDate}
+          </p>
+         )} 
       </div>
     </div>
   );
@@ -54,6 +71,7 @@ EntityCard.propTypes = {
     image: PropTypes.string,
     name: PropTypes.string,
     profession: PropTypes.string,
+    membership: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   }),
 };
 
