@@ -47,7 +47,10 @@ function Page({ params }) {
   const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
   const [candidateReport, setCandidateReport] = useState(null);
   const [budgetingError, setBudgetingError] = useState(false);
-  const [isWorkExperienceOpen, setIsWorkExperienceOpen] = useState(true);
+  const [isWorkExperienceOpen, setIsWorkExperienceOpen] = useState(false);
+  const [isProjectsOpen, setIsProjectsOpen] = useState(false);
+  const [isEducationOpen, setIsEducationOpen] = useState(false);
+  const [isCertificationsOpen, setIsCertificationsOpen] = useState(false);
   const router = useRouter();
   const [alert, setAlert] = useState(null);
   const [paymentHistory, setPaymentHistory] = useState(null);
@@ -418,7 +421,8 @@ function Page({ params }) {
               {talent?.expertise.map((skill, i) => (
                 <Skill
                   key={i}
-                  skill={skill.skill}
+                  skill={skill}
+                  experience={skill?.experience}
                   className="!bg-neutral-white"
                 />
               ))}
@@ -465,26 +469,106 @@ function Page({ params }) {
             </div>
           )}
         </div>
-        
+
         <div className="flex self-center w-full h-auto flex-col gap-y-4">
-          <Heading xm>Projects</Heading>
-          {talent?.projects?.map((project, index) => (
-            <Project key={index?.toString()} {...project} />
-          ))}
+          <button
+            type="button"
+            className="flex w-full items-center justify-between rounded-lg border border-grey-primary-tint-90 bg-neutral-white px-4 py-3 text-left shadow-sm"
+            onClick={() => setIsProjectsOpen((prev) => !prev)}
+          >
+            <Heading xm className="mb-0">
+              Projects
+            </Heading>
+            <Image
+              src={isProjectsOpen ? "/up-arrrow.png" : "/drop-arrow.png"}
+              alt="Toggle projects section"
+              width={24}
+              height={24}
+            />
+          </button>
+          {isProjectsOpen && (
+            <div className="space-y-4">
+              {talent?.projects?.length ? (
+                talent?.projects?.map((project, index) => (
+                  <Project key={index?.toString()} {...project} />
+                ))
+              ) : (
+                <Capsule className="w-full h-auto flex !justify-start !py-10 !px-10">
+                  <p className="text-grey-primary-shade-30">
+                    No projects added
+                  </p>
+                </Capsule>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="flex self-center w-full h-auto flex-col gap-y-4">
-          <Heading xm>Education</Heading>
-          {talent?.education?.map((edu, index) => (
-            <Education key={index?.toString()} {...edu} />
-          ))}
+          <button
+            type="button"
+            className="flex w-full items-center justify-between rounded-lg border border-grey-primary-tint-90 bg-neutral-white px-4 py-3 text-left shadow-sm"
+            onClick={() => setIsEducationOpen((prev) => !prev)}
+          >
+            <Heading xm className="mb-0">
+              Education
+            </Heading>
+            <Image
+              src={isEducationOpen ? "/up-arrrow.png" : "/drop-arrow.png"}
+              alt="Toggle education section"
+              width={24}
+              height={24}
+            />
+          </button>
+          {isEducationOpen && (
+            <div className="space-y-4">
+              {talent?.education?.length ? (
+                talent?.education?.map((edu, index) => (
+                  <Education key={index?.toString()} {...edu} />
+                ))
+              ) : (
+                <Capsule className="w-full h-auto flex !justify-start !py-10 !px-10">
+                  <p className="text-grey-primary-shade-30">
+                    No education details added
+                  </p>
+                </Capsule>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="flex self-center w-full h-auto flex-col gap-y-4">
-          <Heading xm>Certifications</Heading>
-          {talent?.certifications?.map((cert, index) => (
-            <Certifications key={index?.toString()} {...cert} />
-          ))}
+          <button
+            type="button"
+            className="flex w-full items-center justify-between rounded-lg border border-grey-primary-tint-90 bg-neutral-white px-4 py-3 text-left shadow-sm"
+            onClick={() => setIsCertificationsOpen((prev) => !prev)}
+          >
+            <Heading xm className="mb-0">
+              Certifications
+            </Heading>
+            <Image
+              src={
+                isCertificationsOpen ? "/up-arrrow.png" : "/drop-arrow.png"
+              }
+              alt="Toggle certifications section"
+              width={24}
+              height={24}
+            />
+          </button>
+          {isCertificationsOpen && (
+            <div className="space-y-4">
+              {talent?.certifications?.length ? (
+                talent?.certifications?.map((cert, index) => (
+                  <Certifications key={index?.toString()} {...cert} />
+                ))
+              ) : (
+                <Capsule className="w-full h-auto flex !justify-start !py-10 !px-10">
+                  <p className="text-grey-primary-shade-30">
+                    No certifications added
+                  </p>
+                </Capsule>
+              )}
+            </div>
+          )}
         </div>
 
 {/* Work Process Section - Added at the bottom */}

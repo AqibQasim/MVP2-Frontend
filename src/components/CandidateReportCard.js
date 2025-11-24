@@ -71,8 +71,8 @@ function CandidateReportCard({ candidateReport, handleOpenOverlay }) {
               {candidateReport?.customer?.expertise?.map((skill) => (
                 <Skill
                   key={skill?.skill}
-                  icon={skill?.skill}
-                  skill={skill?.skill}
+                  skill={skill}
+                  experience={skill?.experience}
                 />
               ))}
               <span className="h-[1px] w-2 rounded-full bg-grey-primary-tint-40"></span>

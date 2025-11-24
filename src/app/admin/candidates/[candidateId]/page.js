@@ -423,7 +423,8 @@ function Page({ params }) {
               {talent?.expertise.map((skill, i) => (
                 <Skill
                   key={i}
-                  skill={skill.skill}
+                  skill={skill}
+                  experience={skill?.experience}
                   className="!bg-neutral-white"
                 />
               ))}
