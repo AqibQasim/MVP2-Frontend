@@ -28,7 +28,7 @@ function Project({ ...props }) {
         </div>
 
         {descriptionList.length > 0 && (
-          <div className="flex flex-col gap-y-2 pt-5 text-sm text-grey-primary-shade-30">
+          <div className="flex flex-col gap-y-2 pt-5 text-sm text-grey-primary-shade-30 text-left">
             {descriptionList.map((paragraph, index) => (
               <p key={index?.toString()}>{paragraph}</p>
             ))}

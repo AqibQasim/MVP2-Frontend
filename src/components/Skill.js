@@ -28,7 +28,7 @@ function Skill({ className, icon, skill, score = null, experience = null }) {
 
   return (
     <div
-      className={`${className} flex items-center justify-center gap-1.5 rounded-[2.25rem] bg-grey-primary-tint-90 p-2.5 pr-3 font-lufga text-sm !font-normal text-black`}
+      className={`${className} flex  items-center justify-center gap-1.5 rounded-[2.25rem] bg-grey-primary-tint-90 p-2.5 pr-3 font-lufga text-sm !font-normal text-black`}
     >
       {skillLabel || iconKey ? (
         <>

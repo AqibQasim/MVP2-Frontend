@@ -6,6 +6,7 @@ function EntityCard({
   sm = false,
   lg = false,
   icon = false,
+  showVerified = false,
   entity = {
     image: "/avatars/avatar-2.png",
     name: "John Doe",
@@ -46,7 +47,9 @@ function EntityCard({
           <p className={`font-lufga ${textSizeClass} text-[15px] font-medium`}>
             {entity.name}
           </p>
-          <Image src="/verifcation.png" alt="Verified" width={16} height={16} />
+          {showVerified && (
+            <Image src="/verifcation.png" alt="Verified" width={16} height={16} />
+          )}
         </div>
         {entity.profession && (
           <p className="text-[14px] text-sm font-medium text-grey-primary-shade-30">
@@ -67,6 +70,7 @@ EntityCard.propTypes = {
   sm: PropTypes.bool,
   lg: PropTypes.bool,
   icon: PropTypes.oneOfType([PropTypes.bool, PropTypes.element]),
+  showVerified: PropTypes.bool,
   entity: PropTypes.shape({
     image: PropTypes.string,
     name: PropTypes.string,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 //import ButtonBack from "./ButtonBack";
 import Capsule from "@/components/Capsule";
 import ClientPaymentHistoryTable from "@/components/ClientPaymentHistoryTable";
@@ -28,6 +28,64 @@ import IconWithBg from "@/components/IconWithBg";
 import Education from "@/components/Education";
 import Certifications from "@/components/Certifications";
 import Project from "@/components/Project";
+import SkillCategories from "@/components/SkillCategories";
+import { motion } from "motion/react";
+
+const workProcessSteps = [
+  {
+    title: "Share your needs",
+    description:
+      "Discuss your requirements and refine your scope in a call with a Topkal domain expert.",
+  },
+  {
+    title: "Choose your talent",
+    description:
+      "Get a short list of expertly matched talent within 24 hours to review, interview, and choose from.",
+  },
+  {
+    title: "Start your risk-free talent trial",
+    description:
+      "Work with your chosen talent on a trial basis for up to two weeks. Pay only if you decide to hire them.",
+  },
+];
+
+const workProcessArrowPositions = [
+  { x1: 18, x2: 46 },
+  { x1: 52, x2: 80 },
+];
+
+const workProcessSectionVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+};
+
+const workProcessStepVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (index = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, delay: 0.2 + index * 0.4, ease: "easeOut" },
+  }),
+};
+
+const workProcessArrowVariants = {
+  hidden: { pathLength: 0, opacity: 0 },
+  visible: (index = 0) => ({
+    pathLength: 1,
+    opacity: 1,
+    transition: {
+      duration: 0.6,
+      delay: 0.6 + index * 0.6,
+      ease: "easeOut",
+    },
+  }),
+};
+
+const workProcessViewport = { once: true, amount: 0.3 };
 
 
 function Page({ params }) {
@@ -51,13 +109,39 @@ function Page({ params }) {
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
   const [isEducationOpen, setIsEducationOpen] = useState(false);
   const [isCertificationsOpen, setIsCertificationsOpen] = useState(false);
+  const [isSkillCategoriesOpen, setIsSkillCategoriesOpen] = useState(false);
   const router = useRouter();
   const [alert, setAlert] = useState(null);
   const [paymentHistory, setPaymentHistory] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(false);
   //const [error,setError]= useState(null)
 
   const customer_id = params?.candidateId;
+  const skillCategoryData = useMemo(() => {
+    if (!talent) return null;
+    const possibleSources = [
+      talent?.skill_categories,
+      talent?.skills_categories,
+      talent?.skills_category,
+      talent?.skills,
+      talent?.skillCategory,
+      talent?.skill_data,
+    ].filter(Boolean);
+
+    if (!possibleSources.length) return null;
+    const raw = possibleSources[0];
+
+    if (typeof raw === "string") {
+      try {
+        return JSON.parse(raw);
+      } catch {
+        return { other: raw };
+      }
+    }
+
+    return raw;
+  }, [talent]);
 
   const getPaymentHistory = () => {
     const payload = {
@@ -302,6 +386,7 @@ function Page({ params }) {
         <Hr />
         <div className="mini-profile flex items-center justify-between">
           <EntityCard
+            showVerified
             entity={{
               image: "/avatars/avatar-2.png",
               name: talent?.name,
@@ -416,16 +501,63 @@ function Page({ params }) {
               className="text-sm font-bold"
             /> */}
 
-            <div className="flex w-full !items-start flex-col pt-10">
-              <Heading xm>Skills</Heading>
-              {talent?.expertise.map((skill, i) => (
-                <Skill
-                  key={i}
-                  skill={skill}
-                  experience={skill?.experience}
-                  className="!bg-neutral-white"
-                />
-              ))}
+            <div className="flex w-full pt-10 gap-10 flex-col md:flex-row">
+              <div className="flex-1">
+                <Heading xm>Portfolio</Heading>
+                {talent?.work_experience?.length ? (
+                  <div className="mt-3 space-y-4">
+                    {talent.work_experience.map((exp, index) => {
+                      const skills = exp?.skills || [];
+                      const firstTwo = skills.slice(0, 2);
+                      const hasMore = skills.length > 2;
+
+                      return (
+                        <div key={index?.toString()} className="flex flex-col">
+                          <button
+                            onClick={() => {
+                              setIsWorkExperienceOpen(true);
+                              setTimeout(() => {
+                                document.getElementById(`work-exp-${index}`).scrollIntoView({ behavior: 'smooth' });
+                              }, 0);
+                            }}
+                            className="text-primary-tint-10 hover:underline font-medium text-left"
+                          >
+                            {exp?.organization || "Company"}
+                          </button>
+                          <div className="mt-1 flex flex-wrap items-center gap-1.5 text-sm text-grey-primary-shade-30">
+                            {firstTwo.map((skill, i) => (
+                              <Skill
+                                key={i}
+                                skill={skill}
+                                className="!text-xs font-normal border flex flex-wrap"
+                              />
+                            ))}
+                            {hasMore && <span className="ml-1">...</span>}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="mt-2 text-grey-primary-shade-30">
+                    No portfolio experience added
+                  </p>
+                )}
+              </div>
+
+              <div className="flex-1">
+                <Heading xm>Experience</Heading>
+                <div className="mt-2 flex flex-col items-start gap-1.5">
+                  {talent?.expertise?.map((skill, i) => (
+                    <Skill
+                      key={i}
+                      skill={skill}
+                      experience={skill?.experience}
+                      className="!bg-neutral-white"
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
 
 
@@ -457,7 +589,9 @@ function Page({ params }) {
             <div className="space-y-4">
               {talent?.work_experience?.length ? (
                 talent?.work_experience?.map((exp, index) => (
-                  <Experience key={index?.toString()} {...exp} />
+                  <div key={index?.toString()} id={`work-exp-${index}`}>
+                    <Experience {...exp} />
+                  </div>
                 ))
               ) : (
                 <Capsule className='w-full h-auto flex !justify-start !py-10 !px-10'>
@@ -571,62 +705,41 @@ function Page({ params }) {
           )}
         </div>
 
+        <div className="flex self-center w-full h-auto flex-col gap-y-4">
+          <button
+            type="button"
+            className="flex w-full items-center justify-between rounded-lg border border-grey-primary-tint-90 bg-neutral-white px-4 py-3 text-left shadow-sm"
+            onClick={() => setIsSkillCategoriesOpen((prev) => !prev)}
+          >
+            <Heading xm className="mb-0">
+              Skills 
+            </Heading>
+            <Image
+              src={
+                isSkillCategoriesOpen ? "/up-arrrow.png" : "/drop-arrow.png"
+              }
+              alt="Toggle skills section"
+              width={24}
+              height={24}
+            />
+          </button>
+          {isSkillCategoriesOpen && (
+            <div className="space-y-4">
+              <SkillCategories categories={skillCategoryData} />
+            </div>
+          )}
+        </div>
+
+
 {/* Work Process Section - Added at the bottom */}
-<div className="mt-16 bg-gray-50 rounded-2xl p-8">
-  <style jsx>{`
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes drawLine {
-      from {
-        stroke-dashoffset: 400;
-      }
-      to {
-        stroke-dashoffset: 0;
-      }
-    }
-
-    .step-1 {
-      opacity: 0;
-      animation: fadeInUp 0.6s ease-out forwards;
-      animation-delay: 0.2s;
-    }
-
-    .step-2 {
-      opacity: 0;
-      animation: fadeInUp 0.6s ease-out forwards;
-      animation-delay: 0.8s;
-    }
-
-    .step-3 {
-      opacity: 0;
-      animation: fadeInUp 0.6s ease-out forwards;
-      animation-delay: 1.4s;
-    }
-
-    .arrow-1 {
-      stroke-dasharray: 400;
-      stroke-dashoffset: 400;
-      animation: drawLine 0.6s ease-out forwards;
-      animation-delay: 0.6s;
-    }
-
-    .arrow-2 {
-      stroke-dasharray: 400;
-      stroke-dashoffset: 400;
-      animation: drawLine 0.6s ease-out forwards;
-      animation-delay: 1.2s;
-    }
-  `}</style>
-
+<motion.div
+  className="mt-16 bg-gray-50 rounded-2xl p-8"
+  variants={workProcessSectionVariants}
+  initial="hidden"
+  animate={hasAnimated ? "visible" : "hidden"}
+  onViewportEnter={() => setHasAnimated(true)}
+  viewport={{ once: true, amount: 0.3 }}
+>
   <div className="text-center mb-12">
     <h3 className="text-sm text-grey-primary-shade-20 mb-2">COLLABORATION THAT WORKS</h3>
     <h2 className="md:text-4xl text-3xl font-bold text-gray-900 mb-4">How to Work with Co-Vental</h2>
@@ -636,44 +749,24 @@ function Page({ params }) {
   </div>
 
   <div className="relative">
-    {/* Container for steps with proper spacing */}
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-      {/* Step 1 */}
-      <div className="text-center relative z-10 step-1">
-        <div className="w-16 h-16 bg-primary-tint-10 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-6">
-          1
-        </div>
-        <h4 className="font-semibold text-lg text-gray-900 mb-4">Share your needs</h4>
-        <p className="text-grey-primary-shade-20">
-          Discuss your requirements and refine your scope in a call with a Topkal domain expert.
-        </p>
-      </div>
-
-      {/* Step 2 */}
-      <div className="text-center relative z-10 step-2">
-        <div className="w-16 h-16 bg-primary-tint-10 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-6">
-          2
-        </div>
-        <h4 className="font-semibold text-lg text-gray-900 mb-4">Choose your talent</h4>
-        <p className="text-grey-primary-shade-20">
-          Get a short list of expertly matched talent within 24 hours to review, interview, and choose from.
-        </p>
-      </div>
-
-      {/* Step 3 */}
-      <div className="text-center relative z-10 step-3">
-        <div className="w-16 h-16 bg-primary-tint-10 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-6">
-          3
-        </div>
-        <h4 className="font-semibold text-lg text-gray-900 mb-4">Start your risk-free talent trial</h4>
-        <p className="text-grey-primary-shade-20">
-          Work with your chosen talent on a trial basis for up to two weeks. Pay only if you decide to hire them.
-        </p>
-      </div>
+      {workProcessSteps.map((step, index) => (
+        <motion.div
+          key={step.title}
+          className="text-center relative z-10"
+          variants={workProcessStepVariants}
+          custom={index}
+        >
+          <div className="w-16 h-16 bg-primary-tint-10 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-6">
+            {index + 1}
+          </div>
+          <h4 className="font-semibold text-lg text-gray-900 mb-4">{step.title}</h4>
+          <p className="text-grey-primary-shade-20">{step.description}</p>
+        </motion.div>
+      ))}
     </div>
 
-    {/* SVG Container for arrows - positioned absolutely */}
-    <svg 
+    <motion.svg
       className="hidden md:block absolute inset-x-0 top-0 w-full h-16 pointer-events-none"
       xmlns="http://www.w3.org/2000/svg"
       style={{ zIndex: 1 }}
@@ -691,9 +784,8 @@ function Page({ params }) {
           markerUnits="userSpaceOnUse"
           viewBox="0 0 3 8"
         >
-          {/* Thin open chevron arrowhead with wider angle */}
           <polyline 
-            points="0,0 1.7,4 0,8" 
+            points="0,0 1.9,4 0,8" 
             fill="none" 
             stroke="#593AE3" 
             strokeWidth="0.4"
@@ -702,33 +794,25 @@ function Page({ params }) {
           />
         </marker>
       </defs>
-      
-      {/* Arrow from circle 1 to circle 2 */}
-      <line 
-        className="arrow-1"
-        x1="18" 
-        y1="10" 
-        x2="46.5" 
-        y2="10" 
-        stroke="#593AE3" 
-        strokeWidth="0.5" 
-        markerEnd="url(#chevron-arrow)"
-      />
-      
-      {/* Arrow from circle 2 to circle 3 */}
-      <line 
-        className="arrow-2"
-        x1="52" 
-        y1="10" 
-        x2="80.5" 
-        y2="10" 
-        stroke="#593AE3" 
-        strokeWidth="0.5" 
-        markerEnd="url(#chevron-arrow)"
-      />
-    </svg>
+
+      {workProcessArrowPositions.map((arrow, index) => (
+        <motion.line
+          key={`arrow-${arrow.x1}`}
+          x1={arrow.x1}
+          y1="10"
+          x2={arrow.x2}
+          y2="10"
+          stroke="#593AE3"
+          strokeWidth="0.5"
+          markerEnd="url(#chevron-arrow)"
+          variants={workProcessArrowVariants}
+          custom={index}
+          strokeLinecap="round"
+        />
+      ))}
+    </motion.svg>
   </div>
-</div>
+</motion.div>
 
        
       </div>
