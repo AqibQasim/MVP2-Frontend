@@ -100,7 +100,7 @@ function Login() {
 				now.setTime(now.getTime() + 60 * 60 * 60 * 10 + 36000000); // 36000000 ms = 10 hours
 				const expires = now.toUTCString();
 
-				const token = res?.data?.token;
+				const token = result?.data?.token;
 				document.cookie = `credentialLoginToken=${token}; expires=${expires}; path=/;`;
 				setisLoading(false);
 				router?.events?.on("routeChangeComplete", handleRouteChangeComplete);
