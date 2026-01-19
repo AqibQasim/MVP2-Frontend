@@ -17,9 +17,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState, useEffect } from "react";
 
 function Page() {
-  const router = useRouter();
-  const params = useSearchParams();
-
+  
   useEffect(() => {
     document.title = "CoVental | Pool of the top talent";
   }, []);
@@ -36,7 +34,7 @@ function Page() {
     confirmPassword: "",
   });
   const [confirmTerms, setConfirmTerms] = useState(false);
-  const [user_role, setUserRole] = useState("client");
+  const user_role="client";
   const [errors, setErrors] = useState({});
   const [termsError, setTermsError] = useState("");
   const [otp, setotp] = useState(null);
@@ -44,7 +42,6 @@ function Page() {
   const [isLoading, setisLoading] = useState(false);
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
-  const allowedDomains = ["company.com", "company.org"];
 
   const handClick = () => {
     setShow(!show);
@@ -172,8 +169,8 @@ function Page() {
         if (checkUserResponse.status === 404) {
           const emailPayload = {
             to: form.email,
-            subject: "Email Verification",
-            text: "Please verify your email address",
+            subject: "Co-Vental Email Verification",
+            text: `Your OTP is: ${otp}`,
           };
           const emailResponse = await fetch(
             `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/send-email`,
@@ -215,18 +212,6 @@ function Page() {
       validateField(name, value);
     }
   };
-
-  const isFormInvalid = useMemo(() => {
-    return (
-      Object.values(errors).some((err) => err !== "") ||
-      !form.firstName ||
-      !form.lastName ||
-      !form.email ||
-      !form.phoneNumber ||
-      !form.password ||
-      !form.confirmPassword
-    );
-  }, [errors, form]);
 
   const validateField = (name, value) => {
     let errorMsg = "";
