@@ -1,17 +1,12 @@
 "use client";
 import ErrorPopup from "@/components/ErrorPopup";
 import ForgotPasswordModal from "@/components/ForgotPasswordModal";
-import Heading from "@/components/Heading";
 import Input from "@/components/Input";
-import OnBoardingButton from "@/components/OnBoardingButton";
 import Overlay from "@/components/Overlay";
 import SignInButton from "@/components/SignInButton";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import LoaderIcon from "@/svgs/LoaderIcon";
-import urlBase64ToUint8Array from "@/utils/urlBase64ToUint8Array";
-import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
-import Link from "next/link";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useMemo, useCallback, useEffect } from "react";
@@ -23,7 +18,7 @@ function Login() {
 	const router = useRouter();
 	const [alert, setalert] = useState(false);
 	const [isLoading, setisLoading] = useState(false);
-	const user_role ="freelancer";
+	const user_role = "freelancer";
 	const [isForgotPasswordOpened, setIsForgotPasswordOpened] = useState(false);
 	const [show, setShow] = useState(false);
 
@@ -64,14 +59,6 @@ function Login() {
 		setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMsg }));
 	};
 
-	const isFormInvalid = useMemo(() => {
-		return (
-			Object.values(errors).some((err) => err !== "") ||
-			!form.email ||
-			!form.password
-		);
-	}, [errors, form]);
-
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setForm((prevForm) => ({ ...prevForm, [name]: value }));
@@ -92,6 +79,12 @@ function Login() {
 		[form, user_role],
 	);
 
+	// Handle navigation loading
+	const handleRouteChangeComplete = () => {
+		setisLoading(false); // Stop loading when navigation is complete
+		router.events.off("routeChangeComplete", handleRouteChangeComplete);
+	};
+
 	const handleLogin = useCallback(
 		async (event) => {
 			event.preventDefault();
@@ -102,17 +95,12 @@ function Login() {
 			}
 			const result = await mvp2ApiHelper(payload);
 			if (result.status === 200 && result.data) {
-				localStorage.setItem("MVP_CLIENT_LOGGEDIN", true);
+				localStorage.setItem("MVP_CLIENT_LOGGEDIN", false);
 				router.events = router.events || {};
-				router.events.on = router.events.on || (() => {});
-				router.events.off = router.events.off || (() => {});
-				const cleanup = () => {
-					router.events.off("routeChangeComplete", handleRouteChangeComplete);
-				};
+				router.events.on = router.events.on || (() => { });
+				router.events.off = router.events.off || (() => { });
 				router?.events?.on("routeChangeComplete", handleRouteChangeComplete);
-				const isLoggedIn =
-					localStorage.getItem("MVP_CLIENT_LOGGEDIN") === "true";
-				router.push("/landing");
+				router.push(`/candidate/${result.data.id}`);
 			} else {
 				setisLoading(false);
 				setalert(true);
@@ -125,11 +113,11 @@ function Login() {
 		<div className="min-h-screen bg-gray-50 flex flex-col">
 			{/* Header with logo and role buttons */}
 			<div className="flex justify-between items-center p-6">
-						<div>
-							<a href="https://www.co-ventech.com/" target="_blank" rel="noopener noreferrer" className="cursor-pointer">
-								<Image src="/cooventechlogo.png" width={135} height={35} alt="CoVentech Logo" />
-							</a>
-						</div>
+				<div>
+					<a href="https://www.co-ventech.com/" target="_blank" rel="noopener noreferrer" className="cursor-pointer">
+						<Image src="/cooventechlogo.png" width={135} height={35} alt="CoVentech Logo" />
+					</a>
+				</div>
 			</div>
 			<div className="flex-1 flex items-center justify-center px-6">
 				<div className="bg-white shadow-lg p-8 w-full max-w-md">
@@ -221,7 +209,7 @@ function Login() {
 						</div>
 						<SignInButton user_role={user_role} />
 						<div className="text-center mt-6">
-							  <span className="block mb-2 text-gray-600 text-sm">Don&apos;t have an account?</span>
+							<span className="block mb-2 text-gray-600 text-sm">Don&apos;t have an account?</span>
 							<button
 								type="button"
 								className="inline-block rounded-lg border border-blue-600 text-blue-600 px-6 py-2 font-medium hover:bg-blue-50 transition-colors"
