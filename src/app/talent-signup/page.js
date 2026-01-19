@@ -46,7 +46,6 @@ function Page() {
   const [isLoading, setisLoading] = useState(false);
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
-  const allowedDomains = ["company.com", "company.org"];
 
   const handClick = () => {
     setShow(!show);

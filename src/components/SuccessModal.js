@@ -6,6 +6,7 @@ import ConfirmationModal from "./ConfirmationModal"; // Import the new component
 import Overlay from "./Overlay";
 import ErrorPopup from "./ErrorPopup";
 const SuccessModal = ({
+  email,
   imgSrc,
   mainHeading,
   text,
@@ -25,16 +26,29 @@ const SuccessModal = ({
     setEnteredOtp(event.target.value);
   };
 
-  const handleOtpVerification = () => {
-    if (enteredOtp === otp.toString()) {
-      console.log("OTP verified successfully");
-      setIsSecondPopupVisible(true);
+  const handleOtpVerification = async () => {
+    const payload = {
+      email,
+      hash: otp,
+      otp: enteredOtp
+    }
+    const veriftOtpResponse = await fetch(
+      `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/verify-otp`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      },
+    );
+    if (veriftOtpResponse.ok) {
       onClose;
+      setIsSecondPopupVisible(true);
     } else {
       setError(true);
       console.log("Incorrect OTP");
     }
-  };
+  }
+
 
   // const handleVerifyEmailClick = () => {
   //   setIsSecondPopupVisible(true);

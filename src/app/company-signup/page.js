@@ -1,7 +1,6 @@
 // Company signup page, identical to signup
 "use client";
 import ErrorPopup from "@/components/ErrorPopup";
-import Heading from "@/components/Heading";
 import PhoneInputEl from "@/components/PhoneInputEl";
 import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
@@ -10,14 +9,12 @@ import SignInButton from "@/components/SignInButton";
 import SuccessModal from "@/components/SuccessModal";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { revalidate } from "@/lib/data-service";
-import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState, useEffect } from "react";
 
 function Page() {
-  
+
   useEffect(() => {
     document.title = "CoVental | Pool of the top talent";
   }, []);
@@ -170,7 +167,8 @@ function Page() {
           const emailPayload = {
             to: form.email,
             subject: "Co-Vental Email Verification",
-            text: `Your OTP is: ${otp}`,
+            text: `Your OTP is: `,
+            type: "otp"
           };
           const emailResponse = await fetch(
             `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/send-email`,
@@ -182,7 +180,7 @@ function Page() {
           );
           if (emailResponse.ok) {
             const emailData = await emailResponse.json();
-            setotp(emailData.otp);
+            setotp(emailData?.data?.hash);
             setOverlayVisible(true);
             setisLoading(false);
           } else {
@@ -499,6 +497,7 @@ function Page() {
         <Overlay isVisible={isOverlayVisible} closeoverlay={handleCloseOverlay}>
           <SuccessModal
             onClose={handleCloseOverlay}
+            email={form.email}
             imgSrc="/Message.png"
             mainHeading={mainHeading}
             text={text}
