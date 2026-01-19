@@ -29,7 +29,6 @@ export const authConfig = {
   trustHost: true,
   callbacks: {
     async authorized({ auth, request }) {
-      console.log("AAAAHILL SIGN UP WITH  GOOOGLE ");
 
       const user = auth?.user;
       const credentialUserToken =

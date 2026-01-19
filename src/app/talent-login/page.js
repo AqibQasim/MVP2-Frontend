@@ -95,7 +95,7 @@ function Login() {
 			}
 			const result = await mvp2ApiHelper(payload);
 			if (result.status === 200 && result.data) {
-				localStorage.setItem("MVP_CLIENT_LOGGEDIN", false);
+				localStorage.setItem("MVP_CLIENT_LOGGEDIN", true);
 				const now = new Date();
 				now.setTime(now.getTime() + 60 * 60 * 60 * 10 + 36000000); // 36000000 ms = 10 hours
 				const expires = now.toUTCString();
