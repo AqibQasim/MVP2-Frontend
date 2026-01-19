@@ -96,9 +96,13 @@ function Login() {
 			const result = await mvp2ApiHelper(payload);
 			if (result.status === 200 && result.data) {
 				localStorage.setItem("MVP_CLIENT_LOGGEDIN", false);
-				router.events = router.events || {};
-				router.events.on = router.events.on || (() => { });
-				router.events.off = router.events.off || (() => { });
+				const now = new Date();
+				now.setTime(now.getTime() + 60 * 60 * 60 * 10 + 36000000); // 36000000 ms = 10 hours
+				const expires = now.toUTCString();
+
+				const token = res?.data?.token;
+				document.cookie = `credentialLoginToken=${token}; expires=${expires}; path=/;`;
+				setisLoading(false);
 				router?.events?.on("routeChangeComplete", handleRouteChangeComplete);
 				router.push(`/candidate/${result.data.id}`);
 			} else {
