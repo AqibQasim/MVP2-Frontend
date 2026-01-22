@@ -21,7 +21,7 @@ function Experience({ ...props }) {
                     Tasks:
                     {
                         props?.tasks?.map((task,index) => (
-                            <div key={index?.toString()} className='!text-xs font-normal'>{task}</div>
+                            <div key={index?.toString()} className='!text-xs font-normal text-justify'>{task}</div>
                         ))
                     }
                 </div>
@@ -44,7 +44,7 @@ function Experience({ ...props }) {
 
                         {
                             props?.skills?.map((skill,index) => (
-                                <Skill key={index?.toString()} className='!text-xs font-normal border flex flex-wrap' skill={skill} />
+                                <Skill key={index?.toString()} className='!text-xs font-normal border flex flex-wrap' skill={skill}  hideIcon={true}/>
                             ))
                         }
                     </div>

@@ -10,6 +10,21 @@ const nextConfig = {
       },
     ];
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3001', // Your backend port - change if different
+        pathname: '/uploads/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'api.co-ventech.com', // Your production API domain
+        pathname: '/uploads/**',
+      },
+    ],
+  },
 };
 
 export default nextConfig;

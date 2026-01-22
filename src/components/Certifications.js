@@ -23,7 +23,7 @@ function Certifications({ ...props }) {
 
                         {
                             props?.skills?.map((skill,index) => (
-                                <Skill key={index?.toString()} className='!text-xs font-normal border flex flex-wrap' skill={skill} />
+                                <Skill key={index?.toString()} className='!text-xs font-normal border flex flex-wrap' skill={skill}  hideIcon={true}/>
                             ))
                         }
                     </div>
