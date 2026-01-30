@@ -345,9 +345,10 @@ function Page({ params }) {
     year: "numeric",
   });
 
-    console.log('Full Image URL:', talent?.profile_image ? `${API_BASE_URL}${talent.profile_image}` : "/avatars/avatar-2.png");
-          console.log('API_BASE_URL:', API_BASE_URL);
-          console.log('talent.profile_image:', talent?.profile_image);
+    // Debug logs for image URL construction
+    const profileImageUrl = talent?.profile_image 
+      ? `${API_BASE_URL}${talent.profile_image}` 
+      : "/avatars/avatar-2.png";
 
   return (
     <div className="h-full overflow-y-scroll">
@@ -398,7 +399,7 @@ function Page({ params }) {
             isProfilePage={true}
             entity={{
               image: talent?.profile_image 
-                ? `${API_BASE_URL}/${talent.profile_image}` 
+                ? `${API_BASE_URL}${talent.profile_image}` 
                 : "/avatars/avatar-2.png",
               name: talent?.name,
               profession: talent?.specialization,
@@ -472,6 +473,7 @@ function Page({ params }) {
               reportOverlay={isReportOverlayOpened}
               onClose={handleCloseOverlay}
               selectedCandidate={candidateReport}
+              profileImage={profileImageUrl}
             />
           )}
 
@@ -530,6 +532,7 @@ function Page({ params }) {
                               <Skill
                                 key={i}
                                 skill={skill}
+                                hideIcon={true}
                                 className="!text-xs font-normal border flex flex-wrap"
                               />
                             ))}
@@ -553,6 +556,7 @@ function Page({ params }) {
                     <Skill
                       key={i}
                       skill={skill}
+                       hideIcon={true}
                       experience={skill?.experience}
                       className="!bg-neutral-white"
                     />

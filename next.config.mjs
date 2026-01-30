@@ -20,7 +20,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'api.co-ventech.com', // Your production API domain
+        hostname: 'app.co-ventech.com', // Your production API domain
         pathname: '/uploads/**',
       },
     ],
