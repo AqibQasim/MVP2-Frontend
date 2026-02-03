@@ -819,7 +819,15 @@ function Page({ params }) {
     </motion.svg>
   </div>
 </motion.div> */}
-
+        
+        <div className="bg-grey-primary-tint-90  px-6 py-4 flex items-center justify-center gap-8 my-6 mt-10 rounded-3 xl">
+        <p className="text-base font-semibold text-gray-900">Top talent is in high demand.</p>
+        <button 
+          onClick={() => router.push(`/book-talent/${customer_id}`)}
+          className="bg-primary-tint-10 hover:bg-primary-tint-20 text-white font-semibold py-2 px-8 rounded-lg transition-colors">
+          Start hiring
+        </button>
+      </div>
        
       </div>
 
