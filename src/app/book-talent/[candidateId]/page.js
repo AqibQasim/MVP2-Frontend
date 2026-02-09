@@ -774,7 +774,7 @@ export default function BookTalentFlow() {
                             lineHeight: "1.15",
                           }}
                         >
-                          What's your current team size?{" "}
+                          What&apos;s your current team size?{" "}
                           <span
                             style={{
                               color: 'text-grey-primary-shade-90',
@@ -877,7 +877,7 @@ export default function BookTalentFlow() {
                             lineHeight: "1.15",
                           }}
                         >
-                          What's your estimated budget?{" "}
+                          What&apos;s your estimated budget?{" "}
                           <span
                             style={{
                               color: 'text-grey-primary-shade-90',
@@ -1101,7 +1101,7 @@ export default function BookTalentFlow() {
                           </span>
                         </h2>
                         <p className="mb-8 text-grey-primary-shade-80 text-lg">
-                          We'll use this to send you candidate recommendations
+                          We&apos;ll use this to send you candidate recommendations
                         </p>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -1411,7 +1411,7 @@ export default function BookTalentFlow() {
                             📋 Review Your Submission
                           </h3>
                           <p className="text-grey-primary text-sm">
-                            By submitting this form, you'll receive personalized talent recommendations within 24 hours. Our team will review your requirements and connect you with the best matches.
+                            By submitting this form, you&apos;ll receive personalized talent recommendations within 24 hours. Our team will review your requirements and connect you with the best matches.
                           </p>
                         </div>
 

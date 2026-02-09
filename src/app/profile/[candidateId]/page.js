@@ -394,17 +394,38 @@ function Page({ params }) {
         <Hr />
         
         <div className="mini-profile flex items-center justify-between">
-          <EntityCard
-            showVerified
-            isProfilePage={true}
-            entity={{
-              image: talent?.profile_image 
-                ? `${API_BASE_URL}${talent.profile_image}` 
-                : "/avatars/avatar-2.png",
-              name: talent?.name,
-              profession: talent?.specialization,
-            }}
-          />
+          <div className="flex flex-col items-start">
+            <EntityCard
+              showVerified
+              isProfilePage={true}
+              entity={{
+                image: talent?.profile_image 
+                  ? `${API_BASE_URL}${talent.profile_image}` 
+                  : "/avatars/avatar-2.png",
+                name: talent?.name,
+                profession: talent?.specialization,
+              }}
+            />
+            
+        <div className=" rounded-2xl bg-neutral-white py-4 flex items-center justify-between border border-transparent">
+          <div className="flex items-center gap-4">
+            <div className="w-1.5 h-12 bg-primary-tint-10 rounded" />
+            <p className="text-base text-gray-900">
+              {talent?.name?.split(' ')[0]} is{' '}
+              <span className="text-primary-tint-10 font-semibold">
+                {getCandidateStatus(talent?.talent_status, talent?.status)}
+              </span>{' '}
+              for hire
+            </p>
+          </div>
+          <button
+            onClick={() => router.push(`/book-talent/${customer_id}`)}
+            className="bg-primary-tint-10 hover:bg-primary-tint-20 ml-6 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+          >
+            Hire {talent?.name?.split(' ')[0]}
+          </button>
+        </div>
+          </div>
           <Capsule className="ml-auto mt-auto" icon={<IconWithBg icon="$" />}>
             Hourly Rate: ${talent?.hourly_rate}hr
             <div
@@ -426,6 +447,7 @@ function Page({ params }) {
             </div> */}
           {/* )} */}
         </div>
+        
 
         <div className="flex flex-row justify-center">
           <div className="flex flex-1 flex-col justify-start">
