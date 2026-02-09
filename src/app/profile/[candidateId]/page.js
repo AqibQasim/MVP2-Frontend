@@ -10,6 +10,7 @@ import EntityCard from "@/components/EntityCard";
 import Heading from "@/components/Heading";
 import Hr from "@/components/Hr";
 import EmailSvg from "../../../../public/icons/email.svg";
+import GithubSvg from "../../../../public/icons/github.svg";
 import phone from "../../../../public/icons/Call.png";
 import {
   relateCandidateTimezoneWithClientTimezone,
@@ -30,6 +31,8 @@ import Certifications from "@/components/Certifications";
 import Project from "@/components/Project";
 import SkillCategories from "@/components/SkillCategories";
 import { motion } from "motion/react";
+const API_BASE_URL = process.env.NEXT_PUBLIC_STATIC_URL;
+
 
 const workProcessSteps = [
   {
@@ -105,11 +108,11 @@ function Page({ params }) {
   const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
   const [candidateReport, setCandidateReport] = useState(null);
   const [budgetingError, setBudgetingError] = useState(false);
-  const [isWorkExperienceOpen, setIsWorkExperienceOpen] = useState(false);
-  const [isProjectsOpen, setIsProjectsOpen] = useState(false);
-  const [isEducationOpen, setIsEducationOpen] = useState(false);
-  const [isCertificationsOpen, setIsCertificationsOpen] = useState(false);
-  const [isSkillCategoriesOpen, setIsSkillCategoriesOpen] = useState(false);
+  const [isWorkExperienceOpen, setIsWorkExperienceOpen] = useState(true);
+  const [isProjectsOpen, setIsProjectsOpen] = useState(true);
+  const [isEducationOpen, setIsEducationOpen] = useState(true);
+  const [isCertificationsOpen, setIsCertificationsOpen] = useState(true);
+  const [isSkillCategoriesOpen, setIsSkillCategoriesOpen] = useState(true);
   const router = useRouter();
   const [alert, setAlert] = useState(null);
   const [paymentHistory, setPaymentHistory] = useState(null);
@@ -342,6 +345,11 @@ function Page({ params }) {
     year: "numeric",
   });
 
+    // Debug logs for image URL construction
+    const profileImageUrl = talent?.profile_image 
+      ? `${API_BASE_URL}${talent.profile_image}` 
+      : "/avatars/avatar-2.png";
+
   return (
     <div className="h-full overflow-y-scroll">
       <div
@@ -384,11 +392,15 @@ function Page({ params }) {
           </Capsule>
         </div>
         <Hr />
+        
         <div className="mini-profile flex items-center justify-between">
           <EntityCard
             showVerified
+            isProfilePage={true}
             entity={{
-              image: "/avatars/avatar-2.png",
+              image: talent?.profile_image 
+                ? `${API_BASE_URL}${talent.profile_image}` 
+                : "/avatars/avatar-2.png",
               name: talent?.name,
               profession: talent?.specialization,
             }}
@@ -417,50 +429,40 @@ function Page({ params }) {
 
         <div className="flex flex-row justify-center">
           <div className="flex flex-1 flex-col justify-start">
-            <Heading xm>About</Heading>
-            <Capsule
-              className="flex w-fit flex-wrap items-center gap-2"
-              style={{ textTransform: "lowercase" }}
-            >
-              <Image src={EmailSvg} />
-              {talent?.email}
-            </Capsule>
 
-            <Capsule className="mb-2 mt-2 flex w-fit flex-wrap items-center gap-2">
-              <Image src={phone} />
-              {talent?.contact_no}
-            </Capsule>
-
-
-            <div className="mt-2 text-grey-primary-shade-20">
-              Candidate Report
+            <div className="mt-4 text-grey-primary-shade-20">
+              AI Verdict
             </div>
             <Capsule
-              className="ml-5 mt-4 w-1/2 !text-primary-tint-10"
+              className="ml-5 mt-8 mb-20 w-1/2 !text-primary-tint-10"
               onClick={() => setIsReportOverlayOpened(true)}
             >
               View Report
             </Capsule>
 
-            <Hr className={"w-3/4"} />
+            <Heading xm> Personal Info & Address</Heading>
+            <div className="flex items-start gap-4 mt-3">
+              <div className="space-y-4">
 
-            <Heading xm>Address</Heading>
-            <div className="flex items-start gap-1.5">
-              <div>
                 <DetailTag
-                  icon="/icons/address.svg"
-                  name="Address: "
-                  content={talent?.customer_location || "No address"}
-                />
-                <DetailTag
-                  icon="/icons/routing.svg"
-                  name="City State: "
-                  content={talent?.city || "No city/state given"}
+                  icon="/icons/github.svg"
+                  name="Github: "
+                  content={talent?.github_link || "No github link provided"}
                 />
                 <DetailTag
                   icon="/icons/location.svg"
-                  name="Address: "
-                  content={talent?.area_code || "No area code given"}
+                  name="Country: "
+                  content={talent?.country || "No address"}
+                />
+                <DetailTag
+                  icon="/icons/routing.svg"
+                  name="City: "
+                  content={talent?.city || "No city/state given"}
+                />
+                 <DetailTag
+                  icon="/icons/timer-start.svg"
+                  name="Time zone"
+                  content={relateCandidateTimezoneWithClientTimezone(talent?.city)}
                 />
               </div>
             </div>
@@ -471,6 +473,7 @@ function Page({ params }) {
               reportOverlay={isReportOverlayOpened}
               onClose={handleCloseOverlay}
               selectedCandidate={candidateReport}
+              profileImage={profileImageUrl}
             />
           )}
 
@@ -529,6 +532,7 @@ function Page({ params }) {
                               <Skill
                                 key={i}
                                 skill={skill}
+                                hideIcon={true}
                                 className="!text-xs font-normal border flex flex-wrap"
                               />
                             ))}
@@ -545,19 +549,21 @@ function Page({ params }) {
                 )}
               </div>
 
-              <div className="flex-1">
+             <div className="flex-1">
                 <Heading xm>Experience</Heading>
                 <div className="mt-2 flex flex-col items-start gap-1.5">
                   {talent?.expertise?.map((skill, i) => (
                     <Skill
                       key={i}
                       skill={skill}
+                       hideIcon={true}
                       experience={skill?.experience}
                       className="!bg-neutral-white"
                     />
                   ))}
                 </div>
               </div>
+
             </div>
 
 
@@ -732,7 +738,7 @@ function Page({ params }) {
 
 
 {/* Work Process Section - Added at the bottom */}
-<motion.div
+{/* <motion.div
   className="mt-16 bg-gray-50 rounded-2xl p-8"
   variants={workProcessSectionVariants}
   initial="hidden"
@@ -812,8 +818,16 @@ function Page({ params }) {
       ))}
     </motion.svg>
   </div>
-</motion.div>
-
+</motion.div> */}
+        
+        <div className="bg-grey-primary-tint-90  px-6 py-4 flex items-center justify-center gap-8 my-6 mt-10 rounded-3 xl">
+        <p className="text-base font-semibold text-gray-900">Top talent is in high demand.</p>
+        <button 
+          onClick={() => router.push(`/book-talent/${customer_id}`)}
+          className="bg-primary-tint-10 hover:bg-primary-tint-20 text-white font-semibold py-2 px-8 rounded-lg transition-colors">
+          Start hiring
+        </button>
+      </div>
        
       </div>
 

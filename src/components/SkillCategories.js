@@ -1,65 +1,16 @@
 import Capsule from "./Capsule";
 
-const CATEGORY_CONFIG = [
-  { label: "Libraries/APIs", matchKey: "librariesapis" },
-  { label: "Tools", matchKey: "tools" },
-  { label: "Languages", matchKey: "languages" },
-  { label: "Frameworks", matchKey: "frameworks" },
-  { label: "Paradigms", matchKey: "paradigms" },
-  { label: "Platforms", matchKey: "platforms" },
-  { label: "Storage", matchKey: "storage" },
-  { label: "Industry Expertise", matchKey: "industryexpertise" },
-  { label: "Other", matchKey: "other" },
-];
-
-const normalizeValue = (value) => {
-  if (!value) return "";
-  if (Array.isArray(value)) {
-    return value
-      .map((entry) => {
-        if (!entry) return "";
-        if (typeof entry === "string") return entry;
-        if (typeof entry === "object") {
-          return entry?.label || entry?.name || entry?.skill || "";
-        }
-        return `${entry}`;
-      })
-      .filter(Boolean)
-      .join(", ");
-  }
-  if (typeof value === "object") {
-    return Object.values(value)
-      .flat()
-      .map((entry) => {
-        if (!entry) return "";
-        if (typeof entry === "string") return entry;
-        if (typeof entry === "object") {
-          return entry?.label || entry?.name || entry?.skill || "";
-        }
-        return `${entry}`;
-      })
-      .filter(Boolean)
-      .join(", ");
-  }
-  return `${value}`;
+const PROFICIENCY_LEVELS = {
+  expert: "Expert",
+  intermediate: "Strong", 
+  beginner: "Competitive"
 };
 
-const normalizeDataKeys = (data) => {
-  if (!data || typeof data !== "object") return {};
-  return Object.entries(data).reduce((acc, [key, value]) => {
-    const normalizedKey = key.toLowerCase().replace(/[^a-z]/g, "");
-    acc[normalizedKey] = value;
-    return acc;
-  }, {});
-};
-
-function SkillCategories({ categories, emptyMessage = "No skills added yet." }) {
-  const normalizedCategories = normalizeDataKeys(categories || {});
-  const hasAnyValue = CATEGORY_CONFIG.some(
-    ({ matchKey }) => normalizeValue(normalizedCategories[matchKey]).length,
-  );
-
-  if (!hasAnyValue) {
+function SkillCategories({ categories = null, emptyMessage = "No skills added yet." }) {
+  
+  const skillsData = categories;
+  
+  if (!skillsData || skillsData.length === 0) {
     return (
       <Capsule className="w-full h-auto flex !justify-start !py-10 !px-10">
         <p className="text-grey-primary-shade-30">{emptyMessage}</p>
@@ -68,25 +19,34 @@ function SkillCategories({ categories, emptyMessage = "No skills added yet." }) 
   }
 
   return (
-    <Capsule className="w-full h-auto flex !justify-start !py-10 !px-10">
-      <div className="w-full grid gap-6 md:grid-cols-1">
-        {CATEGORY_CONFIG.map(({ label, matchKey }) => {
-          const value = normalizeValue(normalizedCategories[matchKey]);
-          return (
-            <div key={matchKey} className="space-y-2 text-left">
-              <div className="text-base font-semibold text-gray-900">
-                {label}
+    <Capsule className="w-full h-auto flex !justify-start !py-8 !px-8">
+      <div className="w-full">
+        <div className="grid grid-cols-2 gap-x-16 gap-y-3">
+          {skillsData.map((item, index) => {
+            const proficiencyLabel = item?.level 
+              ? PROFICIENCY_LEVELS[item.level.toLowerCase()] || "Competitive"
+              : "Competitive";
+            const isExpert = item.level?.toLowerCase() === "expert";
+
+            return (
+              <div 
+                key={index}
+                className="flex items-center justify-between py-2"
+              >
+                <Capsule className=" font-normal border flex items-center gap-2">
+                  {isExpert && <span className="text-yellow-500">⭐</span>}
+                  <span>{item.skill}</span>
+                </Capsule>
+                <Capsule className=" font-normal border">
+                  {proficiencyLabel}
+                </Capsule>
               </div>
-              <p className="text-grey-primary-shade-20">
-                {value || "Not specified"}
-              </p>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </Capsule>
   );
 }
 
 export default SkillCategories;
-
