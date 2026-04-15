@@ -15,12 +15,18 @@ const nextConfig = {
       {
         protocol: 'http',
         hostname: 'localhost',
-        port: '3001', // Your backend port - change if different
+        port: '3001',
+        pathname: '/uploads/**',
+      },
+      {
+        protocol: 'http',
+        hostname: '127.0.0.1',
+        port: '3001',
         pathname: '/uploads/**',
       },
       {
         protocol: 'https',
-        hostname: 'app.co-ventech.com', // Your production API domain
+        hostname: 'app.co-ventech.com',
         pathname: '/uploads/**',
       },
     ],
