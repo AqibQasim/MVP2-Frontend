@@ -31,8 +31,10 @@ import Certifications from "@/components/Certifications";
 import Project from "@/components/Project";
 import SkillCategories from "@/components/SkillCategories";
 import { motion } from "motion/react";
-const API_BASE_URL = process.env.NEXT_PUBLIC_STATIC_URL;
-
+import {
+  candidateProfileImageUrl,
+  pickProfileImagePath,
+} from "./profileImageUrl";
 
 const workProcessSteps = [
   {
@@ -345,10 +347,9 @@ function Page({ params }) {
     year: "numeric",
   });
 
-    // Debug logs for image URL construction
-    const profileImageUrl = talent?.profile_image 
-      ? `${API_BASE_URL}${talent.profile_image}` 
-      : "/avatars/avatar-2.png";
+    const profileImageUrl = candidateProfileImageUrl(
+      pickProfileImagePath(talent),
+    );
 
   return (
     <div className="h-full overflow-y-scroll">
@@ -398,9 +399,7 @@ function Page({ params }) {
             showVerified
             isProfilePage={true}
             entity={{
-              image: talent?.profile_image 
-                ? `${API_BASE_URL}${talent.profile_image}` 
-                : "/avatars/avatar-2.png",
+              image: candidateProfileImageUrl(pickProfileImagePath(talent)),
               name: talent?.name,
               profession: talent?.specialization,
             }}

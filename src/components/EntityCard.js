@@ -27,6 +27,10 @@ function EntityCard({
         })
       : null;
 
+  const imageSrc = entity.image;
+  const isRemoteAbsolute =
+    typeof imageSrc === "string" && /^https?:\/\//i.test(imageSrc);
+
   return (
     <div className="entity flex items-center justify-start gap-2" onClick={onClick}>
       <div
@@ -34,8 +38,9 @@ function EntityCard({
       >
         {!icon ? (
           <Image
-            src={entity.image}
+            src={imageSrc}
             fill
+            unoptimized={isRemoteAbsolute}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover"
             alt="Avatar image"
