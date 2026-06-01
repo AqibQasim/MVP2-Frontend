@@ -168,7 +168,8 @@ function TalentIdPage({ client_id, customer_id }) {
                 <>
                   <Skill
                     key={i}
-                    skill={skill.skill}
+                    skill={skill}
+                    experience={skill?.experience}
                     className="!bg-neutral-white"
                   />
                 </>

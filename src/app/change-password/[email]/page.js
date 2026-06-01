@@ -49,7 +49,7 @@ function Page({ params }) {
 
       if (res.ok) {
         setSuccess("Password reset successful! Redirecting to login...");
-        setTimeout(() => router.push("/login"), 3000);
+        setTimeout(() => router.push("/company-login"), 3000);
       } else {
         const data = await res.json();
         setError(data.message || "Failed to reset password");

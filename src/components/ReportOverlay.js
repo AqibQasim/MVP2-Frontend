@@ -17,7 +17,10 @@ const isValidDate = (date) => {
   return !isNaN(parsedDate);
 };
 
-const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
+const isRemoteImageSrc = (src) =>
+  typeof src === "string" && /^https?:\/\//i.test(src);
+
+const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate, profileImage }) => {
   // console.log("selected candidate is:", selectedCandidate);
   // console.log(
   //   "selected candidate is this:",
@@ -222,7 +225,16 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate }) => {
           <div className={styles.coverContainer}>
             <div className={styles.topContainer}>
               <div className={styles.avatarContainer}>
-                <Image src="/avatars/avatar-3.svg" width={65} height={84} />
+                <Image
+                  src={profileImage || "/avatars/avatar-3.svg"}
+                  width={65}
+                  height={84}
+                  unoptimized={isRemoteImageSrc(
+                    profileImage || "/avatars/avatar-3.svg",
+                  )}
+                  className="rounded-full object-cover"
+                  alt="Candidate avatar"
+                />
               </div>
               <div className={styles.information}>
                 <h1>{selectedCandidate?.name}</h1>

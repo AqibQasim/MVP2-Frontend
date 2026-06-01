@@ -202,9 +202,6 @@ function Login() {
 
           router?.events?.on("routeChangeComplete", handleRouteChangeComplete);
 
-          const isLoggedIn =
-            localStorage.getItem("MVP_CLIENT_LOGGEDIN") === "true";
-
           if (user_role === "customer") {
             router.push(`/candidate/${result.data.id}`);
           } else {

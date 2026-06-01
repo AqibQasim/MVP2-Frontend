@@ -227,7 +227,11 @@ function JobViewById({ job, user_role }) {
             <div className="skills flex items-center gap-1.5 text-center">
               {interviewingCandidates?.expertise?.map((skill, i) => (
                 <>
-                  <Skill key={i} skill={skill?.skill} />
+                  <Skill
+                    key={i}
+                    skill={skill}
+                    experience={skill?.experience}
+                  />
                 </>
               ))}
             </div>

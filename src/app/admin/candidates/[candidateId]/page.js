@@ -420,13 +420,15 @@ function Page({ params }) {
 
             <div className="text-grey-primary-shade-20">Top Skills</div>
             <div className="flex items-start gap-1.5">
-              {talent?.expertise.map((skill, i) => (
+              {talent?.expertise.slice(0, 3).map((skill, i) => (
                 <Skill
                   key={i}
-                  skill={skill.skill}
+                  skill={skill.skill || skill}
+                  experience={null}
                   className="!bg-neutral-white"
                 />
               ))}
+              {talent?.expertise.length > 3 && <span>...</span>}
             </div>
 
             <div className="mt-2 text-grey-primary-shade-20">

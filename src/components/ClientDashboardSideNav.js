@@ -33,7 +33,7 @@ async function ClientDashboardSideNav({ clientId }) {
           )?.length
         }
       >
-        <Logout />
+        <Logout userRole={"client"}/>
       </ClientDashboardNavLinks>
     </div>
   );

@@ -1,43 +1,23 @@
 
-async function Home() {
-  // await createUserGoogle({
-  //   email: "exampleone@gmail.com",
-  //   name: "Example One",
-  //   user_role: "customer",
-  //   method: "signup",
-  // });
+"use client";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Redirect to talent login page
+    router.push("/talent-login");
+  }, [router]);
 
   return (
-    <>
-      <h1 className="font-satoshi text-7xl font-black text-primary-shade-10">
-        heading
-      </h1>
-      <h1 className="text-primary-shade-20">heading</h1>
-      <h1 className="text-primary-shade-30">heading</h1>
-      <h1 className="text-primary-shade-40">heading</h1>
-      <h1 className="text-primary-shade-50">heading</h1>
-      <h1 className="text-primary-shade-60">heading</h1>
-      <h1 className="text-primary-shade-60">heading</h1>
-      <h1 className="text-primary-shade-60">heading</h1>
-      <h1 className="text-primary-shade-60">heading</h1>
-      <h1 className="text-primary-shade-60">heading</h1>
-      <h1 className="text-primary-shade-60">heading</h1>
-      <h1 className="text-primary-shade-60">heading</h1>
-      <h1 className="text-primary-shade-70">heading</h1>
-      <h1 className="text-primary-shade-80">heading</h1>
-      <h1 className="text-primary-shade-90">heading</h1>
-      <h1 className="text-primary-shade-100">heading</h1>
-      <h1 className="text-primary-shade-10">heading</h1>
-      <h1 className="text-primary-shade-10">heading</h1>
-      <h1 className="text-primary-shade-60">heading</h1>
-      <h1 className="text-primary-shade-10">heading</h1>
-      <h1 className="text-primary-shade-10">heading</h1>
-      <h1 className="text-primary-shade-10">heading</h1>
-      <h1 className="text-primary-shade-10">heading</h1>
-      <h1 className="text-primary-shade-10">heading</h1>
-      <h1 className="text-primary-shade-10">heading</h1>
-      <h1 className="text-primary-shade-10">heading</h1>
-    </>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+        <p className="mt-4 text-gray-600">Redirecting to talent login...</p>
+      </div>
+    </div>
   );
 }
 

@@ -1,8 +1,8 @@
 "use client"; // This makes it a client component
 import SvgIconLogout from "@/svgs/SvgIconLogout";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
-export default function ClientLogout({ className }) {
+export default function ClientLogout({ className, userRole }) {
   const router = useRouter();
 
   const handleLogout = () => {
@@ -12,7 +12,12 @@ export default function ClientLogout({ className }) {
     // remove cookie
     document.cookie =
       "credentialLoginToken=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
-    router.push("/login");
+
+    if(userRole==="client"){
+      router.replace('/company-login')
+    }else{
+      router.replace('/talent-login')
+    }
   };
 
   return (

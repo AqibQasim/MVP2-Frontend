@@ -782,7 +782,7 @@ function Page() {
                 Already have an account?
               </p>
               <Link href={`/login?role=${user_role}`} className="text-xs text-primary underline">
-                Sign in now
+                Login
               </Link>
             </div>
           </div>

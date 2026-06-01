@@ -1,5 +1,4 @@
 "use client";
-
 export default function Error({ error, reset }) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">

@@ -56,7 +56,8 @@ module.exports = {
           darkPaymentPurple: "#3F3855",
           goldenTextColor: "#FFC27B",
           goldenLightText: "#C3A38B",
-          accent: "#F6F5FA"
+          accent: "#F6F5FA",
+          greenDark: "#057663"
         },
         primary: {
           DEFAULT: "#4624E0",

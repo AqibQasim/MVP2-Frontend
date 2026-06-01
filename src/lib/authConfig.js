@@ -25,11 +25,10 @@ export const authConfig = {
       },
     }),
   ],
-  
+
   trustHost: true,
   callbacks: {
     async authorized({ auth, request }) {
-      console.log("AAAAHILL SIGN UP WITH  GOOOGLE ");
 
       const user = auth?.user;
       const credentialUserToken =
@@ -39,8 +38,10 @@ export const authConfig = {
 
       const url = request?.nextUrl;
       const pathname = url?.pathname;
+      console.log("PATHNAME: ", pathname)
       const isAuthenticated = user || credentialUser?.id;
-      const loginPage = pathname === "/login";
+      const loginPage = pathname === "/talent-login";
+      const clientLoginPage = pathname === "/company-login"
       const signupPage = pathname === "/signup";
       const googleUserRedirectPath = user
         ? `/${user.user_role === "client" ? "client/" + user[`client_id`] : "candidate/" + user[`customer_id`]}`
@@ -50,17 +51,41 @@ export const authConfig = {
         ? `/${credentialUser.user_role === "client" ? credentialUser.user_role : "candidate"}/${credentialUser.id}`
         : null;
 
-      if (isAuthenticated && (loginPage || signupPage)) {
-        const redirectPath = user
-          ? googleUserRedirectPath
-          : credentialUserRedirectPath;
-        return NextResponse.redirect(new URL(redirectPath, request.url));
+      if (isAuthenticated && (loginPage || clientLoginPage || signupPage)) {
+        // Ensure company users (role: 'client') are redirected to their dashboard
+        let redirectPath = null;
+        if (user) {
+          if (user.user_role === "client" && user.client_id) {
+            redirectPath = `/client/${user.client_id}`;
+          } else if (user.user_role === "customer" && user.customer_id) {
+            redirectPath = `/candidate/${user.customer_id}`;
+          } else {
+            redirectPath = googleUserRedirectPath;
+          }
+        } else if (credentialUser) {
+          if (credentialUser.user_role === "client" && credentialUser.id) {
+            redirectPath = `/client/${credentialUser.id}`;
+          } else if (credentialUser.user_role === "customer" && credentialUser.id) {
+            redirectPath = `/candidate/${credentialUser.id}`;
+          } else {
+            redirectPath = credentialUserRedirectPath;
+          }
+        }
+        if (redirectPath) {
+          return NextResponse.redirect(new URL(redirectPath, request.url));
+        }
+        // fallback: stay on login page if no valid redirect
+        return NextResponse.redirect(new URL(pathname, request.url));
       }
 
       // NOT AUTHENTICATED
       if (!isAuthenticated) {
-        console.log("User not authenticated");
-        return false;
+        const publicRoutes = ["/talent-login", "/company-login", "/signup"];
+        if (publicRoutes.includes(pathname)) {
+          return true; // allow unauthenticated users on public/login pages
+        }
+        console.log("User not authenticated, redirecting to talent login");
+        return false; // this will trigger the redirect to /talent-login
       }
 
       // Client/Candidate route protection
@@ -81,7 +106,7 @@ export const authConfig = {
 
         if (candidateRoute) {
           if (!isCandidate || (visitedId && isImposter)) {
-            return NextResponse.redirect(new URL("/login", request.url));
+            return NextResponse.redirect(new URL("/talent-login", request.url));
           }
           if (pathname === "/candidate" && currentUserId) {
             return NextResponse.redirect(
@@ -93,7 +118,7 @@ export const authConfig = {
         if (clientRoute) {
           const isClient = googleUserRole === "client";
           if (!isClient || (visitedId && isImposter)) {
-            return NextResponse.redirect(new URL("/login", request.url));
+            return NextResponse.redirect(new URL("/company-login", request.url));
           }
           if (pathname === "/client" && currentUserId) {
             return NextResponse.redirect(
@@ -110,7 +135,7 @@ export const authConfig = {
 
         if (candidateRoute) {
           if (!isCandidate || (visitedId && isImposter)) {
-            return NextResponse.redirect(new URL("/login", request.url));
+            return NextResponse.redirect(new URL("/talent-login", request.url));
           }
           if (pathname === "/candidate" && credentialUserId) {
             return NextResponse.redirect(
@@ -121,7 +146,7 @@ export const authConfig = {
 
         if (clientRoute) {
           if (!isClient || (visitedId && isImposter)) {
-            return NextResponse.redirect(new URL("/login", request.url));
+            return NextResponse.redirect(new URL("/company-login", request.url));
           }
           if (pathname === "/client" && credentialUserId) {
             return NextResponse.redirect(
@@ -140,15 +165,15 @@ export const authConfig = {
         customer: checkCustomerByEmail,
         client: checkClientByEmail,
       };
-    
+
       const userRoleCookie = cookies().get("user_role");
       console.log(userRoleCookie)
       const userRole = userRoleCookie ? userRoleCookie.value : "customer";
-    
+
       const { existingUser } = await role[userRole](user.email);
       if (!existingUser) {
         let stripeData; // Ensure `stripeData` is declared in scope
-    
+
         // Call the Stripe customer creation API
         const stripeResponse = await fetch(
           `${process.env.NEXTAUTH_URL}/api/create-customer`,
@@ -165,17 +190,17 @@ export const authConfig = {
         );
         stripeData = await stripeResponse.json();
         if (userRole === "client") {
-    
+
           if (stripeResponse.status !== 200) {
             throw new Error(stripeData.error);
           }
-    
+
           console.log(
             "Stripe customer created successfully:",
             stripeData.customer,
           );
         }
-    
+
         // Proceed with the rest of the signup process
         const result = await createUserGoogle({
           email: user.email,
@@ -183,10 +208,10 @@ export const authConfig = {
           user_role: userRole,
           method: "signup",
         });
-    
+
         console.log("USER ROLE IS: ", userRole);
         let createAccountResponse, createAccountData;
-    
+
         if (userRole === "client") {
           createAccountResponse = await fetch(
             `${process.env.NEXT_PUBLIC_API_REMOTE_URL}/create-stripe-account`,
@@ -216,19 +241,19 @@ export const authConfig = {
             },
           );
         }
-    
+
         createAccountData = await createAccountResponse.json();
-    
+
         if (createAccountResponse.status !== 200) {
           throw new Error(createAccountData.error);
         }
-    
+
         console.log(
           "Stripe account created successfully:",
           createAccountData,
         );
       }
-    
+
       return true;
     },
     async jwt({ token, user }) {
@@ -268,7 +293,7 @@ export const authConfig = {
     },
   },
   pages: {
-    signIn: "/login",
+    signIn: "/talent-login",
   },
 };
 

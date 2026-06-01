@@ -19,8 +19,7 @@ function DetailTag({
         {name}
       </p>{" "}
       <p className="flex items-center flex-row text-nowrap pl-7 text-grey-primary-shade-60 xl:pl-[unset]">
-        {" "}
-        {content}{" "}
+        {content.length > 22 ? `${content.substring(0, 22)}...` : content}
       </p>
     </div>
   );
