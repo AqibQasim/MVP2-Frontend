@@ -128,7 +128,7 @@ function Login() {
 					<div className="text-center mb-8">
 						<h1 className="text-3xl font-semibold text-gray-900 mb-2">Talent login</h1>
 					</div>
-					<form onSubmit={handleLogin} className="space-y-4">
+					<div className="space-y-4">
 						<div>
 							<label htmlFor="email" className="block text-sm text-gray-600 mb-2">
 								Enter email address
@@ -191,8 +191,8 @@ function Login() {
 							</button>
 						</div>
 						<button
-							type="submit"
 							disabled={isLoading}
+							onClick={handleLogin}
 							className={`w-full rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-colors py-3 px-6 text-base font-semibold ${isLoading ? "cursor-not-allowed" : "cursor-pointer"}`}
 						>
 							{isLoading ? (
@@ -222,7 +222,7 @@ function Login() {
 								Register
 							</button>
 						</div>
-					</form>
+					</div>
 				</div>
 			</div>
 			{isForgotPasswordOpened && (
