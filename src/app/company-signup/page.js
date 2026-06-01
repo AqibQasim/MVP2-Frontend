@@ -299,7 +299,7 @@ function Page() {
           <div className="text-center mb-6">
             <h1 className="text-3xl font-semibold text-gray-900 mb-2">Company Register</h1>
           </div>
-          <form onSubmit={handleOpenOverlay} className="space-y-3">
+          <form className="space-y-3">
             {/* Company Name */}
             <div>
               <Input
@@ -461,7 +461,7 @@ function Page() {
               <p className="text-xs text-red-500">{termsError}</p>
             )}
             <OnBoardingButton
-              type="submit"
+              onClick={handleOpenOverlay}
               disabled={!confirmTerms || isLoading}
               className={`w-full ${!confirmTerms || isLoading ? "cursor-not-allowed" : "cursor-pointer"}`}
             >

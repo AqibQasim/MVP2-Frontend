@@ -114,7 +114,7 @@ function Login() {
               Company login
             </h1>
           </div>
-          <form onSubmit={handleLogin} className="space-y-4">
+          <div className="space-y-4">
             {/* ...existing code... */}
             <div>
               <label
@@ -184,8 +184,8 @@ function Login() {
               </button>
             </div>
             <button
-              type="submit"
               disabled={isLoading}
+              onClick={handleLogin}
               className={`w-full rounded-lg bg-blue-600 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 ${isLoading ? "cursor-not-allowed" : "cursor-pointer"}`}
             >
               {isLoading ? (
@@ -206,7 +206,7 @@ function Login() {
                 <div className="h-px flex-1 bg-gray-300"></div>
               </div>
             </div>
-          </form>
+          </div>
           <SignInButton user_role="client" />
           <div className="mt-6 flex items-center justify-center text-sm text-gray-600">
             <span>Don&apos;t have an account? </span>

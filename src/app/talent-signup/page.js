@@ -289,18 +289,6 @@ function Page() {
     validateField(name, value);
   };
 
-  const isFormInvalid = useMemo(() => {
-    return (
-      Object.values(errors).some((err) => err !== "") ||
-      !form.firstName ||
-      !form.lastName ||
-      !form.email ||
-      !form.phoneNumber ||
-      !form.password ||
-      !form.confirmPassword
-    );
-  }, [errors, form]);
-
   const validateField = (name, value) => {
     let errorMsg = "";
 
@@ -411,7 +399,7 @@ function Page() {
             </h1>
           </div>
 
-          <form onSubmit={handleOpenOverlay} className="space-y-3">
+          <form className="space-y-3">
             {/* First Name and Last Name */}
             <div className="flex gap-3">
               <div className="flex-1">
@@ -573,7 +561,7 @@ function Page() {
             {termsError && <p className="text-xs text-red-500">{termsError}</p>}
 
             <OnBoardingButton
-              type="submit"
+              onClick={handleOpenOverlay}
               disabled={!confirmTerms || isLoading}
               className={`w-full ${!confirmTerms || isLoading ? "cursor-not-allowed" : "cursor-pointer"}`}
             >
