@@ -1,6 +1,5 @@
 "use client";
 import ErrorPopup from "@/components/ErrorPopup";
-import Heading from "@/components/Heading";
 import PhoneInputEl from "@/components/PhoneInputEl";
 import Input from "@/components/Input";
 import OnBoardingButton from "@/components/OnBoardingButton";
@@ -9,16 +8,12 @@ import SignInButton from "@/components/SignInButton";
 import SuccessModal from "@/components/SuccessModal";
 import { mvp2ApiHelper } from "@/Helpers/mvp2ApiHelper";
 import { revalidate } from "@/lib/data-service";
-import { PAGE_HEIGHT_FIX } from "@/utils/utility";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState, useEffect } from "react";
 import { generateOtp } from "@/utils/generateOtp";
 
 function Page() {
-  const router = useRouter();
-  const params = useSearchParams();
 
   // Set page title
   useEffect(() => {
@@ -38,7 +33,7 @@ function Page() {
   });
   const [confirmTerms, setConfirmTerms] = useState(false);
 
-  const [user_role, setUserRole] = useState(params?.get("role") || "client");
+  const user_role="customer";
   const [errors, setErrors] = useState({});
   const [termsError, setTermsError] = useState("");
   const [otp, setotp] = useState(null);

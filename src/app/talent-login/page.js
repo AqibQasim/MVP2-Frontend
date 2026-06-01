@@ -18,7 +18,7 @@ function Login() {
 	const router = useRouter();
 	const [alert, setalert] = useState(false);
 	const [isLoading, setisLoading] = useState(false);
-	const user_role = "freelancer";
+	const user_role = "customer";
 	const [isForgotPasswordOpened, setIsForgotPasswordOpened] = useState(false);
 	const [show, setShow] = useState(false);
 
