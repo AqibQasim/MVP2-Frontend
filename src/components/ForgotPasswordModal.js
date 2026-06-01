@@ -120,7 +120,7 @@ const ForgotPasswordModal = ({
       endpoint = `client-by-email?email=${email}`;
     }
 
-    if (user_role === "customer") {
+    if (user_role === "freelancer") {
       endpoint = `customer-by-email?email=${email}`;
     }
     const userPayload = {
