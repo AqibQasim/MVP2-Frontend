@@ -22,7 +22,7 @@ export function formatCurrencyNoDecimals(price) {
 }
 
 export function formatWithDecimalZero(value) {
-  return value % 1 === 0 ? `${value}.0` : value.toFixed(1);
+  return value % 1 === 0 ? `${value}.0` : value?.toFixed(1);
 }
 
 export function formatDate(date) {

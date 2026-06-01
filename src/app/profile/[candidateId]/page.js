@@ -104,8 +104,6 @@ function Page({ params }) {
   const [jobs, setFetchedJobs] = useState(null);
   const [selectedJobId, setSelectedJobId] = useState("");
   const [error, setError] = useState(null);
-  const [isClientsShow, setIsClientShow] = useState(false);
-  const [isJobsShow, setIsJobsShow] = useState(false);
   const [jobHistory, setJobHistory] = useState(null);
   const [isReportOverlayOpened, setIsReportOverlayOpened] = useState(false);
   const [candidateReport, setCandidateReport] = useState(null);
@@ -316,11 +314,6 @@ function Page({ params }) {
       name: "Time zone",
       content: relateCandidateTimezoneWithClientTimezone(talent?.city), //cityTimezoneOffset(talent?.city || "No city set"),
     },
-    // {
-    //   icon: "/icons/briefcase-tick.svg",
-    //   name: "Job type",
-    //   content: talent?.job_type,
-    // },
   ];
 
   function parseDateString(dateString) {
@@ -329,7 +322,7 @@ function Page({ params }) {
     return new Date(year, monthIndex, day);
   }
 
-  console.log('talents', talent)
+  console.log('candidate report result: ', candidateReport)
 
   // Your formatted date string
   let endTrialDate = formatDate(talent?.updatedAt);
@@ -359,23 +352,6 @@ function Page({ params }) {
       >
         <div className="top flex items-center justify-start gap-3">
           <Heading sm>Candidate Profile</Heading>
-
-          {/* <Capsule
-            onClick={
-              getCandidateStatus(talent?.talent_status, talent?.status) ===
-              "Available"
-                ? () => setShowForm(true)
-                : null
-            }
-            className={`ml-auto cursor-not-allowed !bg-grey-primary-tint-90 ${
-              getCandidateStatus(talent?.talent_status, talent?.status) ===
-              "Available"
-                ? "!text-primary-tint-10"
-                : "!text-gray-500"
-            }`}
-          >
-            Refer To Client
-          </Capsule> */}
 
           <Capsule className="ml-auto !bg-grey-primary-tint-90 !text-primary-tint-10">
             {getCandidateStatus(talent?.talent_status, talent?.status)}
@@ -412,23 +388,28 @@ function Page({ params }) {
             >
             </div>
           </Capsule>
-
-          {/* <div className="gap-2">
-              <input
-                className="rounded-[2.25rem] border-2 border-black px-4 py-3 text-sm font-medium capitalize"
-                value={editedPrice}
-                onChange={(event) => setEditedPrice(event.target.value)}
-              />
-              <ButtonCapsule onPress={() => saveEditedPrice(editedPrice)}>
-                Save
-              </ButtonCapsule>
-            </div> */}
-          {/* )} */}
         </div>
         
 
         <div className="flex flex-row justify-center">
           <div className="flex flex-1 flex-col justify-start">
+            <Heading xm>About</Heading>
+            <Capsule
+              className="flex w-fit flex-wrap items-center gap-2"
+              style={{ textTransform: "lowercase" }}
+            >
+              <Image src={EmailSvg} />
+              {talent?.email}
+            </Capsule>
+
+            <Capsule className="mb-2 mt-2 flex w-fit flex-wrap items-center gap-2">
+              <Image src={phone} />
+              {talent?.contact_no}
+            </Capsule>
+
+            <Skill
+              score={parseInt(calculateCumulativeMean(candidateReport?.result?.technicalRating, candidateReport?.result?.softskillRating, null)?.toString())}
+              className={"w-32"} />
 
             <div className="mt-4 text-grey-primary-shade-20">
               AI Verdict
