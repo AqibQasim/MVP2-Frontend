@@ -16,6 +16,7 @@ import {
   relateCandidateTimezoneWithClientTimezone,
 } from "@/utils/cityTimezoneOffset";
 import { formatDate } from "@/utils/utility";
+import { calculateCumulativeMean } from "@/utils/calculatCumulativeMean";
 import Image from "next/image";
 import Skill from "@/components/Skill";
 import { fetchClientJobs, getClients } from "@/lib/data-service";
