@@ -319,9 +319,7 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate, profileImage
                         : selectedCandidate?.date || results?.data?.createdAt}
                     </span> */}
                     <span>
-                      {/* {format(new Date(2014, 1, 11), "EEE, yyyy-MM-dd")} */}
-
-                     {selectedCandidate?.createdAt.split("T")[0]}
+                      {selectedCandidate?.createdAt?.split("T")[0] ?? "N/A"}
                     </span>
                   </li>
                   <li>
@@ -346,8 +344,9 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate, profileImage
                       results?.data?.result?.technicalAssessment
                     }
                     score={
-                      selectedCandidate?.result?.technicalRating.toString() ||
-                      results?.data?.result?.technicalRating
+                      selectedCandidate?.result?.technicalRating?.toString() ??
+                      results?.data?.result?.technicalRating ??
+                      "0"
                     }
                   />
                   <Assessment
@@ -357,8 +356,9 @@ const ReportOverlay = ({ onClose, reportOverlay, selectedCandidate, profileImage
                       results?.data?.result?.softskillAssessment
                     }
                     score={
-                      selectedCandidate?.result?.softskillRating.toString() ||
-                      results?.data?.result?.softskillRating
+                      selectedCandidate?.result?.softskillRating?.toString() ??
+                      results?.data?.result?.softskillRating ??
+                      "0"
                     }
                   />
                   {isCodingAssessment && (

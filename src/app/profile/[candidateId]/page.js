@@ -409,8 +409,15 @@ function Page({ params }) {
             </Capsule>
 
             <Skill
-              score={parseInt(calculateCumulativeMean(candidateReport?.result?.technicalRating, candidateReport?.result?.softskillRating, null)?.toString())}
-              className={"w-32"} />
+              score={parseInt(
+                calculateCumulativeMean(
+                  candidateReport?.result?.technicalRating,
+                  candidateReport?.result?.softskillRating,
+                  null,
+                ) ?? 0,
+              )}
+              className={"w-32"}
+            />
 
             <div className="mt-4 text-grey-primary-shade-20">
               AI Verdict
