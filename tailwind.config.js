@@ -21,6 +21,8 @@ module.exports = {
       fontFamily: {
         satoshi: ["var(--font-satoshi)"],
         lufga: ["var(--font-lufga)"],
+        jakarta: ["var(--font-plus-jakarta)"],
+        fraunces: ["var(--font-fraunces)"],
       },
       borderRadius: {
         "4xl": "2rem",

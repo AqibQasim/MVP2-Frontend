@@ -1,4 +1,20 @@
 import localFont from "next/font/local";
+import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
+
+export const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["300", "500"],
+  variable: "--font-plus-jakarta",
+  display: "swap",
+});
+
+export const fraunces = Fraunces({
+  subsets: ["latin"],
+  weight: ["300", "500"],
+  style: ["italic"],
+  variable: "--font-fraunces",
+  display: "swap",
+});
 
 export const satoshi = localFont({
   src: [

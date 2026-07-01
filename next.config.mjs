@@ -1,17 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
-  async redirects() {
-    return [
-      {
-        source: '/', //home page of app.co-ventech.com
-        destination: '/talent-login',
-        permanent: true, // or false for temporary
-      },
-    ];
-  },
   images: {
     remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'i.pravatar.cc',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
+      },
       {
         protocol: 'http',
         hostname: 'localhost',
