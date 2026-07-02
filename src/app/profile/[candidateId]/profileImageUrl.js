@@ -17,7 +17,33 @@ function getApiOriginForStaticFiles() {
   return "";
 }
 
-const FALLBACK_AVATAR = "/avatars/avatar-2.png";
+export const PROFILE_DEFAULT_AVATAR =
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=626&h=620&fit=crop&crop=faces";
+
+const PLACEHOLDER_IMAGE_PATTERN =
+  /\/avatars\/avatar-|\.svg($|\?)|dicebear|memoji|ui-avatars|placeholder/i;
+
+function isPlaceholderProfileImage(path) {
+  if (!path) return true;
+  return PLACEHOLDER_IMAGE_PATTERN.test(String(path));
+}
+
+function getDefaultProfileAvatar(customerId) {
+  const pool = [
+    PROFILE_DEFAULT_AVATAR,
+    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=626&h=620&fit=crop&crop=faces",
+    "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=626&h=620&fit=crop&crop=faces",
+    "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=626&h=620&fit=crop&crop=faces",
+  ];
+
+  if (!customerId) return PROFILE_DEFAULT_AVATAR;
+
+  const hash = String(customerId)
+    .split("")
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+
+  return pool[hash % pool.length];
+}
 
 /** Handles root, nested customer, and camelCase API shapes. */
 export function pickProfileImagePath(talent) {
@@ -32,12 +58,14 @@ export function pickProfileImagePath(talent) {
   );
 }
 
-export function candidateProfileImageUrl(profileImage) {
-  if (profileImage == null || profileImage === "") return FALLBACK_AVATAR;
+export function candidateProfileImageUrl(profileImage, customerId) {
+  const fallback = getDefaultProfileAvatar(customerId);
+
+  if (profileImage == null || profileImage === "") return fallback;
   const path = String(profileImage).trim();
-  if (!path) return FALLBACK_AVATAR;
+  if (!path || isPlaceholderProfileImage(path)) return fallback;
   if (/^https?:\/\//i.test(path)) return path;
   const origin = getApiOriginForStaticFiles();
-  if (!origin) return FALLBACK_AVATAR;
+  if (!origin) return fallback;
   return path.startsWith("/") ? `${origin}${path}` : `${origin}/${path}`;
 }
