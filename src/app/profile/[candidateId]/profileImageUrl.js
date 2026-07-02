@@ -20,6 +20,13 @@ function getApiOriginForStaticFiles() {
 export const PROFILE_DEFAULT_AVATAR =
   "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=626&h=620&fit=crop&crop=faces";
 
+const MALE_PROFILE_AVATARS = [
+  PROFILE_DEFAULT_AVATAR,
+  "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=626&h=620&fit=crop&crop=faces",
+  "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=626&h=620&fit=crop&crop=faces",
+  "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=626&h=620&fit=crop&crop=faces",
+];
+
 const PLACEHOLDER_IMAGE_PATTERN =
   /\/avatars\/avatar-|\.svg($|\?)|dicebear|memoji|ui-avatars|placeholder/i;
 
@@ -29,20 +36,13 @@ function isPlaceholderProfileImage(path) {
 }
 
 function getDefaultProfileAvatar(customerId) {
-  const pool = [
-    PROFILE_DEFAULT_AVATAR,
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=626&h=620&fit=crop&crop=faces",
-    "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=626&h=620&fit=crop&crop=faces",
-    "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=626&h=620&fit=crop&crop=faces",
-  ];
-
   if (!customerId) return PROFILE_DEFAULT_AVATAR;
 
   const hash = String(customerId)
     .split("")
     .reduce((acc, char) => acc + char.charCodeAt(0), 0);
 
-  return pool[hash % pool.length];
+  return MALE_PROFILE_AVATARS[hash % MALE_PROFILE_AVATARS.length];
 }
 
 /** Handles root, nested customer, and camelCase API shapes. */
