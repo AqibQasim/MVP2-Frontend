@@ -2,12 +2,14 @@ import Capsule from "./Capsule";
 
 const PROFICIENCY_LEVELS = {
   expert: "Expert",
-  intermediate: "Strong", 
-  beginner: "Competitive"
+  intermediate: "Strong",
+  strong: "Strong",
+  beginner: "Competitive",
+  competitive: "Competitive",
 };
 
 /** API may send an array, a keyed map of arrays, a skill→level map, or a single row object. */
-function normalizeSkillsCategories(categories) {
+export function normalizeSkillsCategories(categories) {
   if (categories == null) return [];
   if (Array.isArray(categories)) return categories;
   if (typeof categories === "string") {

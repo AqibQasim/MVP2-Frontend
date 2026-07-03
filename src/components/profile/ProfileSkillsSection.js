@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import ProfileSectionHeading from "@/components/profile/ProfileSectionHeading";
-import SkillCategories from "@/components/SkillCategories";
+import ProfileSkillsByLevel from "@/components/profile/ProfileSkillsByLevel";
 
 export default function ProfileSkillsSection({ skillCategoryData }) {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -22,9 +22,7 @@ export default function ProfileSkillsSection({ skillCategoryData }) {
 
       {isExpanded ? (
         hasSkills ? (
-          <div className="profile-skills-panel">
-            <SkillCategories categories={skillCategoryData} />
-          </div>
+          <ProfileSkillsByLevel categories={skillCategoryData} />
         ) : (
           <p className="profile-empty-inline">No skills added yet.</p>
         )

@@ -1453,17 +1453,22 @@
   margin-top: 3rem;
 }
 
-.profile-skills-panel {
-  overflow: hidden;
-  border: 1px solid var(--landing-border);
-  border-radius: 1rem;
-  background: var(--landing-bg-white);
+.profile-skills-detail-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
 }
 
-.profile-skills-panel > div {
-  border: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
+.profile-skills-detail-grid .profile-skills-row {
+  display: grid;
+  gap: 0.875rem 1.5rem;
+  align-items: start;
+}
+
+@media (min-width: 768px) {
+  .profile-skills-detail-grid .profile-skills-row {
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+  }
 }
 
 @media (max-width: 767px) {
